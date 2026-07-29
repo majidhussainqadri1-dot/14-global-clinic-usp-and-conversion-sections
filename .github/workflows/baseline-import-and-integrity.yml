@@ -11,157 +11,27 @@ permissions:
 
 jobs:
   import-source:
-    if: github.actor != 'github-actions[bot]'
+    if: github.event_name == 'push' && github.ref_name == 'baseline/file-14-original-import' && github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout baseline branch
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.head_ref || github.ref_name }}
+          ref: baseline/file-14-original-import
           fetch-depth: 0
 
-      - name: Reconstruct and extract original source package
-        shell: bash
+      - name: Verify and extract original source package
         run: |
           set -euo pipefail
           archive='source-package/14-global-clinic-usp-and-conversion-sections-0.1.0.zip'
-          if compgen -G 'source-package/chunks/part-*.b64' > /dev/null; then
-            cat source-package/chunks/part-*.b64 | base64 --decode > "$archive"
-          fi
           test -f "$archive"
           echo '3ec6e447498e8a5b0833068b7b31afd0b52a67a5eae6e1cd9605e5c28ba710b5  source-package/14-global-clinic-usp-and-conversion-sections-0.1.0.zip' | sha256sum --check -
           rm -rf global-clinic-usp
           unzip -q "$archive"
           test -f global-clinic-usp/global-clinic-usp.php
 
-      - name: Generate baseline evidence
-        shell: bash
-        run: |
-          set -euo pipefail
-          find global-clinic-usp -type f -print0 | sort -z | xargs -0 sha256sum > CHECKSUMS.sha256
-
-          cat > SOURCE-PROVENANCE.md <<'EOF'
-          # Source Provenance — File 14
-
-          ## Source package
-
-          - **Project:** Sabri Social Homeopathy Platform
-          - **File number:** 14
-          - **Plugin:** Global Clinic USP and Conversion Sections
-          - **Imported version:** 0.1.0
-          - **Original archive:** `14-global-clinic-usp-and-conversion-sections-0.1.0.zip`
-          - **Original archive SHA-256:** `3ec6e447498e8a5b0833068b7b31afd0b52a67a5eae6e1cd9605e5c28ba710b5`
-          - **Archive size:** 16,190 bytes
-          - **Top-level plugin directory:** `global-clinic-usp/`
-          - **Source files:** 14
-          - **Import date:** 2026-07-29
-
-          ## Import policy
-
-          This branch is an exact baseline import of the supplied WordPress plugin source. The plugin source has not been refactored, renamed, or functionally altered during import. Repository governance documents and automated integrity checks are added outside the plugin directory.
-
-          Any future correction must be made through a separate reviewed commit or pull request so that the original imported baseline remains traceable.
-          EOF
-
-          cat > STATUS.md <<'EOF'
-          # Repository Status
-
-          ## Current state
-
-          **Baseline import pending founder review.**
-
-          The original File 14 source package has been extracted into `global-clinic-usp/` and preserved with file-level SHA-256 checksums.
-
-          ## Validation completed
-
-          - ZIP archive integrity: **PASS**
-          - Unsafe absolute or path-traversal entries: **NONE FOUND**
-          - PHP syntax lint: **12/12 PASS**
-          - Plugin version detected: **0.1.0**
-          - WordPress requirement: **6.0+**
-          - PHP requirement: **7.4+**
-          - Source file count: **14**
-
-          ## Not yet claimed
-
-          This baseline import does **not** by itself prove WordPress staging activation, companion-plugin compatibility, responsive acceptance, cache behavior, production readiness, or live deployment. Those matters require a separate audit, correction cycle, staging installation, regression testing, and founder acceptance before release promotion.
-          EOF
-
-          cat > MANIFEST.md <<'EOF'
-          # Source Manifest — File 14 v0.1.0
-
-          | Path | Purpose |
-          |---|---|
-          | `global-clinic-usp/global-clinic-usp.php` | Main WordPress plugin bootstrap and metadata |
-          | `global-clinic-usp/readme.txt` | WordPress installation, scope, shortcodes, and changelog |
-          | `global-clinic-usp/uninstall.php` | Uninstall behavior |
-          | `global-clinic-usp/includes/class-sgc-activator.php` | Activation and required page/setup logic |
-          | `global-clinic-usp/includes/class-sgc-admin.php` | Administrative settings and controls |
-          | `global-clinic-usp/includes/class-sgc-frontend.php` | Front-end hooks, shortcodes, and placement logic |
-          | `global-clinic-usp/includes/class-sgc-helpers.php` | Shared helper and integration functions |
-          | `global-clinic-usp/includes/class-sgc-plugin.php` | Plugin runtime orchestration |
-          | `global-clinic-usp/templates/home-hero.php` | Two-audience home hero section |
-          | `global-clinic-usp/templates/doctor-portal.php` | Doctor Portal conversion page |
-          | `global-clinic-usp/templates/patient-banner.php` | Patient doctor-discovery banner |
-          | `global-clinic-usp/templates/mission.php` | Main mission section/page |
-          | `global-clinic-usp/templates/footer-mission.php` | Footer mission link/output |
-          | `global-clinic-usp/assets/css/global-clinic-usp.css` | Responsive visual styling |
-
-          ## Public shortcodes
-
-          - `[sgc_home_hero]`
-          - `[sgc_doctor_portal]`
-          - `[sgc_patient_banner]`
-          - `[sgc_our_mission]`
-          EOF
-
-          cat > .gitignore <<'EOF'
-          .DS_Store
-          Thumbs.db
-          *.swp
-          *.swo
-          .idea/
-          .vscode/
-          *.tmp
-          *.log
-          /build/
-          /dist/
-          /vendor/
-          /node_modules/
-          EOF
-
-      - name: Validate imported PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '8.3'
-          coverage: none
-
-      - name: Lint imported source
-        shell: bash
-        run: find global-clinic-usp -type f -name '*.php' -print0 | sort -z | xargs -0 -n1 php -l
-
-      - name: Commit extracted baseline
-        shell: bash
-        env:
-          TARGET_BRANCH: ${{ github.head_ref || github.ref_name }}
-        run: |
-          set -euo pipefail
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          rm -rf source-package/chunks
-          git add -A source-package global-clinic-usp CHECKSUMS.sha256 SOURCE-PROVENANCE.md STATUS.md MANIFEST.md .gitignore
-          if git diff --cached --quiet; then
-            echo 'Baseline source is already imported.'
-            exit 0
-          fi
-          git commit -m 'Import original File 14 plugin source'
-          git push origin HEAD:${TARGET_BRANCH}
-
-  verify:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - name: Generate immutable baseline evidence
+        run: find global-clinic-usp -type f -print0 | sort -z | xargs -0 sha256sum > CHECKSUMS.sha256
 
       - name: Set up PHP
         uses: shivammathur/setup-php@v2
@@ -169,21 +39,29 @@ jobs:
           php-version: '8.3'
           coverage: none
 
-      - name: Verify supplied source
-        shell: bash
+      - name: Lint imported source
+        run: find global-clinic-usp -type f -name '*.php' -print0 | sort -z | xargs -0 -n1 php -l
+
+      - name: Commit extracted baseline when required
+        env:
+          TARGET_BRANCH: baseline/file-14-original-import
         run: |
           set -euo pipefail
-          if test -d global-clinic-usp; then
-            sha256sum --check CHECKSUMS.sha256
-            find global-clinic-usp -type f -name '*.php' -print0 | sort -z | xargs -0 -n1 php -l
-          else
-            mkdir -p /tmp/file14
-            if test -f source-package/14-global-clinic-usp-and-conversion-sections-0.1.0.zip; then
-              cp source-package/14-global-clinic-usp-and-conversion-sections-0.1.0.zip /tmp/file14/source.zip
-            else
-              cat source-package/chunks/part-*.b64 | base64 --decode > /tmp/file14/source.zip
-            fi
-            echo '3ec6e447498e8a5b0833068b7b31afd0b52a67a5eae6e1cd9605e5c28ba710b5  /tmp/file14/source.zip' | sha256sum --check -
-            unzip -q /tmp/file14/source.zip -d /tmp/file14/extracted
-            find /tmp/file14/extracted/global-clinic-usp -type f -name '*.php' -print0 | sort -z | xargs -0 -n1 php -l
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add global-clinic-usp CHECKSUMS.sha256
+          if git diff --cached --quiet; then
+            echo 'Baseline source is already imported.'
+            exit 0
           fi
+          git commit -m 'Import original File 14 plugin source'
+          git push origin HEAD:${TARGET_BRANCH}
+
+  verify-baseline-provenance:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Verify original archive
+        run: echo '3ec6e447498e8a5b0833068b7b31afd0b52a67a5eae6e1cd9605e5c28ba710b5  source-package/14-global-clinic-usp-and-conversion-sections-0.1.0.zip' | sha256sum --check -
