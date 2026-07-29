@@ -33,7 +33,9 @@ jobs:
         run: php tests/contract-tests.php
 
       - name: Verify current source checksums
-        run: sha256sum --check CHECKSUMS.sha256
+        run: |
+          find global-clinic-usp -type f -print0 | sort -z | xargs -0 sha256sum
+          sha256sum --check CHECKSUMS.sha256
 
       - name: Verify original source provenance
         run: |
