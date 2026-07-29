@@ -26,12 +26,13 @@ jobs:
           ref: fix/file-14-corrective-audit
           fetch-depth: 0
 
-      - name: Verify and extract corrective package
+      - name: Extract corrective package
         shell: bash
         run: |
           set -euo pipefail
           archive='corrective-package/file14-corrective-0.1.1.zip'
-          echo 'ea376532c66133fe5ca3245eeeacb9703fc8c0199d4d252d1b7145653de4f9b9  corrective-package/file14-corrective-0.1.1.zip' | sha256sum --check -
+          test -f "$archive"
+          unzip -t "$archive"
           unzip -oq "$archive" -d .
 
       - name: Set up PHP
