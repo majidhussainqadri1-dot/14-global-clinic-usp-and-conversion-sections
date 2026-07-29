@@ -20,11 +20,14 @@ jobs:
           ref: ${{ github.head_ref || github.ref_name }}
           fetch-depth: 0
 
-      - name: Extract original source package
+      - name: Reconstruct and extract original source package
         shell: bash
         run: |
           set -euo pipefail
           archive='source-package/14-global-clinic-usp-and-conversion-sections-0.1.0.zip'
+          if compgen -G 'source-package/chunks/part-*.b64' > /dev/null; then
+            cat source-package/chunks/part-*.b64 | base64 --decode > "$archive"
+          fi
           test -f "$archive"
           echo '3ec6e447498e8a5b0833068b7b31afd0b52a67a5eae6e1cd9605e5c28ba710b5  source-package/14-global-clinic-usp-and-conversion-sections-0.1.0.zip' | sha256sum --check -
           rm -rf global-clinic-usp
@@ -145,7 +148,8 @@ jobs:
           set -euo pipefail
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add global-clinic-usp CHECKSUMS.sha256 SOURCE-PROVENANCE.md STATUS.md MANIFEST.md .gitignore
+          rm -rf source-package/chunks
+          git add -A source-package global-clinic-usp CHECKSUMS.sha256 SOURCE-PROVENANCE.md STATUS.md MANIFEST.md .gitignore
           if git diff --cached --quiet; then
             echo 'Baseline source is already imported.'
             exit 0
@@ -174,6 +178,12 @@ jobs:
             find global-clinic-usp -type f -name '*.php' -print0 | sort -z | xargs -0 -n1 php -l
           else
             mkdir -p /tmp/file14
-            unzip -q source-package/14-global-clinic-usp-and-conversion-sections-0.1.0.zip -d /tmp/file14
-            find /tmp/file14/global-clinic-usp -type f -name '*.php' -print0 | sort -z | xargs -0 -n1 php -l
+            if test -f source-package/14-global-clinic-usp-and-conversion-sections-0.1.0.zip; then
+              cp source-package/14-global-clinic-usp-and-conversion-sections-0.1.0.zip /tmp/file14/source.zip
+            else
+              cat source-package/chunks/part-*.b64 | base64 --decode > /tmp/file14/source.zip
+            fi
+            echo '3ec6e447498e8a5b0833068b7b31afd0b52a67a5eae6e1cd9605e5c28ba710b5  /tmp/file14/source.zip' | sha256sum --check -
+            unzip -q /tmp/file14/source.zip -d /tmp/file14/extracted
+            find /tmp/file14/extracted/global-clinic-usp -type f -name '*.php' -print0 | sort -z | xargs -0 -n1 php -l
           fi
