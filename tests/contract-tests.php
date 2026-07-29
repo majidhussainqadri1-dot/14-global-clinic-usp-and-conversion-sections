@@ -43,7 +43,7 @@ sgc_assert( false !== strpos( $frontend, 'private static $rendered' ), 'Duplicat
 sgc_assert( false !== strpos( $helpers, 'validated_page_url' ), 'Strict destination validation must be present.' );
 sgc_assert( false !== strpos( $activator, 'capture_snapshot' ) && false !== strpos( $activator, 'rollback' ) && false !== strpos( $activator, 'repair' ), 'Snapshot, rollback, and repair contracts must be present.' );
 sgc_assert( false === strpos( $activator, 'wp_update_post' ), 'Activation and repair must not overwrite existing page content.' );
-sgc_assert( false !== strpos( $css, 'min-height: 44px' ), 'Main stylesheet must enforce a 44px minimum interactive target.' );
+sgc_assert( 1 === preg_match( '/min-height\s*:\s*44px/i', $css ), 'Main stylesheet must enforce a 44px minimum interactive target.' );
 sgc_assert( is_file( $plugin . '/assets/css/footer-mission.css' ), 'Scoped footer stylesheet must exist.' );
 
 if ( $failures ) {
