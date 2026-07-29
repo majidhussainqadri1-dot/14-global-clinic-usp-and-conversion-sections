@@ -11,12 +11,13 @@ permissions:
 
 jobs:
   import-source:
-    if: github.event_name == 'push' && github.actor != 'github-actions[bot]'
+    if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout baseline branch
         uses: actions/checkout@v4
         with:
+          ref: ${{ github.head_ref || github.ref_name }}
           fetch-depth: 0
 
       - name: Extract original source package
@@ -138,6 +139,8 @@ jobs:
 
       - name: Commit extracted baseline
         shell: bash
+        env:
+          TARGET_BRANCH: ${{ github.head_ref || github.ref_name }}
         run: |
           set -euo pipefail
           git config user.name 'github-actions[bot]'
@@ -148,7 +151,7 @@ jobs:
             exit 0
           fi
           git commit -m 'Import original File 14 plugin source'
-          git push origin HEAD:${GITHUB_REF_NAME}
+          git push origin HEAD:${TARGET_BRANCH}
 
   verify:
     runs-on: ubuntu-latest
