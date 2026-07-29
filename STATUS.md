@@ -2,23 +2,20 @@
 
 ## Current state
 
-**Corrective candidate v0.1.1 prepared; staging acceptance pending.**
+**Baseline import pending founder review.**
 
-The immutable original File 14 package remains preserved in `baseline/file-14-original-import` and in the original source ZIP. Corrective work is isolated in `fix/file-14-corrective-audit`.
+The original File 14 source package has been extracted into `global-clinic-usp/` and preserved with file-level SHA-256 checksums.
 
-## Corrective validation completed
+## Validation completed
 
-- Original archive SHA-256 provenance: **PASS**
-- Original archive unsafe paths: **NONE FOUND**
-- Corrected PHP syntax: **12/12 PASS on local PHP**
-- Corrective static contract tests: **PASS locally**
-- Nested `main` landmarks: **REMOVED**
-- Regex/closing-navigation HTML mutation: **REMOVED**
-- Public unresolved zero-commission promise: **REMOVED**
-- Existing page overwrite path: **REMOVED**
-- 44px interactive target rule: **ADDED**
-- Upgrade/repair/snapshot/rollback foundation: **ADDED**
+- ZIP archive integrity: **PASS**
+- Unsafe absolute or path-traversal entries: **NONE FOUND**
+- PHP syntax lint: **12/12 PASS**
+- Plugin version detected: **0.1.0**
+- WordPress requirement: **6.0+**
+- PHP requirement: **7.4+**
+- Source file count: **14**
 
 ## Not yet claimed
 
-WordPress staging activation, companion-plugin runtime compatibility, responsive and accessibility acceptance, upgrade and rollback on the Hostinger database, backup restoration, production readiness, and live deployment remain unproven until the approved staging checklist passes.
+This baseline import does **not** by itself prove WordPress staging activation, companion-plugin compatibility, responsive acceptance, cache behavior, production readiness, or live deployment. Those matters require a separate audit, correction cycle, staging installation, regression testing, and founder acceptance before release promotion.
