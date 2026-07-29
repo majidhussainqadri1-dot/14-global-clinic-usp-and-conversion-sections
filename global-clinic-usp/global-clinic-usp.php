@@ -2,18 +2,20 @@
 /**
  * Plugin Name: Global Clinic USP and Conversion Sections
  * Plugin URI: https://www.sabrihomeopathy.com/
- * Description: Places the Global Cloud Clinic Network proposition across the home page, Doctor Portal, doctor search, and mission areas.
- * Version: 0.1.0
+ * Description: Provides policy-safe Global Clinic conversion sections, a Doctor Portal, patient discovery guidance, and mission content for the Sabri Social Homeopathy Platform.
+ * Version: 0.1.1
  * Requires at least: 6.0
  * Requires PHP: 7.4
- * Author: Dr. Allama Majid Hussain Sabri
+ * Author: Dr. Allamah Majid Hussain Sabri Muhaddith Mursheed
  * License: GPL-2.0-or-later
  * Text Domain: global-clinic-usp
+ * Domain Path: /languages
  */
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'SGC_VERSION', '0.1.0' );
+define( 'SGC_VERSION', '0.1.1' );
+define( 'SGC_SCHEMA_VERSION', 2 );
 define( 'SGC_FILE', __FILE__ );
 define( 'SGC_DIR', plugin_dir_path( __FILE__ ) );
 define( 'SGC_URL', plugin_dir_url( __FILE__ ) );
