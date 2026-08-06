@@ -1,0 +1,340 @@
+:root {
+	--gcu-green-900: #123b2a;
+	--gcu-green-800: #18533a;
+	--gcu-green-700: #1f6b49;
+	--gcu-green-600: #27835a;
+	--gcu-green-100: #e8f5ee;
+	--gcu-green-050: #f4fbf7;
+	--gcu-gold-100: #fff6d9;
+	--gcu-blue-100: #eaf4ff;
+	--gcu-red-100: #fff0ed;
+	--gcu-ink: #17221d;
+	--gcu-muted: #52635a;
+	--gcu-border: #cbdad1;
+	--gcu-white: #fff;
+	--gcu-shadow: 0 12px 35px rgba(18, 59, 42, .10);
+	--gcu-radius: 18px;
+}
+
+.gcu-page,
+.gcu-page * {
+	box-sizing: border-box;
+}
+
+.gcu-page {
+	width: min(1180px, calc(100% - 24px));
+	margin-inline: auto;
+	padding-block: clamp(18px, 4vw, 52px);
+	color: var(--gcu-ink);
+	font-size: 1rem;
+	line-height: 1.7;
+}
+
+.gcu-page[dir="rtl"],
+html[dir="rtl"] .gcu-page {
+	direction: rtl;
+	text-align: start;
+}
+
+.gcu-context-nav {
+	display: flex;
+	justify-content: flex-start;
+	gap: 10px;
+	margin-block-end: 20px;
+}
+
+.gcu-context-nav a,
+.gcu-context-nav button {
+	min-width: 44px;
+	min-height: 44px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+	padding: 9px 14px;
+	border: 1px solid var(--gcu-border);
+	border-radius: 999px;
+	background: var(--gcu-white);
+	color: var(--gcu-green-800);
+	font: inherit;
+	font-weight: 700;
+	text-decoration: none;
+	cursor: pointer;
+}
+
+.gcu-context-nav a:hover,
+.gcu-context-nav button:hover {
+	background: var(--gcu-green-050);
+}
+
+.gcu-context-nav a:focus-visible,
+.gcu-context-nav button:focus-visible,
+.gcu-button:focus-visible,
+.gcu-faq summary:focus-visible,
+.gcu-claims summary:focus-visible {
+	outline: 3px solid #fdc84a;
+	outline-offset: 3px;
+}
+
+.gcu-page__header {
+	position: relative;
+	overflow: hidden;
+	padding: clamp(24px, 5vw, 56px);
+	border: 1px solid var(--gcu-border);
+	border-radius: calc(var(--gcu-radius) + 6px);
+	background: linear-gradient(135deg, var(--gcu-green-050), var(--gcu-blue-100));
+	box-shadow: var(--gcu-shadow);
+	margin-block-end: 24px;
+}
+
+.gcu-page__header::after {
+	content: "";
+	position: absolute;
+	inset-inline-end: -70px;
+	inset-block-start: -70px;
+	width: 220px;
+	height: 220px;
+	border-radius: 50%;
+	background: rgba(39, 131, 90, .10);
+	pointer-events: none;
+}
+
+.gcu-page__header h1 {
+	max-width: 860px;
+	margin: 10px 0 12px;
+	font-size: clamp(2rem, 5vw, 4rem);
+	line-height: 1.15;
+	letter-spacing: -.025em;
+	color: var(--gcu-green-900);
+}
+
+.gcu-page__header p {
+	max-width: 800px;
+	margin: 0;
+	font-size: clamp(1rem, 2vw, 1.25rem);
+	color: var(--gcu-muted);
+}
+
+.gcu-eyebrow {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	font-weight: 800;
+	color: var(--gcu-green-700);
+	letter-spacing: .02em;
+}
+
+.gcu-grid,
+.gcu-journeys {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 20px;
+	margin-block: 22px;
+}
+
+.gcu-grid--global_clinic_trust,
+.gcu-grid--global_clinic_steps {
+	grid-template-columns: 1fr;
+}
+
+.gcu-card {
+	min-width: 0;
+	padding: clamp(20px, 3vw, 32px);
+	border: 1px solid var(--gcu-border);
+	border-radius: var(--gcu-radius);
+	background: var(--gcu-white);
+	box-shadow: 0 8px 24px rgba(18, 59, 42, .07);
+}
+
+.gcu-card--hero:nth-child(1) {
+	background: linear-gradient(180deg, var(--gcu-white), var(--gcu-blue-100));
+}
+
+.gcu-card--hero:nth-child(2) {
+	background: linear-gradient(180deg, var(--gcu-white), var(--gcu-green-100));
+}
+
+.gcu-card--trust {
+	background: linear-gradient(180deg, var(--gcu-white), var(--gcu-gold-100));
+}
+
+.gcu-card h2,
+.gcu-faq h2,
+.gcu-state h1 {
+	margin-block: 10px 12px;
+	color: var(--gcu-green-900);
+	font-size: clamp(1.35rem, 2.5vw, 2rem);
+	line-height: 1.3;
+}
+
+.gcu-card__body,
+.gcu-card li,
+.gcu-faq p,
+.gcu-state p {
+	color: var(--gcu-muted);
+}
+
+.gcu-card__icon,
+.gcu-state__icon {
+	width: 52px;
+	height: 52px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 16px;
+	background: var(--gcu-green-100);
+	color: var(--gcu-green-700);
+}
+
+.gcu-icon {
+	width: 1.35em;
+	height: 1.35em;
+	flex: 0 0 auto;
+}
+
+.gcu-button {
+	min-height: 48px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 9px;
+	margin-block-start: 12px;
+	padding: 10px 18px;
+	border: 2px solid var(--gcu-green-700);
+	border-radius: 12px;
+	background: var(--gcu-green-700);
+	color: var(--gcu-white) !important;
+	font-weight: 800;
+	text-decoration: none !important;
+}
+
+.gcu-button:hover {
+	background: var(--gcu-green-900);
+	border-color: var(--gcu-green-900);
+}
+
+.gcu-destination-state {
+	display: flex;
+	align-items: flex-start;
+	gap: 8px;
+	padding: 12px 14px;
+	border-inline-start: 4px solid #d59b00;
+	background: var(--gcu-gold-100);
+	border-radius: 8px;
+}
+
+.gcu-claims,
+.gcu-faq details {
+	margin-block-start: 14px;
+	border-block-start: 1px solid var(--gcu-border);
+	padding-block-start: 12px;
+}
+
+.gcu-claims summary,
+.gcu-faq summary {
+	min-height: 44px;
+	display: flex;
+	align-items: center;
+	font-weight: 750;
+	cursor: pointer;
+	color: var(--gcu-green-800);
+}
+
+.gcu-claims ul,
+.gcu-card ol {
+	padding-inline-start: 1.35rem;
+}
+
+.gcu-faq {
+	padding: clamp(20px, 3vw, 32px);
+	border: 1px solid var(--gcu-border);
+	border-radius: var(--gcu-radius);
+	background: var(--gcu-green-050);
+	margin-block: 24px;
+}
+
+.gcu-faq h2 {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
+
+.gcu-emergency {
+	display: flex;
+	align-items: flex-start;
+	gap: 14px;
+	padding: 18px;
+	border: 1px solid #efb4a9;
+	border-inline-start: 5px solid #ad301d;
+	border-radius: 12px;
+	background: var(--gcu-red-100);
+	color: #6a2116;
+}
+
+.gcu-emergency p {
+	margin: 4px 0 0;
+}
+
+.gcu-state {
+	max-width: 760px;
+	margin: 40px auto;
+	padding: clamp(24px, 5vw, 48px);
+	border: 1px solid var(--gcu-border);
+	border-radius: var(--gcu-radius);
+	background: var(--gcu-white);
+	box-shadow: var(--gcu-shadow);
+	text-align: center;
+}
+
+.gcu-state__icon {
+	margin-inline: auto;
+}
+
+.gcu-state--error {
+	background: var(--gcu-red-100);
+}
+
+@media (max-width: 760px) {
+	.gcu-page {
+		width: min(100% - 16px, 1180px);
+		padding-block: 12px 28px;
+	}
+
+	.gcu-grid,
+	.gcu-journeys {
+		grid-template-columns: 1fr;
+		gap: 14px;
+	}
+
+	.gcu-page__header,
+	.gcu-card,
+	.gcu-faq {
+		border-radius: 14px;
+	}
+
+	.gcu-context-nav {
+		justify-content: space-between;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.gcu-page *,
+	.gcu-page *::before,
+	.gcu-page *::after {
+		scroll-behavior: auto !important;
+		transition-duration: .001ms !important;
+		animation-duration: .001ms !important;
+		animation-iteration-count: 1 !important;
+	}
+}
+
+@media (forced-colors: active) {
+	.gcu-card,
+	.gcu-page__header,
+	.gcu-faq,
+	.gcu-emergency,
+	.gcu-context-nav a,
+	.gcu-context-nav button {
+		border: 1px solid CanvasText;
+	}
+}

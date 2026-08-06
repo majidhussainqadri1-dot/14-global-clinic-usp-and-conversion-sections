@@ -1,29 +1,18 @@
-# Repository Status
+# File 14 Status
 
-## Current state
+## Before this completion branch
 
-**Corrective candidate v0.1.1 is code-complete and CI-green; Hostinger staging acceptance remains pending.**
+- Plan specification: 100%.
+- Legacy/corrective v0.1.1 coding against the final plan: approximately 28%.
+- Major missing scope: canonical routes/entities/workflows, governed copy/claims, localization, consented funnel, experiment governance, destination contracts, event reliability, full traceability and final package.
+- Staging/live/operational evidence: not established.
 
-The immutable original File 14 package remains preserved in `baseline/file-14-original-import` and in the original source ZIP. Corrective work is isolated in `fix/file-14-corrective-audit` and reviewed through draft PR #2.
+## Current v1.0.0 candidate
 
-## Corrective validation completed
-
-- Original archive SHA-256 provenance: **PASS**
-- Original extracted-source checksums: **PASS**
-- Original archive unsafe paths: **NONE FOUND**
-- PHP 7.4 syntax lint: **12/12 PASS**
-- PHP 8.3 syntax lint: **12/12 PASS**
-- Corrective static contract tests: **PASS**
-- Corrected source checksum verification: **PASS**
-- Baseline Import and Integrity workflow: **PASS**
-- Corrective Quality workflow: **PASS**
-- Nested `main` landmarks: **REMOVED**
-- Regex/closing-navigation HTML mutation: **REMOVED**
-- Public unresolved zero-commission promise: **REMOVED**
-- Existing page overwrite path: **REMOVED**
-- 44px interactive target rule: **ADDED**
-- Upgrade/repair/snapshot/rollback foundation: **ADDED**
-
-## Not yet claimed
-
-WordPress staging activation, companion-plugin runtime compatibility, responsive and accessibility acceptance, upgrade and rollback on the Hostinger database, backup restoration, production readiness, and live deployment remain unproven until the approved staging checklist passes.
+- Final-plan repository coding: 100% of File 14-owned FR/NFR implementation scope.
+- Local static/unit/contract quality suite: PASS.
+- Reproducible package/checksum/manifest: present.
+- Two fresh review/fix rounds: complete with zero known repository-code blockers.
+- GitHub CI: must be read from the exact pushed commit.
+- Staging acceptance: pending actual WordPress/Hostinger-equivalent environment.
+- Live deployment/operational status: not claimed.
