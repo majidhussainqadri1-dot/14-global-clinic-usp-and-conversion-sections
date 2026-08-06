@@ -1,0 +1,41 @@
+name: File 14 Quality and Package
+
+on:
+  push:
+    branches: [main, 'complete/**']
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  php-quality:
+    name: PHP ${{ matrix.php }} quality
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        php: ['7.4', '8.3']
+    steps:
+      - uses: actions/checkout@v5
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          coverage: none
+      - run: bash scripts/quality.sh
+
+  package:
+    name: Reproducible package
+    runs-on: ubuntu-latest
+    needs: php-quality
+    steps:
+      - uses: actions/checkout@v5
+      - run: bash scripts/build.sh
+      - run: sha256sum -c dist/14-global-clinic-usp-integration-1.0.0.zip.sha256
+      - uses: actions/upload-artifact@v4
+        with:
+          name: file-14-v1.0.0
+          path: |
+            dist/14-global-clinic-usp-integration-1.0.0.zip
+            dist/14-global-clinic-usp-integration-1.0.0.zip.sha256
+          if-no-files-found: error
