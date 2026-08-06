@@ -1,0 +1,63 @@
+name: Expand File 14 completion bundle
+
+on:
+  push:
+    branches:
+      - complete/file-14-plan-v1.0.0
+
+permissions:
+  contents: write
+
+jobs:
+  expand-and-verify:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout completion branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Reconstruct and extract reviewed source
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -d .file14-bootstrap
+          cat .file14-bootstrap/bundle.part-* | tr -d '\r\n' | base64 --decode > /tmp/file14-completion.tar.gz
+          tar -tzf /tmp/file14-completion.tar.gz >/dev/null
+          tar -xzf /tmp/file14-completion.tar.gz -C .
+          test -f 14-global-clinic-usp-integration/global-clinic-usp-integration.php
+          rm -f CHECKSUMS.sha256
+          find . -type f \
+            -not -path './.git/*' \
+            -not -path './.file14-bootstrap/*' \
+            -not -path './.github/workflows/file14-bootstrap-expand.yml' \
+            -not -path './dist/*' \
+            -not -path './CHECKSUMS.sha256' \
+            -print0 | sort -z | xargs -0 sha256sum | sed 's#  \./#  #' > CHECKSUMS.sha256
+          chmod +x scripts/quality.sh scripts/build.sh
+
+      - name: Run complete repository quality gates
+        shell: bash
+        run: |
+          set -euo pipefail
+          bash scripts/quality.sh
+          bash scripts/build.sh
+          sha256sum -c dist/14-global-clinic-usp-integration-1.0.0.zip.sha256
+
+      - name: Replace legacy source and publish completion commit
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf global-clinic-usp .file14-bootstrap
+          rm -f .github/workflows/file14-bootstrap-expand.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          if git diff --cached --quiet; then
+            echo 'No source changes were produced.'
+            exit 1
+          fi
+          git commit -m 'Complete File 14 plan implementation v1.0.0'
+          git push origin HEAD:complete/file-14-plan-v1.0.0
