@@ -2,8 +2,8 @@
 /**
  * Plugin Name: Global Clinic USP and Conversion Integration
  * Plugin URI: https://sabrihomeopathy.com/
- * Description: Canonical, policy-governed Worldwide Clinic value proposition, ethical conversion journeys, destination contracts and privacy-minimized measurement for the Sabri Social Homeopathy Platform.
- * Version: 1.3.1
+ * Description: Canonical, policy-governed Worldwide Clinic value proposition, ethical conversion journeys, destination contracts, trust intelligence and privacy-minimized measurement for the Sabri Social Homeopathy Platform.
+ * Version: 1.4.0
  * Requires at least: 6.6
  * Requires PHP: 7.4
  * Author: Dr. Allamah Majid Hussain Sabri Muhaddith Mursheed
@@ -14,9 +14,11 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'GCU_VERSION', '1.3.1' );
+define( 'GCU_VERSION', '1.4.0' );
 define( 'GCU_SCHEMA_VERSION', 10004 );
 define( 'GCU_PLAN_VERSION', 'SSH-F14-PLAN-2026-v1.0' );
+define( 'GCU_FUTURE_PLAN_VERSION', 'SSH-F14-FUTURE-CTI-2026-v2.0' );
+define( 'GCU_FUTURE_SCHEMA_VERSION', 1 );
 define( 'GCU_CENTRAL_PLAN_BASELINE', '2026-08-10' );
 define( 'GCU_CANONICAL_REPOSITORY', '14-global-clinic-usp-and-conversion-integration' );
 define( 'GCU_BRAND_PRIMARY', '#087A4E' );
@@ -29,6 +31,7 @@ $gcu_files = array(
 	'includes/class-gcu-i18n.php',
 	'includes/class-gcu-policy.php',
 	'includes/class-gcu-hardening.php',
+	'includes/class-gcu-future-policy.php',
 	'includes/class-gcu-capabilities.php',
 	'includes/class-gcu-install.php',
 	'includes/class-gcu-repository.php',
@@ -39,12 +42,16 @@ $gcu_files = array(
 	'includes/class-gcu-frontend.php',
 	'includes/class-gcu-admin.php',
 	'includes/class-gcu-plugin.php',
+	'includes/class-gcu-future-intelligence.php',
 );
 
-foreach ( $gcu_files as $gcu_file ) { require_once GCU_DIR . $gcu_file; }
+foreach ( $gcu_files as $gcu_file ) {
+	require_once GCU_DIR . $gcu_file;
+}
 unset( $gcu_files, $gcu_file );
 
 add_filter( 'cron_schedules', array( 'GCU_Install', 'cron_schedules' ) );
 register_activation_hook( GCU_FILE, array( 'GCU_Install', 'activate' ) );
 register_deactivation_hook( GCU_FILE, array( 'GCU_Install', 'deactivate' ) );
 add_action( 'plugins_loaded', static function () { GCU_Plugin::instance()->run(); }, 90 );
+add_action( 'plugins_loaded', array( 'GCU_Future_Intelligence', 'bootstrap' ), 95 );
