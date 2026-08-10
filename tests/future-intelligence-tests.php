@@ -10,6 +10,7 @@ function wp_strip_all_tags( $value ) { return strip_tags( (string) $value ); }
 function wp_json_encode( $value ) { return json_encode( $value, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES ); }
 function absint( $value ) { return abs( (int) $value ); }
 
+require __DIR__ . '/../14-global-clinic-usp-integration/includes/class-gcu-policy.php';
 require __DIR__ . '/../14-global-clinic-usp-integration/includes/class-gcu-future-policy.php';
 require __DIR__ . '/../14-global-clinic-usp-integration/includes/class-gcu-future-i18n.php';
 
