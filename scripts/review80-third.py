@@ -37,6 +37,9 @@ workflow=read('.github/workflows/file14-quality.yml')
 build=read('scripts/build.py')
 all_php='\n'.join(p.read_text(encoding='utf-8') for p in P.rglob('*.php'))
 exp_priv=privacy[privacy.find('public function export_data('):privacy.find('public function capture_attribution(')]
+pub_start=contracts.find('public function public_destination($key)')
+pub_end=contracts.find('public function public_destination_health()',pub_start)
+pub_dto=contracts[pub_start:pub_end]
 checks=[
 ('01 exact software and governing-plan identity','Version: 1.4.1' in loader and 'SSH-F14-FUTURE-CTI-2026-v2.0' in loader),
 ('02 base/Future schema identities remain separated',"GCU_SCHEMA_VERSION', 10004" in loader and "GCU_FUTURE_SCHEMA_VERSION', 1" in loader),
@@ -89,7 +92,7 @@ checks=[
 ('49 public readiness endpoint has anti-abuse bound',"consume_rate_limit( 'future-readiness', 60 )" in future),
 ('50 audit persistence failure enters containment','audit_lock_failed' in repo and 'audit_write_failed' in repo and "update_option('gcu_enabled',0,false)" in repo),
 ('51 outbox encoding/write failure enters containment','outbox_payload_invalid' in repo and 'outbox_write_failed' in repo and repo.count("update_option('gcu_enabled',0,false)")>=4),
-('52 public destination DTO remains allowlisted/minimized','public_destination_health' in contracts and "'available'" in contracts and "'safe_url'" in contracts),
+('52 public destination DTO remains allowlisted/minimized',all(x in pub_dto for x in ("'key'=>","'available'=>","'url'=>","'reason'=>")) and all(x not in pub_dto for x in ("'owner'=>","'contract'=>","'verified_at'=>"))),
 ('53 strict same-origin includes scheme host effective port',all(x in hard for x in ('home_scheme','target_scheme','effective_port','strict_same_origin_url'))),
 ('54 consumer cannot elevate canonical destination-owner readiness','may never elevate owner readiness' in contracts),
 ('55 measurement remains explicit-consent bound','analytics_consent' in privacy and 'measurement_allowed' in privacy),
