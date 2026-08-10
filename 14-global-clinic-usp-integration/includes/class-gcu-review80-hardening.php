@@ -198,6 +198,12 @@ final class GCU_Review80_Hardening {
 			return $response;
 		}
 		$route = $request->get_route();
+		if ( 0 === strpos( $route, '/gcu/v1/future/' ) ) {
+			$future_ready = GCU_Future_Intelligence::runtime_ready();
+			if ( is_wp_error( $future_ready ) ) {
+				return $future_ready;
+			}
+		}
 		if ( '/gcu/v1/blocks' === $route || 0 === strpos( $route, '/gcu/v1/future/trust/' ) ) {
 			GCU_Future_Intelligence::claim_freshness_sentinel();
 		}
@@ -255,6 +261,9 @@ final class GCU_Review80_Hardening {
 			$response->set_data( self::normalize_scenario_payload( $data, (bool) get_option( GCU_Future_Intelligence::SAFE_MODE_OPTION, 0 ), (bool) get_option( 'gcu_enabled', 1 ) ) );
 		}
 		if ( '/gcu/v1/future/quality' === $route ) {
+			if ( ! empty( $data['small_cohort_suppressed'] ) ) {
+				$data['sample_count'] = null;
+			}
 			$unverified = array();
 			if ( ! has_filter( 'gcu_future_accessibility_score' ) ) {
 				$unverified[] = 'accessibility';
@@ -267,7 +276,10 @@ final class GCU_Review80_Hardening {
 			$data['provisional'] = ! empty( $data['provisional'] ) || ! empty( $unverified );
 			$response->set_data( $data );
 		}
-		$response->header( 'Cache-Control', 'no-store, private' );
+		$headers = $response->get_headers();
+		if ( empty( $headers['Cache-Control'] ) ) {
+			$response->header( 'Cache-Control', 'no-store, private' );
+		}
 		return $response;
 	}
 

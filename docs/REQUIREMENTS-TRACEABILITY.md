@@ -1,4 +1,4 @@
-# File 14 — Fresh Central + File Plan + Future CTI Requirements Traceability — v1.4.0
+# File 14 — Fresh Central + File Plan + Future CTI Requirements Traceability — v1.4.1
 
 ## Governing freeze
 
@@ -101,4 +101,4 @@ File 14 owns approved Worldwide Clinic value-proposition copy, reusable semantic
 
 ## Truth-status rule
 
-`Specified`, `Coded`, `Packaged`, `Automated-QA Green`, `Staging-Accepted`, `Live-Deployed`, and `Operational` are separate statuses. File 14 v1.4.0 may only claim a status for which current exact-head evidence exists. The Future CTI implementation does not alter that rule.
+`Specified`, `Coded`, `Packaged`, `Automated-QA Green`, `Staging-Accepted`, `Live-Deployed`, and `Operational` are separate statuses. File 14 v1.4.1 may only claim a status for which current exact-head evidence exists. The Future CTI implementation does not alter that rule.
