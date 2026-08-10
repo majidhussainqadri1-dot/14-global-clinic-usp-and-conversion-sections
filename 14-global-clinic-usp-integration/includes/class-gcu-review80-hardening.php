@@ -67,7 +67,7 @@ final class GCU_Review80_Hardening {
 	/** Reject aggregates containing direct personal/contact/identity or explicit patient-record markers. */
 	public static function question_contains_sensitive_data( $question ) {
 		$question = (string) $question;
-		return (bool) preg_match( '/[A-Z0-9._%+\-]+@[A-Z0-9.\-]+\.[A-Z]{2,}|\+?\d[\d\s\-]{6,}\d|\b(?:CNIC|NICOP|passport|patient\s*id|medical\s*record|prescription\s*(?:no|number)|case\s*(?:no|number))\b/i', $question );
+		return (bool) preg_match( '/[A-Z0-9._%+\-]+@[A-Z0-9.\-]+\.[A-Z]{2,}|\+?\d[\d\s\-]{6,}\d|\b(?:CNIC|NICOP|passport|patient\s*id|medical\s*record|prescription\s*(?:no|number)|case\s*(?:no|number))\b|(?:شناختی\s*کارڈ|پاسپورٹ|مریض|تشخیص|نسخہ|میڈیکل\s*ریکارڈ|فون|موبائل|ای\s*میل)|(?:هوية|جواز\s*السفر|مريض|تشخيص|وصفة|سجل\s*طبي|هاتف|جوال|بريد\s*إلكتروني)/iu', $question );
 	}
 
 	public static function filter_question_aggregates( $signals ) {
@@ -198,6 +198,10 @@ final class GCU_Review80_Hardening {
 			return $response;
 		}
 		$route = $request->get_route();
+		if ( 0 === strpos( $route, '/gcu/v1/' ) && '/gcu/v1/health' !== $route ) {
+			$base_ready = GCU_Install::ready_for_runtime();
+			if ( is_wp_error( $base_ready ) ) { return $base_ready; }
+		}
 		if ( 0 === strpos( $route, '/gcu/v1/future/' ) ) {
 			$future_ready = GCU_Future_Intelligence::runtime_ready();
 			if ( is_wp_error( $future_ready ) ) {
@@ -250,6 +254,7 @@ final class GCU_Review80_Hardening {
 		if ( 0 !== strpos( $route, '/gcu/v1/' ) ) {
 			return $response;
 		}
+		$response->header( 'X-GCU-Trace-ID', GCU_Policy::trace_id() );
 		$data = $response->get_data();
 		if ( ! is_array( $data ) ) {
 			return $response;

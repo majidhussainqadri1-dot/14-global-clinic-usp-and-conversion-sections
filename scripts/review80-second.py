@@ -56,7 +56,7 @@ fresh1 = read("scripts/fresh-review-round-1.sh")
 fresh2 = read("scripts/fresh-review-round-2.sh")
 public_dto = section(contracts, "public function public_destination($key)", "public function public_destination_health()")
 bootstrap = section(future, "public static function bootstrap()", "public static function tables()")
-ensure = section(future, "public static function ensure_schema()", "public static function runtime_ready()")
+ensure = section(future, "public static function ensure_schema( $force_verify = false )", "public static function runtime_ready()")
 quality_fn = section(future, "public static function quality_score()", "public static function friction_summary(")
 anomaly_fn = section(future, "public static function anomaly_detector()", "public static function early_stop_guard()")
 harden_response = section(review, "public static function harden_rest_response", "private static function json_array")
@@ -66,7 +66,7 @@ checks: list[tuple[str, bool]] = [
     ("02 traceability current-version truth", "Requirements Traceability — v1.4.1" in trace and "File 14 v1.4.1 may only claim a status" in trace),
     ("03 current schema identities remain separated", "GCU_SCHEMA_VERSION', 10004" in loader and "GCU_FUTURE_SCHEMA_VERSION', 1" in loader),
     ("04 status prose is not contradictory candidate-plus-merged state", "Repository Release State" in status and "Corrective Candidate — Merged" not in status),
-    ("05 release evidence uses current repository-release framing", "Repository Release Evidence" in release and "exact current review/main SHA" in release),
+    ("05 release evidence uses current repository-release framing", "Repository Release Evidence" in release and "exact review/main SHA being accepted" in release and "fresh post-merge" in release),
     ("06 obsolete v1.4.0 PR-3 one-shot release automation removed", not exists(".github/workflows/file14-one-shot-release-gate.yml")),
     ("07 temporary corrective patch machinery removed", not exists(".github/workflows/file14-second-review-corrective-patch.yml") and not exists("scripts/apply-file14-second-review-corrections.py")),
     ("08 canonical package folder and text domain retained", "global-clinic-usp-integration" in loader and "Text Domain: global-clinic-usp-integration" in loader),
@@ -74,15 +74,15 @@ checks: list[tuple[str, bool]] = [
     ("10 public destination internal health remains available only for trusted internal consumers", "all_destination_health" in contracts),
     ("11 dedicated public destination DTO exists", "public function public_destination($key)" in contracts and "public function public_destination_health()" in contracts),
     ("12 public destination DTO strips internal owner/contract/freshness fields", all(x not in public_dto for x in ("'owner'=>", "'contract'=>", "'verified_at'=>"))),
-    ("13 public destinations endpoint uses safe DTO and obeys module safe mode", "public_destination_health()" in rest and "public function destinations(){if(!get_option('gcu_enabled',1))" in rest),
+    ("13 public destinations endpoint uses safe DTO and obeys runtime fail-close", "public_destination_health()" in rest and "public function destinations(){$ready=GCU_Install::ready_for_runtime();" in rest),
     ("14 destination availability cannot be elevated by consumer filter", "false===(bool)$filtered['available']" in contracts and "available=true" not in section(contracts, "apply_filters('gcu_destination_contract_v1'", "return array('key'=>$key")),
     ("15 strict same-origin scheme host and effective port retained", all(x in hard for x in ("strict_same_origin_url", "home_scheme", "target_scheme", "effective_port"))),
     ("16 File 07/08/09 remain destination owners", all(x in contracts for x in ("'File 07'", "'File 08'", "'File 09'"))),
     ("17 File 20 placement readiness contract retained", "sabri_shell_slot_ready_v1" in contracts),
     ("18 Future bootstrap performs no schema migration on every request", "ensure_schema" not in bootstrap),
     ("19 Future schema migration is serialized by named advisory lock", "acquire_db_lock( 'future-schema', 5 )" in ensure and "release_db_lock( $lock )" in ensure),
-    ("20 activation and routine upgrade explicitly ensure Future schema", "activate(){$r=self::install_or_upgrade(true)" in install and "self::ensure_future_schema();" in install and "private static function ensure_future_schema()" in install),
-    ("21 Future schema fast path avoids SHOW TABLE queries when current and healthy", "&& ! get_option( self::SAFE_MODE_OPTION, 0 )" in ensure and re.search(r"if \( self::SCHEMA_VERSION === .*?\) \{\s*return true;", ensure, re.S) is not None),
+    ("20 activation and controlled repair explicitly ensure Future schema", "activate(){$r=self::install_or_upgrade(true)" in install and "self::ensure_future_schema(true);" in install and "private static function ensure_future_schema($force_verify=false)" in install),
+    ("21 Future schema fast path avoids SHOW TABLE queries when current and healthy", "if ( ! $force_verify && self::SCHEMA_VERSION ===" in ensure and "&& ! get_option( self::SAFE_MODE_OPTION, 0 ) ) {\n\t\t\treturn true;" in ensure),
     ("22 Future schema verification remains explicit after actual migration", "self::verify_schema()" in ensure and "future_schema_verification_failed" in ensure),
     ("23 Future safe mode is independently recorded on schema failure", "SAFE_MODE_OPTION" in ensure and "gcu_future_schema_lock_busy" in ensure),
     ("24 all Future REST routes fail closed when base/Future runtime is not ready", "'/gcu/v1/future/'" in review and "GCU_Future_Intelligence::runtime_ready()" in review and "gcu_future_schema_pending" in future),
@@ -116,7 +116,7 @@ checks: list[tuple[str, bool]] = [
     ("52 one approved free tier retained", "approved_core_tier" in policy and "free_approved_core" in policy),
     ("53 optional support cannot purchase advantage", "support_affects_visibility" in policy and "optional_support_no_ranking" in policy),
     ("54 response hardening preserves an endpoint's explicit cache policy", "get_headers()" in harden_response and "empty( $headers['Cache-Control'] )" in harden_response),
-    ("55 public Future response may retain explicit public cache policy", "public, max-age=60" in future and "public_response" in future),
+    ("55 public Future response retains explicit public revalidation policy", "public, no-cache, max-age=0, must-revalidate" in future and "public_response" in future),
     ("56 private Future responses remain no-store", "no-store, private" in future and "no_store_response" in future),
     ("57 F14-FR-001 patient value proposition remains traceable", "F14-FR-001" in trace and "patient_hero" in policy),
     ("58 F14-FR-002 doctor value proposition remains traceable", "F14-FR-002" in trace and "doctor_hero" in policy),

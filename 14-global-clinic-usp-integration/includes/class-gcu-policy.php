@@ -31,7 +31,7 @@ final class GCU_Policy {
 		$now = time();
 		return array(
 			'zero_platform_commission' => array(
-				'text'       => __( 'The platform charges 0% commission on approved clinic transactions.', 'global-clinic-usp-integration' ),
+				'text'       => 'The platform charges 0% commission on approved clinic transactions.',
 				'basis'      => 'Founder-approved platform financial policy, 2026-08-04',
 				'owner'      => 'Founder / business policy owner',
 				'effective'  => $now,
@@ -39,7 +39,7 @@ final class GCU_Policy {
 				'public'     => true,
 			),
 			'free_approved_core' => array(
-				'text'       => __( 'All currently approved core platform features are available in one free tier.', 'global-clinic-usp-integration' ),
+				'text'       => 'All currently approved core platform features are available in one free tier.',
 				'basis'      => 'Founder-approved Single Free Tier — Beyond-Pro policy, 2026-08-04',
 				'owner'      => 'Founder / entitlement owner',
 				'effective'  => $now,
@@ -47,7 +47,7 @@ final class GCU_Policy {
 				'public'     => true,
 			),
 			'optional_support_no_ranking' => array(
-				'text'       => __( 'Voluntary support is optional and does not purchase ranking, visibility, verification or basic service.', 'global-clinic-usp-integration' ),
+				'text'       => 'Voluntary support is optional and does not purchase ranking, visibility, verification or basic service.',
 				'basis'      => 'Founder-approved donation and fairness policy, 2026-08-04',
 				'owner'      => 'Founder / transparency owner',
 				'effective'  => $now,
@@ -55,7 +55,7 @@ final class GCU_Policy {
 				'public'     => true,
 			),
 			'verification_required' => array(
-				'text'       => __( 'Doctor access is activated only after identity, professional evidence, duplicate and risk checks, and the required review are completed.', 'global-clinic-usp-integration' ),
+				'text'       => 'Doctor access is activated only after identity, professional evidence, duplicate and risk checks, and the required review are completed.',
 				'basis'      => 'High-Trust Verified-Entry Membership Principle, 2026-08-05',
 				'owner'      => 'File 09 / File 00',
 				'effective'  => $now,
@@ -63,7 +63,7 @@ final class GCU_Policy {
 				'public'     => true,
 			),
 			'no_verification_guarantee' => array(
-				'text'       => __( 'Starting an application does not guarantee verification or activation.', 'global-clinic-usp-integration' ),
+				'text'       => 'Starting an application does not guarantee verification or activation.',
 				'basis'      => 'File 09 verification boundary',
 				'owner'      => 'File 09',
 				'effective'  => $now,
@@ -71,7 +71,7 @@ final class GCU_Policy {
 				'public'     => true,
 			),
 			'no_emergency_service' => array(
-				'text'       => __( 'This platform is not an emergency service. Seek immediate local emergency care for urgent or life-threatening symptoms.', 'global-clinic-usp-integration' ),
+				'text'       => 'This platform is not an emergency service. Seek immediate local emergency care for urgent or life-threatening symptoms.',
 				'basis'      => 'Clinical safety boundary',
 				'owner'      => 'File 08 / clinical governance',
 				'effective'  => $now,
@@ -79,7 +79,7 @@ final class GCU_Policy {
 				'public'     => true,
 			),
 			'no_cure_guarantee' => array(
-				'text'       => __( 'Verification is not an endorsement or guarantee of a cure, income or outcome.', 'global-clinic-usp-integration' ),
+				'text'       => 'Verification is not an endorsement or guarantee of a cure, income or outcome.',
 				'basis'      => 'Ethical and medical claim boundary',
 				'owner'      => 'Founder / File 24 assurance',
 				'effective'  => $now,
@@ -87,7 +87,7 @@ final class GCU_Policy {
 				'public'     => true,
 			),
 			'direct_fee_flow' => array(
-				'text'       => __( 'Any doctor fee is shown and handled by the canonical clinic or approved provider flow; File 14 does not collect, alter or guarantee payment.', 'global-clinic-usp-integration' ),
+				'text'       => 'Any doctor fee is shown and handled by the canonical clinic or approved provider flow; File 14 does not collect, alter or guarantee payment.',
 				'basis'      => 'File 08 / financial-owner boundary',
 				'owner'      => 'File 08 / approved payment owner',
 				'effective'  => $now,
