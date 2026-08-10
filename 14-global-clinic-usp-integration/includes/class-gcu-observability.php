@@ -1,94 +1,11 @@
 <?php
 
-defined( 'ABSPATH' ) || exit;
-
-final class GCU_Observability {
-	public function hooks() {
-		add_action( 'gcu_daily_governance_check', array( $this, 'daily_governance_check' ) );
-		add_action( 'gcu_process_outbox', array( $this, 'process_outbox' ) );
-	}
-
-	public function health_report() {
-		global $wpdb;
-		$tables = GCU_Install::tables();
-		$missing = array();
-		foreach ( $tables as $name => $table ) {
-			$found = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $wpdb->esc_like( $table ) ) );
-			if ( $table !== $found ) {
-				$missing[] = $name;
-			}
-		}
-		$stale_claims = 0;
-		if ( empty( $missing ) ) {
-			$stale_claims = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$tables['claims']} WHERE status = 'active' AND review_due_at IS NOT NULL AND review_due_at <= UTC_TIMESTAMP()" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-		}
-		$destinations = GCU_Plugin::instance()->contracts()->all_destination_health();
-		$queue = array( 'pending' => 0, 'retry' => 0, 'dead' => 0 );
-		if ( empty( $missing ) ) {
-			$rows = $wpdb->get_results( "SELECT status, COUNT(*) AS total FROM {$tables['outbox']} WHERE status IN ('pending','retry','dead') GROUP BY status", ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-			foreach ( $rows as $row ) {
-				if ( isset( $queue[ $row['status'] ] ) ) {
-					$queue[ $row['status'] ] = (int) $row['total'];
-				}
-			}
-		}
-		$localization_missing = GCU_I18n::missing_keys();
-		return array(
-			'version'               => GCU_VERSION,
-			'plan_version'          => GCU_PLAN_VERSION,
-			'central_plan_baseline' => GCU_CENTRAL_PLAN_BASELINE,
-			'brand_primary'         => GCU_BRAND_PRIMARY,
-			'schema_version'        => (int) get_option( GCU_Install::SCHEMA_OPTION, 0 ),
-			'enabled'               => (bool) get_option( 'gcu_enabled', 1 ),
-			'missing_tables'        => $missing,
-			'stale_claims'          => $stale_claims,
-			'destinations'          => $destinations,
-			'event_queue'           => $queue,
-			'localization_complete' => empty( $localization_missing ),
-			'localization_missing'  => $localization_missing,
-			'legacy_migration'      => get_option( GCU_Install::MIGRATION_LOG, array() ),
-			'policy_revalidation'   => get_option( 'gcu_policy_revalidation_required', array() ),
-			'generated_at'          => gmdate( 'c' ),
-		);
-	}
-
-	public function process_outbox() {
-		return GCU_Plugin::instance()->repository()->dispatch_outbox( '', 50 );
-	}
-
-	public function daily_governance_check() {
-		$report = $this->health_report();
-		update_option( 'gcu_last_health_report', $report, false );
-		if ( ! empty( $report['missing_tables'] ) || $report['stale_claims'] > 0 || $report['event_queue']['dead'] > 0 || ! $report['localization_complete'] ) {
-			do_action( 'gcu_operational_alert_v1', array( 'severity' => 'warning', 'report' => $report, 'owner' => 'File 14 release operator' ) );
-		}
-	}
-
-	public static function log( $level, $code, array $context = array() ) {
-		$record = array(
-			'level'       => sanitize_key( $level ),
-			'code'        => sanitize_key( $code ),
-			'trace_id'    => isset( $context['trace_id'] ) ? sanitize_text_field( $context['trace_id'] ) : GCU_Policy::trace_id(),
-			'context'     => self::redact( $context ),
-			'occurred_at' => gmdate( 'c' ),
-		);
-		do_action( 'gcu_structured_log_v1', $record );
-		if ( defined( 'WP_DEBUG_LOG' ) && WP_DEBUG_LOG ) {
-			error_log( wp_json_encode( array( 'gcu' => $record ) ) ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
-		}
-		return $record['trace_id'];
-	}
-
-	private static function redact( array $context ) {
-		$forbidden = array( 'email', 'phone', 'health', 'identity', 'evidence', 'message', 'token', 'nonce', 'secret', 'cookie', 'ip' );
-		foreach ( $context as $key => $value ) {
-			foreach ( $forbidden as $needle ) {
-				if ( false !== strpos( strtolower( (string) $key ), $needle ) ) {
-					$context[ $key ] = '[redacted]';
-					continue 2;
-				}
-			}
-		}
-		return $context;
-	}
+defined('ABSPATH')||exit;
+final class GCU_Observability{
+public function hooks(){add_action('gcu_daily_governance_check',array($this,'daily_governance_check'));add_action('gcu_process_outbox',array($this,'process_outbox'));add_action('gcu_process_inbox',array($this,'process_inbox'));add_action('gcu_lifecycle_cleanup',array($this,'lifecycle_cleanup'));}
+public function health_report(){global$wpdb;$t=GCU_Install::tables();$missing=array();$engines=array();foreach($t as$n=>$table){$found=$wpdb->get_var($wpdb->prepare('SHOW TABLES LIKE %s',$wpdb->esc_like($table)));if($table!==$found){$missing[]=$n;continue;}$s=$wpdb->get_row($wpdb->prepare('SHOW TABLE STATUS LIKE %s',$wpdb->esc_like($table)),ARRAY_A);$engines[$n]=is_array($s)&&isset($s['Engine'])?strtolower((string)$s['Engine']):'unknown';}$non=array();foreach($engines as$n=>$e){if('innodb'!==$e){$non[$n]=$e;}}$stale=0;if(!$missing){$stale=(int)$wpdb->get_var("SELECT COUNT(*) FROM {$t['claims']} WHERE status='active' AND review_due_at IS NOT NULL AND review_due_at<=UTC_TIMESTAMP()");}$q=array('outbox'=>array('pending'=>0,'retry'=>0,'processing'=>0,'dead'=>0),'inbox'=>array('pending'=>0,'retry'=>0,'processing'=>0,'dead'=>0));if(!$missing){foreach(array('outbox','inbox')as$k){$rows=$wpdb->get_results("SELECT status,COUNT(*) AS total FROM {$t[$k]} WHERE status IN ('pending','retry','processing','dead') GROUP BY status",ARRAY_A);foreach(is_array($rows)?$rows:array()as$row){if(isset($q[$k][$row['status']])){$q[$k][$row['status']]=(int)$row['total'];}}}}$lm=GCU_I18n::missing_keys();$audit=$missing?array('valid'=>false,'scope'=>'unavailable','checked'=>0,'total'=>0):GCU_Plugin::instance()->repository()->verify_audit_chain(5000);return array('version'=>GCU_VERSION,'plan_version'=>GCU_PLAN_VERSION,'central_plan_baseline'=>GCU_CENTRAL_PLAN_BASELINE,'brand_primary'=>GCU_BRAND_PRIMARY,'schema_version'=>(int)get_option(GCU_Install::SCHEMA_OPTION,0),'expected_schema'=>GCU_SCHEMA_VERSION,'enabled'=>(bool)get_option('gcu_enabled',1),'upgrade_error'=>get_option(GCU_Install::UPGRADE_ERROR,array()),'missing_tables'=>$missing,'table_engines'=>$engines,'non_innodb_tables'=>$non,'stale_claims'=>$stale,'destinations'=>GCU_Plugin::instance()->contracts()->all_destination_health(),'queues'=>$q,'audit_chain'=>$audit,'localization_complete'=>empty($lm),'localization_missing'=>$lm,'legacy_migration'=>get_option(GCU_Install::MIGRATION_LOG,array()),'policy_revalidation'=>get_option(GCU_Contracts::REVALIDATION_OPTION,array()),'generated_at'=>gmdate('c'));}
+public function process_outbox(){return GCU_Plugin::instance()->repository()->dispatch_outbox('',50);}public function process_inbox(){return GCU_Plugin::instance()->repository()->process_inbox('',50);}public function lifecycle_cleanup(){return GCU_Plugin::instance()->repository()->cleanup_lifecycle();}
+public function daily_governance_check(){$r=$this->health_report();update_option('gcu_last_health_report',$r,false);$warn=!empty($r['missing_tables'])||!empty($r['non_innodb_tables'])||$r['stale_claims']>0||!$r['localization_complete']||empty($r['audit_chain']['valid'])||$r['queues']['outbox']['dead']>0||$r['queues']['inbox']['dead']>0;if($warn){do_action('gcu_operational_alert_v1',array('severity'=>'warning','report'=>$r,'owner'=>'File 14 release operator'));}}
+public static function log($level,$code,array$context=array()){$r=array('level'=>sanitize_key($level),'code'=>sanitize_key($code),'trace_id'=>isset($context['trace_id'])?sanitize_text_field($context['trace_id']):GCU_Policy::trace_id(),'context'=>self::redact($context),'occurred_at'=>gmdate('c'));do_action('gcu_structured_log_v1',$r);if(defined('WP_DEBUG_LOG')&&WP_DEBUG_LOG){error_log(wp_json_encode(array('gcu'=>$r)));}return$r['trace_id'];}
+private static function redact(array$c){$forbid=array('email','phone','health','identity','evidence','message','token','nonce','secret','cookie','ip','subject');foreach($c as$k=>$v){foreach($forbid as$n){if(false!==strpos(strtolower((string)$k),$n)){$c[$k]='[redacted]';continue 2;}}if(is_array($v)){$c[$k]=self::redact($v);}}return$c;}
 }
