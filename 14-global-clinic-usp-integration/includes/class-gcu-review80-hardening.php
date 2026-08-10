@@ -198,6 +198,10 @@ final class GCU_Review80_Hardening {
 			return $response;
 		}
 		$route = $request->get_route();
+		if ( 0 === strpos( $route, '/gcu/v1/' ) && '/gcu/v1/health' !== $route ) {
+			$base_ready = GCU_Install::ready_for_runtime();
+			if ( is_wp_error( $base_ready ) ) { return $base_ready; }
+		}
 		if ( 0 === strpos( $route, '/gcu/v1/future/' ) ) {
 			$future_ready = GCU_Future_Intelligence::runtime_ready();
 			if ( is_wp_error( $future_ready ) ) {

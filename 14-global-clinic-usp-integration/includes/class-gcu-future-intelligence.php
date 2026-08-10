@@ -90,8 +90,9 @@ final class GCU_Future_Intelligence {
 	}
 
 	public static function runtime_ready() {
-		if ( ! get_option( 'gcu_enabled', 1 ) ) {
-			return new WP_Error( 'gcu_safe_mode', __( 'File 14 is temporarily unavailable.', 'global-clinic-usp-integration' ), array( 'status' => 503 ) );
+		$base_ready = GCU_Install::ready_for_runtime();
+		if ( is_wp_error( $base_ready ) ) {
+			return $base_ready;
 		}
 		if ( self::SCHEMA_VERSION !== (int) get_option( self::SCHEMA_OPTION, 0 ) || get_option( self::SAFE_MODE_OPTION, 0 ) ) {
 			return new WP_Error( 'gcu_future_schema_pending', __( 'Future Conversion and Trust Intelligence is temporarily unavailable until its schema is verified.', 'global-clinic-usp-integration' ), array( 'status' => 503 ) );
@@ -742,6 +743,8 @@ final class GCU_Future_Intelligence {
 	}
 
 	public static function daily_governance() {
+		$ready = self::runtime_ready();
+		if ( is_wp_error( $ready ) ) { return $ready; }
 		self::claim_freshness_sentinel();
 		self::parity_status();
 		self::consistency_graph();
@@ -755,16 +758,22 @@ final class GCU_Future_Intelligence {
 	}
 
 	public static function hourly_intelligence() {
+		$ready = self::runtime_ready();
+		if ( is_wp_error( $ready ) ) { return $ready; }
 		self::anomaly_detector();
 		self::early_stop_guard();
 	}
 
 	public static function business_policy_changed() {
+		$ready = self::runtime_ready();
+		if ( is_wp_error( $ready ) ) { return $ready; }
 		self::parity_status();
 		self::early_stop_guard();
 	}
 
 	public static function cleanup() {
+		$ready = self::runtime_ready();
+		if ( is_wp_error( $ready ) ) { return array( 'skipped' => 'runtime_unready' ); }
 		global $wpdb;
 		$t = self::tables();
 		$reports = $wpdb->query( $wpdb->prepare( "DELETE FROM {$t['reports']} WHERE status IN ('resolved','rejected') AND updated_at<DATE_SUB(UTC_TIMESTAMP(),INTERVAL %d DAY) LIMIT 200", self::REPORT_RETENTION_DAYS ) );
@@ -773,6 +782,8 @@ final class GCU_Future_Intelligence {
 	}
 
 	public static function create_report( array $data ) {
+		$ready = self::runtime_ready();
+		if ( is_wp_error( $ready ) ) { return $ready; }
 		$rate = GCU_Plugin::instance()->repository()->consume_rate_limit( 'future-report', 5 );
 		if ( is_wp_error( $rate ) ) {
 			return $rate;
@@ -827,6 +838,8 @@ final class GCU_Future_Intelligence {
 	}
 
 	public static function resolve_report_record( $id, $expected, $status, $resolution ) {
+		$ready = self::runtime_ready();
+		if ( is_wp_error( $ready ) ) { return $ready; }
 		if ( ! in_array( $status, array( 'reviewing', 'resolved', 'rejected' ), true ) ) {
 			return new WP_Error( 'gcu_future_report_status_invalid', __( 'Invalid report status.', 'global-clinic-usp-integration' ) );
 		}
@@ -1050,6 +1063,8 @@ final class GCU_Future_Intelligence {
 	}
 
 	public static function enqueue_assets() {
+		$ready = self::runtime_ready();
+		if ( is_wp_error( $ready ) ) { return; }
 		$route = sanitize_key( (string) get_query_var( 'gcu_route' ) );
 		if ( ! in_array( $route, array( 'global_clinic', 'how_it_works' ), true ) ) {
 			return;
@@ -1101,6 +1116,8 @@ final class GCU_Future_Intelligence {
 		if ( ! self::can_system_check() ) {
 			wp_die( esc_html__( 'You are not authorized to view this page.', 'global-clinic-usp-integration' ) );
 		}
+		$ready = self::runtime_ready();
+		if ( is_wp_error( $ready ) ) { echo '<div class="notice notice-error"><p>' . esc_html( $ready->get_error_message() ) . '</p></div>'; return; }
 		$catalog = GCU_Future_Policy::feature_catalog();
 		$quality = self::quality_score();
 		$parity = self::parity_status();
@@ -1151,7 +1168,7 @@ final class GCU_Future_Intelligence {
 
 	private static function public_response( array $data, $status = 200 ) {
 		$response = new WP_REST_Response( $data, $status );
-		$response->header( 'Cache-Control', 'public, max-age=60, stale-while-revalidate=60' );
+		$response->header( 'Cache-Control', 'public, no-cache, max-age=0, must-revalidate' );
 		$response->header( 'Vary', 'Accept-Language' );
 		return $response;
 	}
