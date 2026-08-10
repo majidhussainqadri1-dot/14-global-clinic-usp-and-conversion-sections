@@ -1,8 +1,8 @@
 <?php
 $root=dirname(__DIR__);$plugin=$root.'/14-global-clinic-usp-integration';
-$files=array('install'=>$plugin.'/includes/class-gcu-install.php','repo'=>$plugin.'/includes/class-gcu-repository.php','rest'=>$plugin.'/includes/class-gcu-rest.php','privacy'=>$plugin.'/includes/class-gcu-privacy.php','contracts'=>$plugin.'/includes/class-gcu-contracts.php','frontend'=>$plugin.'/includes/class-gcu-frontend.php','obs'=>$plugin.'/includes/class-gcu-observability.php','uninstall'=>$plugin.'/uninstall.php');
-$src=array();foreach($files as $k=>$p){$src[$k]=file_exists($p)?file_get_contents($p):'';}$fail=array();function must($c,$m){global$fail;if(!$c){$fail[]=$m;}}
-must(substr_count($src['install'],'CREATE TABLE')>=12,'Expected 12 owner tables.');
+$files=array('install'=>$plugin.'/includes/class-gcu-install.php','repo'=>$plugin.'/includes/class-gcu-repository.php','rest'=>$plugin.'/includes/class-gcu-rest.php','privacy'=>$plugin.'/includes/class-gcu-privacy.php','contracts'=>$plugin.'/includes/class-gcu-contracts.php','frontend'=>$plugin.'/includes/class-gcu-frontend.php','obs'=>$plugin.'/includes/class-gcu-observability.php','future'=>$plugin.'/includes/class-gcu-future-intelligence.php','uninstall'=>$plugin.'/uninstall.php');
+$src=array();foreach($files as$k=>$p){$src[$k]=file_exists($p)?file_get_contents($p):'';}$fail=array();function must($c,$m){global$fail;if(!$c){$fail[]=$m;}}
+must(substr_count($src['install'],'CREATE TABLE')>=12,'Expected 12 base owner tables.');
 must(false!==strpos($src['install'],'ENGINE=InnoDB'),'InnoDB schema enforcement absent.');
 must(false!==strpos($src['install'],'SHOW TABLE STATUS'),'Storage engine verification absent.');
 must(false!==strpos($src['install'],'SELECT GET_LOCK'),'Install named lock absent.');
@@ -11,10 +11,10 @@ must(substr_count($src['repo'],'START TRANSACTION')>=2,'Governed transactional m
 must(false!==strpos($src['repo'],"'audit-chain'"),'Audit chain named lock absent.');
 must(false!==strpos($src['repo'],'previous_hash')&&false!==strpos($src['repo'],'row_hash'),'Audit chain hash fields absent.');
 must(false!==strpos($src['repo'],'processing')&&false!==strpos($src['repo'],'retry')&&false!==strpos($src['repo'],'dead'),'Queue lifecycle states incomplete.');
-must(false!==strpos($src['repo'],'DATE_SUB(UTC_TIMESTAMP(), INTERVAL 10 MINUTE)'),'Stale queue lock recovery absent.');
+must(false!==strpos($src['repo'],'DATE_SUB(UTC_TIMESTAMP(),INTERVAL 10 MINUTE)'),'Stale queue lock recovery absent.');
 must(false!==strpos($src['repo'],'run_idempotent_command')&&false!==strpos($src['repo'],"status='failed'"),'Durable idempotency recovery absent.');
 must(false!==strpos($src['repo'],'token_hash')&&false!==strpos($src['repo'],'consumed_at IS NULL'),'Atomic DB event token absent.');
-must(false!==strpos($src['repo'],'ON DUPLICATE KEY UPDATE counter = counter + 1'),'Atomic DB rate limit absent.');
+must(false!==strpos($src['repo'],'ON DUPLICATE KEY UPDATE counter=counter+1'),'Atomic DB rate limit absent.');
 must(false!==strpos($src['repo'],'content:')&&false!==strpos($src['repo'],'MAX(content_version)'),'Serialized content version allocation absent.');
 must(false!==strpos($src['rest'],'/event-token'),'Just-in-time event token endpoint absent.');
 must(false!==strpos($src['rest'],'X-GCU-Idempotency-Key'),'Mutation idempotency header absent.');
@@ -29,5 +29,7 @@ must(false!==strpos($src['contracts'],'strict_same_origin_url'),'Strict owner UR
 must(false!==strpos($src['contracts'],'may never elevate'),'Readiness elevation boundary absent.');
 must(false!==strpos($src['contracts'],'sabri_shell_slot_ready_v1'),'File 20 placement readiness absent.');
 must(false!==strpos($src['obs'],'audit_chain')&&false!==strpos($src['obs'],'non_innodb_tables'),'Health does not expose integrity/engine evidence.');
-must(false!==strpos($src['uninstall'],'GCU_ALLOW_PURGE')&&false!==strpos($src['uninstall'],'gcu_commands'),'Guarded purge does not cover v1.3.1 state.');
+must(false!==strpos($src['future'],'gcu_future_records')&&false!==strpos($src['future'],'gcu_future_reports')&&false!==strpos($src['future'],'verify_schema'),'Future CTI additive storage verification absent.');
+must(false!==strpos($src['future'],'claim_freshness_sentinel')&&false!==strpos($src['future'],'early_stop_guard'),'Future trust/reliability guards absent.');
+must(false!==strpos($src['uninstall'],'GCU_ALLOW_PURGE')&&false!==strpos($src['uninstall'],'gcu_commands')&&false!==strpos($src['uninstall'],'gcu_future_records'),'Guarded purge does not cover v1.4.0 state.');
 if($fail){fwrite(STDERR,"Reliability tests failed:\n- ".implode("\n- ",$fail)."\n");exit(1);}echo"Reliability tests: PASS\n";
