@@ -104,7 +104,7 @@ final class GCU_Future_Policy {
 		$patterns = array(
 			'fake_scarcity'     => '/\b(last chance|only today|limited slots?|hurry|act now|ending soon)\b/i',
 			'guaranteed_result' => '/\b(guaranteed cure|guaranteed income|100% guaranteed|certain cure|instant approval)\b/i',
-			'paid_visibility'   => '/\b(pay|donat(?:e|ion)|support)\b.{0,40}\b(rank|ranking|visibility|verification|priority)\b/i',
+			'paid_visibility'   => '/\b(?:pay|donat(?:e|ion)|support)\b(?![^.!?]{0,60}\b(?:does not|do not|cannot|never|not)\b)[^.!?]{0,60}\b(?:rank|ranking|visibility|verification|priority)\b/i',
 			'hidden_fee'        => '/\b(no fees?|free)\b.{0,40}\b(hidden|later|extra)\s+(fee|charge)\b/i',
 			'coercive_consent'  => '/\b(accept all|required consent|must consent|continue only if you agree to tracking)\b/i',
 			'shame_copy'        => '/\b(don.?t miss out|serious doctors always|smart patients always|you will regret)\b/i',
@@ -113,6 +113,7 @@ final class GCU_Future_Policy {
 			if ( preg_match( $pattern, $text ) ) {
 				$flags[] = $key;
 			}
+		}
 		return array( 'safe' => empty( $flags ), 'flags' => $flags );
 	}
 
@@ -237,7 +238,7 @@ final class GCU_Future_Policy {
 			'guaranteed_cure' => '/\b(guaranteed|certain)\s+(cure|recovery|result)\b/i',
 			'guaranteed_income' => '/\b(guaranteed|certain)\s+(income|earning|revenue)\b/i',
 			'instant_verification' => '/\b(instant|automatic)\s+(verification|approval)\b/i',
-			'paid_ranking' => '/\b(pay|donat(?:e|ion)|support)\b.{0,40}\b(rank|ranking|visibility|verification|priority)\b/i',
+			'paid_ranking' => '/\b(?:pay|donat(?:e|ion)|support)\b(?![^.!?]{0,60}\b(?:does not|do not|cannot|never|not)\b)[^.!?]{0,60}\b(?:rank|ranking|visibility|verification|priority)\b/i',
 			'positive_commission' => '/\b([1-9][0-9]*(?:\.[0-9]+)?)\s*%\s*(?:platform\s+)?commission\b/i',
 		);
 	}
@@ -254,6 +255,7 @@ final class GCU_Future_Policy {
 			if ( '' !== $needle && false !== strpos( $text, $needle ) ) {
 				return true;
 			}
+		}
 		return false;
 	}
 }
