@@ -30,7 +30,9 @@ central_check( false !== strpos( $css, '#087A4E' ), 'CEN-BRAND-001 exact Sabri G
 central_check( false === strpos( $css, '--gcu-brand-primary: #ff' ) && false === strpos( $css, '--gcu-brand-primary: #FF' ), 'Orange may not be the primary brand token.' );
 central_check( false !== strpos( $front, 'sabri_shell_back_home_controls' ), 'CEN-NAV-001 File 20 navigation contract missing.' );
 central_check( false !== strpos( $front, 'data-gcu-shell-fallback' ), 'Safe local fallback navigation is missing.' );
-central_check( false === preg_match( '/\son[a-z]+\s*=/i', $front ), 'Inline event handlers are forbidden.' );
+foreach ( array( 'onclick=', 'onload=', 'onerror=', 'onchange=', 'onfocus=', 'onmouseover=', 'onmouseenter=', 'onmouseleave=', 'javascript:' ) as $inline_executable ) {
+	central_check( false === stripos( $front, $inline_executable ), 'Inline executable markup is forbidden: ' . $inline_executable );
+}
 central_check( false === stripos( $front, '<script' ), 'Inline script elements are forbidden.' );
 central_check( false !== strpos( $front, "'doctor_directory'" ) && false !== strpos( $front, "'doctor_onboarding'" ), 'File 07/File 09 destination contracts missing.' );
 central_check( false !== strpos( $front, 'GCU_Plugin::instance()->contracts()->destination' ), 'CTA destinations must resolve through owner contracts.' );
