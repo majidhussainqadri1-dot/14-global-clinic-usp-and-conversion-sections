@@ -1,28 +1,26 @@
-# File 14 Status — v1.4.0 Future Conversion & Trust Intelligence
+# File 14 Status — v1.4.1 Eighty-Pass Corrective Candidate
 
 ## Repository coding status
 
-- Governing freeze: freshly supplied consolidated central governing plan + fresh `SSH-F14-PLAN-2026-v1.0` + Founder-approved additive amendment `SSH-F14-FUTURE-CTI-2026-v2.0` dated 2026-08-10.
-- Software: `1.4.0`.
+- Governing freeze: consolidated central governing plan + `SSH-F14-PLAN-2026-v1.0` + Founder-approved additive amendment `SSH-F14-FUTURE-CTI-2026-v2.0` dated 2026-08-10.
+- Software candidate: `1.4.1`.
 - Base File 14 database schema: `10004`.
 - Future CTI additive schema: `1` (`gcu_future_records`, `gcu_future_reports`) with InnoDB verification/fail-safe state.
-- All 24 Future CTI requirements `F14-FUT-01` through `F14-FUT-24` are implemented and mapped in `docs/REQUIREMENTS-TRACEABILITY.md`.
-- Major v1.4.0 controls: explicit intent routing; safe owner handoff/failover; public trust evidence; claim freshness and policy-parity sentinels; semantic/dark-pattern preflight; jurisdiction copy records; scenario lab; quality/friction/anomaly/cohort analytics; experiment preflight/early-stop; FAQ-gap suggestions; consistency graph; terminology lock; guarded AI draft assistance; public change log; patient safety guide; non-binding doctor readiness self-check; structured copy-quality reports/corrections.
-- File 20 remains the sole shell/navigation owner; Files 07/08/09 remain doctor/directory/clinic-onboarding canonical owners. File 14 creates no substitute backend for those domains.
-- Deterministic package target: `14-global-clinic-usp-integration-1.4.0.zip` + SHA-256 + SBOM.
+- The original 24 Future CTI requirements `F14-FUT-01` through `F14-FUT-24` remain implemented; v1.4.1 is a corrective hardening release rather than a new ownership/scope expansion.
+- v1.4.1 corrective controls: immediate public claim-freshness/parity gating; meaningful mandatory experiment guardrail validation; Urdu/Arabic dark-pattern, guarantee and positive-commission checks; per-stage small-cohort suppression; direct-identifier rejection from FAQ aggregate signals; corrected Future safe-mode scenario truth; explicit provisional quality evidence; File-14-scoped REST post-dispatch hardening; dedicated eighty-pass regression gate.
+- File 20 remains the sole shell/navigation owner; Files 07/08/09 remain doctor/directory/clinic/onboarding canonical owners. File 14 creates no substitute backend for those domains.
+- Deterministic package target: `14-global-clinic-usp-integration-1.4.1.zip` + SHA-256 + file-level SBOM.
 
-## Merge evidence
+## Current review/merge boundary
 
-- Pull Request #3 was merged after the branch exact-head release gate verified candidate SHA `5145f175a5151e037073e6d6104c671d720f667c`.
-- Merge commit: `6ba3234e02de722905c02eafc1915be193230b9c`.
-- The merge commit used the exact tested source tree from candidate SHA `5145f175a5151e037073e6d6104c671d720f667c`.
-- This STATUS update exists to make the repository documentation truthful after the merge and to trigger the now-installed main-branch quality/review workflows against the new exact current `main` HEAD.
+- Corrective work is carried on Pull Request #4 from `review/file14-80-round-2026-08-10` into `main`.
+- The exact PR head, not a historical commit, is the repository candidate truth.
+- The eighty-pass review ledger and v1.4.1 corrective traceability are recorded in `docs/REVIEW-80-LEDGER-v1.4.1.md` once the final review/documentation pass is frozen.
+- No merge claim is made in this pre-merge status file. A merge may be claimed only after the exact final PR head passes Quality/Package, both fresh post-code reviews, and baseline integrity.
 
 ## Truth-status boundary
 
 `Specified`, `Coded`, `Packaged`, `Automated-QA Green`, `Staging-Accepted`, `Live-Deployed`, and `Operational` remain separate states.
-
-The v1.4.0 code has been merged into `main`. The current exact `main` HEAD must independently pass the repository quality/package and fresh-review workflows after this documentation commit before that exact HEAD is called Automated-QA Green. The branch release evidence is historical support, not a substitute for current-main verification.
 
 The following remain external release gates until independently proven in the target environment:
 
