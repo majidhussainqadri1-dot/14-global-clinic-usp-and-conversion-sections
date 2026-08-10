@@ -22,6 +22,7 @@ jobs:
           s=p.read_text(encoding='utf-8')
           old="('73 EN/UR/AR locale coverage retained',\"'ur-PK'\" in fi18n and \"'ar-SA'\" in fi18n and 'en-US' in fi18n),"
           new="('73 American-English source/fallback + UR/AR translation coverage retained',\"'ur-PK'\" in fi18n and \"'ar-SA'\" in fi18n and 'Choose your next step' in fi18n and \"'en-US'\" in r('14-global-clinic-usp-integration/includes/class-gcu-i18n.php'))),"
+          new=new.replace(".php'))),", ".php')),")
           if old not in s:
               raise SystemExit('Fourth locale gate signature not found')
           p.write_text(s.replace(old,new,1),encoding='utf-8')
