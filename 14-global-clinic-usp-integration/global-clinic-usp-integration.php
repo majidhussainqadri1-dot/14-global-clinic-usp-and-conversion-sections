@@ -53,5 +53,12 @@ unset( $gcu_files, $gcu_file );
 add_filter( 'cron_schedules', array( 'GCU_Install', 'cron_schedules' ) );
 register_activation_hook( GCU_FILE, array( 'GCU_Install', 'activate' ) );
 register_deactivation_hook( GCU_FILE, array( 'GCU_Install', 'deactivate' ) );
+register_deactivation_hook(
+	GCU_FILE,
+	static function () {
+		wp_clear_scheduled_hook( 'gcu_future_daily_governance' );
+		wp_clear_scheduled_hook( 'gcu_future_hourly_intelligence' );
+	}
+);
 add_action( 'plugins_loaded', static function () { GCU_Plugin::instance()->run(); }, 90 );
 add_action( 'plugins_loaded', array( 'GCU_Future_Intelligence', 'bootstrap' ), 95 );
