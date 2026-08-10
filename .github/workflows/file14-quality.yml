@@ -30,23 +30,23 @@ jobs:
       - run: bash scripts/build.sh
       - run: |
           cd dist
-          sha256sum -c 14-global-clinic-usp-integration-1.4.0.zip.sha256
+          sha256sum -c 14-global-clinic-usp-integration-1.4.1.zip.sha256
           python3 - <<'PY'
           import json, pathlib, zipfile
           root=pathlib.Path('.')
-          sbom=json.loads((root/'14-global-clinic-usp-integration-1.4.0.sbom.json').read_text())
-          assert sbom['version']=='1.4.0'
+          sbom=json.loads((root/'14-global-clinic-usp-integration-1.4.1.sbom.json').read_text())
+          assert sbom['version']=='1.4.1'
           assert sbom['file_count']==len(sbom['files']) and sbom['file_count']>0
-          with zipfile.ZipFile(root/'14-global-clinic-usp-integration-1.4.0.zip') as z:
+          with zipfile.ZipFile(root/'14-global-clinic-usp-integration-1.4.1.zip') as z:
               assert z.testzip() is None
               assert all(n.startswith('14-global-clinic-usp-integration/') and '..' not in pathlib.PurePosixPath(n).parts for n in z.namelist())
           print('Package/SBOM verification: PASS')
           PY
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4 pinned
         with:
-          name: file-14-v1.4.0
+          name: file-14-v1.4.1
           path: |
-            dist/14-global-clinic-usp-integration-1.4.0.zip
-            dist/14-global-clinic-usp-integration-1.4.0.zip.sha256
-            dist/14-global-clinic-usp-integration-1.4.0.sbom.json
+            dist/14-global-clinic-usp-integration-1.4.1.zip
+            dist/14-global-clinic-usp-integration-1.4.1.zip.sha256
+            dist/14-global-clinic-usp-integration-1.4.1.sbom.json
           if-no-files-found: error
