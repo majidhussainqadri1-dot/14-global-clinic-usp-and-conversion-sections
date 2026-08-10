@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Deterministic 80-pass source/governance review gate for File 14 v1.4.1.
 
-The order mirrors docs/REVIEW-80-LEDGER-v1.4.1.md.  A pass proves only the
-repository property named by that round.  It is not staging, deployed-code,
+The order mirrors docs/REVIEW-80-LEDGER-v1.4.1.md. A pass proves only the
+repository property named by that round. It is not staging, deployed-code,
 database, live or operational evidence.
 """
 from __future__ import annotations
@@ -47,6 +47,7 @@ uninstall = read("14-global-clinic-usp-integration/uninstall.php")
 contract_tests = read("tests/contract-tests.php")
 central_tests = read("tests/central-plan-tests.php")
 review_tests = read("tests/review80-hardening-tests.php")
+policy = read("14-global-clinic-usp-integration/includes/class-gcu-policy.php")
 all_php = "\n".join(p.read_text(encoding="utf-8") for p in P.rglob("*.php"))
 
 checks: list[tuple[str, bool]] = [
@@ -66,7 +67,7 @@ checks: list[tuple[str, bool]] = [
     ("14 central-plan regression aligned to 1.4.1", "Candidate version not 1.4.1" in central_tests and "Stable tag: 1.4.1" in central_tests),
     ("15 STATUS current candidate truth is 1.4.1", "v1.4.1 Eighty-Pass Corrective Candidate" in status and "Software candidate: `1.4.1`" in status),
     ("16 release-evidence current candidate truth is 1.4.1", "Release Evidence — v1.4.1" in release and "Software candidate: `1.4.1`" in release),
-    ("17 corrective round ledger and defect index exist", "Defects were discovered in rounds **02, 03, 04, 05, 06, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16 and 17**" in ledger and "| 80 |" in ledger),
+    ("17 corrective round ledger and complete defect index exist", "Defects were discovered in rounds **02, 03, 04, 05, 06, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 38, 40 and 58**" in ledger and "| 80 |" in ledger),
     ("18 base schema remains 10004 and separate from patch version", "GCU_SCHEMA_VERSION', 10004" in loader),
     ("19 Future additive schema remains 1 with InnoDB verification", "GCU_FUTURE_SCHEMA_VERSION', 1" in loader and "SHOW TABLE STATUS" in install and "innodb" in install.lower()),
     ("20 install/upgrade named lock retained", "SELECT GET_LOCK" in install),
@@ -87,10 +88,10 @@ checks: list[tuple[str, bool]] = [
     ("35 File 07 directory destination ownership retained", "'File 07'" in contracts),
     ("36 File 08 clinic/booking destination ownership retained", "'File 08'" in contracts),
     ("37 File 09/File 00 onboarding-verification ownership retained", "'File 09'" in contracts and "File 09 / File 00" in future_policy),
-    ("38 no alternate File 00 authority created", "verification_owner' => 'File 09 / File 00'" in future_policy and "GCU_Capabilities" in loader),
+    ("38 no alternate File 00 authority created", "verification_owner' => 'File 09 / File 00'" in future_policy and "class-gcu-capabilities.php" in loader),
     ("39 public-safe blocks endpoint remains browseable", "'/blocks'" in rest and "__return_true" in rest),
-    ("40 privileged Future endpoints retain admin permission boundary", "'permission_callback' => array( __CLASS__, 'admin_permission' )" in future),
-    ("41 workflow state-transition validation retained", "transition_allowed" in read("14-global-clinic-usp-integration/includes/class-gcu-policy.php")),
+    ("40 privileged Future endpoints retain least-privilege permission callbacks", all(x in future for x in ("can_manage_content", "can_manage_experiments", "can_view_analytics", "can_system_check", "can_approve_claims"))),
+    ("41 workflow state-transition validation retained", "transition_allowed" in policy),
     ("42 no direct companion write/post backend introduced", re.search(r"wp_insert_post\s*\(", all_php) is None and "Files 00/07/08/09/20/24/25" in review),
     ("43 measurement still requires consent", "analytics_consent" in privacy and "measurement_allowed" in privacy),
     ("44 Global Privacy Control retained", "HTTP_SEC_GPC" in privacy),
@@ -107,8 +108,8 @@ checks: list[tuple[str, bool]] = [
     ("55 AI assistance remains approved-claim bounded", "approved_claims" in future and "AI Ethical Copy Assistant" in future_policy),
     ("56 sensitive experiment profiling remains blocked", "sensitive_sampling" in future_policy and "health profiling" in future_policy),
     ("57 experiment early-stop guard retained", "early_stop_guard" in future),
-    ("58 zero-commission/free/support parity sentinel retained", "parity_status" in future and "zero_commission" in future_policy and "optional_support" in future_policy),
-    ("59 public trust evidence drawer retained", "trust" in future.lower() and "F14-FUT-03" in future_policy),
+    ("58 zero-commission/free/support parity sentinel retained", "parity_status" in future and "0% commission, one free tier and optional support must remain in parity." in future_policy),
+    ("59 public trust evidence drawer retained", "F14-FUT-03" in future_policy and "rest_trust" in future),
     ("60 public material change log retained", "public_change_log" in future and "F14-FUT-22" in future_policy),
     ("61 patient Choose-Safely guide remains educational", "patient_guide" in future_policy and "F14-FUT-23" in future_policy),
     ("62 doctor readiness remains non-binding", "'binding' => false" in future_policy and "F14-FUT-24" in future_policy),
