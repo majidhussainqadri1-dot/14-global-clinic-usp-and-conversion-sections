@@ -1,14 +1,11 @@
 name: File 14 Quality and Package
-
 on:
   push:
     branches: [main, 'complete/**']
   pull_request:
   workflow_dispatch:
-
 permissions:
   contents: read
-
 jobs:
   php-quality:
     name: PHP ${{ matrix.php }} quality
@@ -16,27 +13,40 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php: ['7.4', '8.3']
+        php: ['7.4','8.3']
     steps:
       - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
-      - uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # v2 pinned commit
+      - uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # v2 pinned
         with:
           php-version: ${{ matrix.php }}
           coverage: none
       - run: bash scripts/quality.sh
-
   package:
-    name: Reproducible package
+    name: Deterministic package and SBOM
     runs-on: ubuntu-latest
     needs: php-quality
     steps:
       - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
       - run: bash scripts/build.sh
-      - run: sha256sum -c dist/14-global-clinic-usp-integration-1.3.0.zip.sha256
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+      - run: |
+          cd dist
+          sha256sum -c 14-global-clinic-usp-integration-1.3.1.zip.sha256
+          python3 - <<'PY'
+          import json, pathlib, zipfile
+          root=pathlib.Path('.')
+          sbom=json.loads((root/'14-global-clinic-usp-integration-1.3.1.sbom.json').read_text())
+          assert sbom['version']=='1.3.1'
+          assert sbom['file_count']==len(sbom['files']) and sbom['file_count']>0
+          with zipfile.ZipFile(root/'14-global-clinic-usp-integration-1.3.1.zip') as z:
+              assert z.testzip() is None
+              assert all(n.startswith('14-global-clinic-usp-integration/') and '..' not in pathlib.PurePosixPath(n).parts for n in z.namelist())
+          print('Package/SBOM verification: PASS')
+          PY
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4 pinned
         with:
-          name: file-14-v1.3.0
+          name: file-14-v1.3.1
           path: |
-            dist/14-global-clinic-usp-integration-1.3.0.zip
-            dist/14-global-clinic-usp-integration-1.3.0.zip.sha256
+            dist/14-global-clinic-usp-integration-1.3.1.zip
+            dist/14-global-clinic-usp-integration-1.3.1.zip.sha256
+            dist/14-global-clinic-usp-integration-1.3.1.sbom.json
           if-no-files-found: error
