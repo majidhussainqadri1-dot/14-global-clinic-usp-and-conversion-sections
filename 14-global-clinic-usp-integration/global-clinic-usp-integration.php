@@ -43,6 +43,7 @@ $gcu_files = array(
 	'includes/class-gcu-admin.php',
 	'includes/class-gcu-plugin.php',
 	'includes/class-gcu-future-intelligence.php',
+	'includes/class-gcu-future-i18n.php',
 );
 
 foreach ( $gcu_files as $gcu_file ) {
@@ -62,3 +63,4 @@ register_deactivation_hook(
 );
 add_action( 'plugins_loaded', static function () { GCU_Plugin::instance()->run(); }, 90 );
 add_action( 'plugins_loaded', array( 'GCU_Future_Intelligence', 'bootstrap' ), 95 );
+add_action( 'plugins_loaded', array( 'GCU_Future_I18n', 'bootstrap' ), 96 );
