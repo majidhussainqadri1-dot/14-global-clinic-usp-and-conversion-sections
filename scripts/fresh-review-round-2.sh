@@ -3,8 +3,8 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 P="$ROOT/14-global-clinic-usp-integration"
 fail=0
-need(){ grep -RqsF "$1" "$2" || { echo "ROUND2 missing: $1 in $2" >&2; fail=1; }; }
-forbid(){ if grep -RqsE "$1" "$2"; then echo "ROUND2 forbidden pattern: $1 in $2" >&2; fail=1; fi; }
+need(){ grep -RqsF -- "$1" "$2" || { echo "ROUND2 missing: $1 in $2" >&2; fail=1; }; }
+forbid(){ if grep -RqsE -- "$1" "$2"; then echo "ROUND2 forbidden pattern: $1 in $2" >&2; fail=1; fi; }
 need "--gcu-brand-primary: #087A4E" "$P/assets/css/global-clinic-usp-integration.css"
 need "#087A4E" "$P/assets/css/gcu-future-intelligence.css"
 need "prefers-reduced-motion" "$P/assets/css/global-clinic-usp-integration.css"
