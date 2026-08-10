@@ -15,6 +15,18 @@ jobs:
       - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09
         with:
           ref: review/file14-fourth-80-round-2026-08-10
+      - name: Align exact frontend cache signature
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('14-global-clinic-usp-integration/includes/class-gcu-frontend.php')
+          s=p.read_text(encoding='utf-8')
+          old="public function cache_headers(){$r=sanitize_key((string)get_query_var('gcu_route'));if($r){header('Cache-Control: public, no-cache, max-age=0, must-revalidate',true);header('Pragma: no-cache',true);}}"
+          new="public function cache_headers(){$r=sanitize_key((string)get_query_var('gcu_route'));if($r){nocache_headers();header('Cache-Control: public, no-cache, max-age=0, must-revalidate',true);header('Pragma: no-cache',true);}}"
+          if old not in s:
+              raise SystemExit('frontend cache signature drift')
+          p.write_text(s.replace(old,new,1),encoding='utf-8')
+          PY
       - name: Apply fourth-review corrections
         run: python3 scripts/apply-file14-fourth-review-corrections.py
       - name: Lint corrected PHP
