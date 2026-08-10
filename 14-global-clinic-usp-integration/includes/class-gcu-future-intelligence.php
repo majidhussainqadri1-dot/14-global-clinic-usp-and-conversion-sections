@@ -46,8 +46,8 @@ final class GCU_Future_Intelligence {
 		);
 	}
 
-	public static function ensure_schema() {
-		if ( self::SCHEMA_VERSION === (int) get_option( self::SCHEMA_OPTION, 0 ) && ! get_option( self::SAFE_MODE_OPTION, 0 ) ) {
+	public static function ensure_schema( $force_verify = false ) {
+		if ( ! $force_verify && self::SCHEMA_VERSION === (int) get_option( self::SCHEMA_OPTION, 0 ) && ! get_option( self::SAFE_MODE_OPTION, 0 ) ) {
 			return true;
 		}
 		$lock = GCU_Hardening::acquire_db_lock( 'future-schema', 5 );
@@ -104,19 +104,22 @@ final class GCU_Future_Intelligence {
 		global $wpdb;
 		$missing = array();
 		$non_innodb = array();
+		$missing_columns = array();
+		$required = array(
+			'records' => array( 'record_type','record_key','locale','region','status','is_public','payload','payload_hash','row_version','review_due_at' ),
+			'reports' => array( 'public_id','report_type','route_key','locale','reason_code','actor_hash','status','row_version','created_at','updated_at' ),
+		);
 		foreach ( self::tables() as $key => $table ) {
 			$found = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $wpdb->esc_like( $table ) ) );
-			if ( $table !== $found ) {
-				$missing[] = $key;
-				continue;
-			}
+			if ( $table !== $found ) { $missing[] = $key; continue; }
 			$status = $wpdb->get_row( $wpdb->prepare( 'SHOW TABLE STATUS LIKE %s', $wpdb->esc_like( $table ) ), ARRAY_A );
 			$engine = is_array( $status ) && isset( $status['Engine'] ) ? strtolower( (string) $status['Engine'] ) : '';
-			if ( 'innodb' !== $engine ) {
-				$non_innodb[ $key ] = $engine ? $engine : 'unknown';
-			}
+			if ( 'innodb' !== $engine ) { $non_innodb[ $key ] = $engine ? $engine : 'unknown'; }
+			$columns = $wpdb->get_col( "SHOW COLUMNS FROM `$table`", 0 );
+			$delta = array_values( array_diff( $required[ $key ], is_array( $columns ) ? $columns : array() ) );
+			if ( $delta ) { $missing_columns[ $key ] = $delta; }
 		}
-		return ( $missing || $non_innodb ) ? new WP_Error( 'gcu_future_schema_unverified', __( 'Future Conversion and Trust Intelligence storage is not safely verified.', 'global-clinic-usp-integration' ), array( 'missing' => $missing, 'non_innodb' => $non_innodb ) ) : true;
+		return ( $missing || $non_innodb || $missing_columns ) ? new WP_Error( 'gcu_future_schema_unverified', __( 'Future Conversion and Trust Intelligence storage is not safely verified.', 'global-clinic-usp-integration' ), array( 'missing' => $missing, 'non_innodb' => $non_innodb, 'missing_columns' => $missing_columns ) ) : true;
 	}
 
 	private static function seed_defaults() {
@@ -187,9 +190,11 @@ final class GCU_Future_Intelligence {
 	}
 
 	public static function rest_report( WP_REST_Request $request ) {
+		$key = self::required_idempotency_key( $request );
+		if ( is_wp_error( $key ) ) { return $key; }
 		$data = $request->get_json_params();
 		$data = is_array( $data ) ? $data : array();
-		$result = self::create_report( $data );
+		$result = GCU_Plugin::instance()->repository()->run_idempotent_command( 'future_report', $key, static function() use ( $data ) { return self::create_report( $data ); } );
 		return is_wp_error( $result ) ? $result : self::no_store_response( $result, 201 );
 	}
 
@@ -262,6 +267,10 @@ final class GCU_Future_Intelligence {
 	}
 
 	public static function rest_record_write( WP_REST_Request $request ) {
+		$rate = GCU_Plugin::instance()->repository()->consume_rate_limit( 'future-record-write', 120 );
+		if ( is_wp_error( $rate ) ) { return $rate; }
+		$idempotency = self::required_idempotency_key( $request );
+		if ( is_wp_error( $idempotency ) ) { return $idempotency; }
 		$data = $request->get_json_params();
 		$data = is_array( $data ) ? $data : array();
 		$type = sanitize_key( isset( $data['record_type'] ) ? $data['record_type'] : '' );
@@ -273,17 +282,10 @@ final class GCU_Future_Intelligence {
 		if ( ! $key ) {
 			return new WP_Error( 'gcu_future_record_key_required', __( 'A stable record key is required.', 'global-clinic-usp-integration' ), array( 'status' => 400 ) );
 		}
-		$result = self::upsert_record(
-			$type,
-			$key,
-			GCU_Policy::sanitize_locale( isset( $data['locale'] ) ? $data['locale'] : 'en-US' ),
-			self::sanitize_region( isset( $data['region'] ) ? $data['region'] : 'ZZ' ),
-			isset( $data['payload'] ) && is_array( $data['payload'] ) ? $data['payload'] : array(),
-			isset( $data['status'] ) ? sanitize_key( $data['status'] ) : 'draft',
-			! empty( $data['is_public'] ),
-			isset( $data['expected_version'] ) ? absint( $data['expected_version'] ) : 0,
-			false
-		);
+		$result = GCU_Plugin::instance()->repository()->run_idempotent_command( 'future_record_write', $idempotency, static function() use ( $type, $key, $data ) { return self::upsert_record(
+			$type, $key, GCU_Policy::sanitize_locale( isset( $data['locale'] ) ? $data['locale'] : 'en-US' ),
+			self::sanitize_region( isset( $data['region'] ) ? $data['region'] : 'ZZ' ), isset( $data['payload'] ) && is_array( $data['payload'] ) ? $data['payload'] : array(),
+			isset( $data['status'] ) ? sanitize_key( $data['status'] ) : 'draft', ! empty( $data['is_public'] ), isset( $data['expected_version'] ) ? absint( $data['expected_version'] ) : 0, false ); } );
 		return is_wp_error( $result ) ? $result : self::no_store_response( $result, 201 );
 	}
 
@@ -292,10 +294,14 @@ final class GCU_Future_Intelligence {
 	}
 
 	public static function rest_revalidate_claim( WP_REST_Request $request ) {
+		$rate = GCU_Plugin::instance()->repository()->consume_rate_limit( 'future-claim-revalidate', 60 );
+		if ( is_wp_error( $rate ) ) { return $rate; }
+		$idempotency = self::required_idempotency_key( $request );
+		if ( is_wp_error( $idempotency ) ) { return $idempotency; }
 		$key = sanitize_key( $request['claim_key'] );
 		$expected = absint( $request->get_param( 'expected_version' ) );
 		$reason = sanitize_textarea_field( (string) $request->get_param( 'reason' ) );
-		$result = self::revalidate_claim( $key, $expected, $reason );
+		$result = GCU_Plugin::instance()->repository()->run_idempotent_command( 'future_claim_revalidate', $idempotency, static function() use ( $key, $expected, $reason ) { return self::revalidate_claim( $key, $expected, $reason ); } );
 		return is_wp_error( $result ) ? $result : self::no_store_response( $result );
 	}
 
@@ -747,6 +753,8 @@ final class GCU_Future_Intelligence {
 	public static function daily_governance() {
 		$ready = self::runtime_ready();
 		if ( is_wp_error( $ready ) ) { return $ready; }
+		$schema = self::verify_schema();
+		if ( is_wp_error( $schema ) ) { update_option( self::SAFE_MODE_OPTION, 1, false ); return $schema; }
 		self::claim_freshness_sentinel();
 		self::parity_status();
 		self::consistency_graph();
@@ -1166,6 +1174,11 @@ final class GCU_Future_Intelligence {
 		$intersection = count( array_intersect( $a, $b ) );
 		$union = count( array_unique( array_merge( $a, $b ) ) );
 		return $union ? $intersection / $union : 0.0;
+	}
+
+	private static function required_idempotency_key( WP_REST_Request $request ) {
+		$key = GCU_Hardening::bounded_text( sanitize_text_field( (string) $request->get_header( GCU_REST::IDEMPOTENCY_HEADER ) ), 191 );
+		return strlen( $key ) < 8 ? new WP_Error( 'gcu_idempotency_key_required', __( 'A stable idempotency key is required for this mutation.', 'global-clinic-usp-integration' ), array( 'status' => 400 ) ) : $key;
 	}
 
 	private static function public_response( array $data, $status = 200 ) {

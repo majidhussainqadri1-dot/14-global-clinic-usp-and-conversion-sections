@@ -254,6 +254,7 @@ final class GCU_Review80_Hardening {
 		if ( 0 !== strpos( $route, '/gcu/v1/' ) ) {
 			return $response;
 		}
+		$response->header( 'X-GCU-Trace-ID', GCU_Policy::trace_id() );
 		$data = $response->get_data();
 		if ( ! is_array( $data ) ) {
 			return $response;
