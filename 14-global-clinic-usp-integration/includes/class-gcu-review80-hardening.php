@@ -67,7 +67,7 @@ final class GCU_Review80_Hardening {
 	/** Reject aggregates containing direct personal/contact/identity or explicit patient-record markers. */
 	public static function question_contains_sensitive_data( $question ) {
 		$question = (string) $question;
-		return (bool) preg_match( '/[A-Z0-9._%+\-]+@[A-Z0-9.\-]+\.[A-Z]{2,}|\+?\d[\d\s\-]{6,}\d|\b(?:CNIC|NICOP|passport|patient\s*id|medical\s*record|prescription\s*(?:no|number)|case\s*(?:no|number))\b/i', $question );
+		return (bool) preg_match( '/[A-Z0-9._%+\-]+@[A-Z0-9.\-]+\.[A-Z]{2,}|\+?\d[\d\s\-]{6,}\d|\b(?:CNIC|NICOP|passport|patient\s*id|medical\s*record|prescription\s*(?:no|number)|case\s*(?:no|number))\b|(?:شناختی\s*کارڈ|پاسپورٹ|مریض|تشخیص|نسخہ|میڈیکل\s*ریکارڈ|فون|موبائل|ای\s*میل)|(?:هوية|جواز\s*السفر|مريض|تشخيص|وصفة|سجل\s*طبي|هاتف|جوال|بريد\s*إلكتروني)/iu', $question );
 	}
 
 	public static function filter_question_aggregates( $signals ) {

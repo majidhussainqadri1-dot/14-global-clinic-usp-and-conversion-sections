@@ -29,6 +29,9 @@ final class GCU_Future_Guards {
 		if ( 'ai_draft' === $type && ( 'active' === $status || $public ) ) {
 			return new WP_Error( 'gcu_future_ai_draft_cannot_publish', __( 'AI Ethical Copy Assistant output is draft-only and can never auto-publish.', 'global-clinic-usp-integration' ), array( 'status' => 409 ) );
 		}
+		if ( 'scenario_note' === $type && $public ) {
+			return new WP_Error( 'gcu_future_scenario_note_private', __( 'Scenario notes are internal governance records and cannot be published.', 'global-clinic-usp-integration' ), array( 'status' => 409 ) );
+		}
 		return $response;
 	}
 }

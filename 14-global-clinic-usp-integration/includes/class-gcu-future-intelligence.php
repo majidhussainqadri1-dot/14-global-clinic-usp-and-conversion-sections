@@ -198,6 +198,8 @@ final class GCU_Future_Intelligence {
 	}
 
 	public static function rest_readiness( WP_REST_Request $request ) {
+		$rate = GCU_Plugin::instance()->repository()->consume_rate_limit( 'future-readiness', 60 );
+		if ( is_wp_error( $rate ) ) { return $rate; }
 		$data = $request->get_json_params();
 		return self::no_store_response( GCU_Future_Policy::doctor_readiness_check( is_array( $data ) ? $data : array() ) );
 	}
@@ -826,7 +828,7 @@ final class GCU_Future_Intelligence {
 	}
 
 	private static function report_contains_sensitive_data( $message ) {
-		return (bool) preg_match( '/[A-Z0-9._%+\-]+@[A-Z0-9.\-]+\.[A-Z]{2,}|\+?\d[\d\s\-]{6,}\d|\b(?:CNIC|passport|diagnosis|prescription|patient id)\b/i', $message );
+		return (bool) preg_match( '/[A-Z0-9._%+\-]+@[A-Z0-9.\-]+\.[A-Z]{2,}|\+?\d[\d\s\-]{6,}\d|\b(?:CNIC|NICOP|passport|diagnosis|prescription|patient\s*id|medical\s*record|case\s*(?:no|number))\b|(?:شناختی\s*کارڈ|پاسپورٹ|مریض|تشخیص|نسخہ|میڈیکل\s*ریکارڈ|فون|موبائل|ای\s*میل)|(?:هوية|جواز\s*السفر|مريض|تشخيص|وصفة|سجل\s*طبي|هاتف|جوال|بريد\s*إلكتروني)/iu', $message );
 	}
 
 	public static function reports( $status = 'open', $limit = 100 ) {

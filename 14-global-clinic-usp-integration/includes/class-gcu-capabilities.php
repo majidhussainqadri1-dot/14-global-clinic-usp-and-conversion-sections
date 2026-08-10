@@ -41,7 +41,8 @@ final class GCU_Capabilities {
 
 	public static function can( $capability, $object = null, $purpose = '' ) {
 		$allowed = current_user_can( $capability );
-		return (bool) apply_filters( 'gcu_authorize', $allowed, $capability, $object, sanitize_key( $purpose ) );
+		if ( ! $allowed ) { return false; }
+		return (bool) apply_filters( 'gcu_authorize', true, $capability, $object, sanitize_key( $purpose ) );
 	}
 
 	public static function require_capability( $capability, $object = null, $purpose = '' ) {
