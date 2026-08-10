@@ -45,6 +45,7 @@ $gcu_files = array(
 	'includes/class-gcu-future-intelligence.php',
 	'includes/class-gcu-future-i18n.php',
 	'includes/class-gcu-future-guards.php',
+	'includes/class-gcu-review80-hardening.php',
 );
 
 foreach ( $gcu_files as $gcu_file ) {
@@ -66,3 +67,4 @@ add_action( 'plugins_loaded', static function () { GCU_Plugin::instance()->run()
 add_action( 'plugins_loaded', array( 'GCU_Future_Intelligence', 'bootstrap' ), 95 );
 add_action( 'plugins_loaded', array( 'GCU_Future_I18n', 'bootstrap' ), 96 );
 add_action( 'plugins_loaded', array( 'GCU_Future_Guards', 'bootstrap' ), 97 );
+add_action( 'plugins_loaded', array( 'GCU_Review80_Hardening', 'bootstrap' ), 98 );
