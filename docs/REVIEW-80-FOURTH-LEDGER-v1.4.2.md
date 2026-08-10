@@ -77,7 +77,7 @@
 | 69 | Experiment early-stop | PASS — no new repository defect found after preceding corrections; external browser/staging/live evidence remains separate where applicable. |
 | 70 | Future quality small-cohort suppression | PASS — no new repository defect found after preceding corrections; external browser/staging/live evidence remains separate where applicable. |
 | 71 | Future anomaly small-cohort suppression | PASS — no new repository defect found after preceding corrections; external browser/staging/live evidence remains separate where applicable. |
-| 72 | EN/UR/AR locale coverage | PASS — no new repository defect found after preceding corrections; external browser/staging/live evidence remains separate where applicable. |
+| 72 | EN/UR/AR locale coverage and gate semantics | **DEFECT (QA machinery)** — exact-head CI exposed that the fourth-review gate incorrectly required an explicit `en-US` entry inside the Future translation map, although File 14 uses American-English source/fallback strings with explicit `ur-PK` and `ar-SA` translation sets. The gate now verifies English source/fallback through base i18n plus Urdu/Arabic Future sets. |
 | 73 | RTL/LTR support | PASS — no new repository defect found after preceding corrections; external browser/staging/live evidence remains separate where applicable. |
 | 74 | Keyboard/focus/44px target | PASS — no new repository defect found after preceding corrections; external browser/staging/live evidence remains separate where applicable. |
 | 75 | Reduced motion | PASS — no new repository defect found after preceding corrections; external browser/staging/live evidence remains separate where applicable. |
@@ -89,7 +89,7 @@
 
 ## Defect-round index
 
-Fresh defects were found in rounds **02–24** — **23 defect-bearing rounds**. Rounds 22–24 are QA/release-machinery defects; all earlier listed defects are shipped-source/runtime-contract defects. The remaining **57 rounds** found no additional repository defect after the preceding corrections.
+Fresh defects were found in rounds **02–24 and 72** — **24 defect-bearing rounds**. Rounds 22–24 and 72 are QA/release-machinery defects; all earlier listed defects are shipped-source/runtime-contract defects. The remaining **56 rounds** found no additional repository defect after the preceding corrections.
 
 ## Final acceptance gate
 

@@ -76,7 +76,7 @@ checks=[
 ('70 experiment meaningful guardrails remain','guardrails_valid' in review),
 ('71 Future quality hides exact small cohorts',"'sample_count' => GCU_Future_Policy::cohort_allowed( $selected ) ? $selected : null" in future),
 ('72 Future anomaly hides exact small cohorts',"'current_sample' => null" in future and "'baseline_sample' => null" in future),
-('73 EN/UR/AR locale coverage retained',"'ur-PK'" in fi18n and "'ar-SA'" in fi18n and 'en-US' in fi18n),
+('73 American-English source/fallback + UR/AR translation coverage retained',"'ur-PK'" in fi18n and "'ar-SA'" in fi18n and 'Choose your next step' in fi18n and "'en-US'" in r('14-global-clinic-usp-integration/includes/class-gcu-i18n.php')),
 ('74 RTL/LTR repository support retained','rtl' in css.lower()),
 ('75 accessibility controls retained','44px' in css+future_css and 'focus-visible' in css+future_css and 'prefers-reduced-motion' in css+future_css),
 ('76 deterministic double-build/SBOM retained','Deterministic double-build mismatch' in build and 'file-sha256-sbom-v1' in build),
