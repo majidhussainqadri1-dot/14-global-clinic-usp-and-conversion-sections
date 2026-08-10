@@ -33,18 +33,25 @@ jobs:
           }
           out=[]
           for line in lines:
-              changed=False
               for marker,new in repl.items():
                   if marker in line:
-                      out.append(new); changed=True; break
-              if not changed: out.append(line)
+                      out.append(new)
+                      break
+              else:
+                  out.append(line)
           p.write_text('\n'.join(out)+'\n',encoding='utf-8')
           PY
       - name: Finalize fourth-review gates and release truth
         run: python3 scripts/finalize-file14-fourth-review.py
       - name: Lint all PHP after finalization
         run: find 14-global-clinic-usp-integration tests -name '*.php' -print0 | xargs -0 -n1 php -l
-      - name: Commit durable fourth-review state
+      - name: Restore workflow files for connector-managed update
+        run: |
+          git checkout HEAD -- .github/workflows/file14-quality.yml
+          git checkout HEAD -- .github/workflows/file14-fourth-review-corrective-patch.yml
+          git checkout HEAD -- .github/workflows/file14-fourth-review-diagnostic.yml
+          git checkout HEAD -- .github/workflows/file14-fourth-review-finalize.yml
+      - name: Commit durable non-workflow fourth-review state
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
