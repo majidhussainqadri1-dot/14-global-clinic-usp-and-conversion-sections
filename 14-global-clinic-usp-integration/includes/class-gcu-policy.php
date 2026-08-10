@@ -188,7 +188,6 @@ final class GCU_Policy {
 		return array( 'en-US' => $en, 'ur-PK' => $ur, 'ar-SA' => $ar );
 	}
 
-
 	public static function localized_claim_text( $claim_key, $locale, $default ) {
 		$locale = self::sanitize_locale( $locale );
 		$translations = array(
@@ -255,8 +254,17 @@ final class GCU_Policy {
 	}
 
 	public static function sanitize_locale( $locale ) {
-		$locale = str_replace( '_', '-', sanitize_text_field( (string) $locale ) );
-		return preg_match( '/^[a-z]{2,3}(?:-[A-Z][a-z]{3})?(?:-[A-Z]{2}|-[0-9]{3})?$/', $locale ) ? $locale : 'en-US';
+		$locale = str_replace( '_', '-', trim( sanitize_text_field( (string) $locale ) ) );
+		$lookup = array(
+			'en'    => 'en-US',
+			'en-us' => 'en-US',
+			'ur'    => 'ur-PK',
+			'ur-pk' => 'ur-PK',
+			'ar'    => 'ar-SA',
+			'ar-sa' => 'ar-SA',
+		);
+		$key = strtolower( $locale );
+		return isset( $lookup[ $key ] ) ? $lookup[ $key ] : 'en-US';
 	}
 
 	public static function sanitize_audience( $audience ) {
