@@ -17,7 +17,9 @@ jobs:
           ref: review/file14-third-80-round-2026-08-10
           fetch-depth: 0
       - name: Apply third-review corrective replacements
-        run: python3 scripts/apply-file14-third-review-corrections.py
+        run: |
+          python3 scripts/apply-file14-third-review-corrections.py
+          python3 scripts/apply-file14-third-review-deep-corrections.py
       - name: Validate PHP syntax after correction
         run: find 14-global-clinic-usp-integration -name '*.php' -print0 | xargs -0 -n1 php -l
       - name: Commit corrective source state
@@ -29,5 +31,5 @@ jobs:
             exit 0
           fi
           git add 14-global-clinic-usp-integration
-          git commit -m "Apply File 14 third independent review corrections"
+          git commit -m "Apply deeper File 14 third-review corrections"
           git push origin HEAD:review/file14-third-80-round-2026-08-10
