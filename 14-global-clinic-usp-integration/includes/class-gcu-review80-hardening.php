@@ -241,6 +241,9 @@ final class GCU_Review80_Hardening {
 			return $response;
 		}
 		$route = $request->get_route();
+		if ( 0 !== strpos( $route, '/gcu/v1/' ) ) {
+			return $response;
+		}
 		$data = $response->get_data();
 		if ( ! is_array( $data ) ) {
 			return $response;
