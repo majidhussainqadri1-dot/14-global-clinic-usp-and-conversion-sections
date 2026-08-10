@@ -1,0 +1,50 @@
+name: File 14 Fourth Review Locale Gate Fix
+on:
+  push:
+    branches: ['review/file14-fourth-80-round-2026-08-10']
+    paths:
+      - '.github/workflows/file14-fourth-review-locale-gate-fix.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09
+        with:
+          ref: review/file14-fourth-80-round-2026-08-10
+      - name: Correct locale gate and ledger truth
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('scripts/review80-fourth.py')
+          s=p.read_text(encoding='utf-8')
+          old="('73 EN/UR/AR locale coverage retained',\"'ur-PK'\" in fi18n and \"'ar-SA'\" in fi18n and 'en-US' in fi18n),"
+          new="('73 American-English source/fallback + UR/AR translation coverage retained',\"'ur-PK'\" in fi18n and \"'ar-SA'\" in fi18n and 'Choose your next step' in fi18n and \"'en-US'\" in r('14-global-clinic-usp-integration/includes/class-gcu-i18n.php'))),"
+          if old not in s:
+              raise SystemExit('Fourth locale gate signature not found')
+          p.write_text(s.replace(old,new,1),encoding='utf-8')
+
+          p=Path('docs/REVIEW-80-FOURTH-LEDGER-v1.4.2.md')
+          s=p.read_text(encoding='utf-8')
+          old="| 72 | EN/UR/AR locale coverage | PASS — no new repository defect found after preceding corrections; external browser/staging/live evidence remains separate where applicable. |"
+          new="| 72 | EN/UR/AR locale coverage and gate semantics | **DEFECT (QA machinery)** — exact-head CI exposed that the fourth-review gate incorrectly required an explicit `en-US` entry inside the Future translation map, although File 14 uses American-English source/fallback strings with explicit `ur-PK` and `ar-SA` translation sets. The gate now verifies English source/fallback through base i18n plus Urdu/Arabic Future sets. |"
+          if old not in s:
+              raise SystemExit('Fourth ledger locale row not found')
+          s=s.replace(old,new,1)
+          old="Fresh defects were found in rounds **02–24** — **23 defect-bearing rounds**. Rounds 22–24 are QA/release-machinery defects; all earlier listed defects are shipped-source/runtime-contract defects. The remaining **57 rounds** found no additional repository defect after the preceding corrections."
+          new="Fresh defects were found in rounds **02–24 and 72** — **24 defect-bearing rounds**. Rounds 22–24 and 72 are QA/release-machinery defects; all earlier listed defects are shipped-source/runtime-contract defects. The remaining **56 rounds** found no additional repository defect after the preceding corrections."
+          if old not in s:
+              raise SystemExit('Fourth ledger defect index not found')
+          p.write_text(s.replace(old,new,1),encoding='utf-8')
+          PY
+      - name: Run fourth gate before commit
+        run: python3 scripts/review80-fourth.py
+      - name: Commit corrected gate and ledger
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add scripts/review80-fourth.py docs/REVIEW-80-FOURTH-LEDGER-v1.4.2.md
+          git commit -m 'Correct fourth-review locale gate and defect ledger'
+          git push
