@@ -1,0 +1,28 @@
+name: File 14 Fourth Review Finalize
+on:
+  push:
+    branches: ['review/file14-fourth-80-round-2026-08-10']
+    paths:
+      - 'scripts/finalize-file14-fourth-review.py'
+      - '.github/workflows/file14-fourth-review-finalize.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09
+        with:
+          ref: review/file14-fourth-80-round-2026-08-10
+      - name: Finalize fourth-review gates and release truth
+        run: python3 scripts/finalize-file14-fourth-review.py
+      - name: Lint all PHP after finalization
+        run: find 14-global-clinic-usp-integration tests -name '*.php' -print0 | xargs -0 -n1 php -l
+      - name: Commit durable fourth-review state
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'Finalize File 14 fourth independent 80-pass review'
+          git push
