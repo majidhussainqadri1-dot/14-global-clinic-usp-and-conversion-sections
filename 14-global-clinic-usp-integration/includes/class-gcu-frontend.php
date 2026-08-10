@@ -5,6 +5,7 @@ defined( 'ABSPATH' ) || exit;
 final class GCU_Frontend {
 	private $current_route = '';
 	private $degraded_destination = '';
+	private static $instance_counter = 0;
 
 	public function hooks() {
 		add_action( 'init', array( $this, 'rewrites' ) );
@@ -40,10 +41,13 @@ final class GCU_Frontend {
 			$this->degraded_destination = 'module_disabled';
 			return;
 		}
-		$redirect_map = array( 'find_doctor' => 'doctor_directory', 'start_clinic' => 'doctor_onboarding' );
+		$redirect_map = array(
+			'find_doctor'  => 'doctor_directory',
+			'start_clinic' => 'doctor_onboarding',
+		);
 		if ( isset( $redirect_map[ $this->current_route ] ) ) {
 			$health = GCU_Plugin::instance()->contracts()->destination( $redirect_map[ $this->current_route ] );
-			if ( $health['available'] && $health['url'] ) {
+			if ( ! empty( $health['available'] ) && ! empty( $health['url'] ) ) {
 				wp_safe_redirect( $health['url'], 302, 'File 14 canonical destination bridge' );
 				exit;
 			}
@@ -65,12 +69,18 @@ final class GCU_Frontend {
 	public function assets() {
 		$route = sanitize_key( (string) get_query_var( 'gcu_route' ) );
 		global $post;
-		$has_shortcode = $post instanceof WP_Post && ( has_shortcode( $post->post_content, 'gcu_global_clinic' ) || has_shortcode( $post->post_content, 'gcu_how_it_works' ) || has_shortcode( $post->post_content, 'gcu_block' ) );
+		$has_shortcode = $post instanceof WP_Post && (
+			has_shortcode( $post->post_content, 'gcu_global_clinic' ) ||
+			has_shortcode( $post->post_content, 'gcu_how_it_works' ) ||
+			has_shortcode( $post->post_content, 'gcu_block' )
+		);
 		if ( ! $route && ! $has_shortcode ) {
 			return;
 		}
+
 		wp_enqueue_style( 'gcu-public', GCU_URL . 'assets/css/global-clinic-usp-integration.css', array(), GCU_VERSION );
-		if ( GCU_Policy::analytics_consent() ) {
+
+		if ( GCU_Privacy::measurement_allowed() && ! GCU_Privacy::low_bandwidth_requested() ) {
 			wp_enqueue_script( 'gcu-public', GCU_URL . 'assets/js/global-clinic-usp-integration.js', array(), GCU_VERSION, true );
 			wp_localize_script(
 				'gcu-public',
@@ -125,31 +135,61 @@ final class GCU_Frontend {
 	}
 
 	public function render_global_clinic() {
-		$impression = $this->event_token();
-		$html  = '<main class="gcu-page" id="gcu-main" data-gcu-impression-token="' . esc_attr( $impression ) . '">';
-		$html .= $this->navigation_controls();
-		$html .= '<header class="gcu-page__header"><span class="gcu-eyebrow">' . $this->icon( 'globe' ) . esc_html__( 'Worldwide Clinic', 'global-clinic-usp-integration' ) . '</span>';
-		$html .= '<h1>' . esc_html__( 'Global Homeopathic Care and Professional Presence — Connected with Trust', 'global-clinic-usp-integration' ) . '</h1>';
-		$html .= '<p>' . esc_html__( 'One clear entry point for patients seeking verified doctors and for qualified doctors beginning the approval journey for a worldwide clinic.', 'global-clinic-usp-integration' ) . '</p></header>';
-		$html .= $this->render_blocks( 'global_clinic_primary', 'all' );
-		$html .= $this->render_blocks( 'global_clinic_trust', 'all' );
-		$html .= $this->render_blocks( 'global_clinic_steps', 'all' );
-		$html .= $this->render_faqs();
-		$html .= $this->emergency_notice();
-		$html .= '</main>';
+		$locale = $this->current_locale();
+		$root   = $this->root_id( 'global-clinic' );
+		$token  = $this->event_token();
+		$html   = $this->root_open( $root, $locale, $token );
+		$html  .= $this->navigation_controls( 'global_clinic', $locale );
+		$html  .= '<header class="gcu-page__header">';
+		$html  .= '<span class="gcu-eyebrow">' . $this->icon( 'globe' ) . esc_html( GCU_I18n::text( 'worldwide_clinic', $locale ) ) . '</span>';
+		$html  .= '<h1>' . esc_html( GCU_I18n::text( 'hero_title', $locale ) ) . '</h1>';
+		$html  .= '<p>' . esc_html( GCU_I18n::text( 'hero_body', $locale ) ) . '</p></header>';
+		$html  .= $this->render_blocks( 'global_clinic_primary', 'all' );
+		$html  .= $this->render_blocks( 'global_clinic_trust', 'all' );
+		$html  .= $this->render_blocks( 'global_clinic_steps', 'all' );
+		$html  .= $this->render_faqs( $root, $locale );
+		$html  .= $this->emergency_notice( $locale );
+		$html  .= '</div>';
 		return $html;
 	}
 
 	public function render_how_it_works() {
+		$locale    = $this->current_locale();
+		$root      = $this->root_id( 'how-it-works' );
 		$contracts = GCU_Plugin::instance()->contracts();
-		$patient = $contracts->destination( 'doctor_directory' );
-		$doctor  = $contracts->destination( 'doctor_onboarding' );
-		$html  = '<main class="gcu-page" id="gcu-main">' . $this->navigation_controls();
-		$html .= '<header class="gcu-page__header"><span class="gcu-eyebrow">' . $this->icon( 'route' ) . esc_html__( 'Transparent Process', 'global-clinic-usp-integration' ) . '</span><h1>' . esc_html__( 'How the Global Clinic Journey Works', 'global-clinic-usp-integration' ) . '</h1></header>';
-		$html .= '<section class="gcu-journeys" aria-label="' . esc_attr__( 'Patient and doctor journeys', 'global-clinic-usp-integration' ) . '">';
-		$html .= $this->journey_card( __( 'For Patients', 'global-clinic-usp-integration' ), array( __( 'Search the verified public directory.', 'global-clinic-usp-integration' ), __( 'Review the canonical doctor profile and clinic information.', 'global-clinic-usp-integration' ), __( 'Sign in for protected contact, save or appointment actions.', 'global-clinic-usp-integration' ), __( 'Use the clinic owner for availability, consent and booking status.', 'global-clinic-usp-integration' ) ), $patient, __( 'Find a Global Doctor', 'global-clinic-usp-integration' ), 'patient' );
-		$html .= $this->journey_card( __( 'For Doctors', 'global-clinic-usp-integration' ), array( __( 'Create a high-trust account and accept platform rules.', 'global-clinic-usp-integration' ), __( 'Submit identity and professional evidence to File 09.', 'global-clinic-usp-integration' ), __( 'Complete review, additional-information or appeal steps where required.', 'global-clinic-usp-integration' ), __( 'After approval, configure the canonical profile and clinic owners.', 'global-clinic-usp-integration' ) ), $doctor, __( 'Start Your Global Clinic', 'global-clinic-usp-integration' ), 'doctor' );
-		$html .= '</section>' . $this->render_faqs() . $this->emergency_notice() . '</main>';
+		$patient   = $contracts->destination( 'doctor_directory' );
+		$doctor    = $contracts->destination( 'doctor_onboarding' );
+		$html      = $this->root_open( $root, $locale, '' );
+		$html     .= $this->navigation_controls( 'how_it_works', $locale );
+		$html     .= '<header class="gcu-page__header"><span class="gcu-eyebrow">' . $this->icon( 'route' ) . esc_html( GCU_I18n::text( 'transparent_process', $locale ) ) . '</span><h1>' . esc_html( GCU_I18n::text( 'how_title', $locale ) ) . '</h1></header>';
+		$html     .= '<section class="gcu-journeys" aria-label="' . esc_attr( GCU_I18n::text( 'journeys_label', $locale ) ) . '">';
+		$html     .= $this->journey_card(
+			GCU_I18n::text( 'for_patients', $locale ),
+			array(
+				GCU_I18n::text( 'patient_step_1', $locale ),
+				GCU_I18n::text( 'patient_step_2', $locale ),
+				GCU_I18n::text( 'patient_step_3', $locale ),
+				GCU_I18n::text( 'patient_step_4', $locale ),
+			),
+			$patient,
+			GCU_I18n::text( 'find_doctor', $locale ),
+			'patient',
+			$locale
+		);
+		$html     .= $this->journey_card(
+			GCU_I18n::text( 'for_doctors', $locale ),
+			array(
+				GCU_I18n::text( 'doctor_step_1', $locale ),
+				GCU_I18n::text( 'doctor_step_2', $locale ),
+				GCU_I18n::text( 'doctor_step_3', $locale ),
+				GCU_I18n::text( 'doctor_step_4', $locale ),
+			),
+			$doctor,
+			GCU_I18n::text( 'start_clinic', $locale ),
+			'doctor',
+			$locale
+		);
+		$html .= '</section>' . $this->render_faqs( $root, $locale ) . $this->emergency_notice( $locale ) . '</div>';
 		return $html;
 	}
 
@@ -160,24 +200,26 @@ final class GCU_Frontend {
 			$rows = GCU_Plugin::instance()->repository()->active_blocks( $slot, $audience, 'en-US' );
 		}
 		if ( empty( $rows ) ) {
-			return '<section class="gcu-state gcu-state--empty" role="status"><h2>' . esc_html__( 'Content is being reviewed', 'global-clinic-usp-integration' ) . '</h2><p>' . esc_html__( 'The approved version is temporarily unavailable. Please use the Home link or return later.', 'global-clinic-usp-integration' ) . '</p></section>';
+			return '<section class="gcu-state gcu-state--empty" role="status" aria-live="polite"><h2>' . esc_html( GCU_I18n::text( 'content_review_title', $locale ) ) . '</h2><p>' . esc_html( GCU_I18n::text( 'content_review_body', $locale ) ) . '</p></section>';
 		}
+
 		$html = '<section class="gcu-grid gcu-grid--' . esc_attr( $slot ) . '">';
 		foreach ( $rows as $row ) {
-			$health = $row['cta_destination'] ? GCU_Plugin::instance()->contracts()->destination( $row['cta_destination'] ) : array( 'available' => false, 'url' => '' );
+			$health = ! empty( $row['cta_destination'] ) ? GCU_Plugin::instance()->contracts()->destination( $row['cta_destination'] ) : array( 'available' => false, 'url' => '' );
 			$claims = GCU_Plugin::instance()->repository()->public_claims( $row['claim_keys'] );
-			$html .= '<article class="gcu-card gcu-card--' . esc_attr( $row['block_type'] ) . '" data-block-version="' . esc_attr( $row['content_version'] ) . '">';
-			$html .= '<div class="gcu-card__icon" aria-hidden="true">' . $this->icon( 'patient' === $row['audience'] ? 'search' : ( 'doctor' === $row['audience'] ? 'clinic' : 'shield' ) ) . '</div>';
-			$html .= '<h2>' . esc_html( $row['title'] ) . '</h2><div class="gcu-card__body">' . wp_kses_post( wpautop( $row['body'] ) ) . '</div>';
+			$html  .= '<article class="gcu-card gcu-card--' . esc_attr( $row['block_type'] ) . '" data-block-version="' . esc_attr( $row['content_version'] ) . '">';
+			$html  .= '<div class="gcu-card__icon" aria-hidden="true">' . $this->icon( 'patient' === $row['audience'] ? 'search' : ( 'doctor' === $row['audience'] ? 'clinic' : 'shield' ) ) . '</div>';
+			$html  .= '<h2>' . esc_html( $row['title'] ) . '</h2><div class="gcu-card__body">' . wp_kses_post( wpautop( $row['body'] ) ) . '</div>';
 			if ( $row['cta_label'] ) {
-				if ( $health['available'] && $health['url'] ) {
-					$html .= '<a class="gcu-button" href="' . esc_url( $health['url'] ) . '" data-gcu-destination="' . esc_attr( $row['cta_destination'] ) . '" data-gcu-event-token="' . esc_attr( $this->event_token() ) . '">' . $this->icon( 'arrow' ) . '<span>' . esc_html( $row['cta_label'] ) . '</span></a>';
+				if ( ! empty( $health['available'] ) && ! empty( $health['url'] ) ) {
+					$token = $this->event_token();
+					$html .= '<a class="gcu-button" href="' . esc_url( $health['url'] ) . '" data-gcu-destination="' . esc_attr( $row['cta_destination'] ) . '"' . ( $token ? ' data-gcu-event-token="' . esc_attr( $token ) . '"' : '' ) . '>' . $this->icon( 'arrow', true ) . '<span>' . esc_html( $row['cta_label'] ) . '</span></a>';
 				} else {
-					$html .= '<p class="gcu-destination-state" role="status">' . $this->icon( 'info' ) . esc_html__( 'This destination is temporarily unavailable. No application, booking or approval has been inferred.', 'global-clinic-usp-integration' ) . '</p>';
+					$html .= '<p class="gcu-destination-state" role="status" aria-live="polite">' . $this->icon( 'info' ) . '<span>' . esc_html( GCU_I18n::text( 'destination_unavailable', $locale ) ) . '</span></p>';
 				}
 			}
 			if ( $claims ) {
-				$html .= '<details class="gcu-claims"><summary>' . esc_html__( 'Trust and policy details', 'global-clinic-usp-integration' ) . '</summary><ul>';
+				$html .= '<details class="gcu-claims"><summary>' . esc_html( GCU_I18n::text( 'trust_policy_details', $locale ) ) . '</summary><ul>';
 				foreach ( $claims as $claim ) {
 					$html .= '<li>' . esc_html( GCU_Policy::localized_claim_text( $claim['claim_key'], $locale, $claim['claim_text'] ) ) . '</li>';
 				}
@@ -190,59 +232,74 @@ final class GCU_Frontend {
 	}
 
 	public function current_locale() {
-		$locale = determine_locale();
-		$map = array( 'en_US' => 'en-US', 'ur' => 'ur-PK', 'ur_PK' => 'ur-PK', 'ar' => 'ar-SA', 'ar_SA' => 'ar-SA' );
-		return isset( $map[ $locale ] ) ? $map[ $locale ] : GCU_Policy::sanitize_locale( str_replace( '_', '-', $locale ) );
+		return GCU_I18n::current_locale();
 	}
 
-	private function render_faqs() {
-		$locale = $this->current_locale();
-		$items  = GCU_Plugin::instance()->repository()->active_blocks( 'global_clinic_faq', 'all', $locale );
+	private function render_faqs( $root, $locale ) {
+		$items = GCU_Plugin::instance()->repository()->active_blocks( 'global_clinic_faq', 'all', $locale );
 		if ( empty( $items ) && 'en-US' !== $locale ) {
 			$items = GCU_Plugin::instance()->repository()->active_blocks( 'global_clinic_faq', 'all', 'en-US' );
 		}
 		if ( empty( $items ) ) {
 			return '';
 		}
-		$html = '<section class="gcu-faq" aria-labelledby="gcu-faq-title"><h2 id="gcu-faq-title">' . $this->icon( 'question' ) . esc_html__( 'Frequently Asked Questions', 'global-clinic-usp-integration' ) . '</h2>';
+		$title_id = $root . '-faq-title';
+		$html = '<section class="gcu-faq" aria-labelledby="' . esc_attr( $title_id ) . '"><h2 id="' . esc_attr( $title_id ) . '">' . $this->icon( 'question' ) . esc_html( GCU_I18n::text( 'faq_title', $locale ) ) . '</h2>';
 		foreach ( $items as $item ) {
 			$html .= '<details data-block-version="' . esc_attr( $item['content_version'] ) . '"><summary>' . esc_html( $item['title'] ) . '</summary><div>' . wp_kses_post( wpautop( $item['body'] ) ) . '</div></details>';
 		}
 		return $html . '</section>';
 	}
 
-	private function journey_card( $title, array $steps, array $health, $label, $audience ) {
-		$html = '<article class="gcu-card gcu-card--journey"><div class="gcu-card__icon">' . $this->icon( 'patient' === $audience ? 'search' : 'clinic' ) . '</div><h2>' . esc_html( $title ) . '</h2><ol>';
+	private function journey_card( $title, array $steps, array $health, $label, $audience, $locale ) {
+		$html = '<article class="gcu-card gcu-card--journey"><div class="gcu-card__icon" aria-hidden="true">' . $this->icon( 'patient' === $audience ? 'search' : 'clinic' ) . '</div><h2>' . esc_html( $title ) . '</h2><ol>';
 		foreach ( $steps as $step ) {
 			$html .= '<li>' . esc_html( $step ) . '</li>';
 		}
 		$html .= '</ol>';
-		if ( $health['available'] && $health['url'] ) {
-			$html .= '<a class="gcu-button" href="' . esc_url( $health['url'] ) . '" data-gcu-destination="' . esc_attr( $health['key'] ) . '" data-gcu-event-token="' . esc_attr( $this->event_token() ) . '">' . $this->icon( 'arrow' ) . esc_html( $label ) . '</a>';
+		if ( ! empty( $health['available'] ) && ! empty( $health['url'] ) ) {
+			$token = $this->event_token();
+			$html .= '<a class="gcu-button" href="' . esc_url( $health['url'] ) . '" data-gcu-destination="' . esc_attr( $health['key'] ) . '"' . ( $token ? ' data-gcu-event-token="' . esc_attr( $token ) . '"' : '' ) . '>' . $this->icon( 'arrow', true ) . '<span>' . esc_html( $label ) . '</span></a>';
 		} else {
-			$html .= '<p class="gcu-destination-state" role="status">' . esc_html__( 'Owner destination unavailable; no action was created.', 'global-clinic-usp-integration' ) . '</p>';
+			$html .= '<p class="gcu-destination-state" role="status" aria-live="polite">' . $this->icon( 'info' ) . '<span>' . esc_html( GCU_I18n::text( 'owner_unavailable', $locale ) ) . '</span></p>';
 		}
 		return $html . '</article>';
 	}
 
 	private function render_degraded( $destination ) {
-		return '<main class="gcu-page" id="gcu-main">' . $this->navigation_controls() . '<section class="gcu-state gcu-state--error" role="alert"><div class="gcu-state__icon">' . $this->icon( 'info' ) . '</div><h1>' . esc_html__( 'Service temporarily unavailable', 'global-clinic-usp-integration' ) . '</h1><p>' . esc_html__( 'The requested owner destination is unavailable or incompatible. No booking, application, verification or clinical action has been created.', 'global-clinic-usp-integration' ) . '</p><p><code>' . esc_html( sanitize_key( $destination ) ) . '</code></p></section></main>';
+		$locale = $this->current_locale();
+		$root   = $this->root_id( 'degraded' );
+		$html   = $this->root_open( $root, $locale, '' );
+		$html  .= $this->navigation_controls( 'degraded', $locale );
+		$html  .= '<section class="gcu-state gcu-state--error" role="alert" aria-live="assertive"><div class="gcu-state__icon" aria-hidden="true">' . $this->icon( 'info' ) . '</div><h1>' . esc_html( GCU_I18n::text( 'service_unavailable', $locale ) ) . '</h1><p>' . esc_html( GCU_I18n::text( 'degraded_body', $locale ) ) . '</p><p><code>' . esc_html( sanitize_key( $destination ) ) . '</code></p></section></div>';
+		return $html;
 	}
 
-	private function emergency_notice() {
-		return '<aside class="gcu-emergency" role="note">' . $this->icon( 'alert' ) . '<div><strong>' . esc_html__( 'Emergency limitation', 'global-clinic-usp-integration' ) . '</strong><p>' . esc_html__( 'This platform is not an emergency service. For urgent or life-threatening symptoms, contact local emergency services immediately.', 'global-clinic-usp-integration' ) . '</p></div></aside>';
+	private function emergency_notice( $locale ) {
+		return '<aside class="gcu-emergency" role="note">' . $this->icon( 'alert' ) . '<div><strong>' . esc_html( GCU_I18n::text( 'emergency_title', $locale ) ) . '</strong><p>' . esc_html( GCU_I18n::text( 'emergency_body', $locale ) ) . '</p></div></aside>';
 	}
 
-	private function navigation_controls() {
-		$shared = apply_filters( 'sabri_shell_back_home_controls', '', array( 'owner' => 'File 14', 'home_url' => home_url( '/' ), 'fallback_url' => home_url( '/global-clinic/' ) ) );
+	private function navigation_controls( $context, $locale ) {
+		$shared = apply_filters(
+			'sabri_shell_back_home_controls',
+			'',
+			array(
+				'owner'        => 'File 14',
+				'home_url'     => home_url( '/' ),
+				'fallback_url' => home_url( '/global-clinic/' ),
+				'direction'    => GCU_I18n::direction( $locale ),
+			)
+		);
 		if ( is_string( $shared ) && '' !== trim( $shared ) ) {
 			return $shared;
 		}
-		return '<nav class="gcu-context-nav" aria-label="' . esc_attr__( 'Page navigation', 'global-clinic-usp-integration' ) . '"><button type="button" class="gcu-context-nav__back" onclick="if(history.length>1){history.back()}else{location.href=\'' . esc_js( home_url( '/global-clinic/' ) ) . '\'}">' . $this->icon( 'back' ) . '<span>' . esc_html__( 'Back', 'global-clinic-usp-integration' ) . '</span></button><a href="' . esc_url( home_url( '/' ) ) . '">' . $this->icon( 'home' ) . '<span>' . esc_html__( 'Home', 'global-clinic-usp-integration' ) . '</span></a></nav>';
+
+		$back_url = 'global_clinic' === $context ? home_url( '/' ) : home_url( '/global-clinic/' );
+		return '<nav class="gcu-context-nav" data-gcu-shell-fallback="true" aria-label="' . esc_attr( GCU_I18n::text( 'page_navigation', $locale ) ) . '"><a href="' . esc_url( $back_url ) . '">' . $this->icon( 'back', true ) . '<span>' . esc_html( GCU_I18n::text( 'back', $locale ) ) . '</span></a><a href="' . esc_url( home_url( '/' ) ) . '" rel="home">' . $this->icon( 'home' ) . '<span>' . esc_html( GCU_I18n::text( 'home', $locale ) ) . '</span></a></nav>';
 	}
 
 	private function event_token() {
-		if ( ! GCU_Policy::analytics_consent() ) {
+		if ( ! GCU_Privacy::measurement_allowed() || GCU_Privacy::low_bandwidth_requested() ) {
 			return '';
 		}
 		$id  = wp_generate_uuid4();
@@ -251,7 +308,23 @@ final class GCU_Frontend {
 		return $id . '.' . hash_hmac( 'sha256', $id, wp_salt( 'nonce' ) );
 	}
 
-	private function icon( $name ) {
+	private function root_open( $root, $locale, $token ) {
+		$attrs = ' id="' . esc_attr( $root ) . '" lang="' . esc_attr( GCU_I18n::language( $locale ) ) . '" dir="' . esc_attr( GCU_I18n::direction( $locale ) ) . '" data-gcu-module-version="' . esc_attr( GCU_VERSION ) . '"';
+		if ( GCU_Privacy::low_bandwidth_requested() ) {
+			$attrs .= ' data-gcu-low-bandwidth="true"';
+		}
+		if ( $token ) {
+			$attrs .= ' data-gcu-impression-token="' . esc_attr( $token ) . '"';
+		}
+		return '<div class="gcu-page"' . $attrs . '>';
+	}
+
+	private function root_id( $context ) {
+		self::$instance_counter++;
+		return 'gcu-' . sanitize_html_class( $context ) . '-' . self::$instance_counter;
+	}
+
+	private function icon( $name, $directional = false ) {
 		$paths = array(
 			'globe'    => '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18"/>',
 			'route'    => '<circle cx="6" cy="18" r="2"/><circle cx="18" cy="6" r="2"/><path d="M8 18h3a3 3 0 0 0 3-3v-6a3 3 0 0 1 3-3"/>',
@@ -265,7 +338,8 @@ final class GCU_Frontend {
 			'back'     => '<path d="m15 18-6-6 6-6"/>',
 			'home'     => '<path d="m3 11 9-8 9 8v10h-6v-6H9v6H3V11Z"/>',
 		);
-		$path = isset( $paths[ $name ] ) ? $paths[ $name ] : $paths['info'];
-		return '<svg class="gcu-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">' . $path . '</svg>';
+		$path  = isset( $paths[ $name ] ) ? $paths[ $name ] : $paths['info'];
+		$class = 'gcu-icon' . ( $directional ? ' gcu-icon--directional' : '' );
+		return '<svg class="' . esc_attr( $class ) . '" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">' . $path . '</svg>';
 	}
 }

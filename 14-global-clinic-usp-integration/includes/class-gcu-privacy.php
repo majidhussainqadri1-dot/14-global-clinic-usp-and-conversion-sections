@@ -9,6 +9,23 @@ final class GCU_Privacy {
 		add_action( 'init', array( $this, 'capture_attribution' ), 5 );
 	}
 
+	public static function global_privacy_control_requested() {
+		$gpc = isset( $_SERVER['HTTP_SEC_GPC'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_SEC_GPC'] ) ) : '';
+		return '1' === $gpc;
+	}
+
+	public static function low_bandwidth_requested() {
+		$save_data = isset( $_SERVER['HTTP_SAVE_DATA'] ) ? strtolower( sanitize_text_field( wp_unslash( $_SERVER['HTTP_SAVE_DATA'] ) ) ) : '';
+		return 'on' === $save_data;
+	}
+
+	public static function measurement_allowed() {
+		if ( self::global_privacy_control_requested() ) {
+			return false;
+		}
+		return GCU_Policy::analytics_consent();
+	}
+
 	public function exporters( $exporters ) {
 		$exporters['gcu-conversion-attribution'] = array(
 			'exporter_friendly_name' => __( 'Global Clinic conversion attribution', 'global-clinic-usp-integration' ),
@@ -28,7 +45,7 @@ final class GCU_Privacy {
 	public function export_data( $email_address, $page = 1 ) {
 		unset( $email_address, $page );
 		$data = array();
-		if ( GCU_Policy::analytics_consent() && ! empty( $_COOKIE['gcu_attribution'] ) ) {
+		if ( ! empty( $_COOKIE['gcu_attribution'] ) ) {
 			$decoded = $this->decode_attribution( wp_unslash( $_COOKIE['gcu_attribution'] ) );
 			if ( $decoded ) {
 				$data[] = array(
@@ -54,7 +71,13 @@ final class GCU_Privacy {
 	}
 
 	public function capture_attribution() {
-		if ( ! GCU_Policy::analytics_consent() ) {
+		if ( ! self::measurement_allowed() ) {
+			if ( ! empty( $_COOKIE['gcu_attribution'] ) ) {
+				$this->expire_cookie( 'gcu_attribution' );
+			}
+			return;
+		}
+		if ( ! $this->is_file14_acquisition_route() ) {
 			return;
 		}
 		$input = array(
@@ -88,7 +111,7 @@ final class GCU_Privacy {
 	}
 
 	public function current_campaign() {
-		if ( ! GCU_Policy::analytics_consent() || empty( $_COOKIE['gcu_attribution'] ) ) {
+		if ( ! self::measurement_allowed() || empty( $_COOKIE['gcu_attribution'] ) ) {
 			return array();
 		}
 		$data = $this->decode_attribution( wp_unslash( $_COOKIE['gcu_attribution'] ) );
@@ -102,6 +125,19 @@ final class GCU_Privacy {
 			'campaign' => isset( $data['last_campaign'] ) ? $data['last_campaign'] : '',
 			'ref'      => isset( $data['last_ref'] ) ? $data['last_ref'] : '',
 		);
+	}
+
+	private function is_file14_acquisition_route() {
+		$path = wp_parse_url( isset( $_SERVER['REQUEST_URI'] ) ? wp_unslash( $_SERVER['REQUEST_URI'] ) : '/', PHP_URL_PATH );
+		$path = '/' . ltrim( (string) $path, '/' );
+		$allowed = array(
+			'/global-clinic/',
+			'/find-a-global-doctor/',
+			'/start-your-global-clinic/',
+			'/clinic/how-it-works/',
+		);
+		$normalized = trailingslashit( $path );
+		return in_array( $normalized, $allowed, true );
 	}
 
 	private function encode_attribution( array $payload ) {

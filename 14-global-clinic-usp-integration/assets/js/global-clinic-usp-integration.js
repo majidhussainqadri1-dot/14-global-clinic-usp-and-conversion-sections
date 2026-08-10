@@ -5,12 +5,26 @@
 		return;
 	}
 
+	if (window.navigator && window.navigator.globalPrivacyControl === true) {
+		return;
+	}
+
+	if (window.navigator && window.navigator.connection && window.navigator.connection.saveData === true) {
+		return;
+	}
+
 	function send(stage, destination, token) {
 		if (!token) {
 			return;
 		}
+
+		var eventId = (window.crypto && window.crypto.randomUUID) ? window.crypto.randomUUID() : '';
+		if (!eventId) {
+			return;
+		}
+
 		var body = JSON.stringify({
-			event_id: (window.crypto && window.crypto.randomUUID) ? window.crypto.randomUUID() : '',
+			event_id: eventId,
 			stage: stage,
 			destination: destination || ''
 		});

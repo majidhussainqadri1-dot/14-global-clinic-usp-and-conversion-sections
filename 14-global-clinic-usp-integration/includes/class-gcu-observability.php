@@ -32,17 +32,23 @@ final class GCU_Observability {
 				}
 			}
 		}
+		$localization_missing = GCU_I18n::missing_keys();
 		return array(
-			'version'             => GCU_VERSION,
-			'schema_version'      => (int) get_option( GCU_Install::SCHEMA_OPTION, 0 ),
-			'enabled'             => (bool) get_option( 'gcu_enabled', 1 ),
-			'missing_tables'      => $missing,
-			'stale_claims'        => $stale_claims,
-			'destinations'        => $destinations,
-			'event_queue'         => $queue,
-			'legacy_migration'    => get_option( GCU_Install::MIGRATION_LOG, array() ),
-			'policy_revalidation' => get_option( 'gcu_policy_revalidation_required', array() ),
-			'generated_at'        => gmdate( 'c' ),
+			'version'               => GCU_VERSION,
+			'plan_version'          => GCU_PLAN_VERSION,
+			'central_plan_baseline' => GCU_CENTRAL_PLAN_BASELINE,
+			'brand_primary'         => GCU_BRAND_PRIMARY,
+			'schema_version'        => (int) get_option( GCU_Install::SCHEMA_OPTION, 0 ),
+			'enabled'               => (bool) get_option( 'gcu_enabled', 1 ),
+			'missing_tables'        => $missing,
+			'stale_claims'          => $stale_claims,
+			'destinations'          => $destinations,
+			'event_queue'           => $queue,
+			'localization_complete' => empty( $localization_missing ),
+			'localization_missing'  => $localization_missing,
+			'legacy_migration'      => get_option( GCU_Install::MIGRATION_LOG, array() ),
+			'policy_revalidation'   => get_option( 'gcu_policy_revalidation_required', array() ),
+			'generated_at'          => gmdate( 'c' ),
 		);
 	}
 
@@ -53,18 +59,18 @@ final class GCU_Observability {
 	public function daily_governance_check() {
 		$report = $this->health_report();
 		update_option( 'gcu_last_health_report', $report, false );
-		if ( ! empty( $report['missing_tables'] ) || $report['stale_claims'] > 0 || $report['event_queue']['dead'] > 0 ) {
+		if ( ! empty( $report['missing_tables'] ) || $report['stale_claims'] > 0 || $report['event_queue']['dead'] > 0 || ! $report['localization_complete'] ) {
 			do_action( 'gcu_operational_alert_v1', array( 'severity' => 'warning', 'report' => $report, 'owner' => 'File 14 release operator' ) );
 		}
 	}
 
 	public static function log( $level, $code, array $context = array() ) {
 		$record = array(
-			'level'      => sanitize_key( $level ),
-			'code'       => sanitize_key( $code ),
-			'trace_id'   => isset( $context['trace_id'] ) ? sanitize_text_field( $context['trace_id'] ) : GCU_Policy::trace_id(),
-			'context'    => self::redact( $context ),
-			'occurred_at'=> gmdate( 'c' ),
+			'level'       => sanitize_key( $level ),
+			'code'        => sanitize_key( $code ),
+			'trace_id'    => isset( $context['trace_id'] ) ? sanitize_text_field( $context['trace_id'] ) : GCU_Policy::trace_id(),
+			'context'     => self::redact( $context ),
+			'occurred_at' => gmdate( 'c' ),
 		);
 		do_action( 'gcu_structured_log_v1', $record );
 		if ( defined( 'WP_DEBUG_LOG' ) && WP_DEBUG_LOG ) {

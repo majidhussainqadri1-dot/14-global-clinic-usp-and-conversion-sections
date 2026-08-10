@@ -1,18 +1,19 @@
 :root {
-	--gcu-green-900: #123b2a;
-	--gcu-green-800: #18533a;
-	--gcu-green-700: #1f6b49;
-	--gcu-green-600: #27835a;
-	--gcu-green-100: #e8f5ee;
-	--gcu-green-050: #f4fbf7;
-	--gcu-gold-100: #fff6d9;
-	--gcu-blue-100: #eaf4ff;
-	--gcu-red-100: #fff0ed;
-	--gcu-ink: #17221d;
-	--gcu-muted: #52635a;
-	--gcu-border: #cbdad1;
-	--gcu-white: #fff;
-	--gcu-shadow: 0 12px 35px rgba(18, 59, 42, .10);
+	--gcu-brand-primary: #087A4E;
+	--gcu-brand-primary-hover: #06653F;
+	--gcu-brand-primary-strong: #044B2F;
+	--gcu-brand-surface: #EAF7F1;
+	--gcu-brand-surface-soft: #F5FBF8;
+	--gcu-context-blue: #EAF4FF;
+	--gcu-context-gold: #FFF6D9;
+	--gcu-danger-surface: #FFF0ED;
+	--gcu-danger: #8E2416;
+	--gcu-ink: #17221D;
+	--gcu-muted: #4B5F55;
+	--gcu-border: #C6D8CF;
+	--gcu-white: #FFFFFF;
+	--gcu-focus: #005FCC;
+	--gcu-shadow: 0 12px 35px rgba(8, 122, 78, .10);
 	--gcu-radius: 18px;
 }
 
@@ -28,6 +29,8 @@
 	color: var(--gcu-ink);
 	font-size: 1rem;
 	line-height: 1.7;
+	overflow-wrap: anywhere;
+	word-break: normal;
 }
 
 .gcu-page[dir="rtl"],
@@ -36,8 +39,19 @@ html[dir="rtl"] .gcu-page {
 	text-align: start;
 }
 
+.gcu-page[dir="ltr"] {
+	direction: ltr;
+	text-align: start;
+}
+
+.gcu-page[dir="rtl"] .gcu-icon--directional,
+html[dir="rtl"] .gcu-page .gcu-icon--directional {
+	transform: scaleX(-1);
+}
+
 .gcu-context-nav {
 	display: flex;
+	flex-wrap: wrap;
 	justify-content: flex-start;
 	gap: 10px;
 	margin-block-end: 20px;
@@ -55,7 +69,7 @@ html[dir="rtl"] .gcu-page {
 	border: 1px solid var(--gcu-border);
 	border-radius: 999px;
 	background: var(--gcu-white);
-	color: var(--gcu-green-800);
+	color: var(--gcu-brand-primary-strong);
 	font: inherit;
 	font-weight: 700;
 	text-decoration: none;
@@ -64,7 +78,8 @@ html[dir="rtl"] .gcu-page {
 
 .gcu-context-nav a:hover,
 .gcu-context-nav button:hover {
-	background: var(--gcu-green-050);
+	background: var(--gcu-brand-surface-soft);
+	border-color: var(--gcu-brand-primary);
 }
 
 .gcu-context-nav a:focus-visible,
@@ -72,7 +87,7 @@ html[dir="rtl"] .gcu-page {
 .gcu-button:focus-visible,
 .gcu-faq summary:focus-visible,
 .gcu-claims summary:focus-visible {
-	outline: 3px solid #fdc84a;
+	outline: 3px solid var(--gcu-focus);
 	outline-offset: 3px;
 }
 
@@ -82,7 +97,7 @@ html[dir="rtl"] .gcu-page {
 	padding: clamp(24px, 5vw, 56px);
 	border: 1px solid var(--gcu-border);
 	border-radius: calc(var(--gcu-radius) + 6px);
-	background: linear-gradient(135deg, var(--gcu-green-050), var(--gcu-blue-100));
+	background: linear-gradient(135deg, var(--gcu-brand-surface-soft), var(--gcu-context-blue));
 	box-shadow: var(--gcu-shadow);
 	margin-block-end: 24px;
 }
@@ -95,17 +110,21 @@ html[dir="rtl"] .gcu-page {
 	width: 220px;
 	height: 220px;
 	border-radius: 50%;
-	background: rgba(39, 131, 90, .10);
+	background: rgba(8, 122, 78, .10);
 	pointer-events: none;
 }
 
 .gcu-page__header h1 {
 	max-width: 860px;
-	margin: 10px 0 12px;
+	margin-block: 10px 12px;
 	font-size: clamp(2rem, 5vw, 4rem);
 	line-height: 1.15;
 	letter-spacing: -.025em;
-	color: var(--gcu-green-900);
+	color: var(--gcu-brand-primary-strong);
+}
+
+.gcu-page[dir="rtl"] .gcu-page__header h1 {
+	letter-spacing: normal;
 }
 
 .gcu-page__header p {
@@ -120,8 +139,12 @@ html[dir="rtl"] .gcu-page {
 	align-items: center;
 	gap: 8px;
 	font-weight: 800;
-	color: var(--gcu-green-700);
+	color: var(--gcu-brand-primary);
 	letter-spacing: .02em;
+}
+
+.gcu-page[dir="rtl"] .gcu-eyebrow {
+	letter-spacing: normal;
 }
 
 .gcu-grid,
@@ -143,26 +166,27 @@ html[dir="rtl"] .gcu-page {
 	border: 1px solid var(--gcu-border);
 	border-radius: var(--gcu-radius);
 	background: var(--gcu-white);
-	box-shadow: 0 8px 24px rgba(18, 59, 42, .07);
+	box-shadow: 0 8px 24px rgba(8, 122, 78, .07);
 }
 
 .gcu-card--hero:nth-child(1) {
-	background: linear-gradient(180deg, var(--gcu-white), var(--gcu-blue-100));
+	background: linear-gradient(180deg, var(--gcu-white), var(--gcu-context-blue));
 }
 
 .gcu-card--hero:nth-child(2) {
-	background: linear-gradient(180deg, var(--gcu-white), var(--gcu-green-100));
+	background: linear-gradient(180deg, var(--gcu-white), var(--gcu-brand-surface));
 }
 
 .gcu-card--trust {
-	background: linear-gradient(180deg, var(--gcu-white), var(--gcu-gold-100));
+	background: linear-gradient(180deg, var(--gcu-white), var(--gcu-context-gold));
 }
 
 .gcu-card h2,
 .gcu-faq h2,
-.gcu-state h1 {
+.gcu-state h1,
+.gcu-state h2 {
 	margin-block: 10px 12px;
-	color: var(--gcu-green-900);
+	color: var(--gcu-brand-primary-strong);
 	font-size: clamp(1.35rem, 2.5vw, 2rem);
 	line-height: 1.3;
 }
@@ -182,8 +206,8 @@ html[dir="rtl"] .gcu-page {
 	align-items: center;
 	justify-content: center;
 	border-radius: 16px;
-	background: var(--gcu-green-100);
-	color: var(--gcu-green-700);
+	background: var(--gcu-brand-surface);
+	color: var(--gcu-brand-primary);
 }
 
 .gcu-icon {
@@ -200,17 +224,17 @@ html[dir="rtl"] .gcu-page {
 	gap: 9px;
 	margin-block-start: 12px;
 	padding: 10px 18px;
-	border: 2px solid var(--gcu-green-700);
+	border: 2px solid var(--gcu-brand-primary);
 	border-radius: 12px;
-	background: var(--gcu-green-700);
+	background: var(--gcu-brand-primary);
 	color: var(--gcu-white) !important;
 	font-weight: 800;
 	text-decoration: none !important;
 }
 
 .gcu-button:hover {
-	background: var(--gcu-green-900);
-	border-color: var(--gcu-green-900);
+	background: var(--gcu-brand-primary-hover);
+	border-color: var(--gcu-brand-primary-hover);
 }
 
 .gcu-destination-state {
@@ -218,8 +242,8 @@ html[dir="rtl"] .gcu-page {
 	align-items: flex-start;
 	gap: 8px;
 	padding: 12px 14px;
-	border-inline-start: 4px solid #d59b00;
-	background: var(--gcu-gold-100);
+	border-inline-start: 4px solid #9A6D00;
+	background: var(--gcu-context-gold);
 	border-radius: 8px;
 }
 
@@ -237,7 +261,7 @@ html[dir="rtl"] .gcu-page {
 	align-items: center;
 	font-weight: 750;
 	cursor: pointer;
-	color: var(--gcu-green-800);
+	color: var(--gcu-brand-primary-strong);
 }
 
 .gcu-claims ul,
@@ -249,7 +273,7 @@ html[dir="rtl"] .gcu-page {
 	padding: clamp(20px, 3vw, 32px);
 	border: 1px solid var(--gcu-border);
 	border-radius: var(--gcu-radius);
-	background: var(--gcu-green-050);
+	background: var(--gcu-brand-surface-soft);
 	margin-block: 24px;
 }
 
@@ -264,11 +288,11 @@ html[dir="rtl"] .gcu-page {
 	align-items: flex-start;
 	gap: 14px;
 	padding: 18px;
-	border: 1px solid #efb4a9;
-	border-inline-start: 5px solid #ad301d;
+	border: 1px solid #E8A89C;
+	border-inline-start: 5px solid var(--gcu-danger);
 	border-radius: 12px;
-	background: var(--gcu-red-100);
-	color: #6a2116;
+	background: var(--gcu-danger-surface);
+	color: #651C12;
 }
 
 .gcu-emergency p {
@@ -291,7 +315,13 @@ html[dir="rtl"] .gcu-page {
 }
 
 .gcu-state--error {
-	background: var(--gcu-red-100);
+	background: var(--gcu-danger-surface);
+}
+
+.gcu-page code {
+	font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+	font-size: .9em;
+	unicode-bidi: plaintext;
 }
 
 @media (max-width: 760px) {
@@ -302,7 +332,7 @@ html[dir="rtl"] .gcu-page {
 
 	.gcu-grid,
 	.gcu-journeys {
-		grid-template-columns: 1fr;
+		grid-template-columns: minmax(0, 1fr);
 		gap: 14px;
 	}
 
@@ -317,6 +347,18 @@ html[dir="rtl"] .gcu-page {
 	}
 }
 
+@media (max-width: 360px) {
+	.gcu-page {
+		width: min(100% - 10px, 1180px);
+	}
+
+	.gcu-context-nav a,
+	.gcu-context-nav button,
+	.gcu-button {
+		width: 100%;
+	}
+}
+
 @media (prefers-reduced-motion: reduce) {
 	.gcu-page *,
 	.gcu-page *::before,
@@ -328,13 +370,77 @@ html[dir="rtl"] .gcu-page {
 	}
 }
 
-@media (forced-colors: active) {
+@media (prefers-reduced-data: reduce) {
+	.gcu-page__header,
+	.gcu-card,
+	.gcu-faq,
+	.gcu-state {
+		background-image: none;
+		box-shadow: none;
+	}
+
+	.gcu-page__header::after {
+		display: none;
+	}
+}
+
+.gcu-page[data-gcu-low-bandwidth="true"] .gcu-page__header,
+.gcu-page[data-gcu-low-bandwidth="true"] .gcu-card,
+.gcu-page[data-gcu-low-bandwidth="true"] .gcu-faq,
+.gcu-page[data-gcu-low-bandwidth="true"] .gcu-state {
+	background-image: none;
+	box-shadow: none;
+}
+
+.gcu-page[data-gcu-low-bandwidth="true"] .gcu-page__header::after {
+	display: none;
+}
+
+@media (prefers-contrast: more) {
 	.gcu-card,
 	.gcu-page__header,
 	.gcu-faq,
 	.gcu-emergency,
 	.gcu-context-nav a,
 	.gcu-context-nav button {
+		border-width: 2px;
+	}
+
+	.gcu-muted,
+	.gcu-card__body,
+	.gcu-card li,
+	.gcu-faq p,
+	.gcu-state p {
+		color: var(--gcu-ink);
+	}
+}
+
+@media (forced-colors: active) {
+	.gcu-card,
+	.gcu-page__header,
+	.gcu-faq,
+	.gcu-emergency,
+	.gcu-context-nav a,
+	.gcu-context-nav button,
+	.gcu-button {
 		border: 1px solid CanvasText;
+		box-shadow: none;
+	}
+}
+
+@media print {
+	.gcu-context-nav,
+	.gcu-button {
+		display: none !important;
+	}
+
+	.gcu-page,
+	.gcu-card,
+	.gcu-faq,
+	.gcu-page__header {
+		width: 100%;
+		box-shadow: none;
+		background: #fff;
+		color: #000;
 	}
 }

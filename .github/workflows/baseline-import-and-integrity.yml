@@ -7,61 +7,38 @@ on:
   pull_request:
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
-  import-source:
-    if: github.event_name == 'push' && github.ref_name == 'baseline/file-14-original-import' && github.actor != 'github-actions[bot]'
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout baseline branch
-        uses: actions/checkout@v4
-        with:
-          ref: baseline/file-14-original-import
-          fetch-depth: 0
-
-      - name: Verify and extract original source package
-        run: |
-          set -euo pipefail
-          archive='source-package/14-global-clinic-usp-and-conversion-sections-0.1.0.zip'
-          test -f "$archive"
-          echo '3ec6e447498e8a5b0833068b7b31afd0b52a67a5eae6e1cd9605e5c28ba710b5  source-package/14-global-clinic-usp-and-conversion-sections-0.1.0.zip' | sha256sum --check -
-          rm -rf global-clinic-usp
-          unzip -q "$archive"
-          test -f global-clinic-usp/global-clinic-usp.php
-
-      - name: Generate immutable baseline evidence
-        run: find global-clinic-usp -type f -print0 | sort -z | xargs -0 sha256sum > CHECKSUMS.sha256
-
-      - name: Set up PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '8.3'
-          coverage: none
-
-      - name: Lint imported source
-        run: find global-clinic-usp -type f -name '*.php' -print0 | sort -z | xargs -0 -n1 php -l
-
-      - name: Commit extracted baseline when required
-        env:
-          TARGET_BRANCH: baseline/file-14-original-import
-        run: |
-          set -euo pipefail
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add global-clinic-usp CHECKSUMS.sha256
-          if git diff --cached --quiet; then
-            echo 'Baseline source is already imported.'
-            exit 0
-          fi
-          git commit -m 'Import original File 14 plugin source'
-          git push origin HEAD:${TARGET_BRANCH}
-
   verify-baseline-provenance:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
-
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
       - name: Verify original archive
         run: echo '3ec6e447498e8a5b0833068b7b31afd0b52a67a5eae6e1cd9605e5c28ba710b5  source-package/14-global-clinic-usp-and-conversion-sections-0.1.0.zip' | sha256sum --check -
+      - name: Verify immutable baseline file checksums
+        run: |
+          rm -rf /tmp/file14-baseline
+          mkdir -p /tmp/file14-baseline
+          unzip -q source-package/14-global-clinic-usp-and-conversion-sections-0.1.0.zip -d /tmp/file14-baseline
+          (cd /tmp/file14-baseline && sha256sum --check "$GITHUB_WORKSPACE/BASELINE-CHECKSUMS.sha256")
+
+  lint-baseline-on-baseline-branch:
+    if: github.event_name == 'push' && github.ref_name == 'baseline/file-14-original-import'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+      - uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # v2 pinned commit
+        with:
+          php-version: '8.3'
+          coverage: none
+      - name: Verify and lint original source package without mutating repository state
+        run: |
+          set -euo pipefail
+          archive='source-package/14-global-clinic-usp-and-conversion-sections-0.1.0.zip'
+          echo '3ec6e447498e8a5b0833068b7b31afd0b52a67a5eae6e1cd9605e5c28ba710b5  source-package/14-global-clinic-usp-and-conversion-sections-0.1.0.zip' | sha256sum --check -
+          rm -rf /tmp/file14-baseline
+          mkdir -p /tmp/file14-baseline
+          unzip -q "$archive" -d /tmp/file14-baseline
+          find /tmp/file14-baseline -type f -name '*.php' -print0 | sort -z | xargs -0 -n1 php -l
