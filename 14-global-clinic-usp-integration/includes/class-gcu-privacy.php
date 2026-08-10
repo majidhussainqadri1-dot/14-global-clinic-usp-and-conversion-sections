@@ -1,165 +1,24 @@
 <?php
 
-defined( 'ABSPATH' ) || exit;
-
-final class GCU_Privacy {
-	public function hooks() {
-		add_filter( 'wp_privacy_personal_data_exporters', array( $this, 'exporters' ) );
-		add_filter( 'wp_privacy_personal_data_erasers', array( $this, 'erasers' ) );
-		add_action( 'init', array( $this, 'capture_attribution' ), 5 );
-	}
-
-	public static function global_privacy_control_requested() {
-		$gpc = isset( $_SERVER['HTTP_SEC_GPC'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_SEC_GPC'] ) ) : '';
-		return '1' === $gpc;
-	}
-
-	public static function low_bandwidth_requested() {
-		$save_data = isset( $_SERVER['HTTP_SAVE_DATA'] ) ? strtolower( sanitize_text_field( wp_unslash( $_SERVER['HTTP_SAVE_DATA'] ) ) ) : '';
-		return 'on' === $save_data;
-	}
-
-	public static function measurement_allowed() {
-		if ( self::global_privacy_control_requested() ) {
-			return false;
-		}
-		return GCU_Policy::analytics_consent();
-	}
-
-	public function exporters( $exporters ) {
-		$exporters['gcu-conversion-attribution'] = array(
-			'exporter_friendly_name' => __( 'Global Clinic conversion attribution', 'global-clinic-usp-integration' ),
-			'callback'               => array( $this, 'export_data' ),
-		);
-		return $exporters;
-	}
-
-	public function erasers( $erasers ) {
-		$erasers['gcu-conversion-attribution'] = array(
-			'eraser_friendly_name' => __( 'Global Clinic conversion attribution', 'global-clinic-usp-integration' ),
-			'callback'             => array( $this, 'erase_data' ),
-		);
-		return $erasers;
-	}
-
-	public function export_data( $email_address, $page = 1 ) {
-		unset( $email_address, $page );
-		$data = array();
-		if ( ! empty( $_COOKIE['gcu_attribution'] ) ) {
-			$decoded = $this->decode_attribution( wp_unslash( $_COOKIE['gcu_attribution'] ) );
-			if ( $decoded ) {
-				$data[] = array(
-					'group_id'    => 'gcu-attribution',
-					'group_label' => __( 'Global Clinic attribution', 'global-clinic-usp-integration' ),
-					'item_id'     => 'current-browser-attribution',
-					'data'        => array_map( static function ( $key, $value ) { return array( 'name' => $key, 'value' => $value ); }, array_keys( $decoded ), array_values( $decoded ) ),
-				);
-			}
-		}
-		return array( 'data' => $data, 'done' => true );
-	}
-
-	public function erase_data( $email_address, $page = 1 ) {
-		unset( $email_address, $page );
-		$this->expire_cookie( 'gcu_attribution' );
-		return array(
-			'items_removed'  => true,
-			'items_retained' => false,
-			'messages'       => array(),
-			'done'           => true,
-		);
-	}
-
-	public function capture_attribution() {
-		if ( ! self::measurement_allowed() ) {
-			if ( ! empty( $_COOKIE['gcu_attribution'] ) ) {
-				$this->expire_cookie( 'gcu_attribution' );
-			}
-			return;
-		}
-		if ( ! $this->is_file14_acquisition_route() ) {
-			return;
-		}
-		$input = array(
-			'source'   => isset( $_GET['utm_source'] ) ? $_GET['utm_source'] : '',
-			'medium'   => isset( $_GET['utm_medium'] ) ? $_GET['utm_medium'] : '',
-			'campaign' => isset( $_GET['utm_campaign'] ) ? $_GET['utm_campaign'] : '',
-			'ref'      => isset( $_GET['ref'] ) ? $_GET['ref'] : '',
-		);
-		$campaign = GCU_Policy::sanitize_campaign( $input );
-		if ( ! array_filter( $campaign ) ) {
-			return;
-		}
-		$now      = time();
-		$existing = ! empty( $_COOKIE['gcu_attribution'] ) ? $this->decode_attribution( wp_unslash( $_COOKIE['gcu_attribution'] ) ) : array();
-		$payload  = array(
-			'first_source'   => isset( $existing['first_source'] ) ? $existing['first_source'] : $campaign['source'],
-			'first_medium'   => isset( $existing['first_medium'] ) ? $existing['first_medium'] : $campaign['medium'],
-			'first_campaign' => isset( $existing['first_campaign'] ) ? $existing['first_campaign'] : $campaign['campaign'],
-			'first_ref'      => isset( $existing['first_ref'] ) ? $existing['first_ref'] : $campaign['ref'],
-			'first_at'       => isset( $existing['first_at'] ) ? (int) $existing['first_at'] : $now,
-			'last_source'    => $campaign['source'],
-			'last_medium'    => $campaign['medium'],
-			'last_campaign'  => $campaign['campaign'],
-			'last_ref'       => $campaign['ref'],
-			'last_at'        => $now,
-			'expires_at'     => $now + GCU_Policy::ATTRIBUTION_TTL,
-		);
-		$value = $this->encode_attribution( $payload );
-		setcookie( 'gcu_attribution', $value, array( 'expires' => $payload['expires_at'], 'path' => COOKIEPATH ? COOKIEPATH : '/', 'domain' => COOKIE_DOMAIN, 'secure' => is_ssl(), 'httponly' => true, 'samesite' => 'Lax' ) );
-		$_COOKIE['gcu_attribution'] = $value;
-	}
-
-	public function current_campaign() {
-		if ( ! self::measurement_allowed() || empty( $_COOKIE['gcu_attribution'] ) ) {
-			return array();
-		}
-		$data = $this->decode_attribution( wp_unslash( $_COOKIE['gcu_attribution'] ) );
-		if ( empty( $data['expires_at'] ) || (int) $data['expires_at'] < time() ) {
-			$this->expire_cookie( 'gcu_attribution' );
-			return array();
-		}
-		return array(
-			'source'   => isset( $data['last_source'] ) ? $data['last_source'] : '',
-			'medium'   => isset( $data['last_medium'] ) ? $data['last_medium'] : '',
-			'campaign' => isset( $data['last_campaign'] ) ? $data['last_campaign'] : '',
-			'ref'      => isset( $data['last_ref'] ) ? $data['last_ref'] : '',
-		);
-	}
-
-	private function is_file14_acquisition_route() {
-		$path = wp_parse_url( isset( $_SERVER['REQUEST_URI'] ) ? wp_unslash( $_SERVER['REQUEST_URI'] ) : '/', PHP_URL_PATH );
-		$path = '/' . ltrim( (string) $path, '/' );
-		$allowed = array(
-			'/global-clinic/',
-			'/find-a-global-doctor/',
-			'/start-your-global-clinic/',
-			'/clinic/how-it-works/',
-		);
-		$normalized = trailingslashit( $path );
-		return in_array( $normalized, $allowed, true );
-	}
-
-	private function encode_attribution( array $payload ) {
-		$json = wp_json_encode( $payload );
-		$body = rtrim( strtr( base64_encode( $json ), '+/', '-_' ), '=' );
-		$sig  = hash_hmac( 'sha256', $body, wp_salt( 'auth' ) );
-		return $body . '.' . $sig;
-	}
-
-	private function decode_attribution( $value ) {
-		$parts = explode( '.', (string) $value, 2 );
-		if ( 2 !== count( $parts ) || ! hash_equals( hash_hmac( 'sha256', $parts[0], wp_salt( 'auth' ) ), $parts[1] ) ) {
-			return array();
-		}
-		$body = strtr( $parts[0], '-_', '+/' );
-		$body .= str_repeat( '=', ( 4 - strlen( $body ) % 4 ) % 4 );
-		$data = json_decode( base64_decode( $body, true ), true );
-		return is_array( $data ) ? $data : array();
-	}
-
-	private function expire_cookie( $name ) {
-		setcookie( $name, '', array( 'expires' => time() - HOUR_IN_SECONDS, 'path' => COOKIEPATH ? COOKIEPATH : '/', 'domain' => COOKIE_DOMAIN, 'secure' => is_ssl(), 'httponly' => true, 'samesite' => 'Lax' ) );
-		unset( $_COOKIE[ $name ] );
-	}
+defined('ABSPATH')||exit;
+final class GCU_Privacy{
+const USER_SUBJECT_META='_gcu_measurement_subject_v1',GUEST_SUBJECT_COOKIE='gcu_guest_subject',ATTRIBUTION_COOKIE='gcu_attribution',GUEST_SUBJECT_TTL=86400;
+public function hooks(){add_filter('wp_privacy_personal_data_exporters',array($this,'exporters'));add_filter('wp_privacy_personal_data_erasers',array($this,'erasers'));add_action('init',array($this,'capture_attribution'),5);}
+public static function global_privacy_control_requested(){$v=isset($_SERVER['HTTP_SEC_GPC'])?sanitize_text_field(wp_unslash($_SERVER['HTTP_SEC_GPC'])):'';return'1'===$v;}
+public static function low_bandwidth_requested(){$v=isset($_SERVER['HTTP_SAVE_DATA'])?strtolower(sanitize_text_field(wp_unslash($_SERVER['HTTP_SAVE_DATA']))):'';return'on'===$v;}
+public static function measurement_allowed(){return!self::global_privacy_control_requested()&&!GCU_Hardening::is_sensitive_path()&&GCU_Policy::analytics_consent();}
+public function exporters($x){$x['gcu-conversion-attribution']=array('exporter_friendly_name'=>__('Global Clinic conversion attribution and events','global-clinic-usp-integration'),'callback'=>array($this,'export_data'));return$x;}
+public function erasers($x){$x['gcu-conversion-attribution']=array('eraser_friendly_name'=>__('Global Clinic conversion attribution and events','global-clinic-usp-integration'),'callback'=>array($this,'erase_data'));return$x;}
+public function export_data($email,$page=1){global$wpdb;$page=max(1,absint($page));$offset=($page-1)*200;$data=array();$user=get_user_by('email',sanitize_email($email));if($user){$subject=$this->user_subject_hash($user->ID,false);if($subject){$t=GCU_Install::tables();$rows=$wpdb->get_results($wpdb->prepare("SELECT event_id,funnel_stage,destination_key,source_value,medium_value,campaign_value,ref_value,occurred_at FROM {$t['events']} WHERE subject_hash=%s ORDER BY id ASC LIMIT 201 OFFSET %d",$subject,$offset),ARRAY_A);$more=is_array($rows)&&count($rows)>200;$rows=is_array($rows)?array_slice($rows,0,200):array();foreach($rows as$row){$fields=array();foreach($row as$k=>$v){$fields[]=array('name'=>sanitize_key($k),'value'=>(string)$v);}$data[]=array('group_id'=>'gcu-conversion-events','group_label'=>__('Global Clinic conversion events','global-clinic-usp-integration'),'item_id'=>'gcu-event-'.sanitize_text_field($row['event_id']),'data'=>$fields);}if($more){return array('data'=>$data,'done'=>false);}}}if(1===$page&&!empty($_COOKIE[self::ATTRIBUTION_COOKIE])){$d=$this->decode_signed_cookie(wp_unslash($_COOKIE[self::ATTRIBUTION_COOKIE]),'attribution');if($d){$fields=array();foreach($d as$k=>$v){$fields[]=array('name'=>sanitize_key($k),'value'=>(string)$v);}$data[]=array('group_id'=>'gcu-attribution','group_label'=>__('Global Clinic browser attribution','global-clinic-usp-integration'),'item_id'=>'current-browser-attribution','data'=>$fields);}}return array('data'=>$data,'done'=>true);}
+public function erase_data($email,$page=1){global$wpdb;$user=get_user_by('email',sanitize_email($email));$removed=false;$retained=false;$messages=array();if($user){$subject=$this->user_subject_hash($user->ID,false);if($subject){$t=GCU_Install::tables();$deleted=$wpdb->query($wpdb->prepare("DELETE FROM {$t['events']} WHERE subject_hash=%s LIMIT 500",$subject));if(false===$deleted){$retained=true;$messages[]=__('Some File 14 conversion events could not be erased in this pass.','global-clinic-usp-integration');}else{$removed=$deleted>0;$remaining=(int)$wpdb->get_var($wpdb->prepare("SELECT COUNT(*) FROM {$t['events']} WHERE subject_hash=%s",$subject));if($remaining>0){return array('items_removed'=>$removed,'items_retained'=>true,'messages'=>$messages,'done'=>false);}delete_user_meta($user->ID,self::USER_SUBJECT_META);}}}$this->expire_cookie(self::ATTRIBUTION_COOKIE);$this->expire_cookie(self::GUEST_SUBJECT_COOKIE);return array('items_removed'=>$removed,'items_retained'=>$retained,'messages'=>$messages,'done'=>!$retained);}
+public function capture_attribution(){if(!self::measurement_allowed()){$this->purge_browser_measurement_artifacts();return;}if(!$this->is_file14_acquisition_route()){return;}$c=GCU_Policy::sanitize_campaign(array('source'=>isset($_GET['utm_source'])?$_GET['utm_source']:'','medium'=>isset($_GET['utm_medium'])?$_GET['utm_medium']:'','campaign'=>isset($_GET['utm_campaign'])?$_GET['utm_campaign']:'','ref'=>isset($_GET['ref'])?$_GET['ref']:''));if(!array_filter($c)){return;}$now=time();$e=!empty($_COOKIE[self::ATTRIBUTION_COOKIE])?$this->decode_signed_cookie(wp_unslash($_COOKIE[self::ATTRIBUTION_COOKIE]),'attribution'):array();$p=array('first_source'=>isset($e['first_source'])?$e['first_source']:$c['source'],'first_medium'=>isset($e['first_medium'])?$e['first_medium']:$c['medium'],'first_campaign'=>isset($e['first_campaign'])?$e['first_campaign']:$c['campaign'],'first_ref'=>isset($e['first_ref'])?$e['first_ref']:$c['ref'],'first_at'=>isset($e['first_at'])?(int)$e['first_at']:$now,'last_source'=>$c['source'],'last_medium'=>$c['medium'],'last_campaign'=>$c['campaign'],'last_ref'=>$c['ref'],'last_at'=>$now,'expires_at'=>$now+GCU_Policy::ATTRIBUTION_TTL);$this->set_cookie(self::ATTRIBUTION_COOKIE,$this->encode_signed_cookie($p,'attribution'),$p['expires_at']);}
+public function current_campaign(){if(!self::measurement_allowed()||empty($_COOKIE[self::ATTRIBUTION_COOKIE])){return array();}$d=$this->decode_signed_cookie(wp_unslash($_COOKIE[self::ATTRIBUTION_COOKIE]),'attribution');if(empty($d['expires_at'])||(int)$d['expires_at']<time()){$this->expire_cookie(self::ATTRIBUTION_COOKIE);return array();}return array('source'=>isset($d['last_source'])?$d['last_source']:'','medium'=>isset($d['last_medium'])?$d['last_medium']:'','campaign'=>isset($d['last_campaign'])?$d['last_campaign']:'','ref'=>isset($d['last_ref'])?$d['last_ref']:'');}
+public function event_subject_hash(){if(!self::measurement_allowed()){return'';}if(is_user_logged_in()){return$this->user_subject_hash(get_current_user_id(),true);}$subject='';if(!empty($_COOKIE[self::GUEST_SUBJECT_COOKIE])){$d=$this->decode_signed_cookie(wp_unslash($_COOKIE[self::GUEST_SUBJECT_COOKIE]),'guest-subject');if(!empty($d['subject'])&&!empty($d['expires_at'])&&(int)$d['expires_at']>=time()){$subject=sanitize_text_field($d['subject']);}}if(!preg_match('/^[a-f0-9]{64}$/',$subject)){try{$subject=bin2hex(random_bytes(32));}catch(Exception$e){return'';}$expires=time()+self::GUEST_SUBJECT_TTL;$this->set_cookie(self::GUEST_SUBJECT_COOKIE,$this->encode_signed_cookie(array('subject'=>$subject,'expires_at'=>$expires),'guest-subject'),$expires);}return hash_hmac('sha256',$subject,wp_salt('secure_auth'));}
+private function user_subject_hash($uid,$create){$s=(string)get_user_meta(absint($uid),self::USER_SUBJECT_META,true);if(!preg_match('/^[a-f0-9]{64}$/',$s)&&$create){try{$s=bin2hex(random_bytes(32));}catch(Exception$e){return'';}update_user_meta(absint($uid),self::USER_SUBJECT_META,$s);}return preg_match('/^[a-f0-9]{64}$/',$s)?hash_hmac('sha256',$s,wp_salt('secure_auth')):'';}
+private function is_file14_acquisition_route(){$p=GCU_Hardening::normalized_request_path();return in_array($p,array('/global-clinic/','/find-a-global-doctor/','/start-your-global-clinic/','/clinic/how-it-works/'),true);}
+private function encode_signed_cookie(array$p,$purpose){$json=wp_json_encode($p);$body=rtrim(strtr(base64_encode($json),'+/','-_'),'=');return$body.'.'.hash_hmac('sha256',sanitize_key($purpose).'|'.$body,wp_salt('auth'));}
+private function decode_signed_cookie($v,$purpose){$parts=explode('.',(string)$v,2);if(2!==count($parts)||!hash_equals(hash_hmac('sha256',sanitize_key($purpose).'|'.$parts[0],wp_salt('auth')),$parts[1])){return array();}$body=strtr($parts[0],'-_','+/');$body.=str_repeat('=',(4-strlen($body)%4)%4);$decoded=base64_decode($body,true);$d=false!==$decoded?json_decode($decoded,true):null;return is_array($d)?$d:array();}
+private function purge_browser_measurement_artifacts(){if(!empty($_COOKIE[self::ATTRIBUTION_COOKIE])){$this->expire_cookie(self::ATTRIBUTION_COOKIE);}if(!empty($_COOKIE[self::GUEST_SUBJECT_COOKIE])){$this->expire_cookie(self::GUEST_SUBJECT_COOKIE);}}
+private function set_cookie($n,$v,$e){setcookie($n,$v,array('expires'=>(int)$e,'path'=>COOKIEPATH?COOKIEPATH:'/','domain'=>COOKIE_DOMAIN,'secure'=>is_ssl(),'httponly'=>true,'samesite'=>'Lax'));$_COOKIE[$n]=$v;}
+private function expire_cookie($n){setcookie($n,'',array('expires'=>time()-HOUR_IN_SECONDS,'path'=>COOKIEPATH?COOKIEPATH:'/','domain'=>COOKIE_DOMAIN,'secure'=>is_ssl(),'httponly'=>true,'samesite'=>'Lax'));unset($_COOKIE[$n]);}
 }
