@@ -1,0 +1,34 @@
+.gcu-future{margin-block:24px;padding:clamp(18px,3vw,30px);border:1px solid var(--gcu-border,#c6d8cf);border-radius:18px;background:#fff;color:var(--gcu-ink,#17221d);box-shadow:0 10px 28px rgba(8,122,78,.06)}
+.gcu-future h2{margin-block-start:0;color:var(--gcu-brand-primary-strong,#044b2f);font-size:clamp(1.35rem,3vw,2rem);line-height:1.25}
+.gcu-future p,.gcu-future li,.gcu-future dd,.gcu-future dt,.gcu-future label{font-size:1rem;line-height:1.7}
+.gcu-future__intent-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.gcu-future__intent{min-height:120px;padding:18px;border:2px solid #087A4E;border-radius:16px;display:flex;flex-direction:column;justify-content:center;gap:8px;text-decoration:none;background:#f5fbf8;color:#17221d}
+.gcu-future__intent strong{color:#087A4E;font-size:1.1rem}
+.gcu-future__intent:hover{background:#eaf7f1}
+.gcu-future__intent:focus-visible,.gcu-future a:focus-visible,.gcu-future button:focus-visible,.gcu-future select:focus-visible,.gcu-future textarea:focus-visible,.gcu-future input:focus-visible,.gcu-future summary:focus-visible{outline:3px solid #005fcc;outline-offset:3px}
+.gcu-future__intent--degraded{border-style:dashed;background:#fff8ed}
+.gcu-future__intent--degraded a{display:inline-flex;align-items:center;min-height:44px;margin-block-start:6px;color:#087A4E;font-weight:700}
+.gcu-future__disclosure{margin-block:20px;padding:16px 18px;border-inline-start:5px solid #087A4E;background:#f5fbf8;border-radius:12px}
+.gcu-future__evidence{border-block-start:1px solid var(--gcu-border,#c6d8cf);padding-block:12px}
+.gcu-future__evidence:first-of-type{border-block-start:0}
+.gcu-future__evidence summary{min-height:44px;display:flex;align-items:center;cursor:pointer;font-weight:750;color:#044b2f}
+.gcu-future__evidence dl{display:grid;grid-template-columns:minmax(100px,160px) 1fr;gap:8px 16px;margin-block:12px}
+.gcu-future__evidence dt{font-weight:750;color:#4b5f55}
+.gcu-future__evidence dd{margin:0;overflow-wrap:anywhere}
+.gcu-future ol{padding-inline-start:1.4rem}
+.gcu-page[dir="rtl"] .gcu-future ol{padding-inline-start:0;padding-inline-end:1.4rem}
+.gcu-future-readiness{display:grid;gap:12px}
+.gcu-future-readiness label{display:flex;align-items:flex-start;gap:10px;min-height:44px;padding:10px 12px;border:1px solid #d6e5dd;border-radius:12px;background:#fbfdfc}
+.gcu-future-readiness input[type="checkbox"]{inline-size:22px;block-size:22px;flex:0 0 22px;margin-block-start:2px;accent-color:#087A4E}
+.gcu-future-readiness__result{padding:12px 14px;border-radius:12px;background:#eaf7f1;font-weight:700}
+.gcu-future-report{display:grid;gap:14px;max-width:760px}
+.gcu-future-report label{display:grid;gap:6px;font-weight:700}
+.gcu-future-report select,.gcu-future-report textarea{width:100%;min-height:44px;padding:10px 12px;border:1px solid #9ab8a8;border-radius:10px;background:#fff;color:#17221d;font:inherit}
+.gcu-future-report textarea{min-height:100px;resize:vertical}
+.gcu-future--warning{background:#fff8ed;border-color:#c79235}
+.gcu-future .gcu-button{min-height:44px;min-width:44px}
+@media (max-width:760px){.gcu-future__intent-grid{grid-template-columns:1fr}.gcu-future__evidence dl{grid-template-columns:1fr;gap:2px}.gcu-future{padding:18px 14px}}
+@media (max-width:360px){.gcu-future{margin-inline:-2px;border-radius:14px}.gcu-future__intent{padding:14px;overflow-wrap:anywhere}}
+@media (prefers-reduced-motion:reduce){.gcu-future *{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+@media (forced-colors:active){.gcu-future,.gcu-future__intent,.gcu-future-readiness label{border:1px solid CanvasText;box-shadow:none}.gcu-future__intent{background:Canvas;color:CanvasText}.gcu-future__intent strong{color:CanvasText}}
+@media print{.gcu-future-report{display:none}.gcu-future{box-shadow:none;break-inside:avoid}}
