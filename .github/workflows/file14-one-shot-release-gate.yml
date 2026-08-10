@@ -1,0 +1,105 @@
+name: File 14 Exact-Head Release Gate
+
+on:
+  push:
+    branches:
+      - complete/file-14-plan-v1.0.0
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+env:
+  PR_NUMBER: '3'
+  RELEASE_VERSION: '1.4.0'
+
+jobs:
+  quality:
+    name: Exact-head quality PHP ${{ matrix.php }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        php: ['7.4', '8.3']
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5 pinned
+        with:
+          ref: ${{ github.sha }}
+      - uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # v2 pinned
+        with:
+          php-version: ${{ matrix.php }}
+          coverage: none
+      - run: bash scripts/quality.sh
+
+  fresh-review-round-1:
+    name: Fresh Review Round 1
+    needs: quality
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09
+        with:
+          ref: ${{ github.sha }}
+      - run: bash scripts/fresh-review-round-1.sh
+
+  fresh-review-round-2:
+    name: Fresh Review Round 2
+    needs: fresh-review-round-1
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09
+        with:
+          ref: ${{ github.sha }}
+      - run: bash scripts/fresh-review-round-2.sh
+
+  package:
+    name: Deterministic v1.4.0 package
+    needs: [quality, fresh-review-round-2]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09
+        with:
+          ref: ${{ github.sha }}
+      - run: bash scripts/build.sh
+      - run: |
+          cd dist
+          sha256sum -c "14-global-clinic-usp-integration-${RELEASE_VERSION}.zip.sha256"
+          python3 - <<'PY'
+          import json, os, pathlib, zipfile
+          root = pathlib.Path('.')
+          version = os.environ['RELEASE_VERSION']
+          sbom = json.loads((root / f'14-global-clinic-usp-integration-{version}.sbom.json').read_text())
+          assert sbom['version'] == version
+          assert sbom['file_count'] == len(sbom['files']) and sbom['file_count'] > 0
+          with zipfile.ZipFile(root / f'14-global-clinic-usp-integration-{version}.zip') as z:
+              assert z.testzip() is None
+              assert all(name.startswith('14-global-clinic-usp-integration/') and '..' not in pathlib.PurePosixPath(name).parts for name in z.namelist())
+          print('Exact-head package verification: PASS')
+          PY
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4 pinned
+        with:
+          name: file-14-v1.4.0-${{ github.sha }}
+          path: |
+            dist/14-global-clinic-usp-integration-1.4.0.zip
+            dist/14-global-clinic-usp-integration-1.4.0.zip.sha256
+            dist/14-global-clinic-usp-integration-1.4.0.sbom.json
+          if-no-files-found: error
+
+  merge-pr-3:
+    name: Merge PR 3 only after exact-head gates
+    needs: [quality, fresh-review-round-2, package]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify PR head and merge exact tested SHA
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          TESTED_SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          current_head="$(gh api "repos/$REPO/pulls/$PR_NUMBER" --jq .head.sha)"
+          test "$current_head" = "$TESTED_SHA"
+          gh api --method PUT "repos/$REPO/pulls/$PR_NUMBER/merge" \
+            -f merge_method=merge \
+            -f sha="$TESTED_SHA" \
+            --jq '{merged: .merged, message: .message, sha: .sha}'
