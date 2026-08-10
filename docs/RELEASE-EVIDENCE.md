@@ -1,4 +1,4 @@
-# Release Evidence — v1.4.1 Eighty-Pass Corrective Candidate
+# Release Evidence — v1.4.1 Repository Release Evidence
 
 ## Governing scope
 
@@ -11,7 +11,7 @@
 
 ## Exact-head evidence policy
 
-Historical v1.4.0 success is supporting history only. After the final v1.4.1 coding/documentation commit, the exact tested PR SHA must independently prove:
+Historical v1.4.0 success is supporting history only. For every v1.4.1 corrective change, the exact current review/main SHA must independently prove:
 
 - PHP 7.4 quality gate.
 - PHP 8.3 quality gate.

@@ -23,7 +23,6 @@ final class GCU_Future_Intelligence {
 			return;
 		}
 		self::$booted = true;
-		self::ensure_schema();
 		self::schedule();
 		add_action( 'rest_api_init', array( __CLASS__, 'register_routes' ) );
 		add_filter( 'rest_request_before_callbacks', array( __CLASS__, 'workflow_preflight' ), 10, 3 );
@@ -48,33 +47,55 @@ final class GCU_Future_Intelligence {
 	}
 
 	public static function ensure_schema() {
-		if ( self::SCHEMA_VERSION === (int) get_option( self::SCHEMA_OPTION, 0 ) ) {
-			$verified = self::verify_schema();
-			if ( true === $verified ) {
-				delete_option( self::SAFE_MODE_OPTION );
-				return true;
-			}
+		if ( self::SCHEMA_VERSION === (int) get_option( self::SCHEMA_OPTION, 0 ) && ! get_option( self::SAFE_MODE_OPTION, 0 ) ) {
+			return true;
 		}
-		global $wpdb;
-		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
-		$c = $wpdb->get_charset_collate();
-		$t = self::tables();
-		$engine = "ENGINE=InnoDB $c";
-		$sql = array();
-		$sql[] = "CREATE TABLE {$t['records']} (id bigint(20) unsigned NOT NULL AUTO_INCREMENT,record_type varchar(64) NOT NULL,record_key varchar(191) NOT NULL,locale varchar(32) NOT NULL DEFAULT 'en-US',region varchar(16) NOT NULL DEFAULT 'ZZ',status varchar(32) NOT NULL DEFAULT 'draft',is_public tinyint(1) NOT NULL DEFAULT 0,payload longtext NOT NULL,payload_hash char(64) NOT NULL,row_version bigint(20) unsigned NOT NULL DEFAULT 1,review_due_at datetime NULL,created_by bigint(20) unsigned NOT NULL DEFAULT 0,created_at datetime NOT NULL,updated_at datetime NOT NULL,PRIMARY KEY (id),UNIQUE KEY record_identity (record_type,record_key,locale,region),KEY public_lookup (record_type,status,is_public,locale,region),KEY review_due (status,review_due_at)) $engine;";
-		$sql[] = "CREATE TABLE {$t['reports']} (id bigint(20) unsigned NOT NULL AUTO_INCREMENT,public_id char(36) NOT NULL,report_type varchar(64) NOT NULL,route_key varchar(64) NOT NULL,block_key varchar(191) NULL,locale varchar(32) NOT NULL DEFAULT 'en-US',reason_code varchar(64) NOT NULL,message text NULL,actor_hash char(64) NULL,status varchar(32) NOT NULL DEFAULT 'open',resolution text NULL,row_version bigint(20) unsigned NOT NULL DEFAULT 1,created_at datetime NOT NULL,updated_at datetime NOT NULL,PRIMARY KEY (id),UNIQUE KEY public_id (public_id),KEY review_queue (status,created_at),KEY block_lookup (block_key,status)) $engine;";
-		foreach ( $sql as $statement ) {
-			dbDelta( $statement );
-		}
-		$verified = self::verify_schema();
-		if ( is_wp_error( $verified ) ) {
+		$lock = GCU_Hardening::acquire_db_lock( 'future-schema', 5 );
+		if ( ! $lock ) {
 			update_option( self::SAFE_MODE_OPTION, 1, false );
-			GCU_Observability::log( 'error', 'future_schema_verification_failed', array( 'code' => $verified->get_error_code() ) );
-			return $verified;
+			return new WP_Error( 'gcu_future_schema_lock_busy', __( 'Future Conversion and Trust Intelligence schema upgrade is already running. Please retry shortly.', 'global-clinic-usp-integration' ), array( 'status' => 503 ) );
 		}
-		update_option( self::SCHEMA_OPTION, self::SCHEMA_VERSION, false );
-		delete_option( self::SAFE_MODE_OPTION );
-		self::seed_defaults();
+		try {
+			if ( self::SCHEMA_VERSION === (int) get_option( self::SCHEMA_OPTION, 0 ) ) {
+				$verified = self::verify_schema();
+				if ( true === $verified ) {
+					delete_option( self::SAFE_MODE_OPTION );
+					return true;
+				}
+			}
+			global $wpdb;
+			require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+			$c = $wpdb->get_charset_collate();
+			$t = self::tables();
+			$engine = "ENGINE=InnoDB $c";
+			$sql = array();
+			$sql[] = "CREATE TABLE {$t['records']} (id bigint(20) unsigned NOT NULL AUTO_INCREMENT,record_type varchar(64) NOT NULL,record_key varchar(191) NOT NULL,locale varchar(32) NOT NULL DEFAULT 'en-US',region varchar(16) NOT NULL DEFAULT 'ZZ',status varchar(32) NOT NULL DEFAULT 'draft',is_public tinyint(1) NOT NULL DEFAULT 0,payload longtext NOT NULL,payload_hash char(64) NOT NULL,row_version bigint(20) unsigned NOT NULL DEFAULT 1,review_due_at datetime NULL,created_by bigint(20) unsigned NOT NULL DEFAULT 0,created_at datetime NOT NULL,updated_at datetime NOT NULL,PRIMARY KEY (id),UNIQUE KEY record_identity (record_type,record_key,locale,region),KEY public_lookup (record_type,status,is_public,locale,region),KEY review_due (status,review_due_at)) $engine;";
+			$sql[] = "CREATE TABLE {$t['reports']} (id bigint(20) unsigned NOT NULL AUTO_INCREMENT,public_id char(36) NOT NULL,report_type varchar(64) NOT NULL,route_key varchar(64) NOT NULL,block_key varchar(191) NULL,locale varchar(32) NOT NULL DEFAULT 'en-US',reason_code varchar(64) NOT NULL,message text NULL,actor_hash char(64) NULL,status varchar(32) NOT NULL DEFAULT 'open',resolution text NULL,row_version bigint(20) unsigned NOT NULL DEFAULT 1,created_at datetime NOT NULL,updated_at datetime NOT NULL,PRIMARY KEY (id),UNIQUE KEY public_id (public_id),KEY review_queue (status,created_at),KEY block_lookup (block_key,status)) $engine;";
+			foreach ( $sql as $statement ) {
+				dbDelta( $statement );
+			}
+			$verified = self::verify_schema();
+			if ( is_wp_error( $verified ) ) {
+				update_option( self::SAFE_MODE_OPTION, 1, false );
+				GCU_Observability::log( 'error', 'future_schema_verification_failed', array( 'code' => $verified->get_error_code() ) );
+				return $verified;
+			}
+			update_option( self::SCHEMA_OPTION, self::SCHEMA_VERSION, false );
+			delete_option( self::SAFE_MODE_OPTION );
+			self::seed_defaults();
+			return true;
+		} finally {
+			GCU_Hardening::release_db_lock( $lock );
+		}
+	}
+
+	public static function runtime_ready() {
+		if ( ! get_option( 'gcu_enabled', 1 ) ) {
+			return new WP_Error( 'gcu_safe_mode', __( 'File 14 is temporarily unavailable.', 'global-clinic-usp-integration' ), array( 'status' => 503 ) );
+		}
+		if ( self::SCHEMA_VERSION !== (int) get_option( self::SCHEMA_OPTION, 0 ) || get_option( self::SAFE_MODE_OPTION, 0 ) ) {
+			return new WP_Error( 'gcu_future_schema_pending', __( 'Future Conversion and Trust Intelligence is temporarily unavailable until its schema is verified.', 'global-clinic-usp-integration' ), array( 'status' => 503 ) );
+		}
 		return true;
 	}
 
@@ -514,7 +535,7 @@ final class GCU_Future_Intelligence {
 			'destination_health' => $destination_score,
 			'performance' => $performance_verified ? (float) $performance : 50,
 		);
-		return array( 'score' => GCU_Future_Policy::conversion_quality_score( $metrics ), 'provisional' => ! $performance_verified || ! GCU_Future_Policy::cohort_allowed( $selected ), 'metrics' => $metrics, 'sample_count' => $selected, 'small_cohort_suppressed' => ! GCU_Future_Policy::cohort_allowed( $selected ), 'parity' => $parity, 'performance_verified' => $performance_verified );
+		return array( 'score' => GCU_Future_Policy::conversion_quality_score( $metrics ), 'provisional' => ! $performance_verified || ! GCU_Future_Policy::cohort_allowed( $selected ), 'metrics' => $metrics, 'sample_count' => GCU_Future_Policy::cohort_allowed( $selected ) ? $selected : null, 'small_cohort_suppressed' => ! GCU_Future_Policy::cohort_allowed( $selected ), 'cohort_threshold' => GCU_Future_Policy::MIN_COHORT, 'parity' => $parity, 'performance_verified' => $performance_verified );
 	}
 
 	public static function friction_summary( $days = 30 ) {
@@ -554,7 +575,7 @@ final class GCU_Future_Intelligence {
 		$bs = isset( $baseline['selected'] ) ? (int) $baseline['selected'] : 0;
 		$bl = isset( $baseline['loaded'] ) ? (int) $baseline['loaded'] : 0;
 		if ( ! GCU_Future_Policy::cohort_allowed( $cs ) || ! GCU_Future_Policy::cohort_allowed( $bs ) ) {
-			$result = array( 'status' => 'insufficient_sample', 'severity' => 'none', 'current_sample' => $cs, 'baseline_sample' => $bs, 'checked_at' => gmdate( 'c' ) );
+			$result = array( 'status' => 'insufficient_sample', 'severity' => 'none', 'current_sample' => null, 'baseline_sample' => null, 'suppressed' => true, 'threshold' => GCU_Future_Policy::MIN_COHORT, 'checked_at' => gmdate( 'c' ) );
 			update_option( self::LAST_ANOMALY_OPTION, $result, false );
 			return $result;
 		}
