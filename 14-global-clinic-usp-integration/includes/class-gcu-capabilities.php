@@ -39,9 +39,15 @@ final class GCU_Capabilities {
 		}
 	}
 
+	public static function authorization_adapter_available() {
+		return function_exists( 'has_filter' ) && false !== has_filter( 'gcu_authorize' );
+	}
+
 	public static function can( $capability, $object = null, $purpose = '' ) {
 		$allowed = current_user_can( $capability );
 		if ( ! $allowed ) { return false; }
+		// File 00 owns versioned authorization truth. Native WordPress capabilities are necessary, never sufficient.
+		if ( ! self::authorization_adapter_available() ) { return false; }
 		return (bool) apply_filters( 'gcu_authorize', true, $capability, $object, sanitize_key( $purpose ) );
 	}
 

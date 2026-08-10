@@ -4,7 +4,7 @@ Tags: clinic, doctors, conversion, accessibility, privacy, governance, trust, ex
 Requires at least: 6.6
 Tested up to: 7.0.1
 Requires PHP: 7.4
-Stable tag: 1.4.1
+Stable tag: 1.4.2
 License: GPLv2 or later
 
 Canonical File 14 implementation for approved Worldwide Clinic value-proposition content, ethical conversion journeys, claim governance, destination contracts, Future Conversion & Trust Intelligence and privacy-minimized measurement.
@@ -12,7 +12,7 @@ Canonical File 14 implementation for approved Worldwide Clinic value-proposition
 == Description ==
 File 14 owns approved patient/doctor value-proposition blocks, File 20 placement contracts, claim evidence/version history, ethical conversion diagnostics, `/global-clinic/`, `/clinic/how-it-works/`, and versioned destinations to Files 07/08/09. It never owns doctor profiles, verification evidence, clinic records, appointments, payments, clinical records, the global shell/navigation or visual-system truth.
 
-Version 1.4.0 added the Founder-approved `SSH-F14-FUTURE-CTI-2026-v2.0` amendment as a bounded intelligence layer. Version 1.4.1 is the corrective eighty-pass hardening release for that layer. It strengthens trust, explanation, handoff, copy governance and aggregate measurement without creating a duplicate doctor, clinic, appointment, payment, verification or shell backend.
+Version 1.4.0 added the Founder-approved `SSH-F14-FUTURE-CTI-2026-v2.0` amendment as a bounded intelligence layer. Version 1.4.1 delivered the earlier corrective eighty-pass hardening; version 1.4.2 re-opens the exact post-third-review main state and hardens authorization dependencies, audience isolation, measurement privacy, event identity, audit verification, cache freshness, rollback preservation and operational health. It strengthens trust, explanation, handoff, copy governance and aggregate measurement without creating a duplicate doctor, clinic, appointment, payment, verification or shell backend.
 
 == Future Conversion & Trust Intelligence — 24 approved enhancements ==
 * F14-FUT-01 Ethical Intent Router.
@@ -67,7 +67,7 @@ Version 1.4.0 added the Founder-approved `SSH-F14-FUTURE-CTI-2026-v2.0` amendmen
 == Privacy, AI and accessibility ==
 Public content works without measurement. Measurement requires explicit consent, is disabled under Global Privacy Control, is excluded from sensitive routes, uses bounded random pseudonyms and can be exported/erased through WordPress privacy tools. Browser attribution is signed, restricted to File 14 acquisition routes and bounded to 30 days; guest pseudonyms expire after 24 hours. Save-Data and reduced-data clients suppress nonessential measurement.
 
-Future analytics suppress total cohorts below 10 and, in 1.4.1, also suppress each individual funnel stage below 10. FAQ intelligence consumes approved aggregate question signals only after direct personal/contact/identity markers are rejected. AI copy assistance receives approved claims and produces draft suggestions only; it may not invent factual, medical, financial or verification claims and never auto-publishes.
+Future analytics suppress total cohorts below 10 and, in 1.4.2, also suppress each individual funnel stage below 10. FAQ intelligence consumes approved aggregate question signals only after direct personal/contact/identity markers are rejected. AI copy assistance receives approved claims and produces draft suggestions only; it may not invent factual, medical, financial or verification claims and never auto-publishes.
 
 The File 14 surface includes complete File 14-owned American English, Urdu and Arabic interface chrome, logical LTR/RTL direction, 44px targets, focus-visible treatment, reduced motion/data, forced-colors support, fluid reflow down to the 320px class and no inline executable markup. File 20 remains the sole owner of global navigation; File 14 only consumes its Back/Home contract with a bounded local fallback.
 
@@ -82,6 +82,9 @@ The File 14 surface includes complete File 14-owned American English, Urdu and A
 8. Obtain explicit Founder acceptance before production deployment.
 
 == Changelog ==
+= 1.4.2 =
+* Fourth independent eighty-pass corrective release: File 00 authorization fail-close, campaign PII/clinical minimization, audience-safe placements, Founder active-placement approval, per-stage privacy suppression, event/replay integrity, recent audit-tail verification, shortcode cache freshness, File 20-only navigation ownership, Future-schema failure propagation, non-destructive rollback preservation, expanded system health and rollback audit.
+
 = 1.4.1 =
 * Added immediate public-path claim-freshness/parity revalidation so stale policy evidence cannot remain visible merely until the daily job.
 * Required all mandatory experiment safety guardrails to contain meaningful enabled values, not just keys.

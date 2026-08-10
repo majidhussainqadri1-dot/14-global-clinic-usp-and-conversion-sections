@@ -1,10 +1,10 @@
-# Release Evidence — v1.4.1 Repository Release Evidence
+# Release Evidence — v1.4.2 Repository Release Evidence
 
 ## Governing scope
 
 - Base plan: `SSH-F14-PLAN-2026-v1.0`.
 - Additive Founder-approved amendment: `SSH-F14-FUTURE-CTI-2026-v2.0`.
-- Software candidate: `1.4.1`.
+- Software candidate: `1.4.2`.
 - Base schema: `10004`; Future CTI additive schema: `1`.
 - Requirements retained: original File 14 FR/NFR plus `F14-FUT-01`–`F14-FUT-24`.
 - Ownership remains bounded: no doctor/clinic/application/appointment/payment/verification/shell source of truth is created here.
@@ -51,6 +51,7 @@ Round-by-round evidence is maintained in:
 - `docs/REVIEW-80-LEDGER-v1.4.1.md`
 - `docs/REVIEW-80-SECOND-LEDGER-v1.4.1.md`
 - `docs/REVIEW-80-THIRD-LEDGER-v1.4.1.md`
+- `docs/REVIEW-80-FOURTH-LEDGER-v1.4.2.md`
 
 ## External evidence still mandatory
 
@@ -67,3 +68,8 @@ Repository success cannot prove WordPress/Hostinger staging or live behavior. Th
 - production deployment, live smoke tests, monitoring and deployed-artifact parity confirmation.
 
 No `Staging-Accepted`, `Live-Deployed` or `Operational` claim is made by this repository document.
+
+
+## Fourth independent review
+
+The fourth independent eighty-pass review re-opened the exact post-third-review `main` baseline and corrected additional authorization-dependency, privacy, audience, workflow approval, event identity, audit-tail, cache, schema-propagation, rollback and operational-health defects. Its source/test/package claims are valid only for the exact SHA on which all active gates pass. Staging, deployed code, live DB/schema/migration and operational behavior remain separate evidence classes.

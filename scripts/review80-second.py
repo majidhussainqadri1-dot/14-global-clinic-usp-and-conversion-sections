@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Independent second eighty-pass repository audit for File 14 v1.4.1.
+"""Independent second eighty-pass repository audit for File 14 v1.4.2 current-state compatibility.
 
 Each numbered gate re-opens one failure class after the first eighty-pass review.
 This is repository evidence only; it is never staging/live/deployed-state evidence.
@@ -62,8 +62,8 @@ anomaly_fn = section(future, "public static function anomaly_detector()", "publi
 harden_response = section(review, "public static function harden_rest_response", "private static function json_array")
 
 checks: list[tuple[str, bool]] = [
-    ("01 exact software and plan identity", "Version: 1.4.1" in loader and "SSH-F14-PLAN-2026-v1.0" in loader and "SSH-F14-FUTURE-CTI-2026-v2.0" in loader),
-    ("02 traceability current-version truth", "Requirements Traceability — v1.4.1" in trace and "File 14 v1.4.1 may only claim a status" in trace),
+    ("01 exact software and plan identity", "Version: 1.4.2" in loader and "SSH-F14-PLAN-2026-v1.0" in loader and "SSH-F14-FUTURE-CTI-2026-v2.0" in loader),
+    ("02 traceability current-version truth", "Requirements Traceability — v1.4.2" in trace and "File 14 v1.4.2 may only claim a status" in trace),
     ("03 current schema identities remain separated", "GCU_SCHEMA_VERSION', 10004" in loader and "GCU_FUTURE_SCHEMA_VERSION', 1" in loader),
     ("04 status prose is not contradictory candidate-plus-merged state", "Repository Release State" in status and "Corrective Candidate — Merged" not in status),
     ("05 release evidence uses current repository-release framing", "Repository Release Evidence" in release and "exact review/main SHA being accepted" in release and "fresh post-merge" in release),
