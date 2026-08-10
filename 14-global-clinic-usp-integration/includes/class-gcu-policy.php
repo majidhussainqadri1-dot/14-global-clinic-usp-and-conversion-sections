@@ -277,9 +277,21 @@ final class GCU_Policy {
 		$out = array();
 		foreach ( array( 'source', 'medium', 'campaign', 'ref' ) as $key ) {
 			$value = isset( $input[ $key ] ) ? sanitize_text_field( wp_unslash( $input[ $key ] ) ) : '';
-			$out[ $key ] = function_exists( 'mb_substr' ) ? mb_substr( $value, 0, 100 ) : substr( $value, 0, 100 );
+			$value = function_exists( 'mb_substr' ) ? mb_substr( $value, 0, 100 ) : substr( $value, 0, 100 );
+			$out[ $key ] = self::campaign_value_is_sensitive( $value ) ? '' : $value;
 		}
 		return $out;
+	}
+
+	public static function campaign_value_is_sensitive( $value ) {
+		$value = trim( (string) $value );
+		if ( '' === $value ) { return false; }
+		if ( preg_match( '/[A-Z0-9._%+\-]+@[A-Z0-9.\-]+\.[A-Z]{2,}/i', $value ) ) { return true; }
+		if ( preg_match( '/(?:\+?\d[\s().\-]*){7,}/', $value ) ) { return true; }
+		$lower = function_exists( 'mb_strtolower' ) ? mb_strtolower( $value ) : strtolower( $value );
+		$markers = array( 'cnic','passport','patient id','medical record','diagnosis','symptom','prescription','email','phone','mobile','شناختی','شناختی کارڈ','پاسپورٹ','مریض','تشخیص','علامت','نسخ','ای میل','فون','موبائل','هوية','جواز','مريض','تشخيص','عرض','وصفة','بريد','هاتف','جوال' );
+		foreach ( $markers as $marker ) { if ( false !== strpos( $lower, $marker ) ) { return true; } }
+		return false;
 	}
 
 	public static function analytics_consent() {
