@@ -5,9 +5,9 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Corrective hardening found during the 2026-08-10 eighty-pass File 14 review.
  *
- * The class is deliberately additive: it closes fail-open gaps around claim freshness,
- * experiment preflight, multilingual copy safety and privacy-minimized intelligence
- * without taking ownership from Files 00/07/08/09/20/24/25.
+ * This additive layer closes fail-open gaps around claim freshness, experiment
+ * preflight, multilingual copy safety and privacy-minimized intelligence without
+ * taking canonical ownership from Files 00/07/08/09/20/24/25.
  */
 final class GCU_Review80_Hardening {
 	const MIN_COHORT = 10;
@@ -45,11 +45,9 @@ final class GCU_Review80_Hardening {
 		$patterns = array(
 			'fake_scarcity_ur' => '/(?:صرف\s*آج|آخری\s*موقع|فوراً\s*(?:کریں|درخواست)|جلدی\s*کریں)/u',
 			'guarantee_ur' => '/(?:شفا\s*کی\s*ضمانت|یقینی\s*شفا|آمدن\s*کی\s*ضمانت|فوری\s*منظوری)/u',
-			'paid_visibility_ur' => '/(?:عطیہ|تعاون|ادائیگی).{0,60}(?:درجہ\s*بندی|نمائش|تصدیق|ترجیح)/u',
 			'positive_commission_ur' => '/(?:[1-9][0-9]*\s*(?:%|فیصد)).{0,30}(?:کمیشن|عمول)/u',
 			'fake_scarcity_ar' => '/(?:اليوم\s*فقط|الفرصة\s*الأخيرة|سارع\s*الآن|لفترة\s*محدودة)/u',
 			'guarantee_ar' => '/(?:ضمان\s*الشفاء|شفاء\s*مضمون|دخل\s*مضمون|موافقة\s*فورية)/u',
-			'paid_visibility_ar' => '/(?:تبرع|دعم|دفع).{0,60}(?:ترتيب|ظهور|تحقق|أولوية)/u',
 			'positive_commission_ar' => '/(?:[1-9][0-9]*\s*%).{0,30}(?:عمولة)/u',
 		);
 		foreach ( $patterns as $key => $pattern ) {
@@ -57,7 +55,13 @@ final class GCU_Review80_Hardening {
 				$flags[] = $key;
 			}
 		}
-		return array( 'safe' => empty( $flags ), 'flags' => $flags );
+		if ( preg_match( '/(?:عطیہ|تعاون|ادائیگی)[^۔.!?]{0,60}(?:درجہ\s*بندی|نمائش|تصدیق|ترجیح)/u', $text ) && ! preg_match( '/(?:عطیہ|تعاون|ادائیگی)[^۔.!?]{0,60}(?:نہیں|نہ)[^۔.!?]{0,30}(?:درجہ\s*بندی|نمائش|تصدیق|ترجیح)|(?:عطیہ|تعاون|ادائیگی)[^۔.!?]{0,60}(?:درجہ\s*بندی|نمائش|تصدیق|ترجیح)[^۔.!?]{0,30}(?:نہیں|نہ)/u', $text ) ) {
+			$flags[] = 'paid_visibility_ur';
+		}
+		if ( preg_match( '/(?:تبرع|دعم|دفع)[^.!?؟]{0,60}(?:ترتيب|ظهور|تحقق|أولوية)/u', $text ) && ! preg_match( '/(?:تبرع|دعم|دفع)[^.!?؟]{0,60}(?:لا|ليس|لن)[^.!?؟]{0,30}(?:ترتيب|ظهور|تحقق|أولوية)|(?:تبرع|دعم|دفع)[^.!?؟]{0,60}(?:ترتيب|ظهور|تحقق|أولوية)[^.!?؟]{0,30}(?:لا|ليس|لن)/u', $text ) ) {
+			$flags[] = 'paid_visibility_ar';
+		}
+		return array( 'safe' => empty( $flags ), 'flags' => array_values( array_unique( $flags ) ) );
 	}
 
 	/** Reject aggregates containing direct personal/contact/identity or explicit patient-record markers. */
@@ -194,7 +198,7 @@ final class GCU_Review80_Hardening {
 			return $response;
 		}
 		$route = $request->get_route();
-		if ( 0 === strpos( $route, '/gcu/v1/' ) ) {
+		if ( '/gcu/v1/blocks' === $route || 0 === strpos( $route, '/gcu/v1/future/trust/' ) ) {
 			GCU_Future_Intelligence::claim_freshness_sentinel();
 		}
 		if ( '/gcu/v1/blocks' === $route ) {
