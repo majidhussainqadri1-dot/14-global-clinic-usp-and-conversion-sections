@@ -1,10 +1,11 @@
-# Release Evidence — v1.4.2 Repository Release Evidence
+# Release Evidence — v1.4.3 Fifth-Review Repository Candidate
 
 ## Governing scope
 
 - Base plan: `SSH-F14-PLAN-2026-v1.0`.
 - Additive Founder-approved amendment: `SSH-F14-FUTURE-CTI-2026-v2.0`.
-- Software candidate: `1.4.2`.
+- Fifth-review baseline: exact post-fourth-review `main` `b9045a4229d052103a5546477f664ac88b6ff034`.
+- Software candidate: `1.4.3`.
 - Base schema: `10004`; Future CTI additive schema: `1`.
 - Requirements retained: original File 14 FR/NFR plus `F14-FUT-01`–`F14-FUT-24`.
 - Ownership remains bounded: no doctor/clinic/application/appointment/payment/verification/shell source of truth is created here.
@@ -14,8 +15,8 @@
 Historical green results are supporting history only. For every current File 14 source state, the exact review/main SHA being accepted must independently prove:
 
 - PHP 7.4 and PHP 8.3 quality gates.
-- Policy, contract, reliability, central-plan, Future Intelligence and dedicated corrective regression tests.
-- First, second and third independent eighty-pass repository gates.
+- Policy, contract, reliability, central-plan, Future Intelligence and all dedicated corrective regression tests, including fifth-review regressions.
+- First, second, third, fourth and fifth independent eighty-pass repository gates.
 - Two fresh post-code review rounds after the final accepted source change.
 - Secret / inline executable / stale-token / deprecated-helper scans.
 - Deterministic double-build ZIP.
@@ -26,25 +27,18 @@ Historical green results are supporting history only. For every current File 14 
 
 `Automated-QA Green`, `Packaged` and `main merged` are separate evidence claims; none is inherited from an older commit.
 
-## Third-review corrective evidence areas
+## Fifth-review corrective evidence areas
 
-The third independent review re-opened already-green repository assumptions and corrected additional failure classes, including:
+The fifth independent review re-opened exact post-fourth-review `main` and corrected additional failure classes:
 
-- read/runtime fail-close parity during version/schema mismatch across REST, frontend, destination health and background jobs;
-- base/Future schema verification of critical columns so a partial migration cannot be accepted merely from table existence or version options;
-- serialized rollback and rollback coverage for Future governance records/options;
-- controlled Future schema force-verification on repair/activation paths and periodic structural verification;
-- stale block and linked-claim suppression at query time, not only after a scheduled sentinel;
-- deterministic American-English canonical claim source truth separated from locale rendering;
-- non-elevating authorization adapters over native WordPress capabilities;
-- privacy exporter/eraser correction so another data subject is never conflated with the operator browser's guest cookies, plus paginated Future-report export/anonymization;
-- Urdu/Arabic as well as English sensitive-data rejection for public reports and FAQ aggregate adapters;
-- internal-only scenario-note publication protection;
-- bounded rate and durable idempotency controls on state-changing REST paths;
-- immediate revalidation cache policy for governed public copy;
-- safe response trace identifiers;
-- fail-closed containment if the tamper-evident audit chain or durable outbox cannot persist required evidence;
-- cleanup of temporary corrective machinery before exact-head acceptance.
+- base and Future runtime readiness now revalidate actual required tables, InnoDB engines and critical columns for the current request rather than trusting version options alone;
+- active/public Future governance records require Founder-level approval in addition to content-management permission on the governed REST path;
+- AI copy assistance rejects personal/contact/identity/clinical base text before provider invocation and removes Urdu/Arabic dark-pattern or guarantee candidates before response delivery;
+- conversion event UUID replay is idempotent only for the same stage, destination, pseudonymous subject and campaign identity; conflicting reuse is rejected;
+- the scheduled experiment early-stop path now commits state plus its mandatory audit record atomically or rolls both back;
+- stale documentation about File 20 local shell fallback, generic Future record/report transactionality, software candidate, ledger count and active release-gate count was corrected.
+
+The earlier third and fourth review corrections remain regression-protected, including schema/column verification, non-destructive rollback preservation, audience isolation, File 00 authorization dependency, per-stage privacy suppression, recent-tail audit verification, shortcode cache freshness and File 20-only shell ownership.
 
 Round-by-round evidence is maintained in:
 
@@ -52,6 +46,7 @@ Round-by-round evidence is maintained in:
 - `docs/REVIEW-80-SECOND-LEDGER-v1.4.1.md`
 - `docs/REVIEW-80-THIRD-LEDGER-v1.4.1.md`
 - `docs/REVIEW-80-FOURTH-LEDGER-v1.4.2.md`
+- `docs/REVIEW-80-FIFTH-LEDGER-v1.4.3.md`
 
 ## External evidence still mandatory
 
@@ -68,8 +63,3 @@ Repository success cannot prove WordPress/Hostinger staging or live behavior. Th
 - production deployment, live smoke tests, monitoring and deployed-artifact parity confirmation.
 
 No `Staging-Accepted`, `Live-Deployed` or `Operational` claim is made by this repository document.
-
-
-## Fourth independent review
-
-The fourth independent eighty-pass review re-opened the exact post-third-review `main` baseline and corrected additional authorization-dependency, privacy, audience, workflow approval, event identity, audit-tail, cache, schema-propagation, rollback and operational-health defects. Its source/test/package claims are valid only for the exact SHA on which all active gates pass. Staging, deployed code, live DB/schema/migration and operational behavior remain separate evidence classes.
