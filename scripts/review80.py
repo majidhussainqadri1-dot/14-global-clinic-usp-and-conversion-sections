@@ -65,7 +65,7 @@ checks: list[tuple[str, bool]] = [
     ("12 contract regression version/tag aligned to 1.4.1", "Version 1.4.1 drift" in contract_tests and "Stable tag: 1.4.1" in contract_tests),
     ("13 contract scope assertion is literal and non-interpolating", "strpos($review,'0 !== strpos( $route, \\'/gcu/v1/\\' )')" in contract_tests),
     ("14 central-plan regression aligned to 1.4.1", "Candidate version not 1.4.1" in central_tests and "Stable tag: 1.4.1" in central_tests),
-    ("15 STATUS current candidate truth is 1.4.1", "v1.4.1 Eighty-Pass Corrective Candidate" in status and "Software candidate: `1.4.1`" in status),
+    ("15 STATUS current repository truth is 1.4.1", "v1.4.1 Repository Release State" in status and "Software candidate: `1.4.1`" in status),
     ("16 release-evidence current candidate truth is 1.4.1", "Release Evidence — v1.4.1" in release and "Software candidate: `1.4.1`" in release),
     ("17 corrective round ledger and complete defect index exist", "Defects were discovered in rounds **02, 03, 04, 05, 06, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 38, 40 and 58**" in ledger and "| 80 |" in ledger),
     ("18 base schema remains 10004 and separate from patch version", "GCU_SCHEMA_VERSION', 10004" in loader),

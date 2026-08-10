@@ -77,7 +77,7 @@
 | 68 | F14-FR-016 claim audit/freshness | PASS. |
 | 69 | F14-FUT-01 through F14-FUT-24 catalog | PASS — 24/24 IDs retained. |
 | 70 | Release-evidence stale-candidate wording | **DEFECT:** same temporal documentation drift identified in round 05 was confirmed at the release-evidence acceptance gate; corrected before final acceptance. |
-| 71 | Status candidate/merged contradiction | **DEFECT:** same status contradiction identified in round 04 was confirmed at the status acceptance gate; corrected before final acceptance. |
+| 71 | Status truth + inherited Review80 assertion | **DEFECT:** the status contradiction identified in round 04 was re-confirmed, and exact-head CI then exposed a second QA-harness drift: the inherited first `scripts/review80.py` still required the obsolete “Corrective Candidate” phrase. The status remained truthful; the inherited gate was corrected to require v1.4.1 + `Repository Release State`. |
 | 72 | Exact Sabri Green | PASS. |
 | 73 | RTL/LTR locale behavior | PASS at repository-control level. |
 | 74 | Reduced motion/data/forced colors | PASS. |
@@ -90,7 +90,7 @@
 
 ## Defect-round index
 
-Fresh defects were discovered in rounds **02, 04, 05, 06, 12, 13, 18, 19, 20, 24, 38, 39, 54, 70 and 71**. Rounds 70 and 71 are deliberate re-checks of the same documentation defects first found in rounds 05 and 04; therefore there are **13 distinct defect classes across 15 defect-bearing review rounds**. Every listed defect was corrected before the corresponding final-state gate could pass.
+Fresh defects were discovered in rounds **02, 04, 05, 06, 12, 13, 18, 19, 20, 24, 38, 39, 54, 70 and 71**. Round 70 is a deliberate re-check of the release-evidence defect first found in round 05. Round 71 re-checks the status defect from round 04 and additionally records the inherited first-Review80 QA-harness drift exposed by exact-head CI; therefore there are **14 distinct defect classes across 15 defect-bearing review rounds**. Every listed defect was corrected before the corresponding final-state gate could pass.
 
 All remaining rounds found no additional repository defect after preceding corrections. Any defect exposed by exact-head CI after this ledger is written must be corrected and the exact-head gate rerun; it is not permissible to carry forward a historical green result.
 
