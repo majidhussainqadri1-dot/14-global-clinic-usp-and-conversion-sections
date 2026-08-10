@@ -1,0 +1,33 @@
+name: File 14 Third Review Corrective Patch
+
+on:
+  push:
+    branches:
+      - review/file14-third-80-round-2026-08-10
+
+permissions:
+  contents: write
+
+jobs:
+  apply-corrections:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09
+        with:
+          ref: review/file14-third-80-round-2026-08-10
+          fetch-depth: 0
+      - name: Apply third-review corrective replacements
+        run: python3 scripts/apply-file14-third-review-corrections.py
+      - name: Validate PHP syntax after correction
+        run: find 14-global-clinic-usp-integration -name '*.php' -print0 | xargs -0 -n1 php -l
+      - name: Commit corrective source state
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if git diff --quiet; then
+            echo "No corrective diff remains."
+            exit 0
+          fi
+          git add 14-global-clinic-usp-integration
+          git commit -m "Apply File 14 third independent review corrections"
+          git push origin HEAD:review/file14-third-80-round-2026-08-10
