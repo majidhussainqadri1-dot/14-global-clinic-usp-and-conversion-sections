@@ -2,6 +2,7 @@
 
 defined('ABSPATH')||exit;
 final class GCU_Contracts{
+// Consumer filters may never elevate owner readiness; they may only restrict a recently owner-confirmed state.
 const STATE_PREFIX='gcu_destination_state_',REVALIDATION_OPTION='gcu_policy_revalidation_required';
 public function hooks(){add_action('DoctorDirectoryAvailable.v1',array($this,'consume_directory_event'),10,1);add_action('ClinicBookingAvailable.v1',array($this,'consume_clinic_event'),10,1);add_action('DoctorOnboardingAvailable.v1',array($this,'consume_onboarding_event'),10,1);add_action('BusinessPolicyChanged.v1',array($this,'consume_business_policy_event'),10,1);}
 public function destination_registry(){return array('doctor_directory'=>array('owner'=>'File 07','contract'=>'DoctorDirectoryAvailable.v1','fallback_url'=>home_url('/doctors/')),'clinic'=>array('owner'=>'File 08','contract'=>'ClinicBookingAvailable.v1','fallback_url'=>home_url('/worldwide-clinic/')),'doctor_onboarding'=>array('owner'=>'File 09','contract'=>'DoctorOnboardingAvailable.v1','fallback_url'=>home_url('/doctor/apply/')),'how_it_works'=>array('owner'=>'File 14','contract'=>'local','fallback_url'=>home_url('/clinic/how-it-works/')));}
