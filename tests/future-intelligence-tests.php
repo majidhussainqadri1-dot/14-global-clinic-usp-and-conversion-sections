@@ -11,6 +11,7 @@ function wp_json_encode( $value ) { return json_encode( $value, JSON_UNESCAPED_U
 function absint( $value ) { return abs( (int) $value ); }
 
 require __DIR__ . '/../14-global-clinic-usp-integration/includes/class-gcu-future-policy.php';
+require __DIR__ . '/../14-global-clinic-usp-integration/includes/class-gcu-future-i18n.php';
 
 $failures = array();
 function assert_future( $condition, $message ) {
@@ -36,6 +37,8 @@ assert_future( '' === $bad_context['country'] && '' === $bad_context['language']
 
 $clear = GCU_Future_Policy::dark_pattern_scan( 'Review the verified profile and continue to the canonical owner when ready.' );
 assert_future( true === $clear['safe'], 'Ordinary truthful copy should pass dark-pattern checks.' );
+$truthful_no_advantage = GCU_Future_Policy::dark_pattern_scan( 'Voluntary support is optional and does not purchase ranking, visibility, verification or basic service.' );
+assert_future( true === $truthful_no_advantage['safe'], 'Truthful no-advantage disclosure must not be misclassified as paid visibility.' );
 $scarcity = GCU_Future_Policy::dark_pattern_scan( 'Last chance! Only today. Hurry and act now.' );
 assert_future( false === $scarcity['safe'] && in_array( 'fake_scarcity', $scarcity['flags'], true ), 'Fake scarcity must be blocked.' );
 $guarantee = GCU_Future_Policy::dark_pattern_scan( 'Get a guaranteed cure and guaranteed income.' );
@@ -70,6 +73,12 @@ assert_future( $low_score >= 0 && $low_score <= 100, 'Conversion quality score m
 
 $terms = GCU_Future_Policy::terminology_lock();
 assert_future( isset( $terms['verified_doctor']['en-US'], $terms['verified_doctor']['ur-PK'], $terms['verified_doctor']['ar-SA'] ), 'Terminology lock must cover English, Urdu and Arabic.' );
+$ur = GCU_Future_I18n::strings( 'ur-PK' );
+$ar = GCU_Future_I18n::strings( 'ar-SA' );
+foreach ( array( 'Choose your next step', 'Trust evidence', 'Choose a doctor safely', 'Global Clinic readiness self-check', 'Send report', 'Preparation estimate:' ) as $key ) {
+	assert_future( isset( $ur[ $key ] ) && '' !== $ur[ $key ], 'Missing Urdu Future UI key: ' . $key );
+	assert_future( isset( $ar[ $key ] ) && '' !== $ar[ $key ], 'Missing Arabic Future UI key: ' . $key );
+}
 
 $ready = GCU_Future_Policy::doctor_readiness_check( array_fill_keys( array( 'identity_ready','professional_evidence_ready','profile_ready','clinic_information_ready','languages_ready','consultation_modes_ready','privacy_ready','rules_accepted' ), true ) );
 assert_future( 100 === $ready['score'] && false === $ready['binding'] && 'File 09 / File 00' === $ready['verification_owner'], 'Readiness self-check must remain non-binding and owner-safe.' );
