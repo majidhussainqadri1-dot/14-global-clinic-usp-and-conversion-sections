@@ -8,8 +8,10 @@ php "$ROOT/tests/reliability-tests.php"
 php "$ROOT/tests/central-plan-tests.php"
 php "$ROOT/tests/future-intelligence-tests.php"
 php "$ROOT/tests/review80-hardening-tests.php"
+php "$ROOT/tests/second-review-regression-tests.php"
 python3 "$ROOT/scripts/review80.py"
-python3 -m py_compile "$ROOT/scripts/build.py" "$ROOT/scripts/review80.py"
+python3 "$ROOT/scripts/review80-second.py"
+python3 -m py_compile "$ROOT/scripts/build.py" "$ROOT/scripts/review80.py" "$ROOT/scripts/review80-second.py"
 if grep -RInE "(password|secret|api[_-]?key|private[_-]?key)[[:space:]]*[:=][[:space:]]*['\"][^'\"]+" "$ROOT/14-global-clinic-usp-integration" --exclude='*.md' --exclude='readme.txt'; then echo "Potential embedded secret detected" >&2; exit 1; fi
 if grep -RInE "onclick=|onerror=|onload=|javascript:" "$ROOT/14-global-clinic-usp-integration" --include='*.php' --include='*.html' --include='*.txt'; then echo "Inline executable markup detected" >&2; exit 1; fi
 if grep -RIn "data-gcu-event-token" "$ROOT/14-global-clinic-usp-integration"; then echo "Single-use measurement token found in package source/HTML path" >&2; exit 1; fi
