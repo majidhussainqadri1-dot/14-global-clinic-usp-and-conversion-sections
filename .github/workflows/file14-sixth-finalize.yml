@@ -36,6 +36,44 @@ jobs:
           PY
       - name: Apply final corrective patch
         run: python3 scripts/finalize-sixth-review.py
+      - name: Align sixth-review evidence wording
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          replacements = {
+            'docs/REQUIREMENTS-TRACEABILITY.md': [
+              ('v1.4.3','v1.4.4'),
+              ('fifth-review corrections','sixth-review corrections'),
+              ('Future CTI implementation and fifth-review corrections','Future CTI implementation and sixth-review corrections'),
+            ],
+            'STATUS.md': [
+              ('v1.4.3 Fifth-Review Repository Candidate','v1.4.4 Sixth-Review Repository Candidate'),
+              ('Software candidate: `1.4.3`','Software candidate: `1.4.4`'),
+              ('Base File 14 database schema: `10004`','Base File 14 database schema: `10005`'),
+              ('14-global-clinic-usp-integration-1.4.3.zip','14-global-clinic-usp-integration-1.4.4.zip'),
+              ('This fifth-review branch','This sixth-review branch'),
+              ('the five eighty-pass regression gates','the six eighty-pass regression gates'),
+              ('The five repository review ledgers are:','The six repository review ledgers are:'),
+            ],
+            'docs/RELEASE-EVIDENCE.md': [
+              ('v1.4.3 Fifth-Review Repository Candidate','v1.4.4 Sixth-Review Repository Candidate'),
+              ('Software candidate: `1.4.3`','Software candidate: `1.4.4`'),
+              ('Base schema: `10004`','Base schema: `10005`'),
+              ('including fifth-review regressions','including sixth-review regressions'),
+              ('first, second, third, fourth and fifth','first, second, third, fourth, fifth and sixth'),
+            ],
+          }
+          for name, pairs in replacements.items():
+              p=Path(name); s=p.read_text(encoding='utf-8')
+              for a,b in pairs: s=s.replace(a,b)
+              p.write_text(s,encoding='utf-8')
+          p=Path('tests/second-review-regression-tests.php')
+          s=p.read_text(encoding='utf-8')
+          s=s.replace("v1.4.4 Fifth-Review Repository Candidate","v1.4.4 Sixth-Review Repository Candidate")
+          p.write_text(s,encoding='utf-8')
+          PY
+          git add docs/REQUIREMENTS-TRACEABILITY.md STATUS.md docs/RELEASE-EVIDENCE.md tests/second-review-regression-tests.php
+          git commit -m "QA: align sixth-review truth evidence"
       - name: Run full quality gate
         run: bash scripts/quality.sh
       - name: Remove one-shot finalizer
