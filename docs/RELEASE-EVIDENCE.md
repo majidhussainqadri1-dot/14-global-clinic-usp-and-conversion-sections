@@ -25,7 +25,7 @@ Historical green results are supporting history only. For every current File 14 
 - PR-head parity with the exact tested SHA before merge.
 - A fresh post-merge run on the exact resulting `main` SHA before that SHA is called `Automated-QA Green`.
 
-`Automated-QA Green`, `Packaged` and `main merged` are separate evidence claims; none is inherited from an older commit.
+The third independent eighty-pass review established this exact-main rule; later reviews may strengthen it but may not weaken it. `Automated-QA Green`, `Packaged` and `main merged` are separate evidence claims; none is inherited from an older commit.
 
 ## Fifth-review corrective evidence areas
 
