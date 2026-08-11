@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
-"""Fifth independent 80-pass repository review gate for File 14 v1.4.3."""
+"""Fifth independent 80-pass repository review gate retained as a historical regression suite.
+
+Historical fifth-review facts remain anchored in its ledger, while current release-version
+parity assertions intentionally follow the current File 14 candidate rather than pinning v1.4.3.
+"""
 from pathlib import Path
 import re
 import sys
@@ -29,6 +33,7 @@ js = text(P / "assets/js/global-clinic-usp-integration.js")
 readme = text(P / "readme.txt")
 root_readme = text(ROOT / "README.md")
 status = text(ROOT / "STATUS.md")
+fifth_ledger = text(ROOT / "docs/REVIEW-80-FIFTH-LEDGER-v1.4.3.md")
 trace = text(ROOT / "docs/REQUIREMENTS-TRACEABILITY.md")
 build = text(ROOT / "scripts/build.py")
 quality = text(ROOT / "scripts/quality.sh")
@@ -36,11 +41,14 @@ quality_workflow = text(ROOT / ".github/workflows/file14-quality.yml")
 fresh_workflow = text(ROOT / ".github/workflows/file14-fresh-reviews.yml")
 uninstall = text(P / "uninstall.php")
 
+version_match = re.search(r"Version:\s*([0-9]+\.[0-9]+\.[0-9]+)", main)
+current_version = version_match.group(1) if version_match else ""
+
 checks = []
 def add(label, condition):
     checks.append((label, bool(condition)))
 
-add("01 exact post-fourth-review baseline recorded", "b9045a4229d052103a5546477f664ac88b6ff034" in status)
+add("01 exact post-fourth-review baseline remains recorded in fifth-review evidence", "b9045a4229d052103a5546477f664ac88b6ff034" in fifth_ledger)
 add("02 base runtime schema truth gate", "GCU_Install::verify_schema()" in fifth)
 add("03 Future runtime schema truth gate", "GCU_Future_Intelligence::verify_schema()" in fifth)
 add("04 schema drift fail-closed", "return self::$schema_gate ? $pre_option : 0;" in fifth)
@@ -49,12 +57,12 @@ add("06 AI sensitive input blocked before provider path", "gcu_fifth_ai_sensitiv
 add("07 AI multilingual output guard", "multilingual_dark_pattern_scan" in fifth and "multilingual_guard_applied" in fifth)
 add("08 conflicting conversion event identity rejected", "gcu_conversion_event_identity_conflict" in fifth and "subject_hash" in fifth)
 add("09 legacy hourly early-stop worker replaced", "remove_action( 'gcu_future_hourly_intelligence'" in fifth)
-add("10 early-stop transaction boundary", "transactional_early_stop_guard" in fifth and "START TRANSACTION" in fifth and "COMMIT" in fifth)
-add("11 early-stop mandatory audit rollback", "experiment_early_stopped" in fifth and "if ( false === $audit )" in fifth and "ROLLBACK" in fifth)
-add("12 release documentation corrected to five ledgers", "The five repository review ledgers are:" in status)
-add("13 plugin header/version parity", "Version: 1.4.3" in main and "GCU_VERSION', '1.4.3" in main)
-add("14 stable tag parity", "Stable tag: 1.4.3" in readme)
-add("15 root README version parity", "Software candidate: `1.4.3`" in root_readme)
+add("10 early-stop transaction boundary", "transactional_early_stop_guard" in fifth and (("START TRANSACTION" in fifth and "COMMIT" in fifth) or ("begin_owned_transaction()" in fifth and "commit_owned_transaction()" in fifth)))
+add("11 early-stop mandatory audit rollback", "experiment_early_stopped" in fifth and "if ( false === $audit )" in fifth and ("ROLLBACK" in fifth or "rollback_owned_transaction()" in fifth))
+add("12 release documentation lists the six retained review ledgers", "The six repository review ledgers are:" in status)
+add("13 plugin header/version parity follows current candidate", bool(current_version) and f"Version: {current_version}" in main and f"GCU_VERSION', '{current_version}" in main)
+add("14 stable tag parity follows current candidate", bool(current_version) and f"Stable tag: {current_version}" in readme)
+add("15 root README version parity follows current candidate", bool(current_version) and f"Software candidate: `{current_version}`" in root_readme)
 add("16 Future plan identity", "SSH-F14-FUTURE-CTI-2026-v2.0" in main and "SSH-F14-FUTURE-CTI-2026-v2.0" in future_policy)
 add("17 all 24 Future requirement IDs present", all(f"F14-FUT-{i:02d}" in future_policy for i in range(1, 25)))
 add("18 canonical logical repository identity", "14-global-clinic-usp-and-conversion-integration" in main)
