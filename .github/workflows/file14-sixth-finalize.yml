@@ -25,6 +25,15 @@ jobs:
         run: |
           git config user.name "File 14 Review Bot"
           git config user.email "actions@users.noreply.github.com"
+      - name: Normalize transformer indentation
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('scripts/finalize-sixth-review.py')
+          s=p.read_text(encoding='utf-8')
+          s=s.replace("r'''\\t", "'''\\t")
+          p.write_text(s, encoding='utf-8')
+          PY
       - name: Apply final corrective patch
         run: python3 scripts/finalize-sixth-review.py
       - name: Run full quality gate
