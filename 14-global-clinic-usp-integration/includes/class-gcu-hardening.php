@@ -82,6 +82,18 @@ final class GCU_Hardening {
 		return false;
 	}
 
+	public static function request_fingerprint( $value ) {
+		$normalize = static function ( $v ) use ( &$normalize ) {
+			if ( is_array( $v ) ) {
+				if ( array_keys( $v ) !== range( 0, count( $v ) - 1 ) ) { ksort( $v, SORT_STRING ); }
+				foreach ( $v as $k => $child ) { $v[ $k ] = $normalize( $child ); }
+			}
+			return $v;
+		};
+		$encoded = wp_json_encode( $normalize( self::sanitize_structured_value( $value ) ) );
+		return false === $encoded ? '' : hash( 'sha256', $encoded );
+	}
+
 	public static function command_key( $name, $supplied = '' ) {
 		$supplied = sanitize_text_field( (string) $supplied );
 		if ( '' !== $supplied ) { return hash( 'sha256', sanitize_key( $name ) . '|' . get_current_user_id() . '|' . self::bounded_text( $supplied, 191 ) ); }
