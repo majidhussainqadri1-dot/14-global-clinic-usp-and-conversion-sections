@@ -1,4 +1,4 @@
-# retry-8
+# retry-9
 name: File 14 Sixth Review Finalizer
 
 on:
@@ -55,7 +55,7 @@ jobs:
           p=Path('scripts/review80-second.py');s=p.read_text(encoding='utf-8').replace("GCU_SCHEMA_VERSION', 10004","GCU_SCHEMA_VERSION', 10005");p.write_text(s,encoding='utf-8')
           p=Path('scripts/review80-third.py');s=p.read_text(encoding='utf-8').replace("GCU_SCHEMA_VERSION', 10004","GCU_SCHEMA_VERSION', 10005");s=s.replace("'outbox_payload_invalid' in repo and 'outbox_write_failed' in repo and repo.count(\"update_option('gcu_enabled',0,false)\")>=4","\"mark_containment('outbox_payload_invalid')\" in repo and \"mark_containment('outbox_write_failed')\" in repo and 'private function apply_containment()' in repo");p.write_text(s,encoding='utf-8')
           p=Path('scripts/review80-fourth.py');s=p.read_text(encoding='utf-8').replace("'audit_write_failed' in repo and \"update_option('gcu_enabled',0,false)\" in repo","\"mark_containment('audit_write_failed')\" in repo and 'private function apply_containment()' in repo");p.write_text(s,encoding='utf-8')
-          p=Path('scripts/review80-fifth.py');s=p.read_text(encoding='utf-8').replace('v1.4.3','v1.4.4').replace('"START TRANSACTION" in fifth and "COMMIT" in fifth','"begin_owned_transaction()" in fifth and "commit_owned_transaction()" in fifth').replace('"ROLLBACK" in fifth','"rollback_owned_transaction()" in fifth');p.write_text(s,encoding='utf-8')
+          p=Path('scripts/review80-fifth.py');s=p.read_text(encoding='utf-8').replace('v1.4.3','v1.4.4').replace('"START TRANSACTION" in fifth and "COMMIT" in fifth','"begin_owned_transaction()" in fifth and "commit_owned_transaction()" in fifth').replace('"ROLLBACK" in fifth','"rollback_owned_transaction()" in fifth').replace('The five repository review ledgers are:','The six repository review ledgers are:');p.write_text(s,encoding='utf-8')
           p=Path('scripts/fresh-review-round-1.sh');s=p.read_text(encoding='utf-8').replace('Version: 1.4.3','Version: 1.4.4').replace("GCU_SCHEMA_VERSION', 10004","GCU_SCHEMA_VERSION', 10005").replace('need "START TRANSACTION" "$P/includes/class-gcu-fifth-review-hardening.php"','need "begin_owned_transaction()" "$P/includes/class-gcu-fifth-review-hardening.php"');p.write_text(s,encoding='utf-8')
           p=Path('scripts/fresh-review-round-2.sh');s=p.read_text(encoding='utf-8').replace('Stable tag: 1.4.3','Stable tag: 1.4.4');p.write_text(s,encoding='utf-8')
           PY
