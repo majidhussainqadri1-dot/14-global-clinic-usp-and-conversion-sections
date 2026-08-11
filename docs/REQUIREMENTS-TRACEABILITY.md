@@ -1,10 +1,12 @@
-# File 14 — Fresh Central + File Plan + Future CTI Requirements Traceability — v1.4.4
+# File 14 — Fresh Central + File Plan + Future CTI Requirements Traceability — v1.4.5
 
 ## Governing freeze
 
-This matrix is for the 2026-08-10 corrective and Future Conversion & Trust Intelligence coding pass. It treats the freshly supplied consolidated central governing plan, `SSH-F14-PLAN-2026-v1.0`, and the Founder-approved additive amendment `SSH-F14-FUTURE-CTI-2026-v2.0` as the governing specification. Repository evidence is implementation evidence only; staging/live/operational status remains separate.
+This matrix is the current File 14 traceability baseline for the 2026-08-10 governing plans plus the 2026-08-11 seventh ten-round corrective cycle. It treats the freshly supplied consolidated central governing plan, `SSH-F14-PLAN-2026-v1.0`, and the Founder-approved additive amendment `SSH-F14-FUTURE-CTI-2026-v2.0` as the governing specification. Repository evidence is implementation evidence only; staging/live/operational status remains separate.
 
 Precedence used by this release: definitive Islamic rule → latest explicit Founder directive/amendment → consolidated central governing plan → fresh File 14 plan → Future CTI amendment → verified exact repository head/runtime evidence.
+
+The complete v1.4.4 matrix remains represented by all unchanged rows below. The v1.4.5 corrective delta adds explicit-grant File 00 authorization, normalized lock-scope rejection, owner-confirmed destination URL integrity, privacy-erasure read-back verification, conversion-event UUID identity conflict enforcement, source-tree hygiene and current exact-head QA/evidence reconciliation. `docs/REQUIREMENTS-TRACEABILITY-v1.4.5-ADDENDUM.md` records that delta separately for audit clarity.
 
 ## Canonical ownership
 
@@ -14,8 +16,8 @@ File 14 owns approved Worldwide Clinic value-proposition copy, reusable semantic
 
 | Governing ID | File 14 implementation evidence | Automated evidence |
 |---|---|---|
-| CEN-GOV-001 | Runtime records `GCU_PLAN_VERSION`, `GCU_FUTURE_PLAN_VERSION` and `GCU_CENTRAL_PLAN_BASELINE`; status model keeps coding separate from staging/live | `central-plan-tests.php`, future/fifth-review tests |
-| CEN-OWN-001 | All doctor/onboarding/booking truth resolved through File 07/08/09 contracts; Future CTI stores only File14-owned governance records/reports | contract + central-plan + future/fifth tests |
+| CEN-GOV-001 | Runtime records `GCU_PLAN_VERSION`, `GCU_FUTURE_PLAN_VERSION` and `GCU_CENTRAL_PLAN_BASELINE`; status model keeps coding separate from staging/live | `central-plan-tests.php`, future/fifth/seventh-review tests |
+| CEN-OWN-001 | All doctor/onboarding/booking truth resolved through File 07/08/09 contracts; File 00 authorization adapter is explicit-grant fail closed; Future CTI stores only File14-owned governance records/reports | contract + central-plan + future/fifth/seventh tests |
 | CEN-BIZ-001 | Canonical policy is one approved free tier; parity sentinel blocks drift | policy + future tests |
 | CEN-DON-001 | Voluntary support is separate and cannot purchase ranking, visibility, verification or basic service; parity/dark-pattern rules reinforce this | policy + future tests |
 | CEN-BRAND-001 | Exact primary Sabri Green `#087A4E`; future CSS consumes same token/fallback | central-plan + CSS/fresh-review tests |
@@ -23,7 +25,7 @@ File 14 owns approved Worldwide Clinic value-proposition copy, reusable semantic
 | CEN-LOC-001 | American English canonical File 14 chrome with complete Urdu and Arabic key parity; future protected terminology locks en-US/ur-PK/ar-SA | contract + central-plan + future tests |
 | CEN-A11Y-001 | Semantic headings, 44px targets, focus-visible, RTL, reduced motion, forced colors, 320px-class reflow; Future CTI follows same gates | CSS/static tests; browser staging pending |
 | CEN-LOWDATA-001 | `Save-Data` and reduced-data support; Future CTI JS is not loaded in low-bandwidth mode | central-plan + fresh-review tests |
-| CEN-PRIV-001 | Consent/GPC, bounded attribution, small-cohort suppression, aggregate FAQ signals, PII-minimized copy reports; fifth review rejects sensitive AI-copy input before provider use | contract + central-plan + future/fifth tests |
+| CEN-PRIV-001 | Consent/GPC, bounded attribution, small-cohort suppression, aggregate FAQ signals, PII-minimized copy reports; fifth review rejects sensitive AI-copy input before provider use; v1.4.5 verifies subject-link deletion before erasure completion | contract + central-plan + future/fifth/seventh tests |
 
 ## File 14 functional requirements
 
@@ -31,7 +33,7 @@ File 14 owns approved Worldwide Clinic value-proposition copy, reusable semantic
 |---|---|---|
 | F14-FR-001 Patient value proposition | Localized patient blocks and verified-directory destination | policy/contract tests |
 | F14-FR-002 Doctor value proposition | Localized doctor blocks, zero-commission/free/support rules and onboarding destination | policy/contract tests |
-| F14-FR-003 Primary CTAs | File 07 and File 09 versioned destination registry with safe redirects | contract tests |
+| F14-FR-003 Primary CTAs | File 07 and File 09 versioned destination registry with safe redirects; v1.4.5 prevents consumer URL rewrite of owner-confirmed state | contract + seventh-review tests |
 | F14-FR-004 How it works | Patient/doctor step journeys and canonical process route | contract tests |
 | F14-FR-005 Trust content | Verification limits, privacy, emergency and no-outcome-guarantee claims | policy/contract tests |
 | F14-FR-006 Business copy | 0% commission, one free tier, optional support/no advantage, direct fee-owner boundary | policy + future parity tests |
@@ -39,7 +41,7 @@ File 14 owns approved Worldwide Clinic value-proposition copy, reusable semantic
 | F14-FR-008 Reusable content blocks | Semantic block DTO/API and File 25-compatible classes/tokens | contract tests |
 | F14-FR-009 Destination health | Fail-closed owner readiness and honest degraded states | contract/frontend tests |
 | F14-FR-010 Campaign attribution | Consent, GPC, File 14 route allowlist, sanitized first/last attribution and 30-day expiry | privacy/static tests |
-| F14-FR-011 Funnel events | Impression/CTA stages, single-use event token, no click-as-success inference; fifth review rejects conflicting replay identity for an existing event UUID | REST/repository/fifth tests |
+| F14-FR-011 Funnel events | Impression/CTA stages, single-use event token, no click-as-success inference; conflicting reuse of an event UUID is accepted only for identical stage/destination/pseudonymous-subject/campaign identity and otherwise returns HTTP 409 | REST/repository/fifth/seventh tests |
 | F14-FR-012 Experiment governance | Hypothesis/variants/audience/guardrails/sample/privacy and Founder-gated lifecycle; automatic early-stop state+audit is transactional in the scheduled path | policy/contract + future/fifth tests |
 | F14-FR-013 Localization | en-US canonical, complete ur-PK/ar-SA File 14 chrome, RTL and runtime parity health | contract/central-plan tests |
 | F14-FR-014 FAQ governance | Versioned FAQs, claim links and review deadlines | seed/contract tests |
@@ -79,9 +81,9 @@ File 14 owns approved Worldwide Clinic value-proposition copy, reusable semantic
 
 | Requirement | Repository implementation evidence | Remaining external evidence |
 |---|---|---|
-| F14-NFR-001 Authorization | Native capabilities, object/purpose/state/version checks and fail-closed REST; fifth review adds Founder approval for active/public Future governance | real-role/IDOR staging matrix |
-| F14-NFR-002 Privacy lifecycle | Consent/GPC, minimization, export/erase, bounded attribution, non-destructive uninstall, cohort suppression, PII-minimized reports and sensitive AI-input rejection | WordPress privacy-tool/provider staging acceptance |
-| F14-NFR-003 Reliability | Idempotent event write, outbox/inbox, bounded retry/dead-letter; base/Future actual schema fail-close; transactional scheduled experiment early-stop | queue/provider-failure staging test |
+| F14-NFR-001 Authorization | Native capabilities, object/purpose/state/version checks and fail-closed REST; fifth review adds Founder approval for active/public Future governance; v1.4.5 requires explicit `true` from the File 00 authorization adapter | real-role/IDOR staging matrix |
+| F14-NFR-002 Privacy lifecycle | Consent/GPC, minimization, export/erase, bounded attribution, non-destructive uninstall, cohort suppression, PII-minimized reports, sensitive AI-input rejection and erasure read-back verification | WordPress privacy-tool/provider staging acceptance |
+| F14-NFR-003 Reliability | Idempotent event write, identity-bound event replay, outbox/inbox, bounded retry/dead-letter; base/Future actual schema fail-close; transactional scheduled experiment early-stop; normalized DB-lock scope fail-close | queue/provider-failure staging test |
 | F14-NFR-004 Performance | Bounded queries, conditional assets, low-data suppression and background work; Future quality marks performance provisional without measured input | measured p75/p95 on Hostinger-equivalent staging |
 | F14-NFR-005 Accessibility | File 20 shell contract only, lang/dir, focus, 320px reflow, reduced motion/data, forced colors; Future UI has 44px/focus/reflow gates | screen reader, 320–1920px and 400% zoom acceptance |
 | F14-NFR-006 Observability | Base health plus Future parity/anomaly/quality/consistency/report indicators and conversion event identity conflict warning | real logging/alert ownership acceptance |
@@ -95,10 +97,10 @@ File 14 owns approved Worldwide Clinic value-proposition copy, reusable semantic
 - DoD-08 — all user states, 320–1920px, RTL/LTR, keyboard/focus, zoom, contrast and reduced motion: repository controls are coded; human staging remains mandatory.
 - DoD-09 — performance/load/provider outage/queue/dead-letter/cache/DB failure and measured SLO: failure-path code exists; measured staging evidence remains mandatory.
 - DoD-10 — verified backup restore/cache rebuild/rollback: tooling exists; real restore/rollback drill remains mandatory.
-- DoD-11 — two separate fresh review/fix rounds after final coding change: executable fresh review gates include sixth-review corrections; exact-head regression must be green after the final commit.
+- DoD-11 — two separate fresh review/fix rounds after final coding change: executable fresh review gates include all retained corrections plus the seventh-cycle regression; exact-head regression must be green after the final commit.
 - DoD-12 — real-role staging, Founder acceptance, production monitoring/rollback window: external release gates; not claimed by repository completion.
 - DoD-13 — zero known unresolved blocker/critical defects at repository gate; residual external risks remain documented in release evidence.
 
 ## Truth-status rule
 
-`Specified`, `Coded`, `Packaged`, `Automated-QA Green`, `Staging-Accepted`, `Live-Deployed`, and `Operational` are separate statuses. File 14 v1.4.4 may only claim a status for which current exact-head evidence exists. The Future CTI implementation and sixth-review corrections do not alter that rule.
+`Specified`, `Coded`, `Packaged`, `Automated-QA Green`, `Staging-Accepted`, `Live-Deployed`, and `Operational` are separate statuses. File 14 v1.4.5 may only claim a status for which current exact-head evidence exists. The Future CTI implementation and seventh ten-round corrections do not alter that rule.
