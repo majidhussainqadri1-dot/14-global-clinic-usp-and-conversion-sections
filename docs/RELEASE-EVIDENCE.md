@@ -25,7 +25,7 @@ The seventh corrective cycle reopened exact `main` `db60c4bc5c37a5c88126b78c31b3
 
 Corrected failure classes include: File 00 authorization adapters using truthy/default-allow semantics instead of explicit grant; normalized database lock scopes collapsing to an unsafe generic name; consumer filters being able to rewrite canonical Files 07/08/09 destination URLs; privacy erasure reporting completion without read-back verification of subject-link deletion; committed generated Python bytecode; conflicting conversion-event UUID reuse being accepted without authoritative identity comparison; and stale version-specific QA/documentation gates that no longer matched the v1.4.5 candidate.
 
-Round-by-round evidence is maintained in:
+The six repository review ledgers are:
 
 - `docs/REVIEW-80-LEDGER-v1.4.1.md`
 - `docs/REVIEW-80-SECOND-LEDGER-v1.4.1.md`
@@ -33,7 +33,8 @@ Round-by-round evidence is maintained in:
 - `docs/REVIEW-80-FOURTH-LEDGER-v1.4.2.md`
 - `docs/REVIEW-80-FIFTH-LEDGER-v1.4.3.md`
 - `docs/REVIEW-80-SIXTH-LEDGER-v1.4.4.md`
-- `docs/REVIEW-10-SEVENTH-LEDGER-v1.4.5.md`
+
+The current seventh-cycle sequential ten-round record is `docs/REVIEW-10-SEVENTH-LEDGER-v1.4.5.md`; it is intentionally separate from the six historical eighty-pass ledgers.
 
 ## External evidence still mandatory
 
