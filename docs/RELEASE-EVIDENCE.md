@@ -15,6 +15,8 @@
 
 Historical green results are supporting history only. The **exact review/main SHA being accepted** must independently prove PHP 7.4 and PHP 8.3 quality, policy/contract/reliability/central/Future regression tests, all retained historical review gates, the dedicated eighth-cycle regression test, two fresh post-code review rounds, secret/inline/stale-token/deprecated-helper scans, deterministic double-build ZIP, SHA-256/file-level SBOM and baseline integrity. For the open PR this means the **exact current PR-head SHA**. After merge, **fresh post-merge** exact-main acceptance is mandatory.
 
+Round 10 proved that this distinction must be enforced by workflow execution, not prose alone: GitHub's default `pull_request` checkout had been testing the synthetic merge ref while earlier evidence language referred to the PR head. The quality/package, both fresh-review jobs and baseline-provenance PR job now explicitly checkout `${{ github.event.pull_request.head.sha || github.sha }}` and immediately verify `git rev-parse HEAD` against that exact value. Package artifact naming is also keyed to the same exact SHA. Any older pull-request run produced before this correction is supporting history only and is not final exact-PR-head acceptance evidence.
+
 The **third independent eighty-pass** review established the durable exact-current-main/post-merge policy. Later corrective cycles retain that policy; they do not replace it.
 
 `Automated-QA Green`, `Packaged`, `main merged`, `Staging-Accepted`, `Live-Deployed` and `Operational` remain separate evidence claims.
@@ -23,7 +25,7 @@ The **third independent eighty-pass** review established the durable exact-curre
 
 The eighth corrective cycle continued from the exact corrected v1.4.5 PR head and reviewed the corrected state sequentially. Repository defects found before final exact-head closure include: concurrent event replay TOCTOU; semantically truncated idempotency fingerprints; concurrent logged-in privacy-subject initialization; owner readiness using receipt-time/no monotonic ordering; a noncanonical File 20 slot-readiness fallback; fallback URLs manufacturing owner readiness; analytics DB read failure masquerading as empty/suppressed metrics; and destination-bound funnel stages without mandatory destination identity. Release/test/documentation identity was then advanced to v1.4.6 without a schema change.
 
-Round 10 additionally exposed stale retained QA/evidence contracts after the new cycle: second/third/seventh review assertions were tied to older prose/version identities, and the current traceability matrix had lost the explicit File 25 visual/design-owner statement. Those defects are corrected while preserving the historical safety invariants rather than weakening them.
+Round 10 additionally exposed stale retained QA/evidence contracts after the new cycle: second/third/seventh review assertions were tied to older prose/version identities; the current traceability matrix had lost the explicit File 25 visual/design-owner statement and exact American-English trace wording; and the pull-request workflows themselves were validating GitHub's synthetic merge ref instead of independently validating the exact PR-head SHA. All of these defects were corrected while preserving the historical safety invariants rather than weakening them.
 
 The historical six eighty-pass ledgers remain:
 
