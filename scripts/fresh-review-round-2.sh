@@ -46,7 +46,9 @@ need "*.py[cod]" "$ROOT/.gitignore"
 need "ninth-review-regression-tests.php" "$ROOT/scripts/quality.sh"
 need "REVIEW-10-NINTH-LEDGER-v1.4.7.md" "$ROOT/scripts/quality.sh"
 for id in CEN-GOV-001 CEN-OWN-001 CEN-BIZ-001 CEN-DON-001 CEN-BRAND-001 CEN-NAV-001 CEN-LOC-001 CEN-A11Y-001 CEN-LOWDATA-001 CEN-PRIV-001 F14-FR-001 F14-FR-016 F14-NFR-010 F14-FUT-01 F14-FUT-24 DoD-11 DoD-13; do need "$id" "$ROOT/docs/REQUIREMENTS-TRACEABILITY.md"; done
-forbid "file14-ninth-review-apply.yml|apply-file14-ninth-review-corrections.py" "$ROOT"
+for temp in "$ROOT/.github/workflows/file14-ninth-review-apply.yml" "$ROOT/scripts/apply-file14-ninth-review-corrections.py"; do
+  if [ -e "$temp" ]; then echo "ROUND2 temporary ninth-review machinery remains: $temp" >&2; fail=1; fi
+done
 forbid "<main class=\"gcu-page\"" "$P/includes/class-gcu-frontend.php"
 forbid "guaranteed income|guaranteed cure|limited spots|act now|instant verification" "$P/includes/class-gcu-policy.php"
 forbid "guaranteed income|guaranteed cure|limited spots|act now|instant verification" "$P/includes/class-gcu-frontend.php"
