@@ -36,7 +36,7 @@ jobs:
           PY
       - name: Apply final corrective patch
         run: python3 scripts/finalize-sixth-review.py
-      - name: Align sixth-review evidence wording
+      - name: Align sixth-review evidence and inherited assertions
         run: |
           python3 - <<'PY'
           from pathlib import Path
@@ -68,12 +68,17 @@ jobs:
               for a,b in pairs: s=s.replace(a,b)
               p.write_text(s,encoding='utf-8')
           p=Path('tests/second-review-regression-tests.php')
-          s=p.read_text(encoding='utf-8')
-          s=s.replace("v1.4.4 Fifth-Review Repository Candidate","v1.4.4 Sixth-Review Repository Candidate")
+          s=p.read_text(encoding='utf-8').replace("v1.4.4 Fifth-Review Repository Candidate","v1.4.4 Sixth-Review Repository Candidate")
           p.write_text(s,encoding='utf-8')
+          p=Path('tests/third-review-regression-tests.php')
+          s=p.read_text(encoding='utf-8')
+          old="tr_check(false!==strpos($repo,'audit_lock_failed')&&false!==strpos($repo,'audit_write_failed')&&substr_count($repo,\"update_option('gcu_enabled',0,false)\")>=4,'Audit/outbox persistence failures are not fail-closed contained.');"
+          new="tr_check(false!==strpos($repo,\"mark_containment('audit_lock_failed')\")&&false!==strpos($repo,\"mark_containment('audit_write_failed')\")&&false!==strpos($repo,\"mark_containment('outbox_write_failed')\")&&false!==strpos($repo,'private function apply_containment()'),'Audit/outbox persistence failures are not fail-closed contained.');"
+          if old not in s: raise SystemExit('third-review containment assertion marker missing')
+          p.write_text(s.replace(old,new),encoding='utf-8')
           PY
-          git add docs/REQUIREMENTS-TRACEABILITY.md STATUS.md docs/RELEASE-EVIDENCE.md tests/second-review-regression-tests.php
-          git commit -m "QA: align sixth-review truth evidence"
+          git add docs/REQUIREMENTS-TRACEABILITY.md STATUS.md docs/RELEASE-EVIDENCE.md tests/second-review-regression-tests.php tests/third-review-regression-tests.php
+          git commit -m "QA: align sixth-review truth and containment assertions"
       - name: Run full quality gate
         run: bash scripts/quality.sh
       - name: Remove one-shot finalizer
