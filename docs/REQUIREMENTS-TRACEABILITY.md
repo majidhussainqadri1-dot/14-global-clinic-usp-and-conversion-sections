@@ -10,14 +10,14 @@ The v1.4.5 trace remains historical evidence. The v1.4.6 delta closes concurrent
 
 ## Canonical ownership
 
-File 14 owns approved Worldwide Clinic value-proposition copy, reusable semantic content blocks, File 20 placement contracts, ethical patient/doctor conversion journeys, claim evidence/version history, destination health, trust/copy intelligence and privacy-minimized measurement. It does **not** own doctor/profile/verification/clinic/appointment/payment/clinical records, the global shell/navigation, or visual-system truth. File 20 is the sole shell/slot-readiness owner; Files 07/08/09 remain canonical destination owners. Future CTI may explain, lint, measure, preview or hand off to canonical owners; it may not silently become one.
+File 14 owns approved Worldwide Clinic value-proposition copy, reusable semantic content blocks, File 20 placement contracts, ethical patient/doctor conversion journeys, claim evidence/version history, destination health, trust/copy intelligence and privacy-minimized measurement. It does **not** own doctor/profile/verification/clinic/appointment/payment/clinical records, the global shell/navigation, or visual-system truth. File 20 is the sole shell/slot-readiness owner; Files 07/08/09 remain canonical destination owners; **File 25 remains the canonical public visual/design-system owner**, and File 14 only exposes compatible semantic classes/tokens/components for that visual layer. Future CTI may explain, lint, measure, preview or hand off to canonical owners; it may not silently become one.
 
 ## Fresh central requirements
 
 | Governing ID | File 14 implementation evidence | Automated evidence |
 |---|---|---|
 | CEN-GOV-001 | Runtime records `GCU_PLAN_VERSION`, `GCU_FUTURE_PLAN_VERSION`, `GCU_CENTRAL_PLAN_BASELINE`; status model separates repository/staging/live | central-plan + eighth-review tests |
-| CEN-OWN-001 | Files 07/08/09 provide destination truth; File 20 canonical `sabri_shell_slot_ready_v1` only; File 00 authorization explicit-grant fail closed | contract + central + eighth tests |
+| CEN-OWN-001 | Files 07/08/09 provide destination truth; File 20 canonical `sabri_shell_slot_ready_v1` only; File 25 owns visual/design-system truth; File 00 authorization explicit-grant fail closed | contract + central + eighth tests |
 | CEN-BIZ-001 | One approved free tier; parity sentinel blocks drift | policy + future tests |
 | CEN-DON-001 | Voluntary support cannot purchase ranking, visibility, verification or basic service | policy + future tests |
 | CEN-BRAND-001 | Exact Sabri Green `#087A4E` | central-plan + CSS/fresh tests |
@@ -38,7 +38,7 @@ File 14 owns approved Worldwide Clinic value-proposition copy, reusable semantic
 | F14-FR-005 Trust content | Verification, privacy, emergency and no-outcome-guarantee claims | policy/contract tests |
 | F14-FR-006 Business copy | 0% commission, one free tier, optional support/no advantage, fee-owner boundary | policy + future parity tests |
 | F14-FR-007 Placement registry | Versioned File 20 route/slot/audience/priority placements; only canonical File 20 readiness hook can authorize activation | schema/contract/eighth tests |
-| F14-FR-008 Reusable content blocks | Semantic block DTO/API and File25-compatible classes/tokens | contract tests |
+| F14-FR-008 Reusable content blocks | Semantic block DTO/API and File25-compatible classes/tokens; File 25 retains canonical visual/design ownership | contract/central tests |
 | F14-FR-009 Destination health | Owner occurrence-time freshness, owner-confirmed URL, fail-closed/degraded state | contract/eighth tests |
 | F14-FR-010 Campaign attribution | Consent, GPC, File14 route allowlist, sanitized first/last attribution, 30-day expiry | privacy/static tests |
 | F14-FR-011 Funnel events | Single-use token; destination-bound stages require destination; replay identity checked before write and after deduplication; conflicting reuse returns 409; analytics DB failure returns safe 503 | REST/repository/eighth tests |
@@ -85,7 +85,7 @@ File 14 owns approved Worldwide Clinic value-proposition copy, reusable semantic
 | F14-NFR-002 Privacy lifecycle | Consent/GPC, minimization, export/erase, bounded attribution, pseudonym lock/read-back, cohort suppression, non-destructive uninstall | real privacy-tool staging |
 | F14-NFR-003 Reliability | Full payload idempotency fingerprint, replay identity post-dedup check, monotonic owner events, outbox/inbox/retry/dead-letter, schema fail-close | queue/provider-failure staging |
 | F14-NFR-004 Performance | Bounded queries/assets/background work; measured evidence remains external | p75/p95 staging |
-| F14-NFR-005 Accessibility | File20 shell contract, lang/dir, focus, reflow, reduced motion/data, forced colors | screen reader/400% staging |
+| F14-NFR-005 Accessibility | File20 shell contract, File25 visual-system boundary, lang/dir, focus, reflow, reduced motion/data, forced colors | screen reader/400% staging |
 | F14-NFR-006 Observability | Health, parity/anomaly/quality/report indicators; DB analytics query fails closed | real alert/log acceptance |
 | F14-NFR-007 Migration/rollback | Install lock, dbDelta, snapshots, verified base/Future schema | fresh install/upgrade/restore drill |
 | F14-NFR-008 Operability | System Check, safe mode, Future admin/scenario lab, retention/reconciliation | operator rehearsal |
