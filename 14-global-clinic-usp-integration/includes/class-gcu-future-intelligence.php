@@ -235,12 +235,14 @@ final class GCU_Future_Intelligence {
 	}
 
 	public static function rest_quality() {
-		return self::no_store_response( self::quality_score() );
+		$result = self::quality_score();
+		return is_wp_error( $result ) ? $result : self::no_store_response( $result );
 	}
 
 	public static function rest_friction( WP_REST_Request $request ) {
 		$days = max( 1, min( 90, absint( $request->get_param( 'days' ) ? $request->get_param( 'days' ) : 30 ) ) );
-		return self::no_store_response( self::friction_summary( $days ) );
+		$result = self::friction_summary( $days );
+		return is_wp_error( $result ) ? $result : self::no_store_response( $result );
 	}
 
 	public static function rest_scenarios() {
@@ -509,7 +511,9 @@ final class GCU_Future_Intelligence {
 	public static function quality_score() {
 		global $wpdb;
 		$t = GCU_Install::tables();
+		$wpdb->last_error = '';
 		$rows = $wpdb->get_results( "SELECT funnel_stage,COUNT(*) total FROM {$t['events']} WHERE occurred_at>=DATE_SUB(UTC_TIMESTAMP(),INTERVAL 30 DAY) GROUP BY funnel_stage", ARRAY_A );
+		if ( '' !== (string) $wpdb->last_error ) { return new WP_Error( 'gcu_future_quality_query_failed', __( 'Conversion quality data could not be read safely.', 'global-clinic-usp-integration' ), array( 'status' => 503 ) ); }
 		$counts = array();
 		foreach ( is_array( $rows ) ? $rows : array() as $row ) {
 			$counts[ $row['funnel_stage'] ] = (int) $row['total'];
@@ -518,8 +522,12 @@ final class GCU_Future_Intelligence {
 		$loaded = isset( $counts['destination_loaded'] ) ? $counts['destination_loaded'] : 0;
 		$handoff = GCU_Future_Policy::cohort_allowed( $selected ) ? min( 100, round( 100 * $loaded / max( 1, $selected ), 1 ) ) : 0;
 		$parity = self::parity_status();
+		$wpdb->last_error = '';
 		$stale = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$t['claims']} WHERE status='review_required' OR (status='active' AND review_due_at IS NOT NULL AND review_due_at<=UTC_TIMESTAMP())" );
+		if ( '' !== (string) $wpdb->last_error ) { return new WP_Error( 'gcu_future_quality_claim_query_failed', __( 'Claim freshness data could not be read safely.', 'global-clinic-usp-integration' ), array( 'status' => 503 ) ); }
+		$wpdb->last_error = '';
 		$open_reports = (int) $wpdb->get_var( 'SELECT COUNT(*) FROM ' . self::tables()['reports'] . " WHERE status IN ('open','reviewing')" );
+		if ( '' !== (string) $wpdb->last_error ) { return new WP_Error( 'gcu_future_quality_report_query_failed', __( 'Copy-report data could not be read safely.', 'global-clinic-usp-integration' ), array( 'status' => 503 ) ); }
 		$destinations = GCU_Plugin::instance()->contracts()->all_destination_health();
 		$healthy = 0;
 		foreach ( $destinations as $destination ) {
@@ -544,7 +552,9 @@ final class GCU_Future_Intelligence {
 		global $wpdb;
 		$t = GCU_Install::tables();
 		$days = max( 1, min( 90, (int) $days ) );
+		$wpdb->last_error = '';
 		$rows = $wpdb->get_results( $wpdb->prepare( "SELECT funnel_stage,COUNT(*) total FROM {$t['events']} WHERE occurred_at>=DATE_SUB(UTC_TIMESTAMP(),INTERVAL %d DAY) GROUP BY funnel_stage", $days ), ARRAY_A );
+		if ( '' !== (string) $wpdb->last_error ) { return new WP_Error( 'gcu_future_friction_query_failed', __( 'Conversion friction data could not be read safely.', 'global-clinic-usp-integration' ), array( 'status' => 503 ) ); }
 		$total = 0;
 		$stages = array();
 		foreach ( is_array( $rows ) ? $rows : array() as $row ) {
@@ -570,8 +580,18 @@ final class GCU_Future_Intelligence {
 	public static function anomaly_detector() {
 		global $wpdb;
 		$t = GCU_Install::tables();
+		$wpdb->last_error = '';
 		$current = $wpdb->get_row( "SELECT SUM(funnel_stage='cta_selected') selected,SUM(funnel_stage='destination_loaded') loaded FROM {$t['events']} WHERE occurred_at>=DATE_SUB(UTC_TIMESTAMP(),INTERVAL 24 HOUR)", ARRAY_A );
+		$current_error = (string) $wpdb->last_error;
+		$wpdb->last_error = '';
 		$baseline = $wpdb->get_row( "SELECT SUM(funnel_stage='cta_selected') selected,SUM(funnel_stage='destination_loaded') loaded FROM {$t['events']} WHERE occurred_at<DATE_SUB(UTC_TIMESTAMP(),INTERVAL 24 HOUR) AND occurred_at>=DATE_SUB(UTC_TIMESTAMP(),INTERVAL 8 DAY)", ARRAY_A );
+		$baseline_error = (string) $wpdb->last_error;
+		if ( '' !== $current_error || '' !== $baseline_error ) {
+			$result = array( 'status' => 'query_failed', 'severity' => 'high', 'current_sample' => null, 'baseline_sample' => null, 'suppressed' => true, 'threshold' => GCU_Future_Policy::MIN_COHORT, 'checked_at' => gmdate( 'c' ) );
+			update_option( self::LAST_ANOMALY_OPTION, $result, false );
+			GCU_Observability::log( 'error', 'future_anomaly_query_failed', array() );
+			return $result;
+		}
 		$cs = isset( $current['selected'] ) ? (int) $current['selected'] : 0;
 		$cl = isset( $current['loaded'] ) ? (int) $current['loaded'] : 0;
 		$bs = isset( $baseline['selected'] ) ? (int) $baseline['selected'] : 0;
@@ -1027,6 +1047,7 @@ final class GCU_Future_Intelligence {
 		if ( is_wp_error( $ready ) ) { echo '<div class="notice notice-error"><p>' . esc_html( $ready->get_error_message() ) . '</p></div>'; return; }
 		$catalog = GCU_Future_Policy::feature_catalog();
 		$quality = self::quality_score();
+		if ( is_wp_error( $quality ) ) { echo '<div class="notice notice-error"><p>' . esc_html( $quality->get_error_message() ) . '</p></div>'; return; }
 		$parity = self::parity_status();
 		$reports = self::reports( 'open', 50 );
 		$consistency = self::consistency_graph();

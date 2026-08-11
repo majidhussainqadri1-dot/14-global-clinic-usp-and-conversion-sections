@@ -4,7 +4,7 @@ Tags: clinic, doctors, conversion, accessibility, privacy, governance, trust, ex
 Requires at least: 6.6
 Tested up to: 7.0.1
 Requires PHP: 7.4
-Stable tag: 1.4.6
+Stable tag: 1.4.7
 License: GPLv2 or later
 
 Canonical File 14 implementation for approved Worldwide Clinic value-proposition content, ethical conversion journeys, claim governance, destination contracts, Future Conversion & Trust Intelligence and privacy-minimized measurement.
@@ -12,7 +12,7 @@ Canonical File 14 implementation for approved Worldwide Clinic value-proposition
 == Description ==
 File 14 owns approved patient/doctor value-proposition blocks, File 20 placement contracts, claim evidence/version history, ethical conversion diagnostics, `/global-clinic/`, `/clinic/how-it-works/`, and versioned destinations to Files 07/08/09. It never owns doctor profiles, verification evidence, clinic records, appointments, payments, clinical records, the global shell/navigation or visual-system truth.
 
-Version 1.4.0 added the Founder-approved `SSH-F14-FUTURE-CTI-2026-v2.0` amendment as a bounded intelligence layer. Versions 1.4.1 through 1.4.4 delivered six independent eighty-pass corrective reviews. Version 1.4.5 delivered the seventh ten-round corrective cycle. Version 1.4.6 adds the eighth ten-round corrective hardening for replay/concurrency identity, full idempotency fingerprints, stable privacy subject initialization, monotonic owner readiness events, canonical File 20 slot authority, owner-confirmed destination URLs, analytics DB fail-close and destination-bound funnel validation.
+Version 1.4.0 added the Founder-approved `SSH-F14-FUTURE-CTI-2026-v2.0` amendment as a bounded intelligence layer. Versions 1.4.1 through 1.4.4 delivered six independent eighty-pass corrective reviews. Version 1.4.5 delivered the seventh ten-round corrective cycle. Version 1.4.6 added the eighth ten-round corrective hardening for replay/concurrency identity, full idempotency fingerprints, stable privacy subject initialization, monotonic owner readiness events, canonical File 20 slot authority, owner-confirmed destination URLs, analytics DB fail-close and destination-bound funnel validation.
 
 == Future Conversion & Trust Intelligence — 24 approved enhancements ==
 * F14-FUT-01 Ethical Intent Router.
@@ -86,6 +86,17 @@ The File 14 surface includes complete File 14-owned American English, Urdu and A
 8. Obtain explicit Founder acceptance before production deployment.
 
 == Changelog ==
+= 1.4.7 =
+* Ninth corrective cycle: ten sequential review/fix rounds over exact v1.4.6 PR-head repository truth.
+* Event tokens are validated in permission checks but consumed only inside the event transaction, so failed event writes do not burn the one-time token.
+* Conversion events and claim history no longer use broad INSERT IGNORE semantics; only verified duplicate identity is accepted.
+* Destination-bound funnel identity is enforced at repository level and unstable/empty measurement subjects fail closed.
+* Equal-timestamp owner readiness conflicts fail closed instead of silently discarding a distinct event.
+* Content, placement and experiment creation require authoritative read-back before commit.
+* Future quality/friction/anomaly and experiment early-stop complaint reads fail closed on database errors.
+* Logged-in File 14 pages are private/no-store; guest shared-cache responses vary by language/cookie; en-US fallback blocks/FAQs carry correct lang/dir semantics.
+* Base schema remains 10005 and Future schema remains 1.
+
 = 1.4.6 =
 * Eighth corrective cycle: another ten sequential review/fix rounds over the corrected v1.4.5 PR state.
 * Conversion-event UUID replay identity is rechecked after deduplication to close the concurrent pre-read/insert race.
