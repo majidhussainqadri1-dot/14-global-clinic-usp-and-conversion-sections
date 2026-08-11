@@ -15,7 +15,11 @@ Starting exact repository candidate: `0098c63d5f695d683c7057471d9c3683ec805522` 
 | 07 | Funnel analytics DB read failure could be surfaced as empty/suppressed metrics. | REST analytics path clears/checks DB error state and fails closed with safe HTTP 503. |
 | 08 | Destination-bound funnel stages could be accepted without a destination identifier. | CTA selected, destination loaded, application started and booking started now require a canonical destination. |
 | 09 | The substantive corrections made v1.4.5 release/test/documentation identity stale and lacked dedicated eighth-cycle regression integration. | Raised software to v1.4.6 with no schema change; aligned readmes/status/release/traceability/tests/fresh reviews and added eighth regression gate. |
-| 10 | Final exact-head CI/re-review closure pending at ledger creation. | Will be closed only after current exact-head quality, fresh reviews, baseline integrity and deterministic packaging have been examined and any resulting defect corrected. |
+| 10 | Exact-head closure exposed stale retained QA/evidence contracts tied to older version/prose identities, plus missing exact historical wording for current-main/live-state gates and an explicit File 25/American-English traceability regression. | Made second/third/seventh retained regressions release-cycle forward-compatible without weakening invariants; restored exact-current-main, fresh-post-merge and live-state evidence wording; restored explicit File 25 presentation boundary and American English canonical File 14 chrome traceability; reran exact-head PHP 7.4/8.3 quality, historical six 80-pass gates, fresh reviews, baseline integrity and deterministic package/SBOM to green before closure. |
+
+## Final round classification
+
+Defect-bearing rounds in this eighth ten-round cycle: **01, 02, 03, 04, 05, 06, 07, 08, 09, 10**.
 
 ## Truth boundary
 
