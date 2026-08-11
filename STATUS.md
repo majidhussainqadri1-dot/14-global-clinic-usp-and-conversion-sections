@@ -19,7 +19,7 @@ Historical PRs, commits, workflow runs and packages are supporting history only.
 
 After merge, the **exact resulting `main` SHA** becomes the repository truth candidate and must pass the applicable workflows again. A green PR head is not a green post-merge `main` by inference.
 
-The six historical eighty-pass ledgers remain unchanged:
+The six repository review ledgers are: the retained historical eighty-pass set below.
 
 - `docs/REVIEW-80-LEDGER-v1.4.1.md`
 - `docs/REVIEW-80-SECOND-LEDGER-v1.4.1.md`
