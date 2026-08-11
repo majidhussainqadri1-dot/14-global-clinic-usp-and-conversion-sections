@@ -4,7 +4,7 @@ Tags: clinic, doctors, conversion, accessibility, privacy, governance, trust, ex
 Requires at least: 6.6
 Tested up to: 7.0.1
 Requires PHP: 7.4
-Stable tag: 1.4.5
+Stable tag: 1.4.6
 License: GPLv2 or later
 
 Canonical File 14 implementation for approved Worldwide Clinic value-proposition content, ethical conversion journeys, claim governance, destination contracts, Future Conversion & Trust Intelligence and privacy-minimized measurement.
@@ -12,7 +12,7 @@ Canonical File 14 implementation for approved Worldwide Clinic value-proposition
 == Description ==
 File 14 owns approved patient/doctor value-proposition blocks, File 20 placement contracts, claim evidence/version history, ethical conversion diagnostics, `/global-clinic/`, `/clinic/how-it-works/`, and versioned destinations to Files 07/08/09. It never owns doctor profiles, verification evidence, clinic records, appointments, payments, clinical records, the global shell/navigation or visual-system truth.
 
-Version 1.4.0 added the Founder-approved `SSH-F14-FUTURE-CTI-2026-v2.0` amendment as a bounded intelligence layer. Versions 1.4.1 through 1.4.4 delivered six independent eighty-pass corrective reviews. Version 1.4.5 adds the subsequent ten-round corrective review hardening for fail-closed File 00 authorization, normalized DB-lock scopes, owner-controlled destination URLs, privacy-erasure completion verification, conversion-event identity conflict enforcement and repository hygiene.
+Version 1.4.0 added the Founder-approved `SSH-F14-FUTURE-CTI-2026-v2.0` amendment as a bounded intelligence layer. Versions 1.4.1 through 1.4.4 delivered six independent eighty-pass corrective reviews. Version 1.4.5 delivered the seventh ten-round corrective cycle. Version 1.4.6 adds the eighth ten-round corrective hardening for replay/concurrency identity, full idempotency fingerprints, stable privacy subject initialization, monotonic owner readiness events, canonical File 20 slot authority, owner-confirmed destination URLs, analytics DB fail-close and destination-bound funnel validation.
 
 == Future Conversion & Trust Intelligence — 24 approved enhancements ==
 * F14-FUT-01 Ethical Intent Router.
@@ -54,18 +54,22 @@ Version 1.4.0 added the Founder-approved `SSH-F14-FUTURE-CTI-2026-v2.0` amendmen
 == Reliability and security ==
 * Explicit InnoDB owner schema verification before version promotion and request-scoped runtime schema truth revalidation.
 * Future Intelligence has its own verified additive InnoDB schema for governed records and privacy-minimized copy-quality reports.
-* MySQL named locks for install/upgrade, content-version allocation and audit-chain append; invalid normalized lock scopes fail closed.
-* Optimistic concurrency plus transactional core workflow transitions and claim withdrawal/history; fifth-review experiment early-stop is state+audit atomic.
+* MySQL named locks for install/upgrade, content-version allocation, privacy-subject initialization and audit-chain append; invalid normalized lock scopes fail closed.
+* Optimistic concurrency plus transactional core workflow transitions and claim withdrawal/history; experiment early-stop is state+audit atomic.
 * Database-backed single-use measurement tokens and atomic rate-limit buckets.
-* Durable idempotency command state with bounded retry/recovery.
+* Durable idempotency command state with payload fingerprints bound to the complete bounded canonical request representation.
 * Outbox/inbox processing with stale-lock recovery, retry, exponential backoff and dead-letter state.
 * Strict same-origin destination validation by scheme, host and effective port; consumer filters may restrict owner readiness but cannot rewrite owner-confirmed destinations.
+* Owner readiness is ordered by the owner's event occurrence time, rejects future-invalid timestamps, and cannot claim available without a safe owner-confirmed URL.
+* File 20's canonical `sabri_shell_slot_ready_v1` contract is the sole placement-readiness authority consumed by File 14.
+* Reused conversion-event UUIDs are checked before write and again after a deduplicated insert outcome to close concurrent replay races.
+* Funnel analytics DB errors fail closed instead of being rendered as an empty/suppressed dataset.
 * Tamper-evident audit chain with full/partial verification status.
 * Bounded, hashed owner snapshot and transactional owner-record rollback.
 * Non-destructive uninstall by default; destructive purge requires explicit dual guard.
 
 == Privacy, AI and accessibility ==
-Public content works without measurement. Measurement requires explicit consent, is disabled under Global Privacy Control, is excluded from sensitive routes, uses bounded random pseudonyms and can be exported/erased through WordPress privacy tools. Privacy erasure is not reported complete until the File 14 measurement-subject linkage is confirmed absent. Browser attribution is signed, restricted to File 14 acquisition routes and bounded to 30 days; guest pseudonyms expire after 24 hours. Save-Data and reduced-data clients suppress nonessential measurement.
+Public content works without measurement. Measurement requires explicit consent, is disabled under Global Privacy Control, is excluded from sensitive routes, uses bounded random pseudonyms and can be exported/erased through WordPress privacy tools. Logged-in measurement-subject initialization is serialized and read-back verified so a transient or losing concurrent subject cannot orphan later export/erase linkage. Privacy erasure is not reported complete until the File 14 measurement-subject linkage is confirmed absent. Browser attribution is signed, restricted to File 14 acquisition routes and bounded to 30 days; guest pseudonyms expire after 24 hours. Save-Data and reduced-data clients suppress nonessential measurement.
 
 Future analytics suppress total cohorts below 10 and each individual funnel stage below 10. FAQ intelligence consumes approved aggregate question signals only after direct personal/contact/identity markers are rejected. AI copy assistance receives approved claims and produces draft suggestions only; the fifth review blocks personal/contact/identity/clinical base text before provider invocation and filters Urdu/Arabic dark-pattern or guarantee output before response delivery. AI assistance never auto-publishes.
 
@@ -82,6 +86,18 @@ The File 14 surface includes complete File 14-owned American English, Urdu and A
 8. Obtain explicit Founder acceptance before production deployment.
 
 == Changelog ==
+= 1.4.6 =
+* Eighth corrective cycle: another ten sequential review/fix rounds over the corrected v1.4.5 PR state.
+* Conversion-event UUID replay identity is rechecked after deduplication to close the concurrent pre-read/insert race.
+* Idempotency fingerprints bind the complete bounded canonical request representation instead of the 500-character structured sanitizer projection.
+* Logged-in privacy-subject initialization uses a named lock and read-back verification before an event hash is accepted.
+* File 07/08/09 readiness events require a valid owner occurrence time, cannot overwrite newer owner state, and use owner occurrence time for freshness.
+* Removed the noncanonical `gcu_file20_slot_ready_v1` fallback; only File 20's canonical slot-readiness contract can authorize placement readiness.
+* Owner readiness cannot be manufactured from a fallback URL when the owner-confirmed URL is missing or unsafe.
+* Funnel analytics database read failures return a safe 503 error instead of appearing as an empty/suppressed result.
+* Destination-bound funnel stages require a canonical destination.
+* Added eighth-cycle regression, fresh-review and release-evidence gates; schema remains base `10005` and Future `1`.
+
 = 1.4.5 =
 * Seventh corrective cycle: ten sequential review/fix rounds over the exact v1.4.4 main baseline.
 * File 00 authorization adapters now fail closed unless the exact action/object/purpose is explicitly granted.
