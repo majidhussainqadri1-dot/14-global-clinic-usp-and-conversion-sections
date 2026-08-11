@@ -1,4 +1,4 @@
-# File 14 — Fresh Central + File Plan + Future CTI Requirements Traceability — v1.4.3
+# File 14 — Fresh Central + File Plan + Future CTI Requirements Traceability — v1.4.4
 
 ## Governing freeze
 
@@ -95,10 +95,10 @@ File 14 owns approved Worldwide Clinic value-proposition copy, reusable semantic
 - DoD-08 — all user states, 320–1920px, RTL/LTR, keyboard/focus, zoom, contrast and reduced motion: repository controls are coded; human staging remains mandatory.
 - DoD-09 — performance/load/provider outage/queue/dead-letter/cache/DB failure and measured SLO: failure-path code exists; measured staging evidence remains mandatory.
 - DoD-10 — verified backup restore/cache rebuild/rollback: tooling exists; real restore/rollback drill remains mandatory.
-- DoD-11 — two separate fresh review/fix rounds after final coding change: executable fresh review gates include fifth-review corrections; exact-head regression must be green after the final commit.
+- DoD-11 — two separate fresh review/fix rounds after final coding change: executable fresh review gates include sixth-review corrections; exact-head regression must be green after the final commit.
 - DoD-12 — real-role staging, Founder acceptance, production monitoring/rollback window: external release gates; not claimed by repository completion.
 - DoD-13 — zero known unresolved blocker/critical defects at repository gate; residual external risks remain documented in release evidence.
 
 ## Truth-status rule
 
-`Specified`, `Coded`, `Packaged`, `Automated-QA Green`, `Staging-Accepted`, `Live-Deployed`, and `Operational` are separate statuses. File 14 v1.4.3 may only claim a status for which current exact-head evidence exists. The Future CTI implementation and fifth-review corrections do not alter that rule.
+`Specified`, `Coded`, `Packaged`, `Automated-QA Green`, `Staging-Accepted`, `Live-Deployed`, and `Operational` are separate statuses. File 14 v1.4.4 may only claim a status for which current exact-head evidence exists. The Future CTI implementation and sixth-review corrections do not alter that rule.

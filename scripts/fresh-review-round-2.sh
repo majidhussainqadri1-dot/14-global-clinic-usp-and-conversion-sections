@@ -30,7 +30,7 @@ need "question_contains_sensitive_data" "$P/includes/class-gcu-review80-hardenin
 need "gcu_fifth_ai_sensitive_input_blocked" "$P/includes/class-gcu-fifth-review-hardening.php"
 need "multilingual_dark_pattern_scan" "$P/includes/class-gcu-fifth-review-hardening.php"
 need "multilingual_guard_applied" "$P/includes/class-gcu-fifth-review-hardening.php"
-need "Stable tag: 1.4.3" "$P/readme.txt"
+need "Stable tag: 1.4.4" "$P/readme.txt"
 need "GCU_ALLOW_PURGE" "$P/uninstall.php"
 need "gcu_future_records" "$P/uninstall.php"
 need "Deterministic double-build mismatch" "$ROOT/scripts/build.py"

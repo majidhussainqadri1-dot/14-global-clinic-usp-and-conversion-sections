@@ -55,7 +55,7 @@ checks=[
 ('46 durable idempotent commands retained','run_idempotent_command' in repo and "status='complete'" in repo),
 ('47 outbox retry/dead-letter retained','dispatch_outbox' in repo and "'dead'" in repo),
 ('48 inbox stale recovery retained','process_inbox' in repo and 'INTERVAL 10 MINUTE' in repo),
-('49 audit persistence failure remains fail-closed','audit_write_failed' in repo and "update_option('gcu_enabled',0,false)" in repo),
+('49 audit persistence failure remains fail-closed',"mark_containment('audit_write_failed')" in repo and 'private function apply_containment()' in repo),
 ('50 public claims enforce review horizon','review_due_at IS NULL OR review_due_at>UTC_TIMESTAMP()' in repo),
 ('51 active blocks enforce own review horizon','b.review_due_at IS NULL OR b.review_due_at>UTC_TIMESTAMP()' in repo),
 ('52 active blocks fail closed on stale/missing linked claims','$valid=$this->public_claims($all_claims)' in repo),
