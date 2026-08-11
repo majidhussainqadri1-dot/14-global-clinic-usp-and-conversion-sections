@@ -50,7 +50,7 @@ Round-by-round evidence is maintained in:
 
 ## External evidence still mandatory
 
-Repository success cannot prove WordPress/Hostinger staging or live behavior. The following remain separate external gates:
+Repository success cannot prove WordPress/Hostinger staging or live behavior. Staging, deployed code, live DB/schema/migration and operational behavior remain separate evidence classes. The following remain separate external gates:
 
 - exact deployed artifact/version/checksum parity with the accepted repository package;
 - fresh install and upgrade/migration with real WordPress/MySQL/InnoDB, including column-level schema verification;
