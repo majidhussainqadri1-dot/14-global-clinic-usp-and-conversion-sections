@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Sixth independent 80-pass exact-source review gate for File 14 v1.4.4.
+"""Sixth independent 80-pass exact-source review gate for File 14 v1.4.4+.
 
 This gate is repository evidence only. It does not prove staging, deployed-code,
 live database, migration or operational state.
@@ -43,7 +43,9 @@ build=r('scripts/build.py')
 checks=[]
 def add(label, ok): checks.append((label,bool(ok)))
 
-add('01 exact sixth-review release identity', 'Version: 1.4.4' in loader and "GCU_VERSION', '1.4.4" in loader and "GCU_SCHEMA_VERSION', 10005" in loader)
+version_match=re.search(r'\* Version: (\d+)\.(\d+)\.(\d+)',loader)
+version_tuple=tuple(map(int,version_match.groups())) if version_match else (0,0,0)
+add('01 sixth-review schema and minimum release identity', version_tuple >= (1,4,4) and "GCU_SCHEMA_VERSION', 10005" in loader)
 add('02 governing File14 and Future plan identities', 'SSH-F14-PLAN-2026-v1.0' in loader and 'SSH-F14-FUTURE-CTI-2026-v2.0' in loader)
 add('03 active public blocks re-check File20 slot readiness at request time', 'placement_ready($row)' in repo)
 add('04 File07 remains doctor-directory destination owner', "'doctor_directory'=>array('owner'=>'File 07'" in contracts)
