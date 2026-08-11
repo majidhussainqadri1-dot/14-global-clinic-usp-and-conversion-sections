@@ -15,6 +15,7 @@ php "$ROOT/tests/fifth-review-regression-tests.php"
 php "$ROOT/tests/sixth-review-regression-tests.php"
 php "$ROOT/tests/seventh-review-regression-tests.php"
 php "$ROOT/tests/eighth-review-regression-tests.php"
+php "$ROOT/tests/ninth-review-regression-tests.php"
 python3 "$ROOT/scripts/review80.py"
 python3 "$ROOT/scripts/review80-second.py"
 python3 "$ROOT/scripts/review80-third.py"
@@ -36,12 +37,15 @@ if ! grep -q "Fourth Independent Eighty-Pass Review" "$ROOT/docs/REVIEW-80-FOURT
 if ! grep -q "Fifth Independent Eighty-Pass Review" "$ROOT/docs/REVIEW-80-FIFTH-LEDGER-v1.4.3.md"; then echo "Fifth-review ledger missing" >&2; exit 1; fi
 if ! grep -q "Sixth Independent Eighty-Pass Review" "$ROOT/docs/REVIEW-80-SIXTH-LEDGER-v1.4.4.md"; then echo "Sixth-review ledger missing" >&2; exit 1; fi
 if ! grep -q "Eighth Ten-Round Corrective Review" "$ROOT/docs/REVIEW-10-EIGHTH-LEDGER-v1.4.6.md"; then echo "Eighth-review ledger missing" >&2; exit 1; fi
+if ! grep -q "Ninth Ten-Round Corrective Review" "$ROOT/docs/REVIEW-10-NINTH-LEDGER-v1.4.7.md"; then echo "Ninth-review ledger missing" >&2; exit 1; fi
 for temp in \
   "$ROOT/.github/workflows/file14-third-review-corrective-patch.yml" \
   "$ROOT/scripts/apply-file14-third-review-corrections.py" \
   "$ROOT/scripts/apply-file14-third-review-deep-corrections.py" \
   "$ROOT/scripts/apply-file14-third-review-final-corrections.py" \
-  "$ROOT/scripts/apply-file14-third-review-containment.py"; do
-  if [ -e "$temp" ]; then echo "Temporary third-review corrective machinery remains: $temp" >&2; exit 1; fi
+  "$ROOT/scripts/apply-file14-third-review-containment.py" \
+  "$ROOT/.github/workflows/file14-ninth-review-apply.yml" \
+  "$ROOT/scripts/apply-file14-ninth-review-corrections.py"; do
+  if [ -e "$temp" ]; then echo "Temporary corrective machinery remains: $temp" >&2; exit 1; fi
 done
 echo "Quality suite: PASS"
