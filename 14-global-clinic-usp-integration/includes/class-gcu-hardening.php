@@ -30,6 +30,7 @@ final class GCU_Hardening {
 	public static function acquire_db_lock( $scope, $timeout = 2 ) {
 		global $wpdb;
 		$scope = preg_replace( '/[^a-zA-Z0-9:_\-]/', '', (string) $scope );
+		if ( '' === $scope ) { return false; }
 		$name = substr( $wpdb->prefix . 'gcu:' . $scope, 0, 64 );
 		if ( '' === $name ) { return false; }
 		$ok = (int) $wpdb->get_var( $wpdb->prepare( 'SELECT GET_LOCK(%s, %d)', $name, max( 0, min( 5, (int) $timeout ) ) ) );
