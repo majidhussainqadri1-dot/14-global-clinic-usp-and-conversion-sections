@@ -19,11 +19,11 @@ $baseline_workflow = eighth_text( $root . '/.github/workflows/baseline-import-an
 
 $version = '';
 if ( preg_match( '/Version:\s*([0-9]+\.[0-9]+\.[0-9]+)/', $main, $match ) ) { $version = $match[1]; }
-eighth_assert( '1.4.6' === $version && false !== strpos( $main, "GCU_VERSION', '1.4.6" ), 'Eighth-cycle software identity must be v1.4.6.' );
-eighth_assert( false !== strpos( $main, "GCU_SCHEMA_VERSION', 10005" ) && false !== strpos( $main, "GCU_FUTURE_SCHEMA_VERSION', 1" ), 'Patch release must not invent a schema change.' );
+eighth_assert( '' !== $version && version_compare( $version, '1.4.6', '>=' ) && false !== strpos( $main, "GCU_VERSION', '" . $version . "'" ), 'Eighth-cycle invariants require a release identity at or after v1.4.6.' );
+eighth_assert( false !== strpos( $main, "GCU_SCHEMA_VERSION', 10005" ) && false !== strpos( $main, "GCU_FUTURE_SCHEMA_VERSION', 1" ), 'Patch releases must not invent a schema change.' );
 
 eighth_assert( false !== strpos( $rest, "if(!empty(\$x['deduplicated']))" ) && substr_count( $rest, 'event_identity_guard($d)' ) >= 2, 'Concurrent duplicate conversion events must be identity-rechecked after deduplication.' );
-eighth_assert( false !== strpos( $rest, 'gcu_event_destination_required' ) && false !== strpos( $rest, "'cta_selected','destination_loaded','application_started','booking_started'" ), 'Destination-bound funnel stages must require a canonical destination.' );
+eighth_assert( false !== strpos( $rest, 'gcu_event_destination_required' ) && false !== strpos( $rest, "'cta_selected','destination_loaded','application_started','booking_started'" ), 'Destination-bound funnel stages must require a canonical destination at REST.' );
 eighth_assert( false !== strpos( $rest, "\$wpdb->last_error=''" ) && false !== strpos( $rest, 'gcu_analytics_query_failed' ), 'Funnel query database failures must fail closed instead of looking like empty analytics.' );
 
 eighth_assert( false === strpos( substr( $hard, strpos( $hard, 'public static function request_fingerprint' ), strpos( $hard, 'public static function command_key' ) - strpos( $hard, 'public static function request_fingerprint' ) ), 'sanitize_structured_value' ), 'Idempotency fingerprints must not truncate request semantics through the 500-character structured sanitizer.' );
@@ -33,7 +33,7 @@ eighth_assert( false !== strpos( $privacy, "acquire_db_lock('subject-user:'" ) &
 eighth_assert( false !== strpos( $privacy, 'release_db_lock($lock)' ), 'Measurement subject initialization lock must always be released.' );
 
 eighth_assert( false !== strpos( $contracts, 'owner_event_time' ) && false !== strpos( $contracts, "'owner_occurred_at'" ) && false !== strpos( $contracts, "'received_at'" ), 'Owner readiness must distinguish owner occurrence time from receipt time.' );
-eighth_assert( false !== strpos( $contracts, "\$owner_time<=(int)\$existing['owner_occurred_at']" ), 'Older/out-of-order owner readiness events must not overwrite newer state.' );
+eighth_assert( false !== strpos( $contracts, '$existing_time>$owner_time' ), 'Older/out-of-order owner readiness events must not overwrite newer state.' );
 eighth_assert( false === strpos( $contracts, 'gcu_file20_slot_ready_v1' ) && false !== strpos( $contracts, 'sabri_shell_slot_ready_v1' ), 'Only the canonical File 20 slot-readiness contract may authorize placement readiness.' );
 eighth_assert( false !== strpos( $contracts, "''!==\$owner_url" ) && false !== strpos( $contracts, '$url=$available?$owner_url:$fallback' ), 'Owner availability must require an owner-confirmed safe URL; fallback URL may not manufacture readiness.' );
 
@@ -43,7 +43,7 @@ eighth_assert( false !== strpos( $quality_workflow, 'name: file-14-package-' . $
 eighth_assert( substr_count( $fresh_workflow, 'ref: ' . $head_expression ) >= 2 && substr_count( $fresh_workflow, 'Verify exact checkout SHA' ) >= 2, 'Both fresh-review jobs must execute the exact PR-head SHA.' );
 eighth_assert( false !== strpos( $baseline_workflow, 'ref: ' . $head_expression ) && false !== strpos( $baseline_workflow, 'Verify exact checkout SHA' ), 'Baseline provenance PR job must execute the exact PR-head SHA.' );
 
-eighth_assert( false !== strpos( $status, 'Eighth Ten-Round Repository Candidate' ) && false !== strpos( $release, 'Eighth Ten-Round Repository Candidate' ), 'Status and release evidence must identify the eighth corrective cycle.' );
+eighth_assert( false !== strpos( $status, 'docs/REVIEW-10-EIGHTH-LEDGER-v1.4.6.md' ) && false !== strpos( $release, 'docs/REVIEW-10-EIGHTH-LEDGER-v1.4.6.md' ), 'Current evidence must retain the eighth-cycle ledger as historical evidence.' );
 eighth_assert( false !== strpos( $status, 'Exact deployed code is unverified' ) && false !== strpos( $release, 'Exact deployed code is unverified' ), 'Live-First truth boundary must remain explicit.' );
 
 if ( $failures ) {
