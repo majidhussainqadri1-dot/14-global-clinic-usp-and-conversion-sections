@@ -237,7 +237,7 @@ final class GCU_Fifth_Review_Hardening {
 				continue;
 			}
 			try {
-				if ( false === $wpdb->query( 'START TRANSACTION' ) ) {
+				if ( ! GCU_Plugin::instance()->repository()->begin_owned_transaction() ) {
 					continue;
 				}
 				$updated = $wpdb->query(
@@ -249,7 +249,7 @@ final class GCU_Fifth_Review_Hardening {
 					)
 				);
 				if ( 1 !== $updated ) {
-					$wpdb->query( 'ROLLBACK' );
+					GCU_Plugin::instance()->repository()->rollback_owned_transaction();
 					continue;
 				}
 				$audit = GCU_Plugin::instance()->repository()->audit(
@@ -262,11 +262,11 @@ final class GCU_Fifth_Review_Hardening {
 					array( 'status' => 'stopped', 'row_version' => (int) $row['row_version'] + 1 )
 				);
 				if ( false === $audit ) {
-					$wpdb->query( 'ROLLBACK' );
+					GCU_Plugin::instance()->repository()->rollback_owned_transaction();
 					continue;
 				}
-				if ( false === $wpdb->query( 'COMMIT' ) ) {
-					$wpdb->query( 'ROLLBACK' );
+				if ( ! GCU_Plugin::instance()->repository()->commit_owned_transaction() ) {
+					GCU_Plugin::instance()->repository()->rollback_owned_transaction();
 					continue;
 				}
 				$count++;

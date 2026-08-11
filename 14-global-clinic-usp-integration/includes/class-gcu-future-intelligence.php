@@ -194,7 +194,7 @@ final class GCU_Future_Intelligence {
 		if ( is_wp_error( $key ) ) { return $key; }
 		$data = $request->get_json_params();
 		$data = is_array( $data ) ? $data : array();
-		$result = GCU_Plugin::instance()->repository()->run_idempotent_command( 'future_report', $key, static function() use ( $data ) { return self::create_report( $data ); } );
+		$result = GCU_Plugin::instance()->repository()->run_idempotent_command( 'future_report', $key, static function() use ( $data ) { return self::create_report( $data ); }, GCU_Hardening::request_fingerprint( $data ) );
 		return is_wp_error( $result ) ? $result : self::no_store_response( $result, 201 );
 	}
 
@@ -285,7 +285,7 @@ final class GCU_Future_Intelligence {
 		$result = GCU_Plugin::instance()->repository()->run_idempotent_command( 'future_record_write', $idempotency, static function() use ( $type, $key, $data ) { return self::upsert_record(
 			$type, $key, GCU_Policy::sanitize_locale( isset( $data['locale'] ) ? $data['locale'] : 'en-US' ),
 			self::sanitize_region( isset( $data['region'] ) ? $data['region'] : 'ZZ' ), isset( $data['payload'] ) && is_array( $data['payload'] ) ? $data['payload'] : array(),
-			isset( $data['status'] ) ? sanitize_key( $data['status'] ) : 'draft', ! empty( $data['is_public'] ), isset( $data['expected_version'] ) ? absint( $data['expected_version'] ) : 0, false ); } );
+			isset( $data['status'] ) ? sanitize_key( $data['status'] ) : 'draft', ! empty( $data['is_public'] ), isset( $data['expected_version'] ) ? absint( $data['expected_version'] ) : 0, false ); }, GCU_Hardening::request_fingerprint( array( 'record_type'=>$type, 'record_key'=>$key, 'data'=>$data ) ) );
 		return is_wp_error( $result ) ? $result : self::no_store_response( $result, 201 );
 	}
 
@@ -301,7 +301,7 @@ final class GCU_Future_Intelligence {
 		$key = sanitize_key( $request['claim_key'] );
 		$expected = absint( $request->get_param( 'expected_version' ) );
 		$reason = sanitize_textarea_field( (string) $request->get_param( 'reason' ) );
-		$result = GCU_Plugin::instance()->repository()->run_idempotent_command( 'future_claim_revalidate', $idempotency, static function() use ( $key, $expected, $reason ) { return self::revalidate_claim( $key, $expected, $reason ); } );
+		$result = GCU_Plugin::instance()->repository()->run_idempotent_command( 'future_claim_revalidate', $idempotency, static function() use ( $key, $expected, $reason ) { return self::revalidate_claim( $key, $expected, $reason ); }, GCU_Hardening::request_fingerprint( array( 'claim_key'=>$key, 'expected_version'=>$expected, 'reason'=>$reason ) ) );
 		return is_wp_error( $result ) ? $result : self::no_store_response( $result );
 	}
 
@@ -441,7 +441,7 @@ final class GCU_Future_Intelligence {
 				continue;
 			}
 			try {
-				if ( false === $wpdb->query( 'START TRANSACTION' ) ) {
+				if ( ! GCU_Plugin::instance()->repository()->begin_owned_transaction() ) {
 					continue;
 				}
 				$history = array(
@@ -451,16 +451,15 @@ final class GCU_Future_Intelligence {
 				);
 				$inserted = $wpdb->query( $wpdb->prepare( "INSERT IGNORE INTO {$t['claim_history']} (claim_key,row_version,status,claim_hash,reason,snapshot,actor_id,created_at) VALUES (%s,%d,%s,%s,%s,%s,%d,%s)", $history['claim_key'], $history['row_version'], $history['status'], $history['claim_hash'], $history['reason'], $history['snapshot'], 0, $history['created_at'] ) );
 				if ( false === $inserted ) {
-					$wpdb->query( 'ROLLBACK' );
+					GCU_Plugin::instance()->repository()->rollback_owned_transaction();
 					continue;
 				}
 				$done = $wpdb->query( $wpdb->prepare( "UPDATE {$t['claims']} SET status='review_required',is_public=0,row_version=row_version+1,updated_at=%s WHERE id=%d AND row_version=%d AND status='active'", current_time( 'mysql', true ), (int) $row['id'], (int) $row['row_version'] ) );
-				if ( 1 !== $done || false === $wpdb->query( 'COMMIT' ) ) {
-					$wpdb->query( 'ROLLBACK' );
+				if ( 1 !== $done || false === GCU_Plugin::instance()->repository()->audit( 'claim_freshness_blocked', 'claim', $row['claim_key'], 'claim_governance', 'Review due or expiry reached', $row, array( 'status' => 'review_required', 'is_public' => 0 ) ) || ! GCU_Plugin::instance()->repository()->commit_owned_transaction() ) {
+					GCU_Plugin::instance()->repository()->rollback_owned_transaction();
 					continue;
 				}
 				$count++;
-				GCU_Plugin::instance()->repository()->audit( 'claim_freshness_blocked', 'claim', $row['claim_key'], 'claim_governance', 'Review due or expiry reached', $row, array( 'status' => 'review_required', 'is_public' => 0 ) );
 			} finally {
 				GCU_Hardening::release_db_lock( $lock );
 			}
@@ -491,22 +490,21 @@ final class GCU_Future_Intelligence {
 			if ( (int) $row['row_version'] !== (int) $expected ) {
 				return new WP_Error( 'gcu_future_claim_version_conflict', __( 'The claim changed. Reload before revalidating.', 'global-clinic-usp-integration' ), array( 'status' => 409 ) );
 			}
-			if ( false === $wpdb->query( 'START TRANSACTION' ) ) {
+			if ( ! GCU_Plugin::instance()->repository()->begin_owned_transaction() ) {
 				return new WP_Error( 'gcu_future_claim_transaction_failed', __( 'Claim transaction could not start.', 'global-clinic-usp-integration' ), array( 'status' => 500 ) );
 			}
 			$history = wp_json_encode( $row );
 			$ins = $wpdb->query( $wpdb->prepare( "INSERT IGNORE INTO {$t['claim_history']} (claim_key,row_version,status,claim_hash,reason,snapshot,actor_id,created_at) VALUES (%s,%d,%s,%s,%s,%s,%d,%s)", $key, (int) $row['row_version'], $row['status'], hash( 'sha256', $history ), $reason, $history, get_current_user_id(), current_time( 'mysql', true ) ) );
 			if ( false === $ins ) {
-				$wpdb->query( 'ROLLBACK' );
+				GCU_Plugin::instance()->repository()->rollback_owned_transaction();
 				return new WP_Error( 'gcu_future_claim_history_failed', __( 'Claim history could not be recorded.', 'global-clinic-usp-integration' ), array( 'status' => 500 ) );
 			}
 			$review_due = gmdate( 'Y-m-d H:i:s', time() + GCU_Policy::COPY_REVIEW_DAYS * DAY_IN_SECONDS );
 			$done = $wpdb->query( $wpdb->prepare( "UPDATE {$t['claims']} SET claim_text=%s,basis=%s,owner_name=%s,status='active',is_public=%d,review_due_at=%s,expires_at=NULL,row_version=row_version+1,updated_at=%s WHERE id=%d AND row_version=%d", $canonical[ $key ]['text'], $canonical[ $key ]['basis'], $canonical[ $key ]['owner'], empty( $canonical[ $key ]['public'] ) ? 0 : 1, $review_due, current_time( 'mysql', true ), (int) $row['id'], (int) $expected ) );
-			if ( 1 !== $done || false === $wpdb->query( 'COMMIT' ) ) {
-				$wpdb->query( 'ROLLBACK' );
-				return new WP_Error( 'gcu_future_claim_revalidation_failed', __( 'Claim revalidation could not be committed.', 'global-clinic-usp-integration' ), array( 'status' => 409 ) );
+			if ( 1 !== $done || false === GCU_Plugin::instance()->repository()->audit( 'claim_revalidated', 'claim', $key, 'claim_governance', $reason, $row, array( 'status' => 'active', 'review_due_at' => $review_due ) ) || ! GCU_Plugin::instance()->repository()->commit_owned_transaction() ) {
+				GCU_Plugin::instance()->repository()->rollback_owned_transaction();
+				return new WP_Error( 'gcu_future_claim_revalidation_failed', __( 'Claim revalidation could not be committed with its mandatory audit record.', 'global-clinic-usp-integration' ), array( 'status' => 409 ) );
 			}
-			GCU_Plugin::instance()->repository()->audit( 'claim_revalidated', 'claim', $key, 'claim_governance', $reason, $row, array( 'status' => 'active', 'review_due_at' => $review_due ) );
 			return array( 'claim_key' => $key, 'status' => 'active', 'row_version' => (int) $expected + 1, 'review_due_at' => $review_due );
 		} finally {
 			GCU_Hardening::release_db_lock( $lock );
