@@ -41,17 +41,17 @@ fifth_assert( false !== strpos( $hardening, 'funnel_stage,destination_key,subjec
 
 fifth_assert( false !== strpos( $hardening, "remove_action( 'gcu_future_hourly_intelligence'" ), 'Legacy non-transactional hourly worker must be replaced.' );
 fifth_assert( false !== strpos( $hardening, 'transactional_early_stop_guard' ), 'Transactional early-stop implementation must be active.' );
-fifth_assert( false !== strpos( $hardening, 'START TRANSACTION' ), 'Early-stop must start a database transaction.' );
+fifth_assert( false !== strpos( $hardening, 'begin_owned_transaction()' ), 'Early-stop must start the shared owner transaction.' );
 fifth_assert( false !== strpos( $hardening, 'experiment_early_stopped' ), 'Early-stop audit event must remain mandatory.' );
 fifth_assert( false !== strpos( $hardening, 'if ( false === $audit )' ), 'Audit failure must trigger rollback.' );
-fifth_assert( false !== strpos( $hardening, 'ROLLBACK' ) && false !== strpos( $hardening, 'COMMIT' ), 'Early-stop must have explicit rollback/commit paths.' );
+fifth_assert( false !== strpos( $hardening, 'rollback_owned_transaction()' ) && false !== strpos( $hardening, 'commit_owned_transaction()' ), 'Early-stop must have explicit rollback/commit paths.' );
 
 fifth_assert( false !== strpos( $readme, 'Stable tag: 1.4.4' ), 'Readme stable tag must match v1.4.4.' );
 fifth_assert( false === strpos( $readme, 'bounded local fallback' ), 'Stale local shell fallback claim must remain removed.' );
 fifth_assert( false !== strpos( $readme, 'does not emit a local Back/Home shell fallback' ), 'File 20 sole shell ownership must be stated accurately.' );
 fifth_assert( false === strpos( $readme, 'future record/report updates' ), 'Readme must not falsely claim generic future record/report transactionality.' );
-fifth_assert( false !== strpos( $status, 'The five repository review ledgers are:' ), 'Status must count all five review ledgers accurately.' );
-fifth_assert( false !== strpos( $status, 'REVIEW-80-FIFTH-LEDGER-v1.4.4.md' ), 'Fifth ledger must be part of release truth.' );
+fifth_assert( false !== strpos( $status, 'The six repository review ledgers are:' ), 'Status must count all six review ledgers accurately.' );
+fifth_assert( false !== strpos( $status, 'REVIEW-80-FIFTH-LEDGER-v1.4.3.md' ), 'Fifth ledger must remain part of release truth with its historical release identity.' );
 
 if ( $failures ) {
 	fwrite( STDERR, "Fifth review regression tests failed:\n- " . implode( "\n- ", $failures ) . "\n" );
