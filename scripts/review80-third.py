@@ -48,7 +48,7 @@ current_version='.'.join(vm.groups()) if vm else ''
 version_ok=bool(vm and cm and current_version==cm.group(1) and tuple(map(int,vm.groups())) >= (1,4,2))
 checks=[
 ('01 exact software and governing-plan identity',version_ok and 'SSH-F14-FUTURE-CTI-2026-v2.0' in loader),
-('02 base/Future schema identities remain separated',"GCU_SCHEMA_VERSION', 10004" in loader and "GCU_FUTURE_SCHEMA_VERSION', 1" in loader),
+('02 base/Future schema identities remain separated',"GCU_SCHEMA_VERSION', 10005" in loader and "GCU_FUTURE_SCHEMA_VERSION', 1" in loader),
 ('03 status uses durable exact-current-main truth','exact current `main` SHA' in status and 'docs/REVIEW-80-THIRD-LEDGER-v1.4.1.md' in status),
 ('04 release evidence includes third-review and post-merge exact-head policy','third independent eighty-pass' in release and 'fresh post-merge' in release),
 ('05 base runtime readiness exists','public static function ready_for_runtime()' in install),
@@ -97,7 +97,7 @@ checks=[
 ('48 Future claim revalidation is rate bounded and idempotent',"future-claim-revalidate" in future and "run_idempotent_command( 'future_claim_revalidate'" in future),
 ('49 public readiness endpoint has anti-abuse bound',"consume_rate_limit( 'future-readiness', 60 )" in future),
 ('50 audit persistence failure enters containment','audit_lock_failed' in repo and 'audit_write_failed' in repo and "update_option('gcu_enabled',0,false)" in repo),
-('51 outbox encoding/write failure enters containment','outbox_payload_invalid' in repo and 'outbox_write_failed' in repo and repo.count("update_option('gcu_enabled',0,false)")>=4),
+('51 outbox encoding/write failure enters containment',"mark_containment('outbox_payload_invalid')" in repo and "mark_containment('outbox_write_failed')" in repo and 'private function apply_containment()' in repo),
 ('52 public destination DTO remains allowlisted/minimized',all(x in pub_dto for x in ("'key'=>","'available'=>","'url'=>","'reason'=>")) and all(x not in pub_dto for x in ("'owner'=>","'contract'=>","'verified_at'=>"))),
 ('53 strict same-origin includes scheme host effective port',all(x in hard for x in ('home_scheme','target_scheme','effective_port','strict_same_origin_url'))),
 ('54 consumer cannot elevate canonical destination-owner readiness','may never elevate owner readiness' in contracts),

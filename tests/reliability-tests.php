@@ -7,7 +7,7 @@ must(false!==strpos($src['install'],'ENGINE=InnoDB'),'InnoDB schema enforcement 
 must(false!==strpos($src['install'],'SHOW TABLE STATUS'),'Storage engine verification absent.');
 must(false!==strpos($src['install'],'SELECT GET_LOCK'),'Install named lock absent.');
 must(false!==strpos($src['install'],'snapshot_hash')&&false!==strpos($src['install'],'START TRANSACTION')&&false!==strpos($src['install'],'ROLLBACK'),'Transactional rollback snapshot absent.');
-must(substr_count($src['repo'],'START TRANSACTION')>=2,'Governed transactional mutations are insufficient.');
+must(false!==strpos($src['repo'],'begin_owned_transaction')&&false!==strpos($src['repo'],'commit_owned_transaction')&&false!==strpos($src['repo'],'rollback_owned_transaction'),'Governed transaction manager is insufficient.');
 must(false!==strpos($src['repo'],"'audit-chain'"),'Audit chain named lock absent.');
 must(false!==strpos($src['repo'],'previous_hash')&&false!==strpos($src['repo'],'row_hash'),'Audit chain hash fields absent.');
 must(false!==strpos($src['repo'],'processing')&&false!==strpos($src['repo'],'retry')&&false!==strpos($src['repo'],'dead'),'Queue lifecycle states incomplete.');
