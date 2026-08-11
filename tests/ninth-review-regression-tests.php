@@ -30,10 +30,8 @@ ninth_assert( false !== strpos( $record, 'gcu_event_destination_required' ), 'Re
 ninth_assert( false !== strpos( $record, 'gcu_event_subject_unavailable' ), 'Unstable/empty measurement subject must fail closed.' );
 
 ninth_assert( false !== strpos( $contracts, 'gcu_owner_event_order_ambiguous' ) && false !== strpos( $contracts, 'owner_event_order_ambiguous' ), 'Equal-time distinct owner events must fail closed as ambiguous.' );
-$claim_start = strpos( $repo, 'private function insert_claim_history' );
-$claim_end = false !== $claim_start ? strpos( $repo, 'public function', $claim_start + 10 ) : false;
-$claim_history = false !== $claim_start ? substr( $repo, $claim_start, false !== $claim_end ? $claim_end - $claim_start : 5000 ) : '';
-ninth_assert( false !== strpos( $claim_history, 'existing_history' ) && false === strpos( $claim_history, 'INSERT IGNORE' ), 'Claim history must use strict persistence with exact duplicate equivalence verification.' );
+ninth_assert( false !== strpos( $repo, '$existing_history=' ) && false !== strpos( $repo, '$same_history=' ), 'Claim-history exact duplicate equivalence verification is missing.' );
+ninth_assert( false === strpos( $repo, "INSERT IGNORE INTO {$t['claim_history']}" ), 'Claim history must not use broad INSERT IGNORE semantics.' );
 
 foreach ( array( 'gcu_content_readback_failed', 'gcu_placement_readback_failed', 'gcu_experiment_readback_failed' ) as $marker ) {
     ninth_assert( false !== strpos( $repo, $marker ), 'Mandatory mutation read-back guard missing: ' . $marker );
