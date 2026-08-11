@@ -54,8 +54,9 @@ fifth_assert( false !== strpos( $readme, 'Stable tag: ' . $version ), 'Readme st
 fifth_assert( false === strpos( $readme, 'bounded local fallback' ), 'Stale local shell fallback claim must remain removed.' );
 fifth_assert( false !== strpos( $readme, 'does not emit a local Back/Home shell fallback' ), 'File 20 sole shell ownership must be stated accurately.' );
 fifth_assert( false === strpos( $readme, 'future record/report updates' ), 'Readme must not falsely claim generic future record/report transactionality.' );
-fifth_assert( false !== strpos( $status, 'The six repository review ledgers are:' ), 'Status must count all six historical eighty-pass review ledgers accurately.' );
+fifth_assert( false !== strpos( $status, 'The six historical eighty-pass repository review ledgers are:' ) || false !== strpos( $status, 'The six repository review ledgers are:' ), 'Status must retain all six historical eighty-pass review ledgers accurately.' );
 fifth_assert( false !== strpos( $status, 'REVIEW-80-FIFTH-LEDGER-v1.4.3.md' ), 'Fifth ledger must remain part of release truth with its historical release identity.' );
+fifth_assert( false !== strpos( $status, 'REVIEW-80-SIXTH-LEDGER-v1.4.4.md' ), 'Sixth ledger must remain part of release truth with its historical release identity.' );
 
 if ( $failures ) {
 	fwrite( STDERR, "Fifth review regression tests failed:\n- " . implode( "\n- ", $failures ) . "\n" );
