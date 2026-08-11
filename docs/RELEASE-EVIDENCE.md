@@ -38,7 +38,7 @@ The seventh ten-round record is `docs/REVIEW-10-SEVENTH-LEDGER-v1.4.5.md`. The c
 
 ## External evidence still mandatory
 
-Repository success cannot prove WordPress/Hostinger staging or live behavior. Separate gates still include exact deployed artifact/checksum parity; fresh install/upgrade with real WordPress/MySQL/InnoDB; File00/07/08/09/20/24/25 integration; browser/accessibility/RTL/LTR/400% zoom evidence; performance/failure drills; verified backup restore and rollback rehearsal; explicit Founder staging acceptance; production deployment; live smoke tests; monitoring; and deployed-artifact parity confirmation.
+Repository success cannot prove WordPress/Hostinger staging or live behavior. **Staging, deployed code, live DB/schema/migration** and operational behavior remain separate evidence classes. Separate gates still include exact deployed artifact/checksum parity; fresh install/upgrade with real WordPress/MySQL/InnoDB; File00/07/08/09/20/24/25 integration; browser/accessibility/RTL/LTR/400% zoom evidence; performance/failure drills; verified backup restore and rollback rehearsal; explicit Founder staging acceptance; production deployment; live smoke tests; monitoring; and deployed-artifact parity confirmation.
 
 No `Staging-Accepted`, `Live-Deployed` or `Operational` claim is made by this repository document.
 
