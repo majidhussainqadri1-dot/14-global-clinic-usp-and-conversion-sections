@@ -31,7 +31,7 @@ ninth_assert( false !== strpos( $record, 'gcu_event_subject_unavailable' ), 'Uns
 
 ninth_assert( false !== strpos( $contracts, 'gcu_owner_event_order_ambiguous' ) && false !== strpos( $contracts, 'owner_event_order_ambiguous' ), 'Equal-time distinct owner events must fail closed as ambiguous.' );
 ninth_assert( false !== strpos( $repo, '$existing_history=' ) && false !== strpos( $repo, '$same_history=' ), 'Claim-history exact duplicate equivalence verification is missing.' );
-ninth_assert( false === strpos( $repo, "INSERT IGNORE INTO {$t['claim_history']}" ), 'Claim history must not use broad INSERT IGNORE semantics.' );
+ninth_assert( false === strpos( $repo, "INSERT IGNORE INTO {\$t['claim_history']}" ), 'Claim history must not use broad INSERT IGNORE semantics.' );
 
 foreach ( array( 'gcu_content_readback_failed', 'gcu_placement_readback_failed', 'gcu_experiment_readback_failed' ) as $marker ) {
     ninth_assert( false !== strpos( $repo, $marker ), 'Mandatory mutation read-back guard missing: ' . $marker );
