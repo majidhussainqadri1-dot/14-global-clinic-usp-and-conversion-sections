@@ -20,10 +20,10 @@ fifth_assert( false !== strpos( $main, "define( 'GCU_VERSION', '1.4.3' )" ), 'GC
 fifth_assert( false !== strpos( $main, 'class-gcu-fifth-review-hardening.php' ), 'Fifth-review hardening class must ship.' );
 fifth_assert( false !== strpos( $main, "GCU_Fifth_Review_Hardening', 'bootstrap" ), 'Fifth-review hardening must bootstrap.' );
 
-fifth_assert( false !== strpos( $hardening, "pre_option_gcu_enabled" ), 'Runtime schema truth must gate gcu_enabled reads.' );
+fifth_assert( false !== strpos( $hardening, 'pre_option_gcu_enabled' ), 'Runtime schema truth must gate gcu_enabled reads.' );
 fifth_assert( false !== strpos( $hardening, 'GCU_Install::verify_schema()' ), 'Base schema must be verified at runtime.' );
 fifth_assert( false !== strpos( $hardening, 'GCU_Future_Intelligence::verify_schema()' ), 'Future schema must be verified at runtime.' );
-fifth_assert( false !== strpos( $hardening, "return self::$schema_gate ? $pre_option : 0;" ), 'Schema drift must fail closed.' );
+fifth_assert( false !== strpos( $hardening, 'return self::$schema_gate ? $pre_option : 0;' ), 'Schema drift must fail closed.' );
 
 fifth_assert( false !== strpos( $hardening, "'/gcu/v1/future/records'" ), 'Future record route must be governed.' );
 fifth_assert( false !== strpos( $hardening, "'future_public_governance'" ), 'Public Future governance approval purpose must be explicit.' );
@@ -41,10 +41,10 @@ fifth_assert( false !== strpos( $hardening, 'funnel_stage,destination_key,subjec
 
 fifth_assert( false !== strpos( $hardening, "remove_action( 'gcu_future_hourly_intelligence'" ), 'Legacy non-transactional hourly worker must be replaced.' );
 fifth_assert( false !== strpos( $hardening, 'transactional_early_stop_guard' ), 'Transactional early-stop implementation must be active.' );
-fifth_assert( false !== strpos( $hardening, "START TRANSACTION" ), 'Early-stop must start a database transaction.' );
-fifth_assert( false !== strpos( $hardening, "experiment_early_stopped" ), 'Early-stop audit event must remain mandatory.' );
-fifth_assert( false !== strpos( $hardening, "if ( false === $audit )" ), 'Audit failure must trigger rollback.' );
-fifth_assert( false !== strpos( $hardening, "ROLLBACK" ) && false !== strpos( $hardening, "COMMIT" ), 'Early-stop must have explicit rollback/commit paths.' );
+fifth_assert( false !== strpos( $hardening, 'START TRANSACTION' ), 'Early-stop must start a database transaction.' );
+fifth_assert( false !== strpos( $hardening, 'experiment_early_stopped' ), 'Early-stop audit event must remain mandatory.' );
+fifth_assert( false !== strpos( $hardening, 'if ( false === $audit )' ), 'Audit failure must trigger rollback.' );
+fifth_assert( false !== strpos( $hardening, 'ROLLBACK' ) && false !== strpos( $hardening, 'COMMIT' ), 'Early-stop must have explicit rollback/commit paths.' );
 
 fifth_assert( false !== strpos( $readme, 'Stable tag: 1.4.3' ), 'Readme stable tag must match v1.4.3.' );
 fifth_assert( false === strpos( $readme, 'bounded local fallback' ), 'Stale local shell fallback claim must remain removed.' );
