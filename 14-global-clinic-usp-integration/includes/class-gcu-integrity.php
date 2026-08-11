@@ -49,7 +49,12 @@ final class GCU_Integrity {
 		if ( is_array( $state ) && ! empty( $state['completed'] ) ) { return true; }
 		$audit = self::migrate_audit_chain(); if ( is_wp_error( $audit ) ) { return $audit; }
 		$privacy = self::migrate_privacy_hashes(); if ( is_wp_error( $privacy ) ) { return $privacy; }
-		update_option( self::MIGRATION_OPTION, array( 'completed'=>1, 'version'=>1, 'migrated_at'=>time() ), false );
+		$record = array( 'completed'=>1, 'version'=>1, 'migrated_at'=>time() );
+		update_option( self::MIGRATION_OPTION, $record, false );
+		$stored = get_option( self::MIGRATION_OPTION, array() );
+		if ( ! is_array( $stored ) || empty( $stored['completed'] ) || 1 !== (int) $stored['version'] ) {
+			return new WP_Error( 'gcu_integrity_migration_state_failed', __( 'Integrity migration completed but its durable state could not be confirmed.', 'global-clinic-usp-integration' ) );
+		}
 		return true;
 	}
 
@@ -68,7 +73,8 @@ final class GCU_Integrity {
 					$old_hash=(string)$row['row_hash'];
 					if(!hash_equals($legacy_prev,(string)$row['previous_hash'])||!hash_equals($old_hash,self::legacy_audit_row_hash($row))){$wpdb->query('ROLLBACK');return new WP_Error('gcu_integrity_legacy_audit_invalid',__('The existing audit chain could not be verified before key migration.','global-clinic-usp-integration'));}
 					$legacy_prev=$old_hash; $row['previous_hash']=$stable_prev; $new_hash=self::stable_audit_row_hash($row);
-					if(!$new_hash||false===$wpdb->query($wpdb->prepare("UPDATE {$t['audit']} SET previous_hash=%s,row_hash=%s WHERE id=%d AND row_hash=%s",$stable_prev,$new_hash,(int)$row['id'],$old_hash))){$wpdb->query('ROLLBACK');return new WP_Error('gcu_integrity_audit_rehash_failed',__('Audit key migration could not be completed safely.','global-clinic-usp-integration'));}
+					$changed=$new_hash?$wpdb->query($wpdb->prepare("UPDATE {$t['audit']} SET previous_hash=%s,row_hash=%s WHERE id=%d AND row_hash=%s",$stable_prev,$new_hash,(int)$row['id'],$old_hash)):false;
+					if(1!==$changed){$wpdb->query('ROLLBACK');return new WP_Error('gcu_integrity_audit_rehash_failed',__('Audit key migration could not be completed safely.','global-clinic-usp-integration'));}
 					$stable_prev=$new_hash;
 				}
 				$offset+=count($rows); if(!$rows){break;}
@@ -84,8 +90,15 @@ final class GCU_Integrity {
 		if(false===$wpdb->query('START TRANSACTION')){return new WP_Error('gcu_integrity_privacy_transaction_failed',__('Privacy hash migration transaction could not start.','global-clinic-usp-integration'));}
 		try{
 			$users=$wpdb->get_results($wpdb->prepare("SELECT user_id,meta_value FROM {$wpdb->usermeta} WHERE meta_key=%s",GCU_Privacy::USER_SUBJECT_META),ARRAY_A);
-			foreach(is_array($users)?$users:array()as$u){$seed=(string)$u['meta_value'];if(!preg_match('/^[a-f0-9]{64}$/',$seed)){continue;}$old=hash_hmac('sha256',$seed,wp_salt('secure_auth'));$new=self::user_subject_hash($seed);if(!$new){throw new RuntimeException('privacy-key');}$wpdb->query($wpdb->prepare("UPDATE {$t['events']} SET subject_hash=%s WHERE subject_hash=%s",$new,$old));
-				if(class_exists('GCU_Future_Intelligence')){$ft=GCU_Future_Intelligence::tables();$fexists=$wpdb->get_var($wpdb->prepare('SHOW TABLES LIKE %s',$wpdb->esc_like($ft['reports'])));if($fexists===$ft['reports']){$old_actor=hash_hmac('sha256','u:'.(int)$u['user_id'],wp_salt('auth'));$new_actor=self::future_actor_hash((int)$u['user_id']);$wpdb->query($wpdb->prepare("UPDATE {$ft['reports']} SET actor_hash=%s WHERE actor_hash=%s",$new_actor,$old_actor));}}
+			if(!is_array($users)){throw new RuntimeException('user-read');}
+			foreach($users as$u){
+				$seed=(string)$u['meta_value'];if(!preg_match('/^[a-f0-9]{64}$/',$seed)){continue;}
+				$old=hash_hmac('sha256',$seed,wp_salt('secure_auth'));$new=self::user_subject_hash($seed);if(!$new){throw new RuntimeException('privacy-key');}
+				$changed=$wpdb->query($wpdb->prepare("UPDATE {$t['events']} SET subject_hash=%s WHERE subject_hash=%s",$new,$old));if(false===$changed){throw new RuntimeException('event-update');}
+				if(class_exists('GCU_Future_Intelligence')){
+					$ft=GCU_Future_Intelligence::tables();$fexists=$wpdb->get_var($wpdb->prepare('SHOW TABLES LIKE %s',$wpdb->esc_like($ft['reports'])));
+					if($fexists===$ft['reports']){$old_actor=hash_hmac('sha256','u:'.(int)$u['user_id'],wp_salt('auth'));$new_actor=self::future_actor_hash((int)$u['user_id']);$changed=$wpdb->query($wpdb->prepare("UPDATE {$ft['reports']} SET actor_hash=%s WHERE actor_hash=%s",$new_actor,$old_actor));if(false===$changed){throw new RuntimeException('report-update');}}
+				}
 			}
 			if(false===$wpdb->query('COMMIT')){throw new RuntimeException('commit');}return true;
 		}catch(Throwable$e){$wpdb->query('ROLLBACK');return new WP_Error('gcu_integrity_privacy_migration_failed',__('Privacy hash migration could not be completed safely.','global-clinic-usp-integration'));}
