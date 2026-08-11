@@ -15,6 +15,8 @@
 
 Historical green results are supporting history only. The **exact review/main SHA being accepted** must independently pass PHP 7.4/8.3 quality, all current and retained regression/review gates, two fresh post-code reviews, baseline integrity, deterministic ZIP, SHA-256 and file-level SBOM. For the open PR this means the **exact current PR-head SHA**. GitHub workflows explicitly checkout `${{ github.event.pull_request.head.sha || github.sha }}` and verify `git rev-parse HEAD`. After merge, fresh post-merge exact-main acceptance remains mandatory.
 
+`Packaged`, `Automated-QA Green`, **`main merged`**, `Staging-Accepted`, `Live-Deployed`, and `Operational` are separate evidence claims. This document does not infer any later state from an earlier one.
+
 The eighth cycle established and corrected exact-PR-head workflow execution; its historical record remains `docs/REVIEW-10-EIGHTH-LEDGER-v1.4.6.md`.
 
 ## Ninth ten-round corrective evidence areas
@@ -25,7 +27,7 @@ The current cycle record is `docs/REVIEW-10-NINTH-LEDGER-v1.4.7.md`. Historical 
 
 ## External evidence still mandatory
 
-Repository success cannot prove WordPress/Hostinger staging or live behavior. **Staging, deployed code, live DB/schema/migration** and operational behavior remain separate evidence classes. Mandatory external gates still include exact deployed artifact/checksum parity; fresh install/upgrade with real WordPress/MySQL/InnoDB; File00/07/08/09/20/24/25 integration; browser/accessibility/RTL/LTR/400% zoom; performance/provider/DB/queue failure drills; privacy export/erase; consent/GPC journeys; verified backup/restore/rollback; Founder staging acceptance; controlled production deployment; live smoke tests; and live artifact parity confirmation.
+Repository success cannot prove WordPress/Hostinger staging or live behavior. **Staging, deployed code, live DB/schema/migration** and operational behavior remain separate evidence classes. Mandatory external gates still include exact **deployed-artifact parity** and checksum confirmation; fresh install/upgrade with real WordPress/MySQL/InnoDB; File00/07/08/09/20/24/25 integration; browser/accessibility/RTL/LTR/400% zoom; performance/provider/DB/queue failure drills; privacy export/erase; consent/GPC journeys; verified backup/restore/rollback; Founder staging acceptance; controlled production deployment; live smoke tests; and live artifact parity confirmation.
 
 No `Staging-Accepted`, `Live-Deployed` or `Operational` claim is made by this repository document.
 
