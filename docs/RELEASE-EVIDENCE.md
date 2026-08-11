@@ -12,7 +12,9 @@
 
 ## Exact-head evidence policy
 
-Historical green results are supporting history only. For every current File 14 source state, the exact review/main SHA being accepted must independently prove PHP 7.4 and PHP 8.3 quality, policy/contract/reliability/central/Future and dedicated regression tests including sixth-review regressions, all six independent eighty-pass gates, two fresh post-code review rounds, secret/inline/stale-token/deprecated-helper scans, deterministic double-build ZIP, SHA-256/file-level SBOM, baseline integrity, PR-head parity and fresh post-merge exact-main acceptance.
+Historical green results are supporting history only. For every current File 14 source state, the exact review/main SHA being accepted must independently prove PHP 7.4 and PHP 8.3 quality, policy/contract/reliability/central/Future and dedicated regression tests including sixth-review regressions, all six independent eighty-pass gates, two fresh post-code review rounds, secret/inline/stale-token/deprecated-helper scans, deterministic double-build ZIP, SHA-256/file-level SBOM, baseline integrity, PR-head parity and **fresh post-merge** exact-main acceptance.
+
+The **third independent eighty-pass** review established the durable exact-current-main rule; the fourth, fifth and sixth reviews retain and strengthen that rule rather than replacing it.
 
 `Automated-QA Green`, `Packaged`, `main merged`, `Staging-Accepted`, `Live-Deployed` and `Operational` remain separate evidence claims.
 
