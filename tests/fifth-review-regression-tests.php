@@ -15,8 +15,8 @@ function fifth_assert( $condition, $message ) {
 	}
 }
 
-fifth_assert( false !== strpos( $main, 'Version: 1.4.3' ), 'Plugin header must be v1.4.3.' );
-fifth_assert( false !== strpos( $main, "define( 'GCU_VERSION', '1.4.3' )" ), 'GCU_VERSION must be v1.4.3.' );
+fifth_assert( false !== strpos( $main, 'Version: 1.4.4' ), 'Plugin header must be v1.4.4.' );
+fifth_assert( false !== strpos( $main, "define( 'GCU_VERSION', '1.4.4' )" ), 'GCU_VERSION must be v1.4.4.' );
 fifth_assert( false !== strpos( $main, 'class-gcu-fifth-review-hardening.php' ), 'Fifth-review hardening class must ship.' );
 fifth_assert( false !== strpos( $main, "GCU_Fifth_Review_Hardening', 'bootstrap" ), 'Fifth-review hardening must bootstrap.' );
 
@@ -46,12 +46,12 @@ fifth_assert( false !== strpos( $hardening, 'experiment_early_stopped' ), 'Early
 fifth_assert( false !== strpos( $hardening, 'if ( false === $audit )' ), 'Audit failure must trigger rollback.' );
 fifth_assert( false !== strpos( $hardening, 'ROLLBACK' ) && false !== strpos( $hardening, 'COMMIT' ), 'Early-stop must have explicit rollback/commit paths.' );
 
-fifth_assert( false !== strpos( $readme, 'Stable tag: 1.4.3' ), 'Readme stable tag must match v1.4.3.' );
+fifth_assert( false !== strpos( $readme, 'Stable tag: 1.4.4' ), 'Readme stable tag must match v1.4.4.' );
 fifth_assert( false === strpos( $readme, 'bounded local fallback' ), 'Stale local shell fallback claim must remain removed.' );
 fifth_assert( false !== strpos( $readme, 'does not emit a local Back/Home shell fallback' ), 'File 20 sole shell ownership must be stated accurately.' );
 fifth_assert( false === strpos( $readme, 'future record/report updates' ), 'Readme must not falsely claim generic future record/report transactionality.' );
 fifth_assert( false !== strpos( $status, 'The five repository review ledgers are:' ), 'Status must count all five review ledgers accurately.' );
-fifth_assert( false !== strpos( $status, 'REVIEW-80-FIFTH-LEDGER-v1.4.3.md' ), 'Fifth ledger must be part of release truth.' );
+fifth_assert( false !== strpos( $status, 'REVIEW-80-FIFTH-LEDGER-v1.4.4.md' ), 'Fifth ledger must be part of release truth.' );
 
 if ( $failures ) {
 	fwrite( STDERR, "Fifth review regression tests failed:\n- " . implode( "\n- ", $failures ) . "\n" );

@@ -6,7 +6,7 @@ Canonical File 14 implementation for the **Sabri Social Homeopathy Platform**.
 - Fresh central governing baseline: 2026-08-10
 - Base File plan: `SSH-F14-PLAN-2026-v1.0`
 - Founder-approved additive amendment: `SSH-F14-FUTURE-CTI-2026-v2.0`
-- Software candidate: `1.4.3`
+- Software candidate: `1.4.4`
 - Base schema candidate: `10004`
 - Future CTI additive schema: `1`
 - Canonical repository identity in the governing plan: `14-global-clinic-usp-and-conversion-integration`
