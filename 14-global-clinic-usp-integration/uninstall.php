@@ -45,6 +45,7 @@ $options = array(
 	'gcu_purge_on_uninstall', 'gcu_destination_state_doctor_directory', 'gcu_destination_state_clinic',
 	'gcu_destination_state_doctor_onboarding', 'gcu_future_schema_version', 'gcu_future_safe_mode',
 	'gcu_future_last_anomaly', 'gcu_future_last_parity',
+	'gcu_audit_hmac_key_v1', 'gcu_privacy_hmac_key_v1', 'gcu_integrity_key_migration_v1',
 );
 foreach ( $options as $option ) {
 	delete_option( $option );
