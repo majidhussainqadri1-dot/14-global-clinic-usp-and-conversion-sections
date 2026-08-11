@@ -15,6 +15,8 @@
 
 Historical green results are supporting history only. The **exact review/main SHA being accepted** must independently prove PHP 7.4 and PHP 8.3 quality, policy/contract/reliability/central/Future regression tests, all retained historical review gates, the dedicated eighth-cycle regression test, two fresh post-code review rounds, secret/inline/stale-token/deprecated-helper scans, deterministic double-build ZIP, SHA-256/file-level SBOM and baseline integrity. For the open PR this means the **exact current PR-head SHA**. After merge, **fresh post-merge** exact-main acceptance is mandatory.
 
+The **third independent eighty-pass** review established the durable exact-current-main/post-merge policy. Later corrective cycles retain that policy; they do not replace it.
+
 `Automated-QA Green`, `Packaged`, `main merged`, `Staging-Accepted`, `Live-Deployed` and `Operational` remain separate evidence claims.
 
 ## Eighth ten-round corrective evidence areas
