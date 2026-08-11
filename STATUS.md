@@ -19,7 +19,7 @@ Historical PRs, commits and green workflow runs are supporting history only. The
 
 This v1.4.5 branch may be described as a repository candidate only until the **exact final branch SHA** independently passes PHP 7.4/8.3 quality, policy/contract/reliability/central/Future regression suites, all retained eighty-pass review gates, the dedicated seventh-cycle regression gate, both fresh post-code reviews, baseline integrity and deterministic package/SBOM. After merge, the **exact resulting `main` SHA** becomes the repository truth candidate and must pass the applicable workflows again before `Automated-QA Green` is claimed for current `main`.
 
-The six historical eighty-pass repository review ledgers are:
+The six repository review ledgers are: the retained historical eighty-pass set below.
 
 - `docs/REVIEW-80-LEDGER-v1.4.1.md` — first eighty-pass corrective review.
 - `docs/REVIEW-80-SECOND-LEDGER-v1.4.1.md` — second independent eighty-pass review.
