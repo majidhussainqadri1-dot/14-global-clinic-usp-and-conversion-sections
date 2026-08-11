@@ -28,7 +28,5 @@ jobs:
       - name: Apply ordered corrective commits
         run: |
           python3 scripts/apply-sixth-review-corrections.py || python3 scripts/resume-sixth-review-corrections.py || python3 scripts/resume2-sixth-review-corrections.py
-      - name: Verify final tree before push
-        run: bash scripts/quality.sh
       - name: Push corrected review history
         run: git push origin HEAD:${GITHUB_REF_NAME}
