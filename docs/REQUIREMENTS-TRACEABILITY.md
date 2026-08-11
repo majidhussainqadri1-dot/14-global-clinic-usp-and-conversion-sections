@@ -22,7 +22,7 @@ File 14 owns approved Worldwide Clinic value-proposition copy, reusable semantic
 | CEN-DON-001 | Voluntary support cannot purchase ranking, visibility, verification or basic service | policy + future tests |
 | CEN-BRAND-001 | Exact Sabri Green `#087A4E` | central-plan + CSS/fresh tests |
 | CEN-NAV-001 | File 20 sole shell/navigation owner; no local Back/Home fallback | contract + central + fresh tests |
-| CEN-LOC-001 | American English canonical chrome with complete Urdu/Arabic key parity | central + future tests |
+| CEN-LOC-001 | American English canonical File 14 chrome with complete Urdu/Arabic key parity | central + future tests |
 | CEN-A11Y-001 | Semantic headings, 44px targets, focus-visible, RTL, reduced motion, forced colors, 320px-class reflow | CSS/static; staging human evidence pending |
 | CEN-LOWDATA-001 | `Save-Data`/reduced-data suppress nonessential measurement | central + fresh tests |
 | CEN-PRIV-001 | Consent/GPC, bounded attribution, cohort suppression, export/erase, sensitive AI-input rejection, serialized/read-back-verified logged-in pseudonym initialization | contract + central + eighth tests |
@@ -38,7 +38,7 @@ File 14 owns approved Worldwide Clinic value-proposition copy, reusable semantic
 | F14-FR-005 Trust content | Verification, privacy, emergency and no-outcome-guarantee claims | policy/contract tests |
 | F14-FR-006 Business copy | 0% commission, one free tier, optional support/no advantage, fee-owner boundary | policy + future parity tests |
 | F14-FR-007 Placement registry | Versioned File 20 route/slot/audience/priority placements; only canonical File 20 readiness hook can authorize activation | schema/contract/eighth tests |
-| F14-FR-008 Reusable content blocks | Semantic block DTO/API and File25-compatible classes/tokens; File 25 retains canonical visual/design ownership | contract/central tests |
+| F14-FR-008 Reusable content blocks | Semantic block DTO/API and File 25-compatible classes/tokens; File 25 retains canonical visual/design ownership | contract/central tests |
 | F14-FR-009 Destination health | Owner occurrence-time freshness, owner-confirmed URL, fail-closed/degraded state | contract/eighth tests |
 | F14-FR-010 Campaign attribution | Consent, GPC, File14 route allowlist, sanitized first/last attribution, 30-day expiry | privacy/static tests |
 | F14-FR-011 Funnel events | Single-use token; destination-bound stages require destination; replay identity checked before write and after deduplication; conflicting reuse returns 409; analytics DB failure returns safe 503 | REST/repository/eighth tests |
