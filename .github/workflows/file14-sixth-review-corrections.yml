@@ -26,7 +26,8 @@ jobs:
           git config user.name "File 14 Review Bot"
           git config user.email "actions@users.noreply.github.com"
       - name: Apply ordered corrective commits
-        run: python3 scripts/apply-sixth-review-corrections.py
+        run: |
+          python3 scripts/apply-sixth-review-corrections.py || python3 scripts/resume-sixth-review-corrections.py
       - name: Verify final tree before push
         run: bash scripts/quality.sh
       - name: Push corrected review history
