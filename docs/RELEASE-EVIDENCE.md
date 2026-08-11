@@ -13,7 +13,9 @@
 
 ## Exact-head evidence policy
 
-Historical green results are supporting history only. The **exact review/main SHA being accepted** must independently pass PHP 7.4/8.3 quality, all current and retained regression/review gates, two fresh post-code reviews, baseline integrity, deterministic ZIP, SHA-256 and file-level SBOM. For the open PR this means the **exact current PR-head SHA**. GitHub workflows explicitly checkout `${{ github.event.pull_request.head.sha || github.sha }}` and verify `git rev-parse HEAD`. After merge, fresh post-merge exact-main acceptance remains mandatory.
+Historical green results are supporting history only. The **exact review/main SHA being accepted** must independently pass PHP 7.4/8.3 quality, all current and retained regression/review gates, two fresh post-code reviews, baseline integrity, deterministic ZIP, SHA-256 and file-level SBOM. For the open PR this means the **exact current PR-head SHA**. GitHub workflows explicitly checkout `${{ github.event.pull_request.head.sha || github.sha }}` and verify `git rev-parse HEAD`. After merge, **fresh post-merge** exact-main acceptance remains mandatory.
+
+The **third independent eighty-pass** review established the durable exact-current-main/post-merge evidence rule. Later cycles retain that rule; they do not replace it.
 
 `Packaged`, `Automated-QA Green`, **`main merged`**, `Staging-Accepted`, `Live-Deployed`, and `Operational` are separate evidence claims. This document does not infer any later state from an earlier one.
 
