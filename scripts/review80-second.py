@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
-"""Independent second eighty-pass repository audit for File 14 v1.4.2 current-state compatibility.
+"""Independent second eighty-pass repository audit for File 14.
 
 Each numbered gate re-opens one failure class after the first eighty-pass review.
 This is repository evidence only; it is never staging/live/deployed-state evidence.
+Version/status assertions follow the current candidate so later corrective patch
+releases preserve the safety invariants instead of being rejected for advancing.
 """
 from __future__ import annotations
 import re
@@ -60,13 +62,17 @@ ensure = section(future, "public static function ensure_schema( $force_verify = 
 quality_fn = section(future, "public static function quality_score()", "public static function friction_summary(")
 anomaly_fn = section(future, "public static function anomaly_detector()", "public static function early_stop_guard()")
 harden_response = section(review, "public static function harden_rest_response", "private static function json_array")
+vm = re.search(r"Version:\s*([0-9]+\.[0-9]+\.[0-9]+)", loader)
+cm = re.search(r"GCU_VERSION'\s*,\s*'([^']+)'", loader)
+current_version = vm.group(1) if vm else ""
+version_ok = bool(vm and cm and current_version == cm.group(1))
 
 checks: list[tuple[str, bool]] = [
-    ("01 exact software and plan identity", "Version: 1.4.2" in loader and "SSH-F14-PLAN-2026-v1.0" in loader and "SSH-F14-FUTURE-CTI-2026-v2.0" in loader),
-    ("02 traceability current-version truth", "Requirements Traceability — v1.4.2" in trace and "File 14 v1.4.2 may only claim a status" in trace),
+    ("01 exact software and plan identity", version_ok and "SSH-F14-PLAN-2026-v1.0" in loader and "SSH-F14-FUTURE-CTI-2026-v2.0" in loader),
+    ("02 traceability current-version truth", current_version and f"Requirements Traceability — v{current_version}" in trace and f"File 14 v{current_version} may only claim a status" in trace),
     ("03 current schema identities remain separated", "GCU_SCHEMA_VERSION', 10004" in loader and "GCU_FUTURE_SCHEMA_VERSION', 1" in loader),
-    ("04 status prose is not contradictory candidate-plus-merged state", "Repository Release State" in status and "Corrective Candidate — Merged" not in status),
-    ("05 release evidence uses current repository-release framing", "Repository Release Evidence" in release and "exact review/main SHA being accepted" in release and "fresh post-merge" in release),
+    ("04 status prose is not contradictory candidate-plus-merged state", current_version and f"v{current_version}" in status and "Repository Candidate" in status and "Corrective Candidate — Merged" not in status),
+    ("05 release evidence uses current candidate framing", current_version and f"v{current_version}" in release and "Repository Candidate" in release and "exact review/main SHA being accepted" in release and "fresh post-merge" in release),
     ("06 obsolete v1.4.0 PR-3 one-shot release automation removed", not exists(".github/workflows/file14-one-shot-release-gate.yml")),
     ("07 temporary corrective patch machinery removed", not exists(".github/workflows/file14-second-review-corrective-patch.yml") and not exists("scripts/apply-file14-second-review-corrections.py")),
     ("08 canonical package folder and text domain retained", "global-clinic-usp-integration" in loader and "Text Domain: global-clinic-usp-integration" in loader),
@@ -131,8 +137,8 @@ checks: list[tuple[str, bool]] = [
     ("67 F14-FR-015 accessibility remains", "F14-FR-015" in trace and "min-height: 44px" in css and "focus-visible" in css),
     ("68 F14-FR-016 claim audit/freshness remains", "F14-FR-016" in trace and "claim_freshness_sentinel" in future and "claim_history" in repo),
     ("69 all 24 Future CTI capability IDs remain present", len(set(re.findall(r"F14-FUT-\d{2}", future_policy))) == 24 and "F14-FUT-24" in trace),
-    ("70 release-evidence pre-merge candidate wording corrected", "Eighty-Pass Corrective Candidate" not in release and "Repository Release Evidence" in release),
-    ("71 status candidate/merged wording corrected", "Corrective Candidate — Merged" not in status and "Repository Release State" in status),
+    ("70 release-evidence pre-merge candidate wording is truthful", "Eighty-Pass Corrective Candidate" not in release and "Repository Candidate" in release and "main merged" in release),
+    ("71 status candidate/merged wording is truthful", "Corrective Candidate — Merged" not in status and "Repository Candidate" in status and "exact resulting `main` SHA" in status),
     ("72 Sabri Green remains exact", "#087A4E" in loader and "#087A4E" in css and "#087A4E" in future_css),
     ("73 RTL/LTR localization support retained", "direction" in frontend and "rtl" in css.lower() and "'ur-PK'" in fi18n and "'ar-SA'" in fi18n),
     ("74 reduced motion/data and forced-colors retained", "prefers-reduced-motion" in css and "prefers-reduced-data" in css and "forced-colors" in future_css),
