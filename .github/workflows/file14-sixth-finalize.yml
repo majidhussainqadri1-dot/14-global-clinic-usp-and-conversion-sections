@@ -1,4 +1,4 @@
-# retry-5
+# retry-6
 name: File 14 Sixth Review Finalizer
 
 on:
@@ -77,9 +77,19 @@ jobs:
           new="tr_check(false!==strpos($repo,\"mark_containment('audit_lock_failed')\")&&false!==strpos($repo,\"mark_containment('audit_write_failed')\")&&false!==strpos($repo,\"mark_containment('outbox_write_failed')\")&&false!==strpos($repo,'private function apply_containment()'),'Audit/outbox persistence failures are not fail-closed contained.');"
           if old in s: s=s.replace(old,new)
           p.write_text(s,encoding='utf-8')
+          p=Path('scripts/review80.py')
+          s=p.read_text(encoding='utf-8')
+          s=s.replace('18 base schema remains 10004 and separate from patch version','18 base schema remains 10005 and separate from patch version')
+          s=s.replace("\"GCU_SCHEMA_VERSION', 10004\" in loader","\"GCU_SCHEMA_VERSION', 10005\" in loader")
+          s=s.replace('"START TRANSACTION" in install and "START TRANSACTION" in future','"START TRANSACTION" in install and "begin_owned_transaction" in repo and "commit_owned_transaction" in repo')
+          s=s.replace('"php: [\'7.4\',\'8.3\']" in workflow and f"Version: {current_version}" in fresh1','"php: [\'7.4\',\'8.3\']" in workflow and f"Version: {current_version}" in fresh1')
+          s=s.replace('"php: [\'7.4\',\'8.3\']" in workflow and f"Stable tag: {current_version}" in fresh2','"php: [\'7.4\',\'8.3\']" in workflow and f"Stable tag: {current_version}" in fresh2')
+          p.write_text(s,encoding='utf-8')
+          p=Path('scripts/fresh-review-round-1.sh'); s=p.read_text(encoding='utf-8').replace('Version: 1.4.3','Version: 1.4.4').replace("GCU_SCHEMA_VERSION', 10004","GCU_SCHEMA_VERSION', 10005").replace('need "START TRANSACTION" "$P/includes/class-gcu-fifth-review-hardening.php"','need "begin_owned_transaction()" "$P/includes/class-gcu-fifth-review-hardening.php"'); p.write_text(s,encoding='utf-8')
+          p=Path('scripts/fresh-review-round-2.sh'); s=p.read_text(encoding='utf-8').replace('Stable tag: 1.4.3','Stable tag: 1.4.4'); p.write_text(s,encoding='utf-8')
           PY
-          git add docs/REQUIREMENTS-TRACEABILITY.md STATUS.md docs/RELEASE-EVIDENCE.md tests/second-review-regression-tests.php tests/third-review-regression-tests.php
-          git commit -m "QA: align sixth-review truth and containment assertions"
+          git add docs/REQUIREMENTS-TRACEABILITY.md STATUS.md docs/RELEASE-EVIDENCE.md tests/second-review-regression-tests.php tests/third-review-regression-tests.php scripts/review80.py scripts/fresh-review-round-1.sh scripts/fresh-review-round-2.sh
+          git commit -m "QA: forward-align inherited review gates for v1.4.4"
       - name: Run full quality gate
         run: bash scripts/quality.sh
       - name: Remove one-shot finalizer
