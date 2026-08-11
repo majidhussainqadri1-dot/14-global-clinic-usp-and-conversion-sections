@@ -15,9 +15,9 @@
 
 ## Exact-current-head rule
 
-Historical PRs, commits and green workflow runs are supporting history only. They are not current repository truth merely because they once passed. No historical ledger or merge may substitute for verification of the **exact current review-head SHA** or, after merge, the exact resulting `main` SHA.
+Historical PRs, commits and green workflow runs are supporting history only. They are not current repository truth merely because they once passed. The durable post-merge rule is that the **exact current `main` SHA** must be independently verified; while a PR is still unmerged, its exact review-head SHA is a separate candidate truth and cannot be described as current `main`.
 
-This v1.4.5 branch may be described as a repository candidate only until the **exact final branch SHA** independently passes PHP 7.4/8.3 quality, policy/contract/reliability/central/Future regression suites, all retained eighty-pass review gates, the dedicated seventh-cycle regression gate, both fresh post-code reviews, baseline integrity and deterministic package/SBOM. After merge, the exact resulting `main` SHA must pass the applicable workflows again before `Automated-QA Green` is claimed for `main`.
+This v1.4.5 branch may be described as a repository candidate only until the **exact final branch SHA** independently passes PHP 7.4/8.3 quality, policy/contract/reliability/central/Future regression suites, all retained eighty-pass review gates, the dedicated seventh-cycle regression gate, both fresh post-code reviews, baseline integrity and deterministic package/SBOM. After merge, the exact current `main` SHA must pass the applicable workflows again before `Automated-QA Green` is claimed for `main`.
 
 The six historical eighty-pass repository review ledgers are:
 
