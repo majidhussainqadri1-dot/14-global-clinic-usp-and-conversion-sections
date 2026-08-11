@@ -14,7 +14,7 @@
 
 ## Exact-current-head rule
 
-Historical PRs, commits and green workflow runs are supporting history only. They are not the current repository truth merely because they once passed.
+Historical PRs, commits and green workflow runs are supporting history only. They are not the current repository truth merely because they once passed. No historical ledger or merge may substitute for verification of the **exact current `main` SHA** when a main-branch release state is claimed.
 
 This fifth-review branch may be described as a repository candidate only until the **exact final branch SHA** independently passes PHP 7.4/8.3 quality, the five eighty-pass regression gates, both fresh post-code reviews, baseline integrity and deterministic package/SBOM. After merge, the exact resulting `main` SHA must pass the applicable workflows again before `Automated-QA Green` is claimed for `main`.
 
