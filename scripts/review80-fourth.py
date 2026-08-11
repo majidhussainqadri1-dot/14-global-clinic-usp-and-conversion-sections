@@ -1,10 +1,13 @@
 #!/usr/bin/env python3
 from pathlib import Path
+import re
 ROOT=Path(__file__).resolve().parents[1]
 def r(p): return (ROOT/p).read_text(encoding='utf-8')
 loader=r('14-global-clinic-usp-integration/global-clinic-usp-integration.php');caps=r('14-global-clinic-usp-integration/includes/class-gcu-capabilities.php');policy=r('14-global-clinic-usp-integration/includes/class-gcu-policy.php');repo=r('14-global-clinic-usp-integration/includes/class-gcu-repository.php');front=r('14-global-clinic-usp-integration/includes/class-gcu-frontend.php');install=r('14-global-clinic-usp-integration/includes/class-gcu-install.php');plugin=r('14-global-clinic-usp-integration/includes/class-gcu-plugin.php');obs=r('14-global-clinic-usp-integration/includes/class-gcu-observability.php');admin=r('14-global-clinic-usp-integration/includes/class-gcu-admin.php');contracts=r('14-global-clinic-usp-integration/includes/class-gcu-contracts.php');hard=r('14-global-clinic-usp-integration/includes/class-gcu-hardening.php');privacy=r('14-global-clinic-usp-integration/includes/class-gcu-privacy.php');future=r('14-global-clinic-usp-integration/includes/class-gcu-future-intelligence.php');guards=r('14-global-clinic-usp-integration/includes/class-gcu-future-guards.php');review=r('14-global-clinic-usp-integration/includes/class-gcu-review80-hardening.php');fi18n=r('14-global-clinic-usp-integration/includes/class-gcu-future-i18n.php');css=r('14-global-clinic-usp-integration/assets/css/global-clinic-usp-integration.css');future_css=r('14-global-clinic-usp-integration/assets/css/gcu-future-intelligence.css');readme=r('14-global-clinic-usp-integration/readme.txt');status=r('STATUS.md');release=r('docs/RELEASE-EVIDENCE.md');trace=r('docs/REQUIREMENTS-TRACEABILITY.md');workflow=r('.github/workflows/file14-quality.yml');build=r('scripts/build.py');quality=r('scripts/quality.sh');ledger=r('docs/REVIEW-80-FOURTH-LEDGER-v1.4.2.md')
+vm=re.search(r'Version:\s*([0-9]+)\.([0-9]+)\.([0-9]+)',loader)
+version_ok=bool(vm) and tuple(map(int,vm.groups())) >= (1,4,2)
 checks=[
-('01 exact v1.4.2 + governing plans','Version: 1.4.2' in loader and 'SSH-F14-PLAN-2026-v1.0' in loader and 'SSH-F14-FUTURE-CTI-2026-v2.0' in loader),
+('01 v1.4.2-or-later + governing plans',version_ok and 'SSH-F14-PLAN-2026-v1.0' in loader and 'SSH-F14-FUTURE-CTI-2026-v2.0' in loader),
 ('02 canonical logical repository identity','14-global-clinic-usp-and-conversion-integration' in loader),
 ('03 File00 authorization adapter presence is testable','authorization_adapter_available' in caps),
 ('04 privileged auth fails closed without File00 adapter','! self::authorization_adapter_available()' in caps),

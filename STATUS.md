@@ -1,28 +1,30 @@
-# File 14 Status — v1.4.2 Repository Release State
+# File 14 Status — v1.4.3 Fifth-Review Repository Candidate
 
 ## Repository coding status
 
 - Governing freeze: consolidated central governing plan + `SSH-F14-PLAN-2026-v1.0` + Founder-approved additive amendment `SSH-F14-FUTURE-CTI-2026-v2.0` dated 2026-08-10.
-- Software candidate: `1.4.2`.
+- Re-opened baseline: exact post-fourth-review `main` `b9045a4229d052103a5546477f664ac88b6ff034`.
+- Software candidate: `1.4.3`.
 - Base File 14 database schema: `10004`.
 - Future CTI additive schema: `1` (`gcu_future_records`, `gcu_future_reports`).
 - The 24 Future CTI requirements `F14-FUT-01` through `F14-FUT-24` remain inside File 14's approved trust/conversion scope; File 14 does not become doctor, clinic, appointment, payment, verification or shell source of truth.
 - File 20 remains the sole shell/navigation owner; Files 07/08/09 remain canonical doctor/directory/clinic/onboarding owners.
-- Repository hardening now also requires File 00 authorization-adapter presence for privileged actions, audience-safe block/placement activation, Founder approval of active placements, sensitive campaign minimization, per-stage cohort suppression, conflicting inbound-event detection, recent-tail audit verification, shortcode cache revalidation, File 20-only navigation ownership, Future-schema error propagation, non-destructive rollback preservation, expanded dependency/cron/route health and rollback audit evidence.
-- Deterministic package target: `14-global-clinic-usp-integration-1.4.2.zip` + SHA-256 + file-level SBOM, generated only from the exact head being evaluated.
+- Fifth-review hardening adds request-scoped actual schema truth, Founder approval before active/public Future governance records, conflicting conversion-event identity rejection, AI-copy sensitive-input blocking, Urdu/Arabic AI-output dark-pattern filtering, and transactionally audited automatic experiment early-stop.
+- Deterministic package target: `14-global-clinic-usp-integration-1.4.3.zip` + SHA-256 + file-level SBOM, generated only from the exact head being evaluated.
 
 ## Exact-current-head rule
 
-Historical PRs, commits and green workflow runs are supporting history only. They are not the current repository truth merely because they once passed.
+Historical PRs, commits and green workflow runs are supporting history only. They are not the current repository truth merely because they once passed. No historical ledger or merge may substitute for verification of the **exact current `main` SHA** when a main-branch release state is claimed.
 
-The current repository state may be described as `Automated-QA Green` only when the **exact current `main` SHA at evaluation time** has independently passed the required File 14 quality/package workflow, both fresh post-code reviews, the active first/second/third/fourth eighty-pass regression gates and baseline integrity. If `main` moves, that status must be re-established for the new exact SHA.
+This fifth-review branch may be described as a repository candidate only until the **exact final branch SHA** independently passes PHP 7.4/8.3 quality, the five eighty-pass regression gates, both fresh post-code reviews, baseline integrity and deterministic package/SBOM. After merge, the exact resulting `main` SHA must pass the applicable workflows again before `Automated-QA Green` is claimed for `main`.
 
-The three repository review ledgers are:
+The five repository review ledgers are:
 
 - `docs/REVIEW-80-LEDGER-v1.4.1.md` — first eighty-pass corrective review.
 - `docs/REVIEW-80-SECOND-LEDGER-v1.4.1.md` — second independent eighty-pass review.
 - `docs/REVIEW-80-THIRD-LEDGER-v1.4.1.md` — third independent eighty-pass review.
-- `docs/REVIEW-80-FOURTH-LEDGER-v1.4.2.md` — fourth independent eighty-pass review reopened from the exact post-third-review main baseline.
+- `docs/REVIEW-80-FOURTH-LEDGER-v1.4.2.md` — fourth independent eighty-pass review.
+- `docs/REVIEW-80-FIFTH-LEDGER-v1.4.3.md` — fifth independent eighty-pass review reopened from exact post-fourth-review main.
 
 No ledger or historical merge SHA is allowed to substitute for exact-current-head evidence.
 

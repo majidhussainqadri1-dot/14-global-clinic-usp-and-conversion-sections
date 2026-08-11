@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
-"""Third independent 80-pass exact-source review gate for File 14 v1.4.2 current-state compatibility.
+"""Third independent 80-pass exact-source review gate for File 14.
 
 Each check is one independent final-state property. A PASS is repository evidence
-only; it is not staging, deployed-code, DB, migration or live evidence.
+only; it is not staging, deployed-code, DB, migration or live evidence. Release
+identity follows the current internally-consistent patch version while preserving
+the v1.4.2-or-later safety baseline and governing-plan identity.
 """
 from pathlib import Path
 import re
@@ -40,8 +42,12 @@ exp_priv=privacy[privacy.find('public function export_data('):privacy.find('publ
 pub_start=contracts.find('public function public_destination($key)')
 pub_end=contracts.find('public function public_destination_health()',pub_start)
 pub_dto=contracts[pub_start:pub_end]
+vm=re.search(r'Version:\s*([0-9]+)\.([0-9]+)\.([0-9]+)',loader)
+cm=re.search(r"GCU_VERSION'\s*,\s*'([^']+)'",loader)
+current_version='.'.join(vm.groups()) if vm else ''
+version_ok=bool(vm and cm and current_version==cm.group(1) and tuple(map(int,vm.groups())) >= (1,4,2))
 checks=[
-('01 exact software and governing-plan identity','Version: 1.4.2' in loader and 'SSH-F14-FUTURE-CTI-2026-v2.0' in loader),
+('01 exact software and governing-plan identity',version_ok and 'SSH-F14-FUTURE-CTI-2026-v2.0' in loader),
 ('02 base/Future schema identities remain separated',"GCU_SCHEMA_VERSION', 10004" in loader and "GCU_FUTURE_SCHEMA_VERSION', 1" in loader),
 ('03 status uses durable exact-current-main truth','exact current `main` SHA' in status and 'docs/REVIEW-80-THIRD-LEDGER-v1.4.1.md' in status),
 ('04 release evidence includes third-review and post-merge exact-head policy','third independent eighty-pass' in release and 'fresh post-merge' in release),

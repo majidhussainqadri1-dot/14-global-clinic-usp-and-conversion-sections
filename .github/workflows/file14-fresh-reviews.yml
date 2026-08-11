@@ -1,7 +1,7 @@
 name: File 14 Fresh Post-Code Reviews
 on:
   push:
-    branches: [main, 'complete/**']
+    branches: [main, 'complete/**', 'review/**']
   pull_request:
   workflow_dispatch:
 permissions:

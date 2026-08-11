@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
-"""Deterministic 80-pass source/governance review gate for File 14 v1.4.1.
+"""Deterministic 80-pass source/governance review gate for File 14.
 
 The order mirrors docs/REVIEW-80-LEDGER-v1.4.1.md. A pass proves only the
 repository property named by that round. It is not staging, deployed-code,
-database, live or operational evidence.
+database, live or operational evidence. Release-identity checks intentionally
+follow the current plugin version so later corrective patch releases do not
+invalidate historical safety invariants merely because the version advanced.
 """
 from __future__ import annotations
 import re
@@ -50,6 +52,12 @@ review_tests = read("tests/review80-hardening-tests.php")
 policy = read("14-global-clinic-usp-integration/includes/class-gcu-policy.php")
 all_php = "\n".join(p.read_text(encoding="utf-8") for p in P.rglob("*.php"))
 
+vm = re.search(r"Version:\s*([0-9]+\.[0-9]+\.[0-9]+)", loader)
+cm = re.search(r"GCU_VERSION'\s*,\s*'([^']+)'", loader)
+current_version = vm.group(1) if vm else ""
+version_identity_ok = bool(vm and cm and current_version == cm.group(1))
+version_floor_ok = version_identity_ok and tuple(map(int, current_version.split("."))) >= (1, 4, 2)
+
 checks: list[tuple[str, bool]] = [
     ("01 governing scope / 24 Future IDs / no duplicate post backend", "SSH-F14-FUTURE-CTI-2026-v2.0" in loader and len(set(re.findall(r"F14-FUT-\d{2}", future_policy))) == 24 and re.search(r"wp_insert_post\s*\(", all_php) is None),
     ("02 request-time claim freshness and public fail-closed parity", "claim_freshness_sentinel" in review and "gcu_review80_public_copy_guarded" in review and "finalize_public_guard" in review),
@@ -59,14 +67,14 @@ checks: list[tuple[str, bool]] = [
     ("06 FAQ aggregate direct-identifier rejection", "question_contains_sensitive_data" in review and "CNIC" in review and "patient\\s*id" in review),
     ("07 Scenario Laboratory Future safe-mode truth", "normalize_scenario_payload" in review and "SAFE_MODE_OPTION" in review and "module_enabled" in review),
     ("08 quality evidence remains provisional when material inputs unverified", "unverified_metrics" in review and "privacy_effectiveness" in review and "provisional" in review),
-    ("09 corrective release identity is 1.4.2 everywhere that defines current package", "Version: 1.4.2" in loader and "GCU_VERSION', '1.4.2'" in loader and "Stable tag: 1.4.2" in readme and "file-14-v1.4.2" in workflow),
+    ("09 current corrective release identity is internally consistent and >=1.4.2", version_floor_ok and f"Stable tag: {current_version}" in readme and "version = hm.group(1)" in workflow),
     ("10 truthful multilingual no-advantage disclosure regression", "Truthful Urdu no-advantage copy must pass" in review_tests and "نہیں" in review),
     ("11 REST post-dispatch hardening scoped to File 14 namespace", "0 !== strpos( $route, '/gcu/v1/' )" in review),
-    ("12 contract regression version/tag aligned to 1.4.2", "Version 1.4.2 drift" in contract_tests and "Stable tag: 1.4.2" in contract_tests),
+    ("12 contract regression follows current version/tag", current_version and current_version in contract_tests and f"Stable tag: {current_version}" in contract_tests),
     ("13 contract scope assertion is literal and non-interpolating", "strpos($review,'0 !== strpos( $route, \\'/gcu/v1/\\' )')" in contract_tests),
-    ("14 central-plan regression aligned to 1.4.2", "Candidate version not 1.4.2" in central_tests and "Stable tag: 1.4.2" in central_tests),
-    ("15 STATUS current repository truth is 1.4.2", "v1.4.2 Repository Release State" in status and "Software candidate: `1.4.2`" in status),
-    ("16 release-evidence current candidate truth is 1.4.2", "Release Evidence — v1.4.2" in release and "Software candidate: `1.4.2`" in release),
+    ("14 central-plan regression follows current version", current_version and current_version in central_tests and f"Stable tag: {current_version}" in central_tests),
+    ("15 STATUS follows current repository candidate truth", current_version and f"v{current_version}" in status and f"Software candidate: `{current_version}`" in status),
+    ("16 release-evidence follows current candidate truth", current_version and f"v{current_version}" in release and f"Software candidate: `{current_version}`" in release),
     ("17 corrective round ledger and complete defect index exist", "Defects were discovered in rounds **02, 03, 04, 05, 06, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 38, 40 and 58**" in ledger and "| 80 |" in ledger),
     ("18 base schema remains 10004 and separate from patch version", "GCU_SCHEMA_VERSION', 10004" in loader),
     ("19 Future additive schema remains 1 with InnoDB verification", "GCU_FUTURE_SCHEMA_VERSION', 1" in loader and "SHOW TABLE STATUS" in install and "innodb" in install.lower()),
@@ -126,10 +134,10 @@ checks: list[tuple[str, bool]] = [
     ("73 degraded routes remain noindex", "noindex,nofollow" in frontend),
     ("74 inline executable markup remains forbidden by quality gate", "onclick=|onerror=|onload=|javascript:" in quality),
     ("75 embedded-secret scan remains in quality gate", "Potential embedded secret detected" in quality),
-    ("76 PHP 7.4 exact-head workflow target retained", "php: ['7.4','8.3']" in workflow and "Version: 1.4.2" in fresh1),
-    ("77 PHP 8.3 exact-head workflow target retained", "php: ['7.4','8.3']" in workflow and "Stable tag: 1.4.2" in fresh2),
+    ("76 PHP 7.4 exact-head workflow target retained", "php: ['7.4','8.3']" in workflow and f"Version: {current_version}" in fresh1),
+    ("77 PHP 8.3 exact-head workflow target retained", "php: ['7.4','8.3']" in workflow and f"Stable tag: {current_version}" in fresh2),
     ("78 deterministic double-build gate retained", "Deterministic double-build mismatch" in build),
-    ("79 ZIP path/CRC + SHA-256 + file-level SBOM gate retained", "Unsafe archive path" in build and "file-sha256-sbom-v1" in build and "1.4.2.zip.sha256" in workflow),
+    ("79 ZIP path/CRC + SHA-256 + file-level SBOM gate retained", "Unsafe archive path" in build and "file-sha256-sbom-v1" in build and "package_sha256" in workflow and "version = hm.group(1)" in workflow),
     ("80 truth-status / Live-First boundary remains explicit", "Never infer staging or live state from this repository alone" in root_readme and "No `Staging-Accepted`, `Live-Deployed` or `Operational` claim" in status),
 ]
 

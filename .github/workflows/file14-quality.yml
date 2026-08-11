@@ -1,7 +1,7 @@
 name: File 14 Quality and Package
 on:
   push:
-    branches: [main, 'complete/**']
+    branches: [main, 'complete/**', 'review/**']
   pull_request:
   workflow_dispatch:
 permissions:
@@ -28,25 +28,35 @@ jobs:
     steps:
       - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
       - run: bash scripts/build.sh
-      - run: |
-          cd dist
-          sha256sum -c 14-global-clinic-usp-integration-1.4.2.zip.sha256
+      - name: Verify exact-version package, checksum and SBOM
+        run: |
           python3 - <<'PY'
-          import json, pathlib, zipfile
-          root=pathlib.Path('.')
-          sbom=json.loads((root/'14-global-clinic-usp-integration-1.4.2.sbom.json').read_text())
-          assert sbom['version']=='1.4.2'
-          assert sbom['file_count']==len(sbom['files']) and sbom['file_count']>0
-          with zipfile.ZipFile(root/'14-global-clinic-usp-integration-1.4.2.zip') as z:
+          import hashlib, json, pathlib, re, zipfile
+          root = pathlib.Path('.')
+          main = (root/'14-global-clinic-usp-integration/global-clinic-usp-integration.php').read_text(encoding='utf-8')
+          hm = re.search(r'^\s*\*\s*Version:\s*([0-9]+(?:\.[0-9]+){2})\s*$', main, re.M)
+          cm = re.search(r"define\(\s*'GCU_VERSION'\s*,\s*'([^']+)'\s*\)", main)
+          assert hm and cm and hm.group(1) == cm.group(1), 'Plugin header/GCU_VERSION drift'
+          version = hm.group(1)
+          base = root/'dist'/f'14-global-clinic-usp-integration-{version}'
+          zip_path = pathlib.Path(str(base)+'.zip')
+          sha_path = pathlib.Path(str(base)+'.zip.sha256')
+          sbom_path = pathlib.Path(str(base)+'.sbom.json')
+          assert zip_path.is_file() and sha_path.is_file() and sbom_path.is_file(), 'Exact-version release files missing'
+          expected = sha_path.read_text(encoding='utf-8').split()[0]
+          actual = hashlib.sha256(zip_path.read_bytes()).hexdigest()
+          assert expected == actual, 'ZIP SHA-256 mismatch'
+          sbom = json.loads(sbom_path.read_text(encoding='utf-8'))
+          assert sbom['version'] == version
+          assert sbom['package_sha256'] == actual
+          assert sbom['file_count'] == len(sbom['files']) and sbom['file_count'] > 0
+          with zipfile.ZipFile(zip_path) as z:
               assert z.testzip() is None
               assert all(n.startswith('14-global-clinic-usp-integration/') and '..' not in pathlib.PurePosixPath(n).parts for n in z.namelist())
-          print('Package/SBOM verification: PASS')
+          print(f'Package/SBOM verification: PASS — v{version} — {actual}')
           PY
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4 pinned
         with:
-          name: file-14-v1.4.2
-          path: |
-            dist/14-global-clinic-usp-integration-1.4.2.zip
-            dist/14-global-clinic-usp-integration-1.4.2.zip.sha256
-            dist/14-global-clinic-usp-integration-1.4.2.sbom.json
+          name: file-14-package-${{ github.sha }}
+          path: dist/*
           if-no-files-found: error
