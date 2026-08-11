@@ -13,6 +13,9 @@ $privacy = eighth_text( $plugin . '/includes/class-gcu-privacy.php' );
 $contracts = eighth_text( $plugin . '/includes/class-gcu-contracts.php' );
 $status = eighth_text( $root . '/STATUS.md' );
 $release = eighth_text( $root . '/docs/RELEASE-EVIDENCE.md' );
+$quality_workflow = eighth_text( $root . '/.github/workflows/file14-quality.yml' );
+$fresh_workflow = eighth_text( $root . '/.github/workflows/file14-fresh-reviews.yml' );
+$baseline_workflow = eighth_text( $root . '/.github/workflows/baseline-import-and-integrity.yml' );
 
 $version = '';
 if ( preg_match( '/Version:\s*([0-9]+\.[0-9]+\.[0-9]+)/', $main, $match ) ) { $version = $match[1]; }
@@ -33,6 +36,12 @@ eighth_assert( false !== strpos( $contracts, 'owner_event_time' ) && false !== s
 eighth_assert( false !== strpos( $contracts, "\$owner_time<=(int)\$existing['owner_occurred_at']" ), 'Older/out-of-order owner readiness events must not overwrite newer state.' );
 eighth_assert( false === strpos( $contracts, 'gcu_file20_slot_ready_v1' ) && false !== strpos( $contracts, 'sabri_shell_slot_ready_v1' ), 'Only the canonical File 20 slot-readiness contract may authorize placement readiness.' );
 eighth_assert( false !== strpos( $contracts, "''!==\$owner_url" ) && false !== strpos( $contracts, '$url=$available?$owner_url:$fallback' ), 'Owner availability must require an owner-confirmed safe URL; fallback URL may not manufacture readiness.' );
+
+$head_expression = '${{ github.event.pull_request.head.sha || github.sha }}';
+eighth_assert( substr_count( $quality_workflow, 'ref: ' . $head_expression ) >= 2 && substr_count( $quality_workflow, 'Verify exact checkout SHA' ) >= 2, 'Quality/package workflow must checkout and verify the exact PR head instead of the synthetic pull-request merge ref.' );
+eighth_assert( false !== strpos( $quality_workflow, 'name: file-14-package-' . $head_expression ), 'Package artifact identity must be keyed to the exact PR-head SHA.' );
+eighth_assert( substr_count( $fresh_workflow, 'ref: ' . $head_expression ) >= 2 && substr_count( $fresh_workflow, 'Verify exact checkout SHA' ) >= 2, 'Both fresh-review jobs must execute the exact PR-head SHA.' );
+eighth_assert( false !== strpos( $baseline_workflow, 'ref: ' . $head_expression ) && false !== strpos( $baseline_workflow, 'Verify exact checkout SHA' ), 'Baseline provenance PR job must execute the exact PR-head SHA.' );
 
 eighth_assert( false !== strpos( $status, 'Eighth Ten-Round Repository Candidate' ) && false !== strpos( $release, 'Eighth Ten-Round Repository Candidate' ), 'Status and release evidence must identify the eighth corrective cycle.' );
 eighth_assert( false !== strpos( $status, 'Exact deployed code is unverified' ) && false !== strpos( $release, 'Exact deployed code is unverified' ), 'Live-First truth boundary must remain explicit.' );
