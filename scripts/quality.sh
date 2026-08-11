@@ -14,6 +14,7 @@ php "$ROOT/tests/fourth-review-regression-tests.php"
 php "$ROOT/tests/fifth-review-regression-tests.php"
 php "$ROOT/tests/sixth-review-regression-tests.php"
 php "$ROOT/tests/seventh-review-regression-tests.php"
+php "$ROOT/tests/eighth-review-regression-tests.php"
 python3 "$ROOT/scripts/review80.py"
 python3 "$ROOT/scripts/review80-second.py"
 python3 "$ROOT/scripts/review80-third.py"
@@ -34,6 +35,7 @@ if ! grep -q "Third Independent Eighty-Pass Review" "$ROOT/docs/REVIEW-80-THIRD-
 if ! grep -q "Fourth Independent Eighty-Pass Review" "$ROOT/docs/REVIEW-80-FOURTH-LEDGER-v1.4.2.md"; then echo "Fourth-review ledger missing" >&2; exit 1; fi
 if ! grep -q "Fifth Independent Eighty-Pass Review" "$ROOT/docs/REVIEW-80-FIFTH-LEDGER-v1.4.3.md"; then echo "Fifth-review ledger missing" >&2; exit 1; fi
 if ! grep -q "Sixth Independent Eighty-Pass Review" "$ROOT/docs/REVIEW-80-SIXTH-LEDGER-v1.4.4.md"; then echo "Sixth-review ledger missing" >&2; exit 1; fi
+if ! grep -q "Eighth Ten-Round Corrective Review" "$ROOT/docs/REVIEW-10-EIGHTH-LEDGER-v1.4.6.md"; then echo "Eighth-review ledger missing" >&2; exit 1; fi
 for temp in \
   "$ROOT/.github/workflows/file14-third-review-corrective-patch.yml" \
   "$ROOT/scripts/apply-file14-third-review-corrections.py" \
