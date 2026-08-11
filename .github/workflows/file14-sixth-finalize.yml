@@ -1,0 +1,38 @@
+name: File 14 Sixth Review Finalizer
+
+on:
+  push:
+    branches:
+      - review/file14-sixth-80-round-2026-08-11
+    paths:
+      - .github/workflows/file14-sixth-finalize.yml
+
+permissions:
+  contents: write
+
+jobs:
+  finalize:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09
+        with:
+          fetch-depth: 0
+      - uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240
+        with:
+          php-version: '8.3'
+          coverage: none
+      - name: Configure committer
+        run: |
+          git config user.name "File 14 Review Bot"
+          git config user.email "actions@users.noreply.github.com"
+      - name: Apply final corrective patch
+        run: python3 scripts/finalize-sixth-review.py
+      - name: Run full quality gate
+        run: bash scripts/quality.sh
+      - name: Remove one-shot finalizer
+        run: |
+          rm -f scripts/finalize-sixth-review.py .github/workflows/file14-sixth-finalize.yml
+          git add -A
+          git commit -m "Remove temporary sixth-review finalizer"
+      - name: Push final corrected tree
+        run: git push origin HEAD:${GITHUB_REF_NAME}
