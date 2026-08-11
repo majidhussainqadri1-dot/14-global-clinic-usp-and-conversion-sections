@@ -22,7 +22,7 @@ File 14 owns approved Worldwide Clinic value-proposition copy, semantic content 
 | CEN-DON-001 | Voluntary support cannot buy ranking/visibility/verification/basic service | policy + future |
 | CEN-BRAND-001 | Sabri Green `#087A4E` | central + CSS/fresh |
 | CEN-NAV-001 | File20 sole shell/navigation owner; no duplicate local fallback | contract + central/fresh |
-| CEN-LOC-001 | American English canonical File14 chrome; Urdu/Arabic parity; fallback content gets explicit source `lang`/`dir` | central + ninth |
+| CEN-LOC-001 | American English canonical File 14 chrome; Urdu/Arabic parity; fallback content gets explicit source `lang`/`dir` | central + ninth |
 | CEN-A11Y-001 | Semantic structure, 44px targets, focus, RTL/LTR, reduced motion, forced colors, 320px reflow; fallback language semantics | static/fresh; human staging pending |
 | CEN-LOWDATA-001 | Save-Data/reduced-data suppress nonessential measurement | central/fresh |
 | CEN-PRIV-001 | Consent/GPC, bounded attribution, export/erase, cohort suppression, stable pseudonyms; empty subject fails closed; personalized pages are private/no-store | contract + central + ninth |
@@ -38,7 +38,7 @@ File 14 owns approved Worldwide Clinic value-proposition copy, semantic content 
 | F14-FR-005 Trust content | Verification/privacy/emergency/no-outcome-guarantee claims | policy/contract |
 | F14-FR-006 Business copy | 0% commission, one free tier, optional support/no advantage | policy/future |
 | F14-FR-007 Placement registry | Versioned File20 route/slot/audience/priority; only canonical File20 readiness authorizes activation; creation read-back required | contract/ninth |
-| F14-FR-008 Reusable content blocks | Semantic DTO/API + File25-compatible classes/tokens; File25 remains visual owner | contract/central |
+| F14-FR-008 Reusable content blocks | Semantic DTO/API + File 25-compatible classes/tokens; File25 remains visual owner and never becomes domain truth | contract/central |
 | F14-FR-009 Destination health | Owner occurrence-time freshness, safe owner URL, fail-closed degraded state, equal-time ambiguity protection | contract/ninth |
 | F14-FR-010 Campaign attribution | Consent/GPC, File14 acquisition allowlist, bounded sanitized first/last attribution | privacy/static |
 | F14-FR-011 Funnel events | Permission-time token validation + transaction-time consume; repository destination invariant; stable subject; strict insert; replay identity; DB read fail-close | repository/REST/ninth |
