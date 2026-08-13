@@ -59,6 +59,22 @@ final class GCU_Round16_Bounds {
 		}
 	}
 
+	public static function reports_for_admin() {
+		$reports = GCU_Future_Intelligence::reports( 'open', 50 );
+		if ( is_wp_error( $reports ) ) {
+			wp_die( esc_html( $reports->get_error_message() ) );
+		}
+		return $reports;
+	}
+
+	public static function resolve_report_action( $id, $expected, $status, $resolution ) {
+		$result = GCU_Future_Intelligence::resolve_report_record( $id, $expected, $status, $resolution );
+		if ( is_wp_error( $result ) ) {
+			wp_die( esc_html( $result->get_error_message() ) );
+		}
+		return $result;
+	}
+
 	private static function active_block_count( $type = '' ) {
 		global $wpdb;
 		$tables = GCU_Install::tables();
