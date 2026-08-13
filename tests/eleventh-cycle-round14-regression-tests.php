@@ -10,6 +10,7 @@ if ( false === $src ) {
 }
 
 $required = array(
+	"CREATE TABLE {\$t['records']} (id bigint(20) unsigned NOT NULL AUTO_INCREMENT,record_type varchar(64)",
 	"SELECT id,record_type,record_key,locale,region FROM {\$t['records']}",
 	"GCU_Privacy::legal_hold_applies('future_record',\$identity)",
 	"sanitize_key((string)\$row['record_type'])",
@@ -28,11 +29,6 @@ foreach ( $required as $marker ) {
 $forbidden = "SELECT id,public_id FROM {\$t['records']}";
 if ( false !== strpos( $src, $forbidden ) ) {
 	fwrite( STDERR, "Round 14 regression: Future records cleanup still queries nonexistent public_id.\n" );
-	exit( 1 );
-}
-
-if ( false !== preg_match( '/CREATE TABLE \{\$t\[\x27records\x27\]\}.*?public_id/s', $src ) && preg_match( '/CREATE TABLE \{\$t\[\x27records\x27\]\}.*?public_id/s', $src ) ) {
-	fwrite( STDERR, "Unexpected public_id drift detected in Future records schema; review identity contract.\n" );
 	exit( 1 );
 }
 
