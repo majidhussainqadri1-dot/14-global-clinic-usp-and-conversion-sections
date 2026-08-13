@@ -14,24 +14,28 @@
 ## Exact-current-head rule
 Historical PRs, commits, workflows and packages are supporting history only. The **exact current PR-head SHA** must independently pass PHP 7.4/8.3 quality, retained policy/contract/reliability/central/Future/history gates, current regression coverage, both fresh post-code reviews, baseline integrity and deterministic package/SBOM before this Repository Candidate can be called `Automated-QA Green`.
 
-Round 01 of the current cycle found that the previous exact final head `5a6877e6035747fa62f1c6c4a7d4f986f62e74b0` failed workflow run `31666916417`: both PHP 7.4 and PHP 8.3 stopped in `third-review-regression-tests.php` because durable exact-current-head wording in this status file no longer matched the retained contract. The first corrected-head retest `31670449006` then exposed a second retained wording contract: `second-review-regression-tests.php` requires the status itself to remain explicitly identified as a `Repository Candidate`. Both Round 01 documentation-contract defects are corrected here; the next round may begin only after the resulting exact head is retested.
+Round 01 of the current cycle found that the previous exact final head `5a6877e6035747fa62f1c6c4a7d4f986f62e74b0` failed workflow run `31666916417`: both PHP 7.4 and PHP 8.3 stopped in `third-review-regression-tests.php` because durable exact-current-head wording in this status file no longer matched the retained contract. The first corrected-head retest `31670449006` exposed the retained `Repository Candidate` wording contract. The next exact-head retest `31670609451` then exposed historical-evidence wording contracts. These are all Round 01 correction/retest findings; Round 02 has not started.
 
 After merge, the exact resulting `main` SHA becomes the exact current `main` SHA and repository truth, and must pass applicable workflows again. A green PR head is not a green post-merge main by inference.
 
-## Retained review evidence
-Historical ledgers remain retained through:
+## Retained historical review evidence
+The six historical eighty-pass repository review ledgers are:
 - `docs/REVIEW-80-LEDGER-v1.4.1.md`
 - `docs/REVIEW-80-SECOND-LEDGER-v1.4.1.md`
 - `docs/REVIEW-80-THIRD-LEDGER-v1.4.1.md`
 - `docs/REVIEW-80-FOURTH-LEDGER-v1.4.2.md`
 - `docs/REVIEW-80-FIFTH-LEDGER-v1.4.3.md`
 - `docs/REVIEW-80-SIXTH-LEDGER-v1.4.4.md`
+
+Later retained cycles:
 - `docs/REVIEW-10-SEVENTH-LEDGER-v1.4.5.md`
 - `docs/REVIEW-10-EIGHTH-LEDGER-v1.4.6.md`
 - `docs/REVIEW-10-NINTH-LEDGER-v1.4.7.md`
-- `docs/REVIEW-20-TENTH-LEDGER-v1.4.8.md`
-- `docs/REVIEW-20-2026-08-13-LEDGER-v1.4.8.md`
-- active `docs/REVIEW-20-ELEVENTH-WORKING-LEDGER-v1.4.8.md`.
+- `docs/REVIEW-20-TENTH-LEDGER-v1.4.8.md` — retained historical status identity: **Tenth Twenty-Round Repository Candidate**.
+- `docs/REVIEW-20-2026-08-13-LEDGER-v1.4.8.md` — later closed twenty-round review cycle.
+- active `docs/REVIEW-20-ELEVENTH-WORKING-LEDGER-v1.4.8.md` — current separate eleventh fresh cycle.
+
+The phrase **Tenth Twenty-Round Repository Candidate** above is preserved solely as historical release-evidence identity required by retained regression evidence; it does not describe the current eleventh cycle.
 
 ## Truth-status boundary
 `Specified`, `Coded`, `Packaged`, `Automated-QA Green`, `Staging-Accepted`, `Live-Deployed`, and `Operational` remain separate states.
