@@ -407,11 +407,18 @@ final class GCU_Future_Intelligence {
 				$issues[] = 'claim_stale:' . $key;
 			}
 		}
-		$blocks = $wpdb->get_results( "SELECT title,body,cta_label FROM {$t['blocks']} WHERE status='active' LIMIT 500", ARRAY_A );
-		foreach ( is_array( $blocks ) ? $blocks : array() as $block ) {
-			$scan = GCU_Future_Policy::dark_pattern_scan( implode( ' ', array( $block['title'], wp_strip_all_tags( $block['body'] ), $block['cta_label'] ) ) );
-			foreach ( $scan['flags'] as $flag ) {
-				$issues[] = 'active_copy:' . $flag;
+		$wpdb->last_error = '';
+		$blocks = $wpdb->get_results( "SELECT title,body,cta_label FROM {$t['blocks']} WHERE status='active' ORDER BY id ASC LIMIT 501", ARRAY_A );
+		if ( '' !== (string) $wpdb->last_error || ! is_array( $blocks ) ) {
+			$issues[] = 'active_copy_scan_failed';
+		} elseif ( count( $blocks ) > 500 ) {
+			$issues[] = 'active_copy_scan_ceiling_exceeded';
+		} else {
+			foreach ( $blocks as $block ) {
+				$scan = GCU_Future_Policy::dark_pattern_scan( implode( ' ', array( $block['title'], wp_strip_all_tags( $block['body'] ), $block['cta_label'] ) ) );
+				foreach ( $scan['flags'] as $flag ) {
+					$issues[] = 'active_copy:' . $flag;
+				}
 			}
 		}
 		$result = array( 'ok' => empty( $issues ), 'issues' => array_values( array_unique( $issues ) ), 'checked_at' => gmdate( 'c' ) );
