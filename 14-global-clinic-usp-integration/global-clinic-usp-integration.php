@@ -3,7 +3,7 @@
  * Plugin Name: Global Clinic USP and Conversion Integration
  * Plugin URI: https://sabrihomeopathy.com/
  * Description: Canonical, policy-governed Worldwide Clinic value proposition, ethical conversion journeys, destination contracts, trust intelligence and privacy-minimized measurement for the Sabri Social Homeopathy Platform.
- * Version: 1.4.4
+ * Version: 1.4.8
  * Requires at least: 6.6
  * Requires PHP: 7.4
  * Author: Dr. Allamah Majid Hussain Sabri Muhaddith Mursheed
@@ -14,13 +14,14 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'GCU_VERSION', '1.4.4' );
+define( 'GCU_VERSION', '1.4.8' );
 define( 'GCU_SCHEMA_VERSION', 10005 );
 define( 'GCU_PLAN_VERSION', 'SSH-F14-PLAN-2026-v1.0' );
 define( 'GCU_FUTURE_PLAN_VERSION', 'SSH-F14-FUTURE-CTI-2026-v2.0' );
 define( 'GCU_FUTURE_SCHEMA_VERSION', 1 );
 define( 'GCU_CENTRAL_PLAN_BASELINE', '2026-08-10' );
 define( 'GCU_CANONICAL_REPOSITORY', '14-global-clinic-usp-and-conversion-integration' );
+define( 'GCU_CURRENT_REPOSITORY_ALIAS', '14-global-clinic-usp-and-conversion-sections' );
 define( 'GCU_BRAND_PRIMARY', '#087A4E' );
 define( 'GCU_FILE', __FILE__ );
 define( 'GCU_DIR', plugin_dir_path( __FILE__ ) );

@@ -1,8 +1,8 @@
 # File 14 — Second Independent Eighty-Pass Review & Corrective Ledger — v1.4.1
 
-**Baseline re-opened:** `main` at `3c524fb3d6ee481bc222660a56f6192b994e30d0`.  
-**Governing scope:** consolidated central governing plan + `SSH-F14-PLAN-2026-v1.0` + `SSH-F14-FUTURE-CTI-2026-v2.0`.  
-**Method:** eighty independent repository failure classes; a proven defect is corrected before the corresponding final-state gate is accepted.  
+**Baseline re-opened:** `main` at `3c524fb3d6ee481bc222660a56f6192b994e30d0`.
+**Governing scope:** consolidated central governing plan + `SSH-F14-PLAN-2026-v1.0` + `SSH-F14-FUTURE-CTI-2026-v2.0`.
+**Method:** eighty independent repository failure classes; a proven defect is corrected before the corresponding final-state gate is accepted.
 **Truth boundary:** repository/source/test/package evidence only. It does not prove Hostinger staging, deployed artifact, live DB/schema/migration state, live behavior, Founder staging acceptance or operational status.
 
 | Round | Independent review subject | Finding and immediate correction |

@@ -10,3 +10,5 @@ Thumbs.db
 /dist/
 /vendor/
 /node_modules/
+__pycache__/
+*.py[cod]

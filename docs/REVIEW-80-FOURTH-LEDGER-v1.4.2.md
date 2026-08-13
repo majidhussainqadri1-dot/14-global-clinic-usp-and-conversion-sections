@@ -1,7 +1,7 @@
 # File 14 — Fourth Independent Eighty-Pass Review & Corrective Ledger — v1.4.2
 
-**Baseline re-opened:** exact `main` `dd4fe99df824e199da8b8b203d57c6f06d14421c`.  
-**Governing scope:** consolidated central governing plan + `SSH-F14-PLAN-2026-v1.0` + `SSH-F14-FUTURE-CTI-2026-v2.0`.  
+**Baseline re-opened:** exact `main` `dd4fe99df824e199da8b8b203d57c6f06d14421c`.
+**Governing scope:** consolidated central governing plan + `SSH-F14-PLAN-2026-v1.0` + `SSH-F14-FUTURE-CTI-2026-v2.0`.
 **Truth boundary:** repository/source/test/package evidence only; not staging, deployed artifact, live DB/schema/migration, live behavior or operational evidence.
 
 | Round | Independent review subject | Finding and immediate correction |

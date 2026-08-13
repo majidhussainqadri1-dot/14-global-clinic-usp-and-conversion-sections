@@ -1,9 +1,9 @@
 # File 14 — Eighty-Pass Review & Corrective Ledger — v1.4.1
 
-**Scope:** repository/source/governance/test/package evidence for File 14 only.  
-**Governing sources:** consolidated central governing plan; `SSH-F14-PLAN-2026-v1.0`; Founder-approved `SSH-F14-FUTURE-CTI-2026-v2.0`.  
-**Baseline reviewed:** `main` at `34f44f95646ce21299b6f416d5fa39bae4beb769`.  
-**Corrective release:** `1.4.1`; base schema `10004`; Future CTI schema `1`.  
+**Scope:** repository/source/governance/test/package evidence for File 14 only.
+**Governing sources:** consolidated central governing plan; `SSH-F14-PLAN-2026-v1.0`; Founder-approved `SSH-F14-FUTURE-CTI-2026-v2.0`.
+**Baseline reviewed:** `main` at `34f44f95646ce21299b6f416d5fa39bae4beb769`.
+**Corrective release:** `1.4.1`; base schema `10004`; Future CTI schema `1`.
 **Truth boundary:** repository review is not Hostinger staging/live evidence and does not establish deployed-code, DB/schema/migration or operational truth.
 
 Every round re-opened one defined failure class. A defect was corrected before the corresponding final-state gate could pass. “QA-harness defect” means the production implementation was already correct but the newly written review assertion was itself inaccurate and was immediately corrected rather than weakening the product rule.

@@ -235,12 +235,14 @@ final class GCU_Future_Intelligence {
 	}
 
 	public static function rest_quality() {
-		return self::no_store_response( self::quality_score() );
+		$result = self::quality_score();
+		return is_wp_error( $result ) ? $result : self::no_store_response( $result );
 	}
 
 	public static function rest_friction( WP_REST_Request $request ) {
 		$days = max( 1, min( 90, absint( $request->get_param( 'days' ) ? $request->get_param( 'days' ) : 30 ) ) );
-		return self::no_store_response( self::friction_summary( $days ) );
+		$result = self::friction_summary( $days );
+		return is_wp_error( $result ) ? $result : self::no_store_response( $result );
 	}
 
 	public static function rest_scenarios() {
@@ -509,7 +511,9 @@ final class GCU_Future_Intelligence {
 	public static function quality_score() {
 		global $wpdb;
 		$t = GCU_Install::tables();
+		$wpdb->last_error = '';
 		$rows = $wpdb->get_results( "SELECT funnel_stage,COUNT(*) total FROM {$t['events']} WHERE occurred_at>=DATE_SUB(UTC_TIMESTAMP(),INTERVAL 30 DAY) GROUP BY funnel_stage", ARRAY_A );
+		if ( '' !== (string) $wpdb->last_error ) { return new WP_Error( 'gcu_future_quality_query_failed', __( 'Conversion quality data could not be read safely.', 'global-clinic-usp-integration' ), array( 'status' => 503 ) ); }
 		$counts = array();
 		foreach ( is_array( $rows ) ? $rows : array() as $row ) {
 			$counts[ $row['funnel_stage'] ] = (int) $row['total'];
@@ -518,8 +522,12 @@ final class GCU_Future_Intelligence {
 		$loaded = isset( $counts['destination_loaded'] ) ? $counts['destination_loaded'] : 0;
 		$handoff = GCU_Future_Policy::cohort_allowed( $selected ) ? min( 100, round( 100 * $loaded / max( 1, $selected ), 1 ) ) : 0;
 		$parity = self::parity_status();
+		$wpdb->last_error = '';
 		$stale = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$t['claims']} WHERE status='review_required' OR (status='active' AND review_due_at IS NOT NULL AND review_due_at<=UTC_TIMESTAMP())" );
+		if ( '' !== (string) $wpdb->last_error ) { return new WP_Error( 'gcu_future_quality_claim_query_failed', __( 'Claim freshness data could not be read safely.', 'global-clinic-usp-integration' ), array( 'status' => 503 ) ); }
+		$wpdb->last_error = '';
 		$open_reports = (int) $wpdb->get_var( 'SELECT COUNT(*) FROM ' . self::tables()['reports'] . " WHERE status IN ('open','reviewing')" );
+		if ( '' !== (string) $wpdb->last_error ) { return new WP_Error( 'gcu_future_quality_report_query_failed', __( 'Copy-report data could not be read safely.', 'global-clinic-usp-integration' ), array( 'status' => 503 ) ); }
 		$destinations = GCU_Plugin::instance()->contracts()->all_destination_health();
 		$healthy = 0;
 		foreach ( $destinations as $destination ) {
@@ -544,7 +552,9 @@ final class GCU_Future_Intelligence {
 		global $wpdb;
 		$t = GCU_Install::tables();
 		$days = max( 1, min( 90, (int) $days ) );
+		$wpdb->last_error = '';
 		$rows = $wpdb->get_results( $wpdb->prepare( "SELECT funnel_stage,COUNT(*) total FROM {$t['events']} WHERE occurred_at>=DATE_SUB(UTC_TIMESTAMP(),INTERVAL %d DAY) GROUP BY funnel_stage", $days ), ARRAY_A );
+		if ( '' !== (string) $wpdb->last_error ) { return new WP_Error( 'gcu_future_friction_query_failed', __( 'Conversion friction data could not be read safely.', 'global-clinic-usp-integration' ), array( 'status' => 503 ) ); }
 		$total = 0;
 		$stages = array();
 		foreach ( is_array( $rows ) ? $rows : array() as $row ) {
@@ -570,8 +580,18 @@ final class GCU_Future_Intelligence {
 	public static function anomaly_detector() {
 		global $wpdb;
 		$t = GCU_Install::tables();
+		$wpdb->last_error = '';
 		$current = $wpdb->get_row( "SELECT SUM(funnel_stage='cta_selected') selected,SUM(funnel_stage='destination_loaded') loaded FROM {$t['events']} WHERE occurred_at>=DATE_SUB(UTC_TIMESTAMP(),INTERVAL 24 HOUR)", ARRAY_A );
+		$current_error = (string) $wpdb->last_error;
+		$wpdb->last_error = '';
 		$baseline = $wpdb->get_row( "SELECT SUM(funnel_stage='cta_selected') selected,SUM(funnel_stage='destination_loaded') loaded FROM {$t['events']} WHERE occurred_at<DATE_SUB(UTC_TIMESTAMP(),INTERVAL 24 HOUR) AND occurred_at>=DATE_SUB(UTC_TIMESTAMP(),INTERVAL 8 DAY)", ARRAY_A );
+		$baseline_error = (string) $wpdb->last_error;
+		if ( '' !== $current_error || '' !== $baseline_error ) {
+			$result = array( 'status' => 'query_failed', 'severity' => 'high', 'current_sample' => null, 'baseline_sample' => null, 'suppressed' => true, 'threshold' => GCU_Future_Policy::MIN_COHORT, 'checked_at' => gmdate( 'c' ) );
+			update_option( self::LAST_ANOMALY_OPTION, $result, false );
+			GCU_Observability::log( 'error', 'future_anomaly_query_failed', array() );
+			return $result;
+		}
 		$cs = isset( $current['selected'] ) ? (int) $current['selected'] : 0;
 		$cl = isset( $current['loaded'] ) ? (int) $current['loaded'] : 0;
 		$bs = isset( $baseline['selected'] ) ? (int) $baseline['selected'] : 0;
@@ -754,7 +774,25 @@ final class GCU_Future_Intelligence {
 		if ( is_wp_error( $ready ) ) { return array( 'skipped' => 'runtime_unready' ); }
 		global $wpdb;
 		$t = self::tables();
-		$reports=0;$records=0;for($i=0;$i<10;$i++){$n=$wpdb->query($wpdb->prepare("DELETE FROM {$t['reports']} WHERE status IN ('resolved','rejected') AND updated_at<DATE_SUB(UTC_TIMESTAMP(),INTERVAL %d DAY) LIMIT 200",self::REPORT_RETENTION_DAYS));if(false===$n){$reports=false;break;}$reports+=$n;if($n<200){break;}}for($i=0;$i<10;$i++){$n=$wpdb->query("DELETE FROM {$t['records']} WHERE status IN ('superseded','rejected') AND updated_at<DATE_SUB(UTC_TIMESTAMP(),INTERVAL 730 DAY) LIMIT 200");if(false===$n){$records=false;break;}$records+=$n;if($n<200){break;}}if(2000===$reports||2000===$records){GCU_Observability::log('warning','future_lifecycle_cleanup_backlog',array('reports'=>$reports,'records'=>$records));}return array('reports'=>$reports,'records'=>$records);
+		$reports=0;$records=0;
+		for($i=0;$i<10;$i++){
+			$wpdb->last_error='';
+			$rows=$wpdb->get_results($wpdb->prepare("SELECT id,public_id FROM {$t['reports']} WHERE status IN ('resolved','rejected') AND updated_at<DATE_SUB(UTC_TIMESTAMP(),INTERVAL %d DAY) ORDER BY id ASC LIMIT 200",self::REPORT_RETENTION_DAYS),ARRAY_A);
+			if(''!==(string)$wpdb->last_error||!is_array($rows)){$reports=false;break;}
+			$ids=array();foreach($rows as$row){if(!GCU_Privacy::legal_hold_applies('future_report',(string)$row['public_id'])){$ids[]=(int)$row['id'];}}
+			$n=0;if($ids){$ph=implode(',',array_fill(0,count($ids),'%d'));$n=$wpdb->query($wpdb->prepare("DELETE FROM {$t['reports']} WHERE id IN ($ph)",$ids));if(false===$n){$reports=false;break;}$reports+=$n;}
+			if(count($rows)<200){break;}if(0===$n&&count($rows)>=200){GCU_Observability::log('warning','future_report_retention_held_batch',array('scanned'=>count($rows)));break;}
+		}
+		for($i=0;$i<10;$i++){
+			$wpdb->last_error='';$rows=$wpdb->get_results("SELECT id,public_id FROM {$t['records']} WHERE status IN ('superseded','rejected') AND updated_at<DATE_SUB(UTC_TIMESTAMP(),INTERVAL 730 DAY) ORDER BY id ASC LIMIT 200",ARRAY_A);
+			if(''!==(string)$wpdb->last_error||!is_array($rows)){$records=false;break;}
+			$ids=array();foreach($rows as$row){if(!GCU_Privacy::legal_hold_applies('future_record',(string)$row['public_id'])){$ids[]=(int)$row['id'];}}
+			$n=0;if($ids){$ph=implode(',',array_fill(0,count($ids),'%d'));$n=$wpdb->query($wpdb->prepare("DELETE FROM {$t['records']} WHERE id IN ($ph)",$ids));if(false===$n){$records=false;break;}$records+=$n;}
+			if(count($rows)<200){break;}if(0===$n&&count($rows)>=200){GCU_Observability::log('warning','future_record_retention_held_batch',array('scanned'=>count($rows)));break;}
+		}
+		if(false===$reports||false===$records){GCU_Observability::log('error','future_lifecycle_cleanup_failed',array('reports'=>$reports,'records'=>$records));}
+		if(2000===$reports||2000===$records){GCU_Observability::log('warning','future_lifecycle_cleanup_backlog',array('reports'=>$reports,'records'=>$records));}
+		return array('reports'=>$reports,'records'=>$records);
 	}
 
 	public static function create_report( array $data ) {
@@ -807,7 +845,7 @@ final class GCU_Future_Intelligence {
 	}
 
 	public static function upsert_record( $type, $key, $locale, $region, array $payload, $status = 'draft', $is_public = false, $expected = 0, $system = false ) {
-		$ready=self::verify_schema();if(is_wp_error($ready)){return$ready;}$type=sanitize_key($type);$key=sanitize_key($key);$locale=GCU_Policy::sanitize_locale($locale);$region=self::sanitize_region($region);$status=sanitize_key($status);if(!in_array($status,array('draft','suggested','review','active','superseded','rejected'),true)){$status='draft';}$payload=GCU_Hardening::sanitize_structured_value($payload);$encoded=wp_json_encode($payload);if(false===$encoded||strlen($encoded)>self::RECORD_PAYLOAD_MAX){return new WP_Error('gcu_future_record_payload_invalid',__('Future Intelligence record payload is invalid or too large.','global-clinic-usp-integration'),array('status'=>400));}
+		$ready=self::verify_schema();if(is_wp_error($ready)){return$ready;}$type=sanitize_key($type);$key=sanitize_key($key);$locale=GCU_Policy::sanitize_locale($locale);$region=self::sanitize_region($region);$status=sanitize_key($status);if(!$system){$object=$type.':'.$key;$auth=GCU_Capabilities::require_capability(GCU_Capabilities::MANAGE_CONTENT,$object,'future_record_write');if(is_wp_error($auth)){return$auth;}if('active'===$status||$is_public){$approve=GCU_Capabilities::require_capability(GCU_Capabilities::APPROVE_CLAIMS,$object,'future_record_publish');if(is_wp_error($approve)){return$approve;}}}if(!in_array($status,array('draft','suggested','review','active','superseded','rejected'),true)){$status='draft';}$payload=GCU_Hardening::sanitize_structured_value($payload);$encoded=wp_json_encode($payload);if(false===$encoded||strlen($encoded)>self::RECORD_PAYLOAD_MAX){return new WP_Error('gcu_future_record_payload_invalid',__('Future Intelligence record payload is invalid or too large.','global-clinic-usp-integration'),array('status'=>400));}
 		global$wpdb;$t=self::tables();$row=$wpdb->get_row($wpdb->prepare("SELECT * FROM {$t['records']} WHERE record_type=%s AND record_key=%s AND locale=%s AND region=%s",$type,$key,$locale,$region),ARRAY_A);if($row&&!$system&&(int)$expected!==(int)$row['row_version']){return new WP_Error('gcu_future_record_version_conflict',__('The Future Intelligence record changed. Reload it.','global-clinic-usp-integration'),array('status'=>409,'current_version'=>(int)$row['row_version']));}$now=current_time('mysql',true);$review_due=gmdate('Y-m-d H:i:s',time()+GCU_Policy::COPY_REVIEW_DAYS*DAY_IN_SECONDS);$repo=GCU_Plugin::instance()->repository();if(!$repo->begin_owned_transaction()){return new WP_Error('gcu_future_record_transaction_failed',__('The Future Intelligence transaction could not start.','global-clinic-usp-integration'),array('status'=>503));}
 		if($row){$done=$wpdb->query($wpdb->prepare("UPDATE {$t['records']} SET status=%s,is_public=%d,payload=%s,payload_hash=%s,row_version=row_version+1,review_due_at=%s,updated_at=%s WHERE id=%d AND row_version=%d",$status,$is_public?1:0,$encoded,hash('sha256',$encoded),$review_due,$now,(int)$row['id'],(int)$row['row_version']));if(1!==$done||false===$repo->audit('future_record_updated','future_record',$type.':'.$key,'future_intelligence_governance','',$row,array('status'=>$status,'hash'=>hash('sha256',$encoded)))){$repo->rollback_owned_transaction();return new WP_Error('gcu_future_record_update_failed',__('The Future Intelligence record could not be updated with its mandatory audit record.','global-clinic-usp-integration'),array('status'=>409));}$result=array('record_type'=>$type,'record_key'=>$key,'locale'=>$locale,'region'=>$region,'status'=>$status,'row_version'=>(int)$row['row_version']+1);}else{$data=array('record_type'=>$type,'record_key'=>$key,'locale'=>$locale,'region'=>$region,'status'=>$status,'is_public'=>$is_public?1:0,'payload'=>$encoded,'payload_hash'=>hash('sha256',$encoded),'review_due_at'=>$review_due,'created_by'=>$system?0:get_current_user_id(),'created_at'=>$now,'updated_at'=>$now);if(false===$wpdb->insert($t['records'],$data)||false===$repo->audit('future_record_created','future_record',$type.':'.$key,'future_intelligence_governance','',array(),array('status'=>$status,'hash'=>hash('sha256',$encoded)))){$repo->rollback_owned_transaction();return new WP_Error('gcu_future_record_insert_failed',__('The Future Intelligence record could not be created with its mandatory audit record.','global-clinic-usp-integration'),array('status'=>500));}$result=array('record_type'=>$type,'record_key'=>$key,'locale'=>$locale,'region'=>$region,'status'=>$status,'row_version'=>1);}
 		if(!$repo->commit_owned_transaction()){$repo->rollback_owned_transaction();return new WP_Error('gcu_future_record_commit_failed',__('The Future Intelligence record could not be committed safely.','global-clinic-usp-integration'),array('status'=>503));}return$result;
@@ -1027,6 +1065,7 @@ final class GCU_Future_Intelligence {
 		if ( is_wp_error( $ready ) ) { echo '<div class="notice notice-error"><p>' . esc_html( $ready->get_error_message() ) . '</p></div>'; return; }
 		$catalog = GCU_Future_Policy::feature_catalog();
 		$quality = self::quality_score();
+		if ( is_wp_error( $quality ) ) { echo '<div class="notice notice-error"><p>' . esc_html( $quality->get_error_message() ) . '</p></div>'; return; }
 		$parity = self::parity_status();
 		$reports = self::reports( 'open', 50 );
 		$consistency = self::consistency_graph();
