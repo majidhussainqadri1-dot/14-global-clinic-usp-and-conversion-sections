@@ -9,12 +9,13 @@
 - Base File 14 database schema: `10005`; Future CTI additive schema: `1`.
 - The earlier 2026-08-13 twenty-round cycle remains closed in `docs/REVIEW-20-2026-08-13-LEDGER-v1.4.8.md`; it is historical evidence and is not being re-counted as this new cycle.
 - The current eleventh fresh twenty-round cycle is tracked in `docs/REVIEW-20-ELEVENTH-WORKING-LEDGER-v1.4.8.md` and must not be called complete until Round 20 correction/retest and the exact-head gates finish.
+- Rounds 01–19 of the current cycle have now completed their review/correction discipline; the latest fully gated pre-Round-19 head is Round 18 exact head `9cae6f12a193cb7ab57338718ef687a8de272633`, which passed Baseline `31736192037`, Fresh Reviews `31736192260`, and Quality/Package `31736192039`.
 - Deterministic package target: `14-global-clinic-usp-integration-1.4.8.zip` + SHA-256 + file-level SBOM generated only from the exact head being evaluated.
 
 ## Exact-current-head rule
 Historical PRs, commits, workflows and packages are supporting history only. The **exact current PR-head SHA** must independently pass PHP 7.4/8.3 quality, retained policy/contract/reliability/central/Future/history gates, current regression coverage, both fresh post-code reviews, baseline integrity and deterministic package/SBOM before this Repository Candidate can be called `Automated-QA Green`.
 
-Round 01 of the current cycle found that the previous exact final head `5a6877e6035747fa62f1c6c4a7d4f986f62e74b0` failed workflow run `31666916417`: both PHP 7.4 and PHP 8.3 stopped in `third-review-regression-tests.php` because durable exact-current-head wording in this status file no longer matched the retained contract. The first corrected-head retest `31670449006` exposed the retained `Repository Candidate` wording contract. The next exact-head retest `31670609451` exposed historical-evidence wording contracts, and retest `31670770380` proved that the retained fifth 80-pass gate also requires the canonical six-ledger heading. These are all Round 01 correction/retest findings; Round 02 has not started.
+Round 01 of the current cycle found that the previous exact final head `5a6877e6035747fa62f1c6c4a7d4f986f62e74b0` failed workflow run `31666916417`: both PHP 7.4 and PHP 8.3 stopped in `third-review-regression-tests.php` because durable exact-current-head wording in this status file no longer matched the retained contract. The first corrected-head retest `31670449006` exposed the retained `Repository Candidate` wording contract. The next exact-head retest `31670609451` exposed historical-evidence wording contracts, and retest `31670770380` proved that the retained fifth 80-pass gate also requires the canonical six-ledger heading. These were Round 01 correction/retest findings and are retained only as historical evidence; subsequent rounds are recorded in the active working ledger.
 
 After merge, the exact resulting `main` SHA becomes the exact current `main` SHA and repository truth, and must pass applicable workflows again. A green PR head is not a green post-merge main by inference.
 
@@ -46,4 +47,6 @@ External gates remain: real staging install/upgrade and DB/schema verification; 
 
 No `Staging-Accepted`, `Live-Deployed` or `Operational` claim is made here.
 
-**Exact deployed code is unverified; repository-based diagnosis is provisional with respect to the live site.**
+**Exact deployed code ابھی unverified ہے؛ repository-based diagnosis provisional ہے۔**
+
+Historical English status wording retained for compatibility: **Exact deployed code is unverified; repository-based diagnosis is provisional with respect to the live site.**
