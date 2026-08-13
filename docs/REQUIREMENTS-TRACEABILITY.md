@@ -1,12 +1,12 @@
-# File 14 — Fresh Central + File Plan + Future CTI Requirements Traceability — v1.4.7
+# File 14 — Requirements Traceability — v1.4.8
 
 ## Governing freeze
 
-This matrix is the current File 14 traceability baseline for the 2026-08-10 governing plans plus the 2026-08-11 ninth ten-round corrective cycle. Governing specification: consolidated central plan + `SSH-F14-PLAN-2026-v1.0` + Founder-approved additive amendment `SSH-F14-FUTURE-CTI-2026-v2.0`. Repository evidence never substitutes for staging/live evidence.
+This matrix is the current File 14 traceability baseline for the 2026-08-10 governing plans plus the current 2026-08-13 twenty-round corrective cycle. Governing specification: consolidated central plan + `SSH-F14-PLAN-2026-v1.0` + Founder-approved additive amendment `SSH-F14-FUTURE-CTI-2026-v2.0`. Repository evidence never substitutes for staging/live evidence.
 
 Precedence: definitive Islamic rule → latest explicit Founder directive/amendment → consolidated central governing plan → File 14 plan → Future CTI amendment → verified exact repository-head/runtime evidence.
 
-The v1.4.6 eighth-cycle trace remains historical evidence. The v1.4.7 delta adds transactional one-time event-token consumption, strict event/history persistence, repository-level funnel identity, stable pseudonymous-subject fail-close, equal-time owner-event ambiguity fail-close, authoritative creation read-back, Future analytics/safety DB fail-close, personalized cache privacy, and explicit en-US fallback language/direction. Base schema remains `10005`; Future schema remains `1`.
+The v1.4.7 starting trace remains historical evidence. The v1.4.8 delta retains and extends transactional one-time event-token consumption, strict event/history persistence, repository-level funnel identity, stable pseudonymous-subject fail-close, equal-time owner-event ambiguity fail-close, authoritative creation read-back, Future analytics/safety DB fail-close, personalized cache privacy, and explicit en-US fallback language/direction. Base schema remains `10005`; Future schema remains `1`.
 
 ## Canonical ownership
 
@@ -103,4 +103,4 @@ File 14 owns approved Worldwide Clinic value-proposition copy, semantic content 
 
 ## Truth-status rule
 
-`Specified`, `Coded`, `Packaged`, `Automated-QA Green`, `Staging-Accepted`, `Live-Deployed`, and `Operational` are separate statuses. File 14 v1.4.7 may only claim a status supported by current exact-head evidence. Ninth-cycle repository corrections do not alter that rule.
+`Specified`, `Coded`, `Packaged`, `Automated-QA Green`, `Staging-Accepted`, `Live-Deployed`, and `Operational` are separate statuses. File 14 v1.4.8 may only claim a status supported by current exact-head evidence. Ninth-cycle repository corrections do not alter that rule.
