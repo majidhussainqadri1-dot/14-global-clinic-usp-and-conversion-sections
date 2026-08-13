@@ -7,6 +7,7 @@
 - Software candidate: `1.4.8`; base schema `10005`; Future CTI schema `1`.
 - Ownership remains bounded: File 20 shell/slot authority; Files 07/08/09 destination truth; File 25 public visual/design-system truth; File 00 authorization/verification authority where contracted.
 - Draft integration remains PR `#10`; branch naming is historical location, not release truth.
+- No `main merged` claim is made for this candidate; merge status and the exact resulting `main` SHA must be verified independently after an approved merge.
 
 ## Exact-head evidence policy
 Historical green results are supporting history only. The exact current PR-head SHA must be recorded and independently validated before any `Automated-QA Green` claim. The exact review/main SHA being accepted must independently pass PHP 7.4/8.3 quality, all current and retained regression/review gates, including the third independent eighty-pass review, two fresh post-code reviews, baseline integrity, deterministic ZIP, SHA-256 and file-level SBOM. After merge, fresh post-merge exact-main acceptance remains mandatory.
