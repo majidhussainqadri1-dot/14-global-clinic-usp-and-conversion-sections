@@ -8,8 +8,9 @@
 - Software candidate: `1.4.8`.
 - Base File 14 database schema: `10005`; Future CTI additive schema: `1`.
 - The earlier 2026-08-13 twenty-round cycle remains closed in `docs/REVIEW-20-2026-08-13-LEDGER-v1.4.8.md`; it is historical evidence and is not being re-counted as this new cycle.
-- The current eleventh fresh twenty-round cycle is tracked in `docs/REVIEW-20-ELEVENTH-WORKING-LEDGER-v1.4.8.md` and must not be called complete until Round 20 correction/retest and the exact-head gates finish.
-- Rounds 01–19 of the current cycle have now completed their review/correction discipline; the latest fully gated pre-Round-19 head is Round 18 exact head `9cae6f12a193cb7ab57338718ef687a8de272633`, which passed Baseline `31736192037`, Fresh Reviews `31736192260`, and Quality/Package `31736192039`.
+- The current eleventh fresh twenty-round cycle is tracked in `docs/REVIEW-20-ELEVENTH-WORKING-LEDGER-v1.4.8.md`. Rounds 01–20 have completed the required review → end-of-round correction → retest discipline.
+- The latest fully gated pre-Round-20 evidence was Round 19 exact head `b3eebee7272ee4641e6f9201255d59b7b108c5ce`, which passed Baseline `31736400098`, Fresh Reviews `31736400137`, and Quality/Package `31736400093`.
+- Round 20 corrected the final report-workflow defects, removed temporary correction machinery, and added permanent regression coverage. The final exact SHA is intentionally not hard-coded in this file because this documentation commit itself changes the PR head; the exact current PR-head must be resolved and proven by CI after this status/ledger closure.
 - Deterministic package target: `14-global-clinic-usp-integration-1.4.8.zip` + SHA-256 + file-level SBOM generated only from the exact head being evaluated.
 
 ## Exact-current-head rule
@@ -36,7 +37,7 @@ Later retained cycles:
 - `docs/REVIEW-10-NINTH-LEDGER-v1.4.7.md`
 - `docs/REVIEW-20-TENTH-LEDGER-v1.4.8.md` — retained historical status identity: **Tenth Twenty-Round Repository Candidate**.
 - `docs/REVIEW-20-2026-08-13-LEDGER-v1.4.8.md` — later closed twenty-round review cycle.
-- active `docs/REVIEW-20-ELEVENTH-WORKING-LEDGER-v1.4.8.md` — current separate eleventh fresh cycle.
+- `docs/REVIEW-20-ELEVENTH-WORKING-LEDGER-v1.4.8.md` — current separate eleventh fresh cycle, all 20 rounds reviewed/corrected as applicable.
 
 The phrase **Tenth Twenty-Round Repository Candidate** above is preserved solely as historical release-evidence identity required by retained regression evidence; it does not describe the current eleventh cycle.
 
