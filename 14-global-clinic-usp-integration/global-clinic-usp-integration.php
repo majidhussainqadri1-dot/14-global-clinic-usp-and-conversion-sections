@@ -49,6 +49,7 @@ $gcu_files = array(
 	'includes/class-gcu-future-guards.php',
 	'includes/class-gcu-review80-hardening.php',
 	'includes/class-gcu-fifth-review-hardening.php',
+	'includes/class-gcu-eleventh-review-hardening.php',
 );
 
 foreach ( $gcu_files as $gcu_file ) {
@@ -58,6 +59,7 @@ unset( $gcu_files, $gcu_file );
 
 add_filter( 'cron_schedules', array( 'GCU_Install', 'cron_schedules' ) );
 register_activation_hook( GCU_FILE, array( 'GCU_Install', 'activate' ) );
+register_activation_hook( GCU_FILE, array( 'GCU_Eleventh_Review_Hardening', 'activation_verify' ) );
 register_deactivation_hook( GCU_FILE, array( 'GCU_Install', 'deactivate' ) );
 register_deactivation_hook(
 	GCU_FILE,
@@ -72,3 +74,4 @@ add_action( 'plugins_loaded', array( 'GCU_Future_I18n', 'bootstrap' ), 96 );
 add_action( 'plugins_loaded', array( 'GCU_Future_Guards', 'bootstrap' ), 97 );
 add_action( 'plugins_loaded', array( 'GCU_Review80_Hardening', 'bootstrap' ), 98 );
 add_action( 'plugins_loaded', array( 'GCU_Fifth_Review_Hardening', 'bootstrap' ), 99 );
+add_action( 'plugins_loaded', array( 'GCU_Eleventh_Review_Hardening', 'bootstrap' ), 100 );
