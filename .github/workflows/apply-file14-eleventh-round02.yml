@@ -1,0 +1,83 @@
+name: Apply File 14 Eleventh Review Round 02 correction
+on:
+  push:
+    branches: [file14-eleventh-20-round-corrective-review-2026-08-13]
+permissions:
+  contents: write
+jobs:
+  apply:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09
+        with:
+          ref: file14-eleventh-20-round-corrective-review-2026-08-13
+          fetch-depth: 0
+      - name: Apply completed Round 02 corrections
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('14-global-clinic-usp-integration/includes/class-gcu-install.php')
+          s=p.read_text()
+          old="self::schedule();update_option(self::VERSION_OPTION,GCU_VERSION,false);"
+          new="$scheduled=self::schedule();if(is_wp_error($scheduled)){return$scheduled;}update_option(self::VERSION_OPTION,GCU_VERSION,false);"
+          if old not in s: raise SystemExit('install schedule call target not found')
+          s=s.replace(old,new,1)
+          old="public static function schedule(){if(!wp_next_scheduled('gcu_daily_governance_check')){wp_schedule_event(time()+HOUR_IN_SECONDS,'daily','gcu_daily_governance_check');}if(!wp_next_scheduled('gcu_process_outbox')){wp_schedule_event(time()+300,'gcu_five_minutes','gcu_process_outbox');}if(!wp_next_scheduled('gcu_process_inbox')){wp_schedule_event(time()+330,'gcu_five_minutes','gcu_process_inbox');}if(!wp_next_scheduled('gcu_lifecycle_cleanup')){wp_schedule_event(time()+HOUR_IN_SECONDS,'hourly','gcu_lifecycle_cleanup');}}"
+          new="public static function schedule(){foreach(array(array('gcu_daily_governance_check',time()+HOUR_IN_SECONDS,'daily'),array('gcu_process_outbox',time()+300,'gcu_five_minutes'),array('gcu_process_inbox',time()+330,'gcu_five_minutes'),array('gcu_lifecycle_cleanup',time()+HOUR_IN_SECONDS,'hourly'))as$job){if(wp_next_scheduled($job[0])){continue;}$r=wp_schedule_event($job[1],$job[2],$job[0],array(),true);if(is_wp_error($r)||false===$r){$code=is_wp_error($r)?$r->get_error_code():'schedule_failed';GCU_Observability::log('error','cron_schedule_failed',array('hook'=>$job[0],'code'=>$code));return new WP_Error('gcu_cron_schedule_failed',__('File 14 could not schedule a required governance or delivery job.','global-clinic-usp-integration'),array('hook'=>$job[0],'code'=>$code));}}return true;}"
+          if old not in s: raise SystemExit('schedule function target not found')
+          s=s.replace(old,new,1)
+          old="private static function install_lock_active(){global$wpdb;$state=get_option(self::LOCK_OPTION,false);if(!$state){return false;}$at=is_array($state)&&!empty($state['acquired_at'])?(int)$state['acquired_at']:0;if($at&&$at>time()-600){return true;}$name=substr($wpdb->prefix.'gcu-install-upgrade',0,64);$used=$wpdb->get_var($wpdb->prepare('SELECT IS_USED_LOCK(%s)',$name));if(null===$used||false===$used||0===(int)$used){delete_option(self::LOCK_OPTION);GCU_Observability::log('warning','stale_install_lock_recovered',array('age'=>$at?max(0,time()-$at):null));return false;}return true;}"
+          new="private static function install_lock_active(){global$wpdb;$state=get_option(self::LOCK_OPTION,false);if(!$state){return false;}$at=is_array($state)&&!empty($state['acquired_at'])?(int)$state['acquired_at']:0;if($at&&$at>time()-600){return true;}$name=substr($wpdb->prefix.'gcu-install-upgrade',0,64);$wpdb->last_error='';$used=$wpdb->get_var($wpdb->prepare('SELECT IS_USED_LOCK(%s)',$name));if(''!==(string)$wpdb->last_error){GCU_Observability::log('error','install_lock_probe_failed',array('age'=>$at?max(0,time()-$at):null));return true;}if(null===$used||false===$used||0===(int)$used){delete_option(self::LOCK_OPTION);GCU_Observability::log('warning','stale_install_lock_recovered',array('age'=>$at?max(0,time()-$at):null));return false;}return true;}"
+          if old not in s: raise SystemExit('install_lock_active target not found')
+          s=s.replace(old,new,1)
+          p.write_text(s)
+
+          q=Path('scripts/quality.sh')
+          qs=q.read_text()
+          marker='php "$ROOT/tests/eleventh-review-regression-tests.php"\n'
+          if marker not in qs: raise SystemExit('quality marker not found')
+          test_line='php "$ROOT/tests/eleventh-cycle-round02-regression-tests.php"\n'
+          if test_line not in qs: qs=qs.replace(marker,marker+test_line,1)
+          q.write_text(qs)
+
+          t=Path('tests/eleventh-cycle-round02-regression-tests.php')
+          t.write_text(r'''<?php
+          $root = dirname( __DIR__ );
+          $install = file_get_contents( $root . '/14-global-clinic-usp-integration/includes/class-gcu-install.php' );
+          $failures = array();
+          function e11r02_assert( $condition, $message ) { global $failures; if ( ! $condition ) { $failures[] = $message; } }
+          e11r02_assert( false !== strpos( $install, "install_lock_probe_failed" ), 'Stale install-lock ownership probe must expose DB failure.' );
+          e11r02_assert( false !== strpos( $install, "if(''!==(string)$wpdb->last_error)" ), 'Stale install-lock DB probe must inspect last_error.' );
+          e11r02_assert( false !== strpos( $install, "return true;}if(null===$used" ), 'Unknown stale-lock ownership must fail closed.' );
+          e11r02_assert( false !== strpos( $install, "wp_schedule_event($job[1],$job[2],$job[0],array(),true)" ), 'Required cron scheduling must request WP_Error evidence.' );
+          e11r02_assert( false !== strpos( $install, "gcu_cron_schedule_failed" ), 'Required cron scheduling failures must block install/upgrade completion.' );
+          e11r02_assert( false !== strpos( $install, '$scheduled=self::schedule();if(is_wp_error($scheduled)){return$scheduled;}' ), 'Install/upgrade must propagate required cron scheduling failure.' );
+          if ( $failures ) { fwrite( STDERR, "Eleventh-cycle Round 02 regression tests failed:\n- " . implode( "\n- ", $failures ) . "\n" ); exit( 1 ); }
+          echo "Eleventh-cycle Round 02 regression tests: PASS\n";
+          ''')
+
+          ledger=Path('docs/REVIEW-20-ELEVENTH-WORKING-LEDGER-v1.4.8.md')
+          ls=ledger.read_text()
+          oldrow='| 02 | Pending | Not yet reviewed. |'
+          newrow='| 02 | Defect | Full bootstrap/version/dependency/activation/deactivation/uninstall review found two lifecycle fail-open gaps: stale install-lock ownership probing could treat a DB query failure as an unused lock and clear the lock marker; required base cron scheduling failures were ignored while install/upgrade still advanced version/schema truth. After the completed review, the lock probe was made DB-error fail-closed, required cron scheduling now returns/propagates WP_Error evidence, observability markers were added, and dedicated regression coverage was wired into the full quality suite. |'
+          if oldrow not in ls: raise SystemExit('round02 ledger row not found')
+          ledger.write_text(ls.replace(oldrow,newrow,1))
+          PY
+          php -l 14-global-clinic-usp-integration/includes/class-gcu-install.php
+          php -l tests/eleventh-cycle-round02-regression-tests.php
+          php tests/eleventh-cycle-round02-regression-tests.php
+          bash scripts/quality.sh
+          rm -f .github/workflows/apply-file14-eleventh-round02.yml
+      - name: Commit corrected Round 02 state
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git diff --cached --check
+          git commit -m 'File 14 v1.4.8: eleventh review Round 02 lifecycle fail-close hardening'
+          git push origin HEAD:refs/heads/file14-eleventh-20-round-corrective-review-2026-08-13
