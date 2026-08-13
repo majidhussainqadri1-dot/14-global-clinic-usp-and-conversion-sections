@@ -5,18 +5,18 @@
 - Tenth-cycle starting exact repository candidate: v1.4.7 PR #10 head `938b2e4945c2689336997a29ef53abf0a9d8b7b2`, based on `main` `db60c4bc5c37a5c88126b78c31b34c75236f33d7`.
 - Software candidate: `1.4.8`.
 - Base File 14 database schema: `10005`; Future CTI additive schema: `1`.
-- Twenty sequential review rounds were completed with review-first/fix-after-round discipline; defects were found in rounds 03, 04, 05, 06, 07, 08, 09, 10, 12, 13, 14, 15, 17, 18 and 19. Rounds 01, 02, 11, 16 and 20 were clean.
+- Twenty sequential review rounds were completed in the prior tenth-cycle ledger with review-first/fix-after-round discipline; the current additional twenty-round cycle is recorded separately and must not be called complete until its final round and exact-head retest finish.
 - Tenth-cycle hardening covers fail-closed database truth, privacy export/erase and legal holds, repository-level event identity, transactional governance evidence, owner-native Future safety/authorization, idempotency lock recovery, rollback snapshot integrity, audit/migration integrity, locale semantics, queue/health observability and owner-approved evidence-backed destructive purge.
 - Deterministic package target: `14-global-clinic-usp-integration-1.4.8.zip` + SHA-256 + file-level SBOM generated only from the exact head being evaluated.
 - Draft PR: `#10` (historical branch name `file14-seventh-10-round-corrective-review` → `main`); branch naming does not define release identity.
 
 ## Exact-current-head rule
-Historical PRs, commits, workflows and packages are supporting history only. The exact current PR-head SHA must independently pass PHP 7.4/8.3 quality, retained policy/contract/reliability/central/Future/history gates, tenth-cycle regression, both fresh post-code reviews, baseline integrity and deterministic package/SBOM before this candidate can be called `Automated-QA Green`.
+Historical PRs, commits, workflows and packages are supporting history only. The exact current PR-head SHA must independently pass PHP 7.4/8.3 quality, retained policy/contract/reliability/central/Future/history gates, current regression coverage, both fresh post-code reviews, baseline integrity and deterministic package/SBOM before this candidate can be called `Automated-QA Green`.
 
 After merge, the exact resulting `main` SHA becomes the exact current `main` SHA and repository truth, and must pass applicable workflows again. A green PR head is not a green post-merge main by inference.
 
 ## Retained historical review evidence
-The six historical eighty-pass repository review ledgers are:
+The six repository review ledgers are:
 - `docs/REVIEW-80-LEDGER-v1.4.1.md`
 - `docs/REVIEW-80-SECOND-LEDGER-v1.4.1.md`
 - `docs/REVIEW-80-THIRD-LEDGER-v1.4.1.md`
@@ -28,7 +28,8 @@ Later retained cycles:
 - `docs/REVIEW-10-SEVENTH-LEDGER-v1.4.5.md`
 - `docs/REVIEW-10-EIGHTH-LEDGER-v1.4.6.md`
 - `docs/REVIEW-10-NINTH-LEDGER-v1.4.7.md`
-- current repository-candidate record: `docs/REVIEW-20-TENTH-LEDGER-v1.4.8.md`
+- prior repository-candidate record: `docs/REVIEW-20-TENTH-LEDGER-v1.4.8.md`
+- active current sequential cycle: `docs/REVIEW-20-2026-08-13-WORKING-LEDGER.md` until closure.
 
 ## Truth-status boundary
 `Specified`, `Coded`, `Packaged`, `Automated-QA Green`, `Staging-Accepted`, `Live-Deployed`, and `Operational` remain separate states.
