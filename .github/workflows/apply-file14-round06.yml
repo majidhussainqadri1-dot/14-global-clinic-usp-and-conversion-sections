@@ -1,0 +1,69 @@
+name: Apply File 14 Round 06 correction
+on:
+  push:
+    branches: [file14-seventh-10-round-corrective-review]
+permissions:
+  contents: write
+jobs:
+  apply:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09
+        with:
+          ref: file14-seventh-10-round-corrective-review
+          fetch-depth: 0
+      - name: Apply Round 06 ledger fixes only after completed review
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('14-global-clinic-usp-integration/includes/class-gcu-repository.php')
+          s=p.read_text()
+          old="""$r=$wpdb->get_results($wpdb->prepare($sql,$a),ARRAY_A);if(!is_array($r)){return array();}$all_claims=array();"""
+          new="""$wpdb->last_error='';$r=$wpdb->get_results($wpdb->prepare($sql,$a),ARRAY_A);if(''!==(string)$wpdb->last_error||!is_array($r)){GCU_Observability::log('error','active_blocks_read_failed',array('slot'=>$slot,'locale'=>$locale));return array();}$all_claims=array();"""
+          if old not in s: raise SystemExit('active_blocks target not found')
+          s=s.replace(old,new,1)
+          old2="""$rows=$wpdb->get_results($wpdb->prepare($sql,$keys),ARRAY_A);$out=array();foreach(is_array($rows)?$rows:array()as$row){"""
+          new2="""$wpdb->last_error='';$rows=$wpdb->get_results($wpdb->prepare($sql,$keys),ARRAY_A);if(''!==(string)$wpdb->last_error||!is_array($rows)){GCU_Observability::log('error','public_claims_read_failed',array('claim_count'=>count($keys)));return array();}$out=array();foreach($rows as$row){"""
+          if old2 not in s: raise SystemExit('public_claims target not found')
+          s=s.replace(old2,new2,1)
+          p.write_text(s)
+          q=Path('scripts/quality.sh')
+          qs=q.read_text()
+          marker='php "$ROOT/tests/tenth-review-regression-tests.php"\n'
+          if marker not in qs: raise SystemExit('quality marker not found')
+          qs=qs.replace(marker,marker+'php "$ROOT/tests/eleventh-review-regression-tests.php"\n',1)
+          q.write_text(qs)
+          test=Path('tests/eleventh-review-regression-tests.php')
+          test.write_text("""<?php
+$root = dirname( __DIR__ );
+$repo = file_get_contents( $root . '/14-global-clinic-usp-integration/includes/class-gcu-repository.php' );
+$failures = array();
+function eleventh_assert( $condition, $message ) { global $failures; if ( ! $condition ) { $failures[] = $message; } }
+foreach ( array( 'active_blocks_read_failed', 'public_claims_read_failed' ) as $marker ) {
+    eleventh_assert( false !== strpos( $repo, $marker ), 'Public read DB failure marker missing: ' . $marker );
+}
+eleventh_assert( substr_count( $repo, "\\$wpdb->last_error=''" ) >= 2, 'Public repository reads must clear and inspect last_error.' );
+if ( $failures ) { fwrite( STDERR, "Eleventh review regression tests failed:\\n- " . implode( "\\n- ", $failures ) . "\\n" ); exit( 1 ); }
+echo "Eleventh review regression tests: PASS\\n";
+""")
+          PY
+          php -l 14-global-clinic-usp-integration/includes/class-gcu-repository.php
+          php -l tests/eleventh-review-regression-tests.php
+          php tests/eleventh-review-regression-tests.php
+          bash scripts/quality.sh
+          rm -f .github/workflows/apply-file14-round06.yml
+      - name: Commit clean Round 06 corrected state
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE=e7536ee5fbf8754b6d6ca275300a3bd8f1033d28
+          git reset "$BASE"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git diff --cached --check
+          git commit -m 'File 14 v1.4.8: round 06 public-read DB observability hardening'
+          git push --force-with-lease origin HEAD:refs/heads/file14-seventh-10-round-corrective-review
