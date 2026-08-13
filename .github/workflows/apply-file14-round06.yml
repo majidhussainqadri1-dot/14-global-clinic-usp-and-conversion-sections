@@ -80,6 +80,7 @@ jobs:
           php -l tests/contract-tests.php
           php -l tests/eleventh-review-regression-tests.php
           python3 -m py_compile scripts/review80.py
+          rm -rf scripts/__pycache__
           php tests/eleventh-review-regression-tests.php
           bash scripts/quality.sh
           rm -f .github/workflows/apply-file14-round06.yml
