@@ -14,10 +14,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 P = ROOT / "14-global-clinic-usp-integration"
 
-
 def read(path: str) -> str:
     return (ROOT / path).read_text(encoding="utf-8")
-
 
 loader = read("14-global-clinic-usp-integration/global-clinic-usp-integration.php")
 future_policy = read("14-global-clinic-usp-integration/includes/class-gcu-future-policy.php")
@@ -72,7 +70,7 @@ checks: list[tuple[str, bool]] = [
     ("11 REST post-dispatch hardening scoped to File 14 namespace", "0 !== strpos( $route, '/gcu/v1/' )" in review),
     ("12 contract regression follows current version/tag", current_version and current_version in contract_tests and f"Stable tag: {current_version}" in contract_tests),
     ("13 contract scope assertion is literal and non-interpolating", "strpos($review,'0 !== strpos( $route, \\'/gcu/v1/\\' )')" in contract_tests),
-    ("14 central-plan regression follows current version", current_version and current_version in central_tests and f"Stable tag: {current_version}" in central_tests),
+    ("14 central-plan regression follows current version", "version_compare($version,'1.4.8','>=')" in central_tests and "Stable tag: '.$version" in central_tests and "GCU_VERSION', '" in central_tests and "$version" in central_tests),
     ("15 STATUS follows current repository candidate truth", current_version and f"v{current_version}" in status and f"Software candidate: `{current_version}`" in status),
     ("16 release-evidence follows current candidate truth", current_version and f"v{current_version}" in release and f"Software candidate: `{current_version}`" in release),
     ("17 corrective round ledger and complete defect index exist", "Defects were discovered in rounds **02, 03, 04, 05, 06, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 38, 40 and 58**" in ledger and "| 80 |" in ledger),
@@ -134,8 +132,8 @@ checks: list[tuple[str, bool]] = [
     ("73 degraded routes remain noindex", "noindex,nofollow" in frontend),
     ("74 inline executable markup remains forbidden by quality gate", "onclick=|onerror=|onload=|javascript:" in quality),
     ("75 embedded-secret scan remains in quality gate", "Potential embedded secret detected" in quality),
-    ("76 PHP 7.4 exact-head workflow target retained", "php: ['7.4','8.3']" in workflow and f"Version: {current_version}" in fresh1),
-    ("77 PHP 8.3 exact-head workflow target retained", "php: ['7.4','8.3']" in workflow and f"Stable tag: {current_version}" in fresh2),
+    ("76 PHP 7.4 exact-head workflow target retained", "php: ['7.4','8.3']" in workflow and 'version_compare($argv[1],"1.4.8",">=")' in fresh1 and "GCU_VERSION', '$version'" in fresh1),
+    ("77 PHP 8.3 exact-head workflow target retained", "php: ['7.4','8.3']" in workflow and 'version="$(sed -nE' in fresh2 and 'Stable tag: $version' in fresh2),
     ("78 deterministic double-build gate retained", "Deterministic double-build mismatch" in build),
     ("79 ZIP path/CRC + SHA-256 + file-level SBOM gate retained", "Unsafe archive path" in build and "file-sha256-sbom-v1" in build and "package_sha256" in workflow and "version = hm.group(1)" in workflow),
     ("80 truth-status / Live-First boundary remains explicit", "Never infer staging or live state from this repository alone" in root_readme and "No `Staging-Accepted`, `Live-Deployed` or `Operational` claim" in status),

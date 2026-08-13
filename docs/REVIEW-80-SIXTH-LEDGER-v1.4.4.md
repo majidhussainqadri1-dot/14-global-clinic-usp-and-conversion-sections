@@ -1,14 +1,14 @@
 # Sixth Independent Eighty-Pass Review — File 14 v1.4.4
 
-**Baseline reviewed:** exact `main` `d40a366e8e1c2c2e8a8327f8286803a0aa95c7d7`  
-**Plan basis:** `SSH-F14-PLAN-2026-v1.0`, `SSH-F14-FUTURE-CTI-2026-v2.0`, consolidated central governing plan.  
+**Baseline reviewed:** exact `main` `d40a366e8e1c2c2e8a8327f8286803a0aa95c7d7`
+**Plan basis:** `SSH-F14-PLAN-2026-v1.0`, `SSH-F14-FUTURE-CTI-2026-v2.0`, consolidated central governing plan.
 **Truth class:** repository/source/automated-QA evidence only. This ledger is not staging, deployed-code, live DB/migration, Founder acceptance or operational evidence.
 
 The review discipline was: inspect one independent concern, correct a discovered defect immediately, then continue the next concern against the corrected tree. The final 80-gate executable review is `scripts/review80-sixth.py`; critical regressions are also frozen in `tests/sixth-review-regression-tests.php`.
 
 ## Defect-bearing review rounds
 
-**Substantive defects were found in rounds:** **03, 08–32**.  
+**Substantive defects were found in rounds:** **03, 08–32**.
 Rounds **01–02, 04–07 and 33–80** found no additional substantive repository defect after the preceding corrections were incorporated.
 
 | Round | Review focus | Result / correction |

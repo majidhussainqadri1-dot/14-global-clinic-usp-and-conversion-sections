@@ -1,29 +1,19 @@
-# Release Evidence — v1.4.4 Sixth-Review Repository Candidate
+# Release Evidence — v1.4.8 Tenth Twenty-Round Repository Candidate
 
 ## Governing scope
-
 - Base plan: `SSH-F14-PLAN-2026-v1.0`.
-- Additive Founder-approved amendment: `SSH-F14-FUTURE-CTI-2026-v2.0`.
-- Sixth-review baseline: exact post-fifth-review `main` `d40a366e8e1c2c2e8a8327f8286803a0aa95c7d7`.
-- Software candidate: `1.4.4`.
-- Base schema: `10005`; Future CTI additive schema: `1`.
-- Requirements retained: original File 14 FR/NFR plus `F14-FUT-01`–`F14-FUT-24`.
-- Ownership remains bounded: no doctor/clinic/application/appointment/payment/verification/shell source of truth is created here.
+- Founder-approved additive amendment: `SSH-F14-FUTURE-CTI-2026-v2.0`.
+- Tenth-cycle starting exact repository candidate: v1.4.7 PR #10 head `938b2e4945c2689336997a29ef53abf0a9d8b7b2`, based on `main` `db60c4bc5c37a5c88126b78c31b34c75236f33d7`.
+- Software candidate: `1.4.8`; base schema `10005`; Future CTI schema `1`.
+- Ownership remains bounded: File 20 shell/slot authority; Files 07/08/09 destination truth; File 25 public visual/design-system truth; File 00 authorization/verification authority where contracted.
+- Draft integration remains PR `#10`; branch naming is historical location, not release truth.
+- No `main merged` claim is made for this candidate; merge status and the exact resulting `main` SHA must be verified independently after an approved merge.
 
 ## Exact-head evidence policy
+Historical green results are supporting history only. The exact current PR-head SHA must be recorded and independently validated before any `Automated-QA Green` claim. The exact review/main SHA being accepted must independently pass PHP 7.4/8.3 quality, all current and retained regression/review gates, including the third independent eighty-pass review, two fresh post-code reviews, baseline integrity, deterministic ZIP, SHA-256 and file-level SBOM. After merge, fresh post-merge exact-main acceptance remains mandatory.
 
-Historical green results are supporting history only. For every current File 14 source state, the exact review/main SHA being accepted must independently prove PHP 7.4 and PHP 8.3 quality, policy/contract/reliability/central/Future and dedicated regression tests including sixth-review regressions, all six independent eighty-pass gates, two fresh post-code review rounds, secret/inline/stale-token/deprecated-helper scans, deterministic double-build ZIP, SHA-256/file-level SBOM, baseline integrity, PR-head parity and **fresh post-merge** exact-main acceptance.
-
-The **third independent eighty-pass** review established the durable exact-current-main rule; the fourth, fifth and sixth reviews retain and strengthen that rule rather than replacing it.
-
-`Automated-QA Green`, `Packaged`, `main merged`, `Staging-Accepted`, `Live-Deployed` and `Operational` remain separate evidence claims.
-
-## Sixth-review corrective evidence areas
-
-The sixth independent review reopened exact post-fifth-review `main` and corrected additional failure classes: request-time File20 slot readiness, stable audit/privacy HMAC identities and guarded legacy migration, audit-integrity containment, mandatory admin audit truth, actual Future schema verification before safe-mode exit, nested owner mutation/audit/outbox atomicity, payload-bound idempotency and command completion, stale install-lock recovery, bounded-draining retention, stable privacy export/erase linkage, read-back verified inbound owner state, fail-closed migration/rate-limit failures, conversion-event/outbox atomicity, atomic Future report/record governance, transactional early-stop parity, and stable bounded cursor pagination.
-
-Round-by-round evidence is maintained in:
-
+## Retained historical evidence
+The six historical eighty-pass repository review ledgers remain part of release truth:
 - `docs/REVIEW-80-LEDGER-v1.4.1.md`
 - `docs/REVIEW-80-SECOND-LEDGER-v1.4.1.md`
 - `docs/REVIEW-80-THIRD-LEDGER-v1.4.1.md`
@@ -31,8 +21,20 @@ Round-by-round evidence is maintained in:
 - `docs/REVIEW-80-FIFTH-LEDGER-v1.4.3.md`
 - `docs/REVIEW-80-SIXTH-LEDGER-v1.4.4.md`
 
-## External evidence still mandatory
+Later retained cycles:
+- `docs/REVIEW-10-SEVENTH-LEDGER-v1.4.5.md`
+- `docs/REVIEW-10-EIGHTH-LEDGER-v1.4.6.md`
+- `docs/REVIEW-10-NINTH-LEDGER-v1.4.7.md`
+- current repository-candidate record: `docs/REVIEW-20-TENTH-LEDGER-v1.4.8.md`
 
-Repository success cannot prove WordPress/Hostinger staging or live behavior. Staging, deployed code, live DB/schema/migration and operational behavior remain separate evidence classes. Separate gates still include exact deployed artifact/checksum parity, fresh install/upgrade with real WordPress/MySQL/InnoDB, File00/07/08/09/20/24/25 integration, browser/accessibility/RTL/LTR/400% zoom evidence, performance/failure drills, verified backup restore and rollback rehearsal, explicit Founder staging acceptance, production deployment, live smoke tests, monitoring and deployed-artifact parity confirmation.
+## Tenth twenty-round corrective evidence areas
+The tenth cycle reviewed exact v1.4.7 PR-head repository truth sequentially. Every numbered round was completed before that round's defects were corrected; only after correction/retest did the next round begin. Defects were found in rounds **03, 04, 05, 06, 07, 08, 09, 10, 12, 13, 14, 15, 17, 18 and 19**; rounds **01, 02, 11, 16 and 20** were clean.
+
+Corrections include: fail-closed event identity and token storage; fail-closed privacy export/erase; exact repository duplicate identity; governed content supersession; repository-layer semantic/ethical workflow gates; native Future write/publication authorization; explicit DB-read failures across mutation paths; idempotency lock-claim recovery; verified rollback snapshot evidence; audit/integrity migration fail-close; scoped legal holds and retention evidence; correct fallback-content language semantics without overriding UI locale; queue/health database-failure observability; owner-approved backup/restore-backed destructive purge with durable receipt; and release-forward QA/fresh-review gates plus dedicated tenth-cycle regression coverage.
+
+## External evidence still mandatory
+Repository success cannot prove WordPress/Hostinger staging or live behavior. Staging, deployed code, live DB/schema/migration and operational behavior remain separate evidence classes. Mandatory external gates include exact deployed-artifact parity/checksum; fresh install/upgrade with real WordPress/MySQL/InnoDB; File00/07/08/09/20/24/25 integration; browser/accessibility/RTL/LTR/400% zoom; performance/provider/DB/queue failure drills; privacy export/erase/legal-hold; consent/GPC; verified backup/restore/rollback; Founder staging acceptance; controlled production deployment; live smoke tests; and live artifact parity confirmation.
 
 No `Staging-Accepted`, `Live-Deployed` or `Operational` claim is made by this repository document.
+
+**Exact deployed code is unverified; repository-based diagnosis is provisional with respect to the live site.**

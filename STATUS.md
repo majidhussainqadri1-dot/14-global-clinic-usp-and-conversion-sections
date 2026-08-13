@@ -1,47 +1,53 @@
-# File 14 Status — v1.4.4 Sixth-Review Repository Candidate
+# File 14 Status — v1.4.8 Eleventh Fresh Twenty-Round Repository Candidate
 
 ## Repository coding status
-
 - Governing freeze: consolidated central governing plan + `SSH-F14-PLAN-2026-v1.0` + Founder-approved additive amendment `SSH-F14-FUTURE-CTI-2026-v2.0` dated 2026-08-10.
-- Sixth-review baseline: exact post-fifth-review `main` `d40a366e8e1c2c2e8a8327f8286803a0aa95c7d7`.
-- Software candidate: `1.4.4`.
-- Base File 14 database schema: `10005`.
-- Future CTI additive schema: `1` (`gcu_future_records`, `gcu_future_reports`).
-- The 24 Future CTI requirements `F14-FUT-01` through `F14-FUT-24` remain inside File 14's approved trust/conversion scope; File 14 does not become doctor, clinic, appointment, payment, verification or shell source of truth.
-- File 20 remains the sole shell/navigation owner; Files 07/08/09 remain canonical doctor/directory/clinic/onboarding owners.
-- Sixth-review hardening adds request-time File20 placement fail-close, stable File14 audit/privacy HMAC identities with guarded legacy migration, nested owner transaction/audit/outbox atomicity, payload-bound idempotency, stale install-lock recovery, read-back verified inbound owner state, fail-closed migration/rate-limit errors, atomic Future report/record governance, cursor pagination and bounded-draining retention cleanup.
-- Deterministic package target: `14-global-clinic-usp-integration-1.4.4.zip` + SHA-256 + file-level SBOM, generated only from the exact head being evaluated.
+- Previous closed review baseline: exact repository head `5a6877e6035747fa62f1c6c4a7d4f986f62e74b0`, based ultimately on `main` `db60c4bc5c37a5c88126b78c31b34c75236f33d7`.
+- Current review branch: `file14-eleventh-20-round-corrective-review-2026-08-13`.
+- Current draft integration PR: `#11` → `main`.
+- Software candidate: `1.4.8`.
+- Base File 14 database schema: `10005`; Future CTI additive schema: `1`.
+- The earlier 2026-08-13 twenty-round cycle remains closed in `docs/REVIEW-20-2026-08-13-LEDGER-v1.4.8.md`; it is historical evidence and is not being re-counted as this new cycle.
+- The current eleventh fresh twenty-round cycle is tracked in `docs/REVIEW-20-ELEVENTH-WORKING-LEDGER-v1.4.8.md`. Rounds 01–20 have completed the required review → end-of-round correction → retest discipline.
+- The latest fully gated pre-Round-20 evidence was Round 19 exact head `b3eebee7272ee4641e6f9201255d59b7b108c5ce`, which passed Baseline `31736400098`, Fresh Reviews `31736400137`, and Quality/Package `31736400093`.
+- Round 20 corrected the final report-workflow defects, removed temporary correction machinery, and added permanent regression coverage. The final exact SHA is intentionally not hard-coded in this file because this documentation commit itself changes the PR head; the exact current PR-head must be resolved and proven by CI after this status/ledger closure.
+- Deterministic package target: `14-global-clinic-usp-integration-1.4.8.zip` + SHA-256 + file-level SBOM generated only from the exact head being evaluated.
 
 ## Exact-current-head rule
+Historical PRs, commits, workflows and packages are supporting history only. The **exact current PR-head SHA** must independently pass PHP 7.4/8.3 quality, retained policy/contract/reliability/central/Future/history gates, current regression coverage, both fresh post-code reviews, baseline integrity and deterministic package/SBOM before this Repository Candidate can be called `Automated-QA Green`.
 
-Historical PRs, commits and green workflow runs are supporting history only. They are not current repository truth merely because they once passed. No historical ledger or merge may substitute for verification of the **exact current `main` SHA** when a main-branch release state is claimed.
+Round 01 of the current cycle found that the previous exact final head `5a6877e6035747fa62f1c6c4a7d4f986f62e74b0` failed workflow run `31666916417`: both PHP 7.4 and PHP 8.3 stopped in `third-review-regression-tests.php` because durable exact-current-head wording in this status file no longer matched the retained contract. The first corrected-head retest `31670449006` exposed the retained `Repository Candidate` wording contract. The next exact-head retest `31670609451` exposed historical-evidence wording contracts, and retest `31670770380` proved that the retained fifth 80-pass gate also requires the canonical six-ledger heading. These were Round 01 correction/retest findings and are retained only as historical evidence; subsequent rounds are recorded in the active working ledger.
 
-This sixth-review branch may be described as a repository candidate only until the **exact final branch SHA** independently passes PHP 7.4/8.3 quality, all six eighty-pass regression gates, both fresh post-code reviews, baseline integrity and deterministic package/SBOM. After merge, the exact resulting `main` SHA must pass the applicable workflows again before `Automated-QA Green` is claimed for `main`.
+After merge, the exact resulting `main` SHA becomes the exact current `main` SHA and repository truth, and must pass applicable workflows again. A green PR head is not a green post-merge main by inference.
 
+## Retained historical review evidence
 The six repository review ledgers are:
+- `docs/REVIEW-80-LEDGER-v1.4.1.md`
+- `docs/REVIEW-80-SECOND-LEDGER-v1.4.1.md`
+- `docs/REVIEW-80-THIRD-LEDGER-v1.4.1.md`
+- `docs/REVIEW-80-FOURTH-LEDGER-v1.4.2.md`
+- `docs/REVIEW-80-FIFTH-LEDGER-v1.4.3.md`
+- `docs/REVIEW-80-SIXTH-LEDGER-v1.4.4.md`
 
-- `docs/REVIEW-80-LEDGER-v1.4.1.md` — first eighty-pass corrective review.
-- `docs/REVIEW-80-SECOND-LEDGER-v1.4.1.md` — second independent eighty-pass review.
-- `docs/REVIEW-80-THIRD-LEDGER-v1.4.1.md` — third independent eighty-pass review.
-- `docs/REVIEW-80-FOURTH-LEDGER-v1.4.2.md` — fourth independent eighty-pass review.
-- `docs/REVIEW-80-FIFTH-LEDGER-v1.4.3.md` — fifth independent eighty-pass review.
-- `docs/REVIEW-80-SIXTH-LEDGER-v1.4.4.md` — sixth independent eighty-pass review reopened from exact post-fifth-review main.
+Those six are retained historical eighty-pass evidence; they do not rename or re-count the current cycle.
 
-No ledger or historical merge SHA is allowed to substitute for exact-current-head evidence.
+Later retained cycles:
+- `docs/REVIEW-10-SEVENTH-LEDGER-v1.4.5.md`
+- `docs/REVIEW-10-EIGHTH-LEDGER-v1.4.6.md`
+- `docs/REVIEW-10-NINTH-LEDGER-v1.4.7.md`
+- `docs/REVIEW-20-TENTH-LEDGER-v1.4.8.md` — retained historical status identity: **Tenth Twenty-Round Repository Candidate**.
+- `docs/REVIEW-20-2026-08-13-LEDGER-v1.4.8.md` — later closed twenty-round review cycle.
+- `docs/REVIEW-20-ELEVENTH-WORKING-LEDGER-v1.4.8.md` — current separate eleventh fresh cycle, all 20 rounds reviewed/corrected as applicable.
+
+The phrase **Tenth Twenty-Round Repository Candidate** above is preserved solely as historical release-evidence identity required by retained regression evidence; it does not describe the current eleventh cycle.
 
 ## Truth-status boundary
-
 `Specified`, `Coded`, `Packaged`, `Automated-QA Green`, `Staging-Accepted`, `Live-Deployed`, and `Operational` remain separate states.
 
-The following remain external release gates until independently proven in the target environment:
+External gates remain: real staging install/upgrade and DB/schema verification; File00/07/08/09/20/24/25 real-role integration; browser/accessibility/RTL/LTR/400% zoom testing; performance/provider/DB/queue failure drills; privacy export/erase/legal-hold and consent/GPC journeys; backup/restore/rollback rehearsal; Founder staging acceptance; controlled production deployment; live smoke test; and deployed-artifact checksum/parity confirmation.
 
-- Hostinger-equivalent fresh install and upgrade/migration acceptance, including real verification of base schema `10005` and Future schema `1` with the exact deployed package.
-- Real File 00/07/08/09/20/24/25 integration and normal/degraded/unauthorized journeys.
-- Real WordPress/MySQL rollback/restore rehearsal and backup consistency evidence.
-- 320–1920px, 400% zoom, keyboard, screen-reader, English LTR and Urdu/Arabic RTL human acceptance.
-- Measured p75/p95 performance, slow-network behavior and provider/queue/cache/DB failure drills.
-- Claim freshness/revalidation, policy parity, experiment preflight/early-stop, copy-report correction, privacy export/erase, low-bandwidth/GPC/consent and audit/outbox containment scenarios in the target environment.
-- Founder visual/copy/functional staging acceptance.
-- Controlled production deployment, live smoke test, monitoring and deployed-artifact parity confirmation.
+No `Staging-Accepted`, `Live-Deployed` or `Operational` claim is made here.
 
-No `Staging-Accepted`, `Live-Deployed` or `Operational` claim is made by this repository status file.
+**Exact deployed code ابھی unverified ہے؛ repository-based diagnosis provisional ہے۔**
+
+Historical English status wording retained for compatibility: **Exact deployed code is unverified; repository-based diagnosis is provisional with respect to the live site.**

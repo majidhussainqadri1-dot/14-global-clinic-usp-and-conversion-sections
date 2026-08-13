@@ -217,11 +217,15 @@ final class GCU_Fifth_Review_Hardening {
 
 		global $wpdb;
 		$future_tables = GCU_Future_Intelligence::tables();
+		$wpdb->last_error = '';
 		$open_reports = (int) $wpdb->get_var(
 			"SELECT COUNT(*) FROM {$future_tables['reports']} WHERE status IN ('open','reviewing') AND created_at>=DATE_SUB(UTC_TIMESTAMP(),INTERVAL 7 DAY)"
 		);
+		$report_query_failed = '' !== (string) $wpdb->last_error;
+		if ( $report_query_failed ) { GCU_Observability::log( 'error', 'future_early_stop_report_query_failed', array() ); }
 		$breach = empty( $parity['ok'] )
 			|| $destination_failure
+			|| $report_query_failed
 			|| $open_reports >= 5
 			|| ( isset( $anomaly['severity'] ) && 'high' === $anomaly['severity'] );
 		if ( ! $breach ) {

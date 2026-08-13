@@ -30,6 +30,7 @@ final class GCU_Hardening {
 	public static function acquire_db_lock( $scope, $timeout = 2 ) {
 		global $wpdb;
 		$scope = preg_replace( '/[^a-zA-Z0-9:_\-]/', '', (string) $scope );
+		if ( '' === $scope ) { return false; }
 		$name = substr( $wpdb->prefix . 'gcu:' . $scope, 0, 64 );
 		if ( '' === $name ) { return false; }
 		$ok = (int) $wpdb->get_var( $wpdb->prepare( 'SELECT GET_LOCK(%s, %d)', $name, max( 0, min( 5, (int) $timeout ) ) ) );
@@ -83,15 +84,25 @@ final class GCU_Hardening {
 	}
 
 	public static function request_fingerprint( $value ) {
-		$normalize = static function ( $v ) use ( &$normalize ) {
+		$valid = true;
+		$nodes = 0;
+		$normalize = static function ( $v, $depth = 0 ) use ( &$normalize, &$valid, &$nodes ) {
+			$nodes++;
+			if ( $depth > 8 || $nodes > 2000 ) { $valid = false; return null; }
 			if ( is_array( $v ) ) {
-				if ( array_keys( $v ) !== range( 0, count( $v ) - 1 ) ) { ksort( $v, SORT_STRING ); }
-				foreach ( $v as $k => $child ) { $v[ $k ] = $normalize( $child ); }
+				if ( count( $v ) > 500 ) { $valid = false; return null; }
+				$is_list = array_keys( $v ) === range( 0, count( $v ) - 1 );
+				if ( ! $is_list ) { ksort( $v, SORT_STRING ); }
+				foreach ( $v as $k => $child ) { $v[ $k ] = $normalize( $child, $depth + 1 ); }
+				return $v;
 			}
-			return $v;
+			if ( is_bool( $v ) || is_int( $v ) || is_float( $v ) || null === $v || is_string( $v ) ) { return $v; }
+			$valid = false;
+			return null;
 		};
-		$encoded = wp_json_encode( $normalize( self::sanitize_structured_value( $value ) ) );
-		return false === $encoded ? '' : hash( 'sha256', $encoded );
+		$encoded = wp_json_encode( $normalize( $value ) );
+		if ( ! $valid || false === $encoded || strlen( $encoded ) > 1048576 ) { return ''; }
+		return hash( 'sha256', $encoded );
 	}
 
 	public static function command_key( $name, $supplied = '' ) {

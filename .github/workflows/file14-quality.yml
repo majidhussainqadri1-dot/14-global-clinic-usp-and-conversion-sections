@@ -16,6 +16,10 @@ jobs:
         php: ['7.4','8.3']
     steps:
       - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - name: Verify exact checkout SHA
+        run: test "$(git rev-parse HEAD)" = "${{ github.event.pull_request.head.sha || github.sha }}"
       - uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # v2 pinned
         with:
           php-version: ${{ matrix.php }}
@@ -27,6 +31,10 @@ jobs:
     needs: php-quality
     steps:
       - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - name: Verify exact checkout SHA
+        run: test "$(git rev-parse HEAD)" = "${{ github.event.pull_request.head.sha || github.sha }}"
       - run: bash scripts/build.sh
       - name: Verify exact-version package, checksum and SBOM
         run: |
@@ -57,6 +65,6 @@ jobs:
           PY
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4 pinned
         with:
-          name: file-14-package-${{ github.sha }}
+          name: file-14-package-${{ github.event.pull_request.head.sha || github.sha }}
           path: dist/*
           if-no-files-found: error

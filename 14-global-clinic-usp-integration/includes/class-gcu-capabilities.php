@@ -48,7 +48,8 @@ final class GCU_Capabilities {
 		if ( ! $allowed ) { return false; }
 		// File 00 owns versioned authorization truth. Native WordPress capabilities are necessary, never sufficient.
 		if ( ! self::authorization_adapter_available() ) { return false; }
-		return (bool) apply_filters( 'gcu_authorize', true, $capability, $object, sanitize_key( $purpose ) );
+		// Fail closed: a registered adapter must explicitly grant this exact action/object/purpose.
+		return true === apply_filters( 'gcu_authorize', false, $capability, $object, sanitize_key( $purpose ) );
 	}
 
 	public static function require_capability( $capability, $object = null, $purpose = '' ) {
