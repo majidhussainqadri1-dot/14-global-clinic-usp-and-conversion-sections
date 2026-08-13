@@ -1,35 +1,33 @@
-# File 14 Status — v1.4.8 Tenth Twenty-Round Repository Candidate
+# File 14 Status — v1.4.8 Current Twenty-Round Repository Candidate
 
 ## Repository coding status
 - Governing freeze: consolidated central governing plan + `SSH-F14-PLAN-2026-v1.0` + Founder-approved additive amendment `SSH-F14-FUTURE-CTI-2026-v2.0` dated 2026-08-10.
-- Tenth-cycle starting exact repository candidate: v1.4.7 PR #10 head `938b2e4945c2689336997a29ef53abf0a9d8b7b2`, based on `main` `db60c4bc5c37a5c88126b78c31b34c75236f33d7`.
+- Current-cycle starting exact repository candidate: v1.4.7 PR #10 head `938b2e4945c2689336997a29ef53abf0a9d8b7b2`, based on `main` `db60c4bc5c37a5c88126b78c31b34c75236f33d7`.
 - Software candidate: `1.4.8`.
 - Base File 14 database schema: `10005`; Future CTI additive schema: `1`.
-- Twenty sequential review rounds were completed in the prior tenth-cycle ledger with review-first/fix-after-round discipline; the current additional twenty-round cycle is recorded separately and must not be called complete until its final round and exact-head retest finish.
-- Tenth-cycle hardening covers fail-closed database truth, privacy export/erase and legal holds, repository-level event identity, transactional governance evidence, owner-native Future safety/authorization, idempotency lock recovery, rollback snapshot integrity, audit/migration integrity, locale semantics, queue/health observability and owner-approved evidence-backed destructive purge.
-- Deterministic package target: `14-global-clinic-usp-integration-1.4.8.zip` + SHA-256 + file-level SBOM generated only from the exact head being evaluated.
+- The current 2026-08-13 twenty-round sequential corrective review is complete at the review/repair level. Every round was fully reviewed before that round's corrections began; correction/retest completed before the next round. Final ledger: `docs/REVIEW-20-2026-08-13-LEDGER-v1.4.8.md`.
+- Defect rounds in this current cycle: `01, 06, 07, 08, 09, 10, 11, 19, 20`.
+- Deterministic package target: `14-global-clinic-usp-integration-1.4.8.zip` + SHA-256 + file-level SBOM generated only from the exact final head being evaluated.
 - Draft PR: `#10` (historical branch name `file14-seventh-10-round-corrective-review` → `main`); branch naming does not define release identity.
 
 ## Exact-current-head rule
-Historical PRs, commits, workflows and packages are supporting history only. The exact current PR-head SHA must independently pass PHP 7.4/8.3 quality, retained policy/contract/reliability/central/Future/history gates, current regression coverage, both fresh post-code reviews, baseline integrity and deterministic package/SBOM before this candidate can be called `Automated-QA Green`.
+Historical PRs, commits, workflows and packages are supporting history only. The exact final PR-head SHA produced by the Round 20 corrections must independently pass PHP 7.4/8.3 quality, retained policy/contract/reliability/central/Future/history gates, current regression coverage, both fresh post-code reviews, baseline integrity and deterministic package/SBOM before this candidate can be called `Automated-QA Green`.
 
 After merge, the exact resulting `main` SHA becomes the exact current `main` SHA and repository truth, and must pass applicable workflows again. A green PR head is not a green post-merge main by inference.
 
-## Retained historical review evidence
-The six repository review ledgers are:
+## Retained review evidence
+Historical ledgers remain retained through:
 - `docs/REVIEW-80-LEDGER-v1.4.1.md`
 - `docs/REVIEW-80-SECOND-LEDGER-v1.4.1.md`
 - `docs/REVIEW-80-THIRD-LEDGER-v1.4.1.md`
 - `docs/REVIEW-80-FOURTH-LEDGER-v1.4.2.md`
 - `docs/REVIEW-80-FIFTH-LEDGER-v1.4.3.md`
 - `docs/REVIEW-80-SIXTH-LEDGER-v1.4.4.md`
-
-Later retained cycles:
 - `docs/REVIEW-10-SEVENTH-LEDGER-v1.4.5.md`
 - `docs/REVIEW-10-EIGHTH-LEDGER-v1.4.6.md`
 - `docs/REVIEW-10-NINTH-LEDGER-v1.4.7.md`
-- prior repository-candidate record: `docs/REVIEW-20-TENTH-LEDGER-v1.4.8.md`
-- active current sequential cycle: `docs/REVIEW-20-2026-08-13-WORKING-LEDGER.md` until closure.
+- prior `docs/REVIEW-20-TENTH-LEDGER-v1.4.8.md`
+- current `docs/REVIEW-20-2026-08-13-LEDGER-v1.4.8.md`.
 
 ## Truth-status boundary
 `Specified`, `Coded`, `Packaged`, `Automated-QA Green`, `Staging-Accepted`, `Live-Deployed`, and `Operational` remain separate states.
