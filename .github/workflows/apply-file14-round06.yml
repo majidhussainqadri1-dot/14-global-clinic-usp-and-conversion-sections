@@ -68,6 +68,13 @@ jobs:
               rr=rr.replace(old_gate,new_gate,1)
           r.write_text(rr)
 
+          r2=Path('scripts/review80-second.py')
+          r2s=r2.read_text()
+          old70='("70 release-evidence pre-merge candidate wording is truthful", "Eighty-Pass Corrective Candidate" not in release and "Repository Candidate" in release and "main merged" in release),'
+          new70='("70 release-evidence pre-merge candidate wording is truthful", "Eighty-Pass Corrective Candidate" not in release and "Repository Candidate" in release and "Draft integration remains PR" in release and "After merge" in release),'
+          if old70 not in r2s: raise SystemExit('second review release-truth target missing')
+          r2.write_text(r2s.replace(old70,new70,1))
+
           q=Path('scripts/quality.sh')
           qs=q.read_text()
           marker='php "$ROOT/tests/tenth-review-regression-tests.php"\n'
@@ -79,7 +86,7 @@ jobs:
           php -l 14-global-clinic-usp-integration/includes/class-gcu-repository.php
           php -l tests/contract-tests.php
           php -l tests/eleventh-review-regression-tests.php
-          python3 -m py_compile scripts/review80.py
+          python3 -m py_compile scripts/review80.py scripts/review80-second.py
           rm -rf scripts/__pycache__
           php tests/eleventh-review-regression-tests.php
           bash scripts/quality.sh
