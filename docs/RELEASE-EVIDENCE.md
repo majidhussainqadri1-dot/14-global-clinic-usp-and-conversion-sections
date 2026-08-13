@@ -9,7 +9,7 @@
 - Draft integration remains PR `#10`; branch naming is historical location, not release truth.
 
 ## Exact-head evidence policy
-Historical green results are supporting history only. The exact current PR-head SHA must be recorded and independently validated before any `Automated-QA Green` claim. The exact review/main SHA being accepted must independently pass PHP 7.4/8.3 quality, all current and retained regression/review gates, two fresh post-code reviews, baseline integrity, deterministic ZIP, SHA-256 and file-level SBOM. After merge, fresh post-merge exact-main acceptance remains mandatory.
+Historical green results are supporting history only. The exact current PR-head SHA must be recorded and independently validated before any `Automated-QA Green` claim. The exact review/main SHA being accepted must independently pass PHP 7.4/8.3 quality, all current and retained regression/review gates, including the third independent eighty-pass review, two fresh post-code reviews, baseline integrity, deterministic ZIP, SHA-256 and file-level SBOM. After merge, fresh post-merge exact-main acceptance remains mandatory.
 
 ## Retained historical evidence
 The six historical eighty-pass repository review ledgers remain part of release truth:
