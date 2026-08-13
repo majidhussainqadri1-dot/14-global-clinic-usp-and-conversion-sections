@@ -8,7 +8,7 @@ Discipline: each numbered round is reviewed completely before any correction for
 
 | Round | Result | Completed-review finding / end-of-round correction |
 |---|---|---|
-| 01 | Defect | Exact baseline workflow run `31666916417` failed on both PHP 7.4 and 8.3 because retained `third-review-regression-tests.php` required the durable phrase `exact current PR-head SHA`, while `STATUS.md` had drifted to `exact final PR-head SHA`. Package/SBOM was skipped. After the review completed, exact-head wording and current PR #11/branch truth were aligned in STATUS/README and this new cycle ledger was opened. Corrected-head CI must pass before Round 02 is accepted. |
+| 01 | Defect | Exact baseline workflow run `31666916417` failed on both PHP 7.4 and 8.3 because retained `third-review-regression-tests.php` required the durable phrase `exact current PR-head SHA`, while `STATUS.md` had drifted to `exact final PR-head SHA`; package/SBOM was skipped. After the completed review, STATUS/README/current-cycle truth were corrected. The first corrected-head retest (`31670449006`) then failed the retained `second-review-regression-tests.php` because STATUS no longer literally identified the state as `Repository Candidate`; this was corrected without opening Round 02. Baseline integrity on corrected head `07433a40...` passed (`31670449004`). Round 02 remains blocked until the newest exact head passes the remaining quality/fresh-review/package gates. |
 | 02 | Pending | Not yet reviewed. |
 | 03 | Pending | Not yet reviewed. |
 | 04 | Pending | Not yet reviewed. |
