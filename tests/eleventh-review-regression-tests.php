@@ -16,4 +16,8 @@ r10ck(false!==strpos($bounds,"'/gcu/v1/future/consistency'"),'Consistency REST g
 r10ck(false!==strpos($bounds,"'/gcu/v1/future/scenarios'"),'Scenario REST guard missing.');
 r10ck(false!==strpos($bounds,"remove_action( 'gcu_future_daily_governance'"),'Daily consistency fail-safe guard missing.');
 $filter_pos=strpos($future,"apply_filters( 'gcu_future_question_aggregates'");$type_pos=false===$filter_pos?false:strpos($future,'if ( ! is_array( $signals ) )',$filter_pos);$query_pos=false===$filter_pos?false:strpos($future,'SELECT LOWER(title)',$filter_pos);r10ck(false!==$filter_pos&&false!==$type_pos&&false!==$query_pos&&$filter_pos<$type_pos&&$type_pos<$query_pos,'FAQ suppression must short-circuit before catalog query.');
+r10ck(false!==strpos($future,"WHERE status='active' ORDER BY id ASC LIMIT 501"),'Global parity active-copy scan must use a deterministic one-row-over ceiling query.');
+r10ck(false!==strpos($future,"'active_copy_scan_failed'"),'Global parity DB-query failure must block parity.');
+r10ck(false!==strpos($future,"'active_copy_scan_ceiling_exceeded'"),'Global parity scan ceiling overflow must block parity.');
+$parity_pos=strpos($future,'public static function parity_status()');$clear_pos=false===$parity_pos?false:strpos($future,"\$wpdb->last_error = '';",$parity_pos);$blocks_pos=false===$parity_pos?false:strpos($future,'SELECT title,body,cta_label',$parity_pos);r10ck(false!==$parity_pos&&false!==$clear_pos&&false!==$blocks_pos&&$parity_pos<$clear_pos&&$clear_pos<$blocks_pos,'Global parity active-copy query must clear DB error state before scanning.');
 if($fail){fwrite(STDERR,"Eleventh review regression tests failed:\n- ".implode("\n- ",$fail)."\n");exit(1);}echo "Eleventh review regression tests: PASS\n";
