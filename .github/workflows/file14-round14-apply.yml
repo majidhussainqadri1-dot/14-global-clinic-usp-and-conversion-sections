@@ -1,0 +1,43 @@
+name: File 14 Round 14 One-Shot Correction
+
+on:
+  push:
+    branches:
+      - file14-eleventh-20-round-corrective-review-2026-08-13
+    paths:
+      - .github/workflows/file14-round14-apply.yml
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Apply exact cleanup correction
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('14-global-clinic-usp-integration/includes/class-gcu-future-intelligence.php')
+          s = p.read_text()
+          old1 = "$wpdb->last_error='';$rows=$wpdb->get_results(\"SELECT id,public_id FROM {$t['records']} WHERE status IN ('superseded','rejected') AND updated_at<DATE_SUB(UTC_TIMESTAMP(),INTERVAL 730 DAY) ORDER BY id ASC LIMIT 200\",ARRAY_A);"
+          new1 = "$wpdb->last_error='';$rows=$wpdb->get_results(\"SELECT id,record_type,record_key,locale,region FROM {$t['records']} WHERE status IN ('superseded','rejected') AND updated_at<DATE_SUB(UTC_TIMESTAMP(),INTERVAL 730 DAY) ORDER BY id ASC LIMIT 200\",ARRAY_A);"
+          old2 = "$ids=array();foreach($rows as$row){if(!GCU_Privacy::legal_hold_applies('future_record',(string)$row['public_id'])){$ids[]=(int)$row['id'];}}"
+          new2 = "$ids=array();foreach($rows as$row){$identity=sanitize_key((string)$row['record_type']).':'.sanitize_key((string)$row['record_key']).':'.GCU_Policy::sanitize_locale((string)$row['locale']).':'.GCU_Future_Intelligence::sanitize_region((string)$row['region']);if(!GCU_Privacy::legal_hold_applies('future_record',$identity)){$ids[]=(int)$row['id'];}}"
+          if old1 not in s or old2 not in s:
+              raise SystemExit('Expected Round 14 cleanup patterns not found; refusing blind patch')
+          s = s.replace(old1, new1, 1).replace(old2, new2, 1)
+          p.write_text(s)
+          PY
+      - name: Commit corrected source
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add 14-global-clinic-usp-integration/includes/class-gcu-future-intelligence.php
+          git diff --cached --quiet && exit 0
+          git commit -m "review11 round-14: fix Future record retention cleanup"
+          git push
