@@ -13,7 +13,7 @@
 ## Exact-current-head rule
 Historical PRs, commits, workflows and packages are supporting history only. The exact current PR-head SHA must independently pass PHP 7.4/8.3 quality, retained policy/contract/reliability/central/Future/history gates, tenth-cycle regression, both fresh post-code reviews, baseline integrity and deterministic package/SBOM before this candidate can be called `Automated-QA Green`.
 
-After merge, the exact current `main` SHA becomes repository truth and must pass applicable workflows again. A green PR head is not a green post-merge main by inference.
+After merge, the exact resulting `main` SHA becomes the exact current `main` SHA and repository truth, and must pass applicable workflows again. A green PR head is not a green post-merge main by inference.
 
 ## Retained historical review evidence
 The six historical eighty-pass repository review ledgers are:
