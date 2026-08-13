@@ -30,6 +30,11 @@ jobs:
           if old2 not in s: raise SystemExit('public_claims target not found')
           s=s.replace(old2,new2,1)
           p.write_text(s)
+          c=Path('tests/contract-tests.php')
+          cs=c.read_text()
+          if "Version: 1.4.7" not in cs or "Stable tag: 1.4.7" not in cs: raise SystemExit('contract version targets not found')
+          cs=cs.replace("Version: 1.4.7","Version: 1.4.8").replace("GCU_VERSION', '1.4.7","GCU_VERSION', '1.4.8").replace('Version 1.4.7 drift.','Version 1.4.8 drift.').replace('Stable tag: 1.4.7','Stable tag: 1.4.8')
+          c.write_text(cs)
           q=Path('scripts/quality.sh')
           qs=q.read_text()
           marker='php "$ROOT/tests/tenth-review-regression-tests.php"\n'
@@ -37,8 +42,9 @@ jobs:
           qs=qs.replace(marker,marker+'php "$ROOT/tests/eleventh-review-regression-tests.php"\n',1)
           q.write_text(qs)
           PY
-          echo 'PD9waHAKJHJvb3QgPSBkaXJuYW1lKCBfX0RJUl9fICk7CiRyZXBvID0gZmlsZV9nZXRfY29udGVudHMoICRyb290IC4gJy8xNC1nbG9iYWwtY2xpbmljLXVzcC1pbnRlZ3JhdGlvbi9pbmNsdWRlcy9jbGFzcy1nY3UtcmVwb3NpdG9yeS5waHAnICk7CiRmYWlsdXJlcyA9IGFycmF5KCk7CmZ1bmN0aW9uIGVsZXZlbnRoX2Fzc2VydCggJGNvbmRpdGlvbiwgJG1lc3NhZ2UgKSB7IGdsb2JhbCAkZmFpbHVyZXM7IGlmICggISAkY29uZGl0aW9uICkgeyAkZmFpbHVyZXNbXSA9ICRtZXNzYWdlOyB9IH0KZm9yZWFjaCAoIGFycmF5KCAnYWN0aXZlX2Jsb2Nrc19yZWFkX2ZhaWxlZCcsICdwdWJsaWNfY2xhaW1zX3JlYWRfZmFpbGVkJyApIGFzICRtYXJrZXIgKSB7CiAgICBlbGV2ZW50aF9hc3NlcnQoIGZhbHNlICE9PSBzdHJwb3MoICRyZXBvLCAkbWFya2VyICksICdQdWJsaWMgcmVhZCBEQiBmYWlsdXJlIG1hcmtlciBtaXNzaW5nOiAnIC4gJG1hcmtlciApOwp9CmVsZXZlbnRoX2Fzc2VydCggc3Vic3RyX2NvdW50KCAkcmVwbywgIiR3cGRiLT5sYXN0X2Vycm9yPScnIiApID49IDIsICdQdWJsaWMgcmVwb3NpdG9yeSByZWFkcyBtdXN0IGNsZWFyIGFuZCBpbnNwZWN0IGxhc3RfZXJyb3IuJyApOwppZiAoICRmYWlsdXJlcyApIHsgZndyaXRlKCBTVERFUlIsICJFbGV2ZW50aCByZXZpZXcgcmVncmVzc2lvbiB0ZXN0cyBmYWlsZWQ6XG4tICIgLiBpbXBsb2RlKCAiXG4tICIsICRmYWlsdXJlcyApIC4gIlxuIiApOyBleGl0KCAxICk7IH0KZWNobyAiRWxldmVudGggcmV2aWV3IHJlZ3Jlc3Npb24gdGVzdHM6IFBBU1NcbiI7Cg==' | base64 -d > tests/eleventh-review-regression-tests.php
+          echo 'PD9waHAKJHJvb3QgPSBkaXJuYW1lKCBfX0RJUl9fICk7CiRyZXBvID0gZmlsZV9nZXRfY29udGVudHMoICRyb290IC4gJy8xNC1nbG9iYWwtY2xpbmljLXVzcC1pbnRlZ3JhdGlvbi9pbmNsdWRlcy9jbGFzcy1nY3UtcmVwb3NpdG9yeS5waHAnICk7CiRmYWlsdXJlcyA9IGFycmF5KCk7CmZ1bmN0aW9uIGVsZXZlbnRoX2Fzc2VydCggJGNvbmRpdGlvbiwgJG1lc3NhZ2UgKSB7IGdsb2JhbCAkZmFpbHVyZXM7IGlmICggISAkY29uZGl0aW9uICkgeyAkZmFpbHVyZXNbXSA9ICRtZXNzYWdlOyB9IH0KZm9yZWFjaCAoIGFycmF5KCAnYWN0aXZlX2Jsb2Nrc19yZWFkX2ZhaWxlZCcsICdwdWJsaWNfY2xhaW1zX3JlYWRfZmFpbGVkJyApIGFzICRtYXJrZXIgKSB7CiAgICBlbGV2ZW50aF9hc3NlcnQoIGZhbHNlICE9PSBzdHJwb3MoICRyZXBvLCAkbWFya2VyICksICdQdWJsaWMgcmVhZCBEQiBmYWlsdXJlIG1hcmtlciBtaXNzaW5nOiAnIC4gJG1hcmtlciApOwp9CmVsZXZlbnRoX2Fzc2VydCggc3Vic3RyX2NvdW50KCAkcmVwbywgIlwkd3BkYi0+bGFzdF9lcnJvcj0nJyIgKSA+PSAyLCAnUHVibGljIHJlcG9zaXRvcnkgcmVhZHMgbXVzdCBjbGVhciBhbmQgaW5zcGVjdCBsYXN0X2Vycm9yLicgKTsKaWYgKCAkZmFpbHVyZXMgKSB7IGZ3cml0ZSggU1RERVJSLCAiRWxldmVudGggcmV2aWV3IHJlZ3Jlc3Npb24gdGVzdHMgZmFpbGVkOlxuLSAiIC4gaW1wbG9kZSggIlxuLSAiLCAkZmFpbHVyZXMgKSAuICJcbiIgKTsgZXhpdCggMSApOyB9CmVjaG8gIkVsZXZlbnRoIHJldmlldyByZWdyZXNzaW9uIHRlc3RzOiBQQVNTXG4iOwo=' | base64 -d > tests/eleventh-review-regression-tests.php
           php -l 14-global-clinic-usp-integration/includes/class-gcu-repository.php
+          php -l tests/contract-tests.php
           php -l tests/eleventh-review-regression-tests.php
           php tests/eleventh-review-regression-tests.php
           bash scripts/quality.sh
@@ -53,5 +59,5 @@ jobs:
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add -A
           git diff --cached --check
-          git commit -m 'File 14 v1.4.8: round 06 public-read DB observability hardening'
+          git commit -m 'File 14 v1.4.8: round 06 public-read DB observability and regression alignment'
           git push --force-with-lease origin HEAD:refs/heads/file14-seventh-10-round-corrective-review
