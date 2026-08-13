@@ -4,7 +4,7 @@ Tags: clinic, doctors, conversion, accessibility, privacy, governance, trust, ex
 Requires at least: 6.6
 Tested up to: 7.0.1
 Requires PHP: 7.4
-Stable tag: 1.4.7
+Stable tag: 1.4.8
 License: GPLv2 or later
 
 Canonical File 14 implementation for approved Worldwide Clinic value-proposition content, ethical conversion journeys, claim governance, destination contracts, Future Conversion & Trust Intelligence and privacy-minimized measurement.
@@ -86,6 +86,21 @@ The File 14 surface includes complete File 14-owned American English, Urdu and A
 8. Obtain explicit Founder acceptance before production deployment.
 
 == Changelog ==
+= 1.4.8 =
+* Tenth corrective cycle: twenty sequential review rounds; each round was completed before that round’s defects were corrected and retested.
+* Database reads that govern event identity, privacy export/erase, workflow mutation, snapshots, audit integrity, migration, health and queues now fail closed instead of silently degrading to empty/absent state.
+* Conversion-event replay/dedup identity is verified repository-side; one-time token storage/consumption distinguishes database failure from expiry.
+* Content supersession, direct repository transitions and Future CTI record publication now preserve native governance/authorization and semantic safety invariants.
+* Idempotent command claims are failed safely when their named lock cannot be obtained instead of lingering as stale processing state.
+* Privacy retention and erasure now honor scoped legal holds; lifecycle cleanup reports database failures/backlog rather than hiding them.
+* Rollback snapshot capture verifies table probes, reads, counts and persisted snapshot hashes before it can be accepted.
+* Audit-chain and integrity migrations fail closed on predecessor/table/count/read failures.
+* Front-end fallback content keeps explicit source language while surrounding Urdu/Arabic interface chrome retains its own locale semantics.
+* Queue/health observability now surfaces query, claim, finalization and retry-persistence failures.
+* Destructive uninstall purge requires recent owner approval plus backup/restore evidence and emits a durable purge receipt.
+* QA gates were made release-forward: historical ninth-cycle tests no longer pin the current release, fresh reviews derive current version, and a dedicated tenth-cycle regression/ledger gate covers this twenty-round closure.
+* Base schema remains 10005 and Future schema remains 1.
+
 = 1.4.7 =
 * Ninth corrective cycle: ten sequential review/fix rounds over exact v1.4.6 PR-head repository truth.
 * Event tokens are validated in permission checks but consumed only inside the event transaction, so failed event writes do not burn the one-time token.

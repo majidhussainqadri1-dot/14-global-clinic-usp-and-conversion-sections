@@ -1,7 +1,7 @@
 # File 14 — Future Conversion & Trust Intelligence — 24 Enhancements
 
-**Additive governing amendment:** `SSH-F14-FUTURE-CTI-2026-v2.0`  
-**Date:** 2026-08-10  
+**Additive governing amendment:** `SSH-F14-FUTURE-CTI-2026-v2.0`
+**Date:** 2026-08-10
 **Software implementation baseline:** `1.4.0`
 
 ## Governing boundary

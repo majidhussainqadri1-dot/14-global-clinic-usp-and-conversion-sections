@@ -1,7 +1,7 @@
 # File 14 — Fifth Independent Eighty-Pass Review & Corrective Ledger — v1.4.3
 
-**Baseline re-opened:** exact post-fourth-review `main` `b9045a4229d052103a5546477f664ac88b6ff034`.  
-**Governing scope:** consolidated central governing plan + `SSH-F14-PLAN-2026-v1.0` + `SSH-F14-FUTURE-CTI-2026-v2.0`.  
+**Baseline re-opened:** exact post-fourth-review `main` `b9045a4229d052103a5546477f664ac88b6ff034`.
+**Governing scope:** consolidated central governing plan + `SSH-F14-PLAN-2026-v1.0` + `SSH-F14-FUTURE-CTI-2026-v2.0`.
 **Truth boundary:** repository/source/test/package evidence only; not staging, deployed artifact, live DB/schema/migration, live behavior or operational evidence.
 
 Every defect below was corrected before the review proceeded to final acceptance gating. A PASS means no additional repository defect was identified in that round after all preceding corrections; it does not substitute for external browser/staging/live evidence where the plan explicitly requires it.
