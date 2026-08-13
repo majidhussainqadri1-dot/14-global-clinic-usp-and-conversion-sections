@@ -56,6 +56,18 @@ jobs:
           if 'exact current PR-head SHA' not in rs or 'After merge' not in rs: raise SystemExit('release evidence exact-head language missing')
           rel.write_text(rs)
 
+          r=Path('scripts/review80.py')
+          rr=r.read_text()
+          replacements={
+              '("14 central-plan regression follows current version", current_version and current_version in central_tests and f"Stable tag: {current_version}" in central_tests),': '("14 central-plan regression follows current version", bool(current_version) and "version_compare($version,\'1.4.8\',\'>=\')" in central_tests and "Stable tag: \'.$version" in central_tests),',
+              '("76 PHP 7.4 exact-head workflow target retained", "php: [\'7.4\',\'8.3\']" in workflow and f"Version: {current_version}" in fresh1),': '("76 PHP 7.4 exact-head workflow target retained", "php: [\'7.4\',\'8.3\']" in workflow and "version_compare($argv[1],\\\"1.4.8\\\",\\\">=\\\")" in fresh1 and "Stable tag: $version" in fresh1),',
+              '("77 PHP 8.3 exact-head workflow target retained", "php: [\'7.4\',\'8.3\']" in workflow and f"Stable tag: {current_version}" in fresh2),': '("77 PHP 8.3 exact-head workflow target retained", "php: [\'7.4\',\'8.3\']" in workflow and "Stable tag: $version" in fresh2),',
+          }
+          for old_gate,new_gate in replacements.items():
+              if old_gate not in rr: raise SystemExit('review80 version-dynamic gate target missing: '+old_gate[:30])
+              rr=rr.replace(old_gate,new_gate,1)
+          r.write_text(rr)
+
           q=Path('scripts/quality.sh')
           qs=q.read_text()
           marker='php "$ROOT/tests/tenth-review-regression-tests.php"\n'
@@ -67,6 +79,7 @@ jobs:
           php -l 14-global-clinic-usp-integration/includes/class-gcu-repository.php
           php -l tests/contract-tests.php
           php -l tests/eleventh-review-regression-tests.php
+          python3 -m py_compile scripts/review80.py
           php tests/eleventh-review-regression-tests.php
           bash scripts/quality.sh
           rm -f .github/workflows/apply-file14-round06.yml
