@@ -68,6 +68,21 @@ register_deactivation_hook(
 		wp_clear_scheduled_hook( 'gcu_future_hourly_intelligence' );
 	}
 );
+add_action(
+	'template_redirect',
+	static function () {
+		$route = sanitize_key( (string) get_query_var( 'gcu_route' ) );
+		if ( ! $route ) { return; }
+		$allowed = array( 'global_clinic', 'how_it_works', 'find_doctor', 'start_clinic' );
+		if ( in_array( $route, $allowed, true ) ) { return; }
+		set_query_var( 'gcu_route', '' );
+		global $wp_query;
+		if ( $wp_query instanceof WP_Query ) { $wp_query->set_404(); }
+		status_header( 404 );
+		nocache_headers();
+	},
+	0
+);
 add_action( 'plugins_loaded', static function () { GCU_Plugin::instance()->run(); }, 90 );
 add_action( 'plugins_loaded', array( 'GCU_Future_Intelligence', 'bootstrap' ), 95 );
 add_action( 'plugins_loaded', array( 'GCU_Future_I18n', 'bootstrap' ), 96 );
