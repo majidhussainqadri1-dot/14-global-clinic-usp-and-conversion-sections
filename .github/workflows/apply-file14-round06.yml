@@ -21,12 +21,12 @@ jobs:
           from pathlib import Path
           p=Path('14-global-clinic-usp-integration/includes/class-gcu-repository.php')
           s=p.read_text()
-          old="""$r=$wpdb->get_results($wpdb->prepare($sql,$a),ARRAY_A);if(!is_array($r)){return array();}$all_claims=array();"""
-          new="""$wpdb->last_error='';$r=$wpdb->get_results($wpdb->prepare($sql,$a),ARRAY_A);if(''!==(string)$wpdb->last_error||!is_array($r)){GCU_Observability::log('error','active_blocks_read_failed',array('slot'=>$slot,'locale'=>$locale));return array();}$all_claims=array();"""
+          old="$r=$wpdb->get_results($wpdb->prepare($sql,$a),ARRAY_A);if(!is_array($r)){return array();}$all_claims=array();"
+          new="$wpdb->last_error='';$r=$wpdb->get_results($wpdb->prepare($sql,$a),ARRAY_A);if(''!==(string)$wpdb->last_error||!is_array($r)){GCU_Observability::log('error','active_blocks_read_failed',array('slot'=>$slot,'locale'=>$locale));return array();}$all_claims=array();"
           if old not in s: raise SystemExit('active_blocks target not found')
           s=s.replace(old,new,1)
-          old2="""$rows=$wpdb->get_results($wpdb->prepare($sql,$keys),ARRAY_A);$out=array();foreach(is_array($rows)?$rows:array()as$row){"""
-          new2="""$wpdb->last_error='';$rows=$wpdb->get_results($wpdb->prepare($sql,$keys),ARRAY_A);if(''!==(string)$wpdb->last_error||!is_array($rows)){GCU_Observability::log('error','public_claims_read_failed',array('claim_count'=>count($keys)));return array();}$out=array();foreach($rows as$row){"""
+          old2="$rows=$wpdb->get_results($wpdb->prepare($sql,$keys),ARRAY_A);$out=array();foreach(is_array($rows)?$rows:array()as$row){"
+          new2="$wpdb->last_error='';$rows=$wpdb->get_results($wpdb->prepare($sql,$keys),ARRAY_A);if(''!==(string)$wpdb->last_error||!is_array($rows)){GCU_Observability::log('error','public_claims_read_failed',array('claim_count'=>count($keys)));return array();}$out=array();foreach($rows as$row){"
           if old2 not in s: raise SystemExit('public_claims target not found')
           s=s.replace(old2,new2,1)
           p.write_text(s)
@@ -36,20 +36,8 @@ jobs:
           if marker not in qs: raise SystemExit('quality marker not found')
           qs=qs.replace(marker,marker+'php "$ROOT/tests/eleventh-review-regression-tests.php"\n',1)
           q.write_text(qs)
-          test=Path('tests/eleventh-review-regression-tests.php')
-          test.write_text("""<?php
-$root = dirname( __DIR__ );
-$repo = file_get_contents( $root . '/14-global-clinic-usp-integration/includes/class-gcu-repository.php' );
-$failures = array();
-function eleventh_assert( $condition, $message ) { global $failures; if ( ! $condition ) { $failures[] = $message; } }
-foreach ( array( 'active_blocks_read_failed', 'public_claims_read_failed' ) as $marker ) {
-    eleventh_assert( false !== strpos( $repo, $marker ), 'Public read DB failure marker missing: ' . $marker );
-}
-eleventh_assert( substr_count( $repo, "\\$wpdb->last_error=''" ) >= 2, 'Public repository reads must clear and inspect last_error.' );
-if ( $failures ) { fwrite( STDERR, "Eleventh review regression tests failed:\\n- " . implode( "\\n- ", $failures ) . "\\n" ); exit( 1 ); }
-echo "Eleventh review regression tests: PASS\\n";
-""")
           PY
+          echo 'PD9waHAKJHJvb3QgPSBkaXJuYW1lKCBfX0RJUl9fICk7CiRyZXBvID0gZmlsZV9nZXRfY29udGVudHMoICRyb290IC4gJy8xNC1nbG9iYWwtY2xpbmljLXVzcC1pbnRlZ3JhdGlvbi9pbmNsdWRlcy9jbGFzcy1nY3UtcmVwb3NpdG9yeS5waHAnICk7CiRmYWlsdXJlcyA9IGFycmF5KCk7CmZ1bmN0aW9uIGVsZXZlbnRoX2Fzc2VydCggJGNvbmRpdGlvbiwgJG1lc3NhZ2UgKSB7IGdsb2JhbCAkZmFpbHVyZXM7IGlmICggISAkY29uZGl0aW9uICkgeyAkZmFpbHVyZXNbXSA9ICRtZXNzYWdlOyB9IH0KZm9yZWFjaCAoIGFycmF5KCAnYWN0aXZlX2Jsb2Nrc19yZWFkX2ZhaWxlZCcsICdwdWJsaWNfY2xhaW1zX3JlYWRfZmFpbGVkJyApIGFzICRtYXJrZXIgKSB7CiAgICBlbGV2ZW50aF9hc3NlcnQoIGZhbHNlICE9PSBzdHJwb3MoICRyZXBvLCAkbWFya2VyICksICdQdWJsaWMgcmVhZCBEQiBmYWlsdXJlIG1hcmtlciBtaXNzaW5nOiAnIC4gJG1hcmtlciApOwp9CmVsZXZlbnRoX2Fzc2VydCggc3Vic3RyX2NvdW50KCAkcmVwbywgIiR3cGRiLT5sYXN0X2Vycm9yPScnIiApID49IDIsICdQdWJsaWMgcmVwb3NpdG9yeSByZWFkcyBtdXN0IGNsZWFyIGFuZCBpbnNwZWN0IGxhc3RfZXJyb3IuJyApOwppZiAoICRmYWlsdXJlcyApIHsgZndyaXRlKCBTVERFUlIsICJFbGV2ZW50aCByZXZpZXcgcmVncmVzc2lvbiB0ZXN0cyBmYWlsZWQ6XG4tICIgLiBpbXBsb2RlKCAiXG4tICIsICRmYWlsdXJlcyApIC4gIlxuIiApOyBleGl0KCAxICk7IH0KZWNobyAiRWxldmVudGggcmV2aWV3IHJlZ3Jlc3Npb24gdGVzdHM6IFBBU1NcbiI7Cg==' | base64 -d > tests/eleventh-review-regression-tests.php
           php -l 14-global-clinic-usp-integration/includes/class-gcu-repository.php
           php -l tests/eleventh-review-regression-tests.php
           php tests/eleventh-review-regression-tests.php
