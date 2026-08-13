@@ -24,5 +24,7 @@ one(
     "\t\t$data = array(\n\t\t\t'report_id' => isset( $_POST['report_id'] ) ? sanitize_text_field( wp_unslash( $_POST['report_id'] ) ) : '',\n\t\t\t'reason_code' => isset( $_POST['reason_code'] ) ? wp_unslash( $_POST['reason_code'] ) : '',",
     'report submit UUID',
 )
-
+old = "$rows=$wpdb->get_results($wpdb->prepare(\"SELECT id,public_id,report_type,route_key,block_key,locale,reason_code,message,status,resolution,row_version,created_at,updated_at FROM {$t['reports']} WHERE status=%s AND id>%d ORDER BY id ASC LIMIT %d\",$status,absint($cursor),$limit+1),ARRAY_A);$rows=is_array($rows)?$rows:array();"
+new = "$wpdb->last_error='';$rows=$wpdb->get_results($wpdb->prepare(\"SELECT id,public_id,report_type,route_key,block_key,locale,reason_code,message,status,resolution,row_version,created_at,updated_at FROM {$t['reports']} WHERE status=%s AND id>%d ORDER BY id ASC LIMIT %d\",$status,absint($cursor),$limit+1),ARRAY_A);if(''!==(string)$wpdb->last_error||!is_array($rows)){return new WP_Error('gcu_future_reports_page_query_failed',__('Reports could not be read safely.','global-clinic-usp-integration'),array('status'=>503));}"
+one(old,new,'reports page DB fail closed')
 path.write_text(text)
