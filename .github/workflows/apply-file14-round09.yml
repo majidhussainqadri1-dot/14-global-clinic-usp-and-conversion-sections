@@ -1,0 +1,48 @@
+name: Apply File 14 Round 09 correction
+on:
+  push:
+    branches: [file14-seventh-10-round-corrective-review]
+permissions:
+  contents: write
+jobs:
+  apply:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09
+        with:
+          ref: file14-seventh-10-round-corrective-review
+          fetch-depth: 0
+      - name: Apply Round 09 correction after completed review
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('docs/REQUIREMENTS-TRACEABILITY.md')
+          s=p.read_text()
+          replacements={
+            '# File 14 — Fresh Central + File Plan + Future CTI Requirements Traceability — v1.4.7':'# File 14 — Requirements Traceability — v1.4.8',
+            '2026-08-10 governing plans plus the 2026-08-11 ninth ten-round corrective cycle':'2026-08-10 governing plans plus the current 2026-08-13 twenty-round corrective cycle',
+            'The v1.4.6 eighth-cycle trace remains historical evidence. The v1.4.7 delta adds':'The v1.4.7 starting trace remains historical evidence. The v1.4.8 delta retains and extends',
+            'File 14 v1.4.7 may only claim a status':'File 14 v1.4.8 may only claim a status',
+          }
+          for old,new in replacements.items():
+              if old not in s:
+                  raise SystemExit('Round 09 traceability target missing: '+old)
+              s=s.replace(old,new,1)
+          p.write_text(s)
+          PY
+          grep -q 'Requirements Traceability — v1.4.8' docs/REQUIREMENTS-TRACEABILITY.md
+          grep -q 'File 14 v1.4.8 may only claim a status' docs/REQUIREMENTS-TRACEABILITY.md
+          rm -f .github/workflows/apply-file14-round09.yml
+      - name: Commit Round 09 corrected state
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git diff --cached --check
+          git commit -m 'fix(round-09): align current traceability with v1.4.8'
+          git push origin HEAD:file14-seventh-10-round-corrective-review
