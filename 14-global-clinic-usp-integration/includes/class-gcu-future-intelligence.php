@@ -784,9 +784,9 @@ final class GCU_Future_Intelligence {
 			if(count($rows)<200){break;}if(0===$n&&count($rows)>=200){GCU_Observability::log('warning','future_report_retention_held_batch',array('scanned'=>count($rows)));break;}
 		}
 		for($i=0;$i<10;$i++){
-			$wpdb->last_error='';$rows=$wpdb->get_results("SELECT id,public_id FROM {$t['records']} WHERE status IN ('superseded','rejected') AND updated_at<DATE_SUB(UTC_TIMESTAMP(),INTERVAL 730 DAY) ORDER BY id ASC LIMIT 200",ARRAY_A);
+			$wpdb->last_error='';$rows=$wpdb->get_results("SELECT id,record_type,record_key,locale,region FROM {$t['records']} WHERE status IN ('superseded','rejected') AND updated_at<DATE_SUB(UTC_TIMESTAMP(),INTERVAL 730 DAY) ORDER BY id ASC LIMIT 200",ARRAY_A);
 			if(''!==(string)$wpdb->last_error||!is_array($rows)){$records=false;break;}
-			$ids=array();foreach($rows as$row){if(!GCU_Privacy::legal_hold_applies('future_record',(string)$row['public_id'])){$ids[]=(int)$row['id'];}}
+			$ids=array();foreach($rows as$row){$identity=sanitize_key((string)$row['record_type']).':'.sanitize_key((string)$row['record_key']).':'.GCU_Policy::sanitize_locale((string)$row['locale']).':'.GCU_Future_Intelligence::sanitize_region((string)$row['region']);if(!GCU_Privacy::legal_hold_applies('future_record',$identity)){$ids[]=(int)$row['id'];}}
 			$n=0;if($ids){$ph=implode(',',array_fill(0,count($ids),'%d'));$n=$wpdb->query($wpdb->prepare("DELETE FROM {$t['records']} WHERE id IN ($ph)",$ids));if(false===$n){$records=false;break;}$records+=$n;}
 			if(count($rows)<200){break;}if(0===$n&&count($rows)>=200){GCU_Observability::log('warning','future_record_retention_held_batch',array('scanned'=>count($rows)));break;}
 		}
