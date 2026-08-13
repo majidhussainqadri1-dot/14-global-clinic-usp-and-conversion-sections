@@ -1,4 +1,4 @@
-# File 14 Status — v1.4.8 Eleventh Fresh Twenty-Round Repository Review
+# File 14 Status — v1.4.8 Eleventh Fresh Twenty-Round Repository Candidate
 
 ## Repository coding status
 - Governing freeze: consolidated central governing plan + `SSH-F14-PLAN-2026-v1.0` + Founder-approved additive amendment `SSH-F14-FUTURE-CTI-2026-v2.0` dated 2026-08-10.
@@ -12,9 +12,9 @@
 - Deterministic package target: `14-global-clinic-usp-integration-1.4.8.zip` + SHA-256 + file-level SBOM generated only from the exact head being evaluated.
 
 ## Exact-current-head rule
-Historical PRs, commits, workflows and packages are supporting history only. The **exact current PR-head SHA** must independently pass PHP 7.4/8.3 quality, retained policy/contract/reliability/central/Future/history gates, current regression coverage, both fresh post-code reviews, baseline integrity and deterministic package/SBOM before this candidate can be called `Automated-QA Green`.
+Historical PRs, commits, workflows and packages are supporting history only. The **exact current PR-head SHA** must independently pass PHP 7.4/8.3 quality, retained policy/contract/reliability/central/Future/history gates, current regression coverage, both fresh post-code reviews, baseline integrity and deterministic package/SBOM before this Repository Candidate can be called `Automated-QA Green`.
 
-Round 01 of the current cycle found that the previous exact final head `5a6877e6035747fa62f1c6c4a7d4f986f62e74b0` failed workflow run `31666916417`: both PHP 7.4 and PHP 8.3 stopped in `third-review-regression-tests.php` because durable exact-current-head wording in this status file no longer matched the retained contract. That defect is corrected in this round; the next round may begin only after the corrected head is retested.
+Round 01 of the current cycle found that the previous exact final head `5a6877e6035747fa62f1c6c4a7d4f986f62e74b0` failed workflow run `31666916417`: both PHP 7.4 and PHP 8.3 stopped in `third-review-regression-tests.php` because durable exact-current-head wording in this status file no longer matched the retained contract. The first corrected-head retest `31670449006` then exposed a second retained wording contract: `second-review-regression-tests.php` requires the status itself to remain explicitly identified as a `Repository Candidate`. Both Round 01 documentation-contract defects are corrected here; the next round may begin only after the resulting exact head is retested.
 
 After merge, the exact resulting `main` SHA becomes the exact current `main` SHA and repository truth, and must pass applicable workflows again. A green PR head is not a green post-merge main by inference.
 
