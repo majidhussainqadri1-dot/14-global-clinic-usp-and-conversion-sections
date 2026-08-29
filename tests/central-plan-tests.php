@@ -5,7 +5,7 @@ $main=t($p.'/global-clinic-usp-integration.php');$front=t($p.'/includes/class-gc
 $version='';if(preg_match('/Version:\s*([0-9]+\.[0-9]+\.[0-9]+)/',$main,$m)){$version=$m[1];}
 c(''!==$version&&version_compare($version,'1.4.8','>=')&&false!==strpos($main,"GCU_VERSION', '".$version."'"),'Candidate version must be >=1.4.8 and match GCU_VERSION.');
 c(false!==strpos($read,'Stable tag: '.$version),'Readme stable tag must match current plugin version.');
-c(false!==strpos($main,"GCU_SCHEMA_VERSION', 10005")&&false!==strpos($main,"GCU_FUTURE_SCHEMA_VERSION', 1"),'Schema identity drift.');
+c(false!==strpos($main,"GCU_SCHEMA_VERSION', 10006")&&false!==strpos($main,"GCU_FUTURE_SCHEMA_VERSION', 1"),'Schema identity drift.');
 foreach(array("GCU_CENTRAL_PLAN_BASELINE', '2026-08-10","GCU_PLAN_VERSION', 'SSH-F14-PLAN-2026-v1.0","GCU_FUTURE_PLAN_VERSION', 'SSH-F14-FUTURE-CTI-2026-v2.0","GCU_CANONICAL_REPOSITORY', '14-global-clinic-usp-and-conversion-integration","GCU_CURRENT_REPOSITORY_ALIAS', '14-global-clinic-usp-and-conversion-sections") as$n){c(false!==strpos($main,$n),'Main contract missing: '.$n);}
 c(false!==strpos($css,'--gcu-brand-primary: #087A4E')&&false!==strpos($futureCss,'#087A4E'),'Sabri Green token drift.');
 c(false!==strpos($front,'sabri_shell_back_home_controls')&&false===strpos($front,'data-gcu-shell-fallback'),'File 20 shell ownership drift.');
