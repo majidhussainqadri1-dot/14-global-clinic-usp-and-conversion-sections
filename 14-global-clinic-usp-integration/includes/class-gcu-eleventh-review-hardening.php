@@ -46,6 +46,8 @@ final class GCU_Eleventh_Review_Hardening {
 		if ( is_wp_error( $future_schema ) ) { return $future_schema; }
 		$constraints = self::verify_schema_constraints();
 		if ( is_wp_error( $constraints ) ) { return $constraints; }
+		$cleanup_indexes = self::verify_cleanup_indexes();
+		if ( is_wp_error( $cleanup_indexes ) ) { return $cleanup_indexes; }
 		$snapshot = self::verify_snapshot_integrity();
 		if ( is_wp_error( $snapshot ) ) { return $snapshot; }
 		$migration = self::verify_migration_receipt( $repair );
@@ -103,6 +105,38 @@ final class GCU_Eleventh_Review_Hardening {
 			}
 		}
 		return $missing ? new WP_Error( 'gcu_schema_constraints_unverified', __( 'File 14 database uniqueness constraints are incomplete or inconsistent.', 'global-clinic-usp-integration' ), array( 'missing_indexes' => $missing ) ) : true;
+	}
+
+	private static function verify_cleanup_indexes() {
+		global $wpdb;
+		$t = GCU_Install::tables();
+		$expected = array(
+			$t['events']       => array( 'retention_time' => array( 'occurred_at', 'id' ) ),
+			$t['outbox']       => array( 'sent_retention' => array( 'status', 'dispatched_at', 'id' ) ),
+			$t['inbox']        => array( 'processed_retention' => array( 'status', 'processed_at', 'id' ) ),
+			$t['event_tokens'] => array( 'expiry_cleanup' => array( 'expires_at', 'id' ), 'consumed_cleanup' => array( 'consumed_at', 'id' ) ),
+			$t['commands']     => array( 'completed_retention' => array( 'status', 'updated_at', 'id' ) ),
+		);
+		$missing = array();
+		foreach ( $expected as $table => $indexes ) {
+			$wpdb->last_error = '';
+			$rows = $wpdb->get_results( "SHOW INDEX FROM `$table`", ARRAY_A );
+			if ( '' !== (string) $wpdb->last_error || ! is_array( $rows ) ) {
+				return new WP_Error( 'gcu_cleanup_index_probe_failed', __( 'File 14 cleanup indexes could not be verified safely.', 'global-clinic-usp-integration' ), array( 'table' => $table ) );
+			}
+			$actual = array();
+			foreach ( $rows as $row ) {
+				if ( ! isset( $row['Key_name'], $row['Column_name'] ) ) { continue; }
+				$name = (string) $row['Key_name'];
+				$seq = isset( $row['Seq_in_index'] ) ? max( 1, (int) $row['Seq_in_index'] ) : count( isset( $actual[$name] ) ? $actual[$name] : array() ) + 1;
+				$actual[$name][$seq] = (string) $row['Column_name'];
+			}
+			foreach ( $actual as $name => $columns ) { ksort( $columns, SORT_NUMERIC ); $actual[$name] = array_values( $columns ); }
+			foreach ( $indexes as $name => $columns ) {
+				if ( ! isset( $actual[$name] ) || $columns !== $actual[$name] ) { $missing[$table][$name] = $columns; }
+			}
+		}
+		return $missing ? new WP_Error( 'gcu_cleanup_indexes_unverified', __( 'File 14 cleanup indexes are incomplete.', 'global-clinic-usp-integration' ), array( 'missing_indexes' => $missing ) ) : true;
 	}
 
 	private static function verify_snapshot_integrity() {

@@ -15,7 +15,7 @@
 defined( 'ABSPATH' ) || exit;
 
 define( 'GCU_VERSION', '1.4.8' );
-define( 'GCU_SCHEMA_VERSION', 10005 );
+define( 'GCU_SCHEMA_VERSION', 10006 );
 define( 'GCU_PLAN_VERSION', 'SSH-F14-PLAN-2026-v1.0' );
 define( 'GCU_FUTURE_PLAN_VERSION', 'SSH-F14-FUTURE-CTI-2026-v2.0' );
 define( 'GCU_FUTURE_SCHEMA_VERSION', 1 );
