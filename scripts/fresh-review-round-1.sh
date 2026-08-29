@@ -7,7 +7,7 @@ version="$(sed -nE 's/^\s*\*\s*Version:\s*([0-9]+\.[0-9]+\.[0-9]+)\s*$/\1/p' "$P
 [ -n "$version" ] || { echo 'ROUND1 version missing' >&2; exit 1; }
 php -r 'exit(version_compare($argv[1],"1.4.8",">=")?0:1);' "$version" || { echo "ROUND1 candidate must be >=1.4.8" >&2; exit 1; }
 need "GCU_VERSION', '$version'" "$P/global-clinic-usp-integration.php"; need "Stable tag: $version" "$P/readme.txt"
-for x in "GCU_SCHEMA_VERSION', 10005" "SSH-F14-FUTURE-CTI-2026-v2.0" "GCU_FUTURE_SCHEMA_VERSION', 1" GCU_Review80_Hardening GCU_Fifth_Review_Hardening GCU_CURRENT_REPOSITORY_ALIAS; do need "$x" "$P/global-clinic-usp-integration.php"; done
+for x in "GCU_SCHEMA_VERSION', 10006" "SSH-F14-FUTURE-CTI-2026-v2.0" "GCU_FUTURE_SCHEMA_VERSION', 1" GCU_Review80_Hardening GCU_Fifth_Review_Hardening GCU_CURRENT_REPOSITORY_ALIAS; do need "$x" "$P/global-clinic-usp-integration.php"; done
 need "apply_filters( 'gcu_authorize', false" "$P/includes/class-gcu-capabilities.php"; need "true === apply_filters" "$P/includes/class-gcu-capabilities.php"
 for x in validate_event_token consume_event_token gcu_event_subject_unavailable gcu_event_duplicate_query_failed gcu_workflow_read_failed fail_command_claim legal_hold_applies outbox_select_failed inbox_select_failed; do need "$x" "$P/includes/class-gcu-repository.php"; done
 for x in gcu_snapshot_table_probe_failed gcu_snapshot_count_failed gcu_snapshot_read_failed gcu_snapshot_persist_failed; do need "$x" "$P/includes/class-gcu-install.php"; done
