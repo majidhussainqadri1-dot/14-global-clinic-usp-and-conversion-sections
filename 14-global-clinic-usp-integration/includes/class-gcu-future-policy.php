@@ -98,6 +98,22 @@ final class GCU_Future_Policy {
 		return array( 'safe' => empty( $flags ), 'risk' => empty( $flags ) ? 'low' : 'high', 'flags' => array_values( array_unique( $flags ) ) );
 	}
 
+	public static function business_policy_contradiction_scan( $text ) {
+		$text = self::normalize_text( $text );
+		$flags = array();
+		$patterns = array(
+			'nonzero_platform_commission' => '/\b(?:[1-9]\d?(?:\.\d+)?|100)\s*%\s*(?:platform\s*)?commission\b|\b(?:platform\s*)?commission\s*(?:is|of|:)\s*(?:[1-9]\d?(?:\.\d+)?|100)\s*%/i',
+			'paid_core_tier' => '/\b(?:paid|premium|pro|subscription)\s+(?:core\s+)?tier\b|\b(?:core|basic)\s+(?:features?|service)\s+(?:require|requires|need|needs)\s+(?:payment|subscription|fee)/i',
+			'support_buys_status' => '/\b(?:donat(?:e|ion)|support|payment|pay)\b[^.!?]{0,80}\b(?:buys?|improves?|increases?|boosts?|gets?)\b[^.!?]{0,60}\b(?:rank|ranking|visibility|verification|priority|approval)\b/i',
+			'approval_guarantee' => '/\b(?:guaranteed|automatic|instant|certain)\s+(?:doctor\s+)?(?:approval|verification|activation)\b|\b(?:approval|verification|activation)\s+(?:is\s+)?guaranteed\b/i',
+			'outcome_guarantee' => '/\b(?:guaranteed|certain|assured)\s+(?:cure|income|outcome|result)\b|\b(?:cure|income|outcome|result)\s+(?:is\s+)?guaranteed\b/i',
+		);
+		foreach ( $patterns as $key => $pattern ) {
+			if ( preg_match( $pattern, $text ) ) { $flags[] = 'business_policy_contradiction:' . $key; }
+		}
+		return array( 'safe' => empty( $flags ), 'flags' => $flags );
+	}
+
 	public static function dark_pattern_scan( $text ) {
 		$text  = self::normalize_text( $text );
 		$flags = array();
@@ -129,9 +145,10 @@ final class GCU_Future_Policy {
 			isset( $previous['cta_label'] ) ? $previous['cta_label'] : '',
 		) ) );
 		$dark = self::dark_pattern_scan( $current );
+		$business = self::business_policy_contradiction_scan( $current );
 		$semantic = $prior ? self::semantic_risk_scan( $prior, $current ) : array( 'safe' => true, 'risk' => 'low', 'flags' => array() );
-		$flags = array_merge( $dark['flags'], $semantic['flags'] );
-		return array( 'safe' => empty( $flags ), 'flags' => array_values( array_unique( $flags ) ), 'dark_pattern' => $dark, 'semantic' => $semantic );
+		$flags = array_merge( $dark['flags'], $business['flags'], $semantic['flags'] );
+		return array( 'safe' => empty( $flags ), 'flags' => array_values( array_unique( $flags ) ), 'dark_pattern' => $dark, 'business_policy' => $business, 'semantic' => $semantic );
 	}
 
 	public static function experiment_preflight( array $variants, array $guardrails, $sample_policy, $privacy_policy ) {

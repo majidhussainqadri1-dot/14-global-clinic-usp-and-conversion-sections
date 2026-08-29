@@ -417,8 +417,10 @@ final class GCU_Future_Intelligence {
 			$issues[] = 'active_copy_scan_ceiling_exceeded';
 		} else {
 			foreach ( $blocks as $block ) {
-				$scan = GCU_Future_Policy::dark_pattern_scan( implode( ' ', array( $block['title'], wp_strip_all_tags( $block['body'] ), $block['cta_label'] ) ) );
-				foreach ( $scan['flags'] as $flag ) {
+				$active_text = implode( ' ', array( $block['title'], wp_strip_all_tags( $block['body'] ), $block['cta_label'] ) );
+				$scan = GCU_Future_Policy::dark_pattern_scan( $active_text );
+				$business = GCU_Future_Policy::business_policy_contradiction_scan( $active_text );
+				foreach ( array_merge( $scan['flags'], $business['flags'] ) as $flag ) {
 					$issues[] = 'active_copy:' . $flag;
 				}
 			}
