@@ -156,7 +156,7 @@ final class GCU_Future_Intelligence {
 		register_rest_route( $ns, '/future/ai-copy', array( 'methods' => WP_REST_Server::CREATABLE, 'callback' => array( __CLASS__, 'rest_ai_copy' ), 'permission_callback' => array( __CLASS__, 'can_manage_content' ) ) );
 		register_rest_route( $ns, '/future/records', array( array( 'methods' => WP_REST_Server::READABLE, 'callback' => array( __CLASS__, 'rest_records' ), 'permission_callback' => array( __CLASS__, 'can_manage_content' ) ), array( 'methods' => WP_REST_Server::CREATABLE, 'callback' => array( __CLASS__, 'rest_record_write' ), 'permission_callback' => array( __CLASS__, 'can_manage_content' ) ) ) );
 		register_rest_route( $ns, '/future/reports', array( 'methods' => WP_REST_Server::READABLE, 'callback' => array( __CLASS__, 'rest_reports' ), 'permission_callback' => array( __CLASS__, 'can_manage_content' ) ) );
-		register_rest_route( $ns, '/future/claims/(?P<claim_key>[a-z0-9_\-]+)/revalidate', array( 'methods' => WP_REST_Server::EDITABLE, 'callback' => array( __CLASS__, 'rest_revalidate_claim' ), 'permission_callback' => array( __CLASS__, 'can_approve_claims' ) ) );
+		register_rest_route( $ns, '/future/claims/(?P<claim_key>[a-z0-9_\-]+)/revalidate', array( 'methods' => WP_REST_Server::EDITABLE, 'callback' => array( __CLASS__, 'rest_revalidate_claim' ), 'permission_callback' => array( __CLASS__, 'can_revalidate_claim' ) ) );
 	}
 
 	public static function rest_catalog() {
@@ -472,6 +472,9 @@ final class GCU_Future_Intelligence {
 	}
 
 	public static function revalidate_claim( $key, $expected, $reason ) {
+		$key = sanitize_key( $key );
+		$auth = GCU_Capabilities::require_capability( GCU_Capabilities::APPROVE_CLAIMS, $key, 'future_intelligence_claims' );
+		if ( is_wp_error( $auth ) ) { return $auth; }
 		$reason = trim( sanitize_textarea_field( $reason ) );
 		if ( strlen( $reason ) < 8 ) {
 			return new WP_Error( 'gcu_future_revalidation_reason_required', __( 'A meaningful revalidation reason is required.', 'global-clinic-usp-integration' ), array( 'status' => 400 ) );
@@ -856,6 +859,7 @@ final class GCU_Future_Intelligence {
 
 	public static function resolve_report_record( $id, $expected, $status, $resolution ) {
 		$ready=self::runtime_ready();if(is_wp_error($ready)){return$ready;}
+		$id=sanitize_text_field((string)$id);$auth=GCU_Capabilities::require_capability(GCU_Capabilities::MANAGE_CONTENT,$id,'future_intelligence_content');if(is_wp_error($auth)){return$auth;}
 		if(!in_array($status,array('reviewing','resolved','rejected'),true)){return new WP_Error('gcu_future_report_status_invalid',__('Invalid report status.','global-clinic-usp-integration'));}
 		$resolution=trim(sanitize_textarea_field($resolution));if(in_array($status,array('resolved','rejected'),true)&&strlen($resolution)<8){return new WP_Error('gcu_future_report_resolution_required',__('A meaningful resolution is required.','global-clinic-usp-integration'));}
 		global$wpdb;$t=self::tables();$wpdb->last_error='';$row=$wpdb->get_row($wpdb->prepare("SELECT * FROM {$t['reports']} WHERE public_id=%s",$id),ARRAY_A);if(''!==(string)$wpdb->last_error){return new WP_Error('gcu_future_report_read_failed',__('The report could not be read safely.','global-clinic-usp-integration'),array('status'=>503));}if(!$row){return new WP_Error('gcu_future_report_not_found',__('Report not found.','global-clinic-usp-integration'));}if((int)$row['row_version']!==(int)$expected){return new WP_Error('gcu_future_report_version_conflict',__('The report changed. Reload it.','global-clinic-usp-integration'));}
@@ -1062,10 +1066,10 @@ final class GCU_Future_Intelligence {
 
 	public static function resolve_report() {
 		check_admin_referer( 'gcu_future_resolve_report' );
-		if ( ! self::can_manage_content() ) {
-			wp_die( esc_html__( 'You are not authorized to review File 14 reports.', 'global-clinic-usp-integration' ) );
-		}
 		$id = isset( $_POST['report_id'] ) ? sanitize_text_field( wp_unslash( $_POST['report_id'] ) ) : '';
+		if ( ! GCU_Capabilities::can( GCU_Capabilities::MANAGE_CONTENT, $id, 'future_intelligence_content' ) ) {
+			wp_die( esc_html__( 'You are not authorized to review this File 14 report.', 'global-clinic-usp-integration' ) );
+		}
 		$expected = isset( $_POST['expected_version'] ) ? absint( $_POST['expected_version'] ) : 0;
 		$status = isset( $_POST['status'] ) ? sanitize_key( wp_unslash( $_POST['status'] ) ) : '';
 		$resolution = isset( $_POST['resolution'] ) ? sanitize_textarea_field( wp_unslash( $_POST['resolution'] ) ) : '';
@@ -1108,6 +1112,10 @@ final class GCU_Future_Intelligence {
 	}
 	public static function can_approve_claims() {
 		return GCU_Capabilities::can( GCU_Capabilities::APPROVE_CLAIMS, null, 'future_intelligence_claims' );
+	}
+	public static function can_revalidate_claim( WP_REST_Request $request ) {
+		$key = sanitize_key( (string) $request['claim_key'] );
+		return GCU_Capabilities::can( GCU_Capabilities::APPROVE_CLAIMS, $key, 'future_intelligence_claims' );
 	}
 
 	private static function sanitize_region( $region ) {
