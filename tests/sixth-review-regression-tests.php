@@ -14,7 +14,7 @@ $admin=file_get_contents($p.'/includes/class-gcu-admin.php');
 $obs=file_get_contents($p.'/includes/class-gcu-observability.php');
 $hard=file_get_contents($p.'/includes/class-gcu-hardening.php');
 
-s6(false!==strpos($main,"GCU_SCHEMA_VERSION', 10005"),'Sixth-review schema identity drift.');
+s6(false!==strpos($main,"GCU_SCHEMA_VERSION', 10006"),'Sixth-review schema identity drift.');
 s6(false!==strpos($repo,'placement_ready($row)'),'Active placement request-time File20 fail-close missing.');
 s6(false!==strpos($integrity,'AUDIT_KEY_OPTION')&&false!==strpos($integrity,'PRIVACY_KEY_OPTION')&&false!==strpos($integrity,'migrate_legacy_hashes'),'Stable integrity/privacy key migration missing.');
 s6(false!==strpos($obs,'audit_chain_integrity_failed'),'Invalid audit-chain containment missing.');
