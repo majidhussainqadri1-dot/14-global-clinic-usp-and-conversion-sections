@@ -18,7 +18,7 @@ $status=tenth_text($root.'/STATUS.md');
 $release=tenth_text($root.'/docs/RELEASE-EVIDENCE.md');
 $version=''; if(preg_match('/Version:\s*([0-9]+\.[0-9]+\.[0-9]+)/',$main,$m)){$version=$m[1];}
 tenth_assert(''!==$version && version_compare($version,'1.4.8','>=') && false!==strpos($main,"GCU_VERSION', '".$version."'"),'Tenth-cycle candidate must be v1.4.8 or later with matching GCU_VERSION.');
-tenth_assert(false!==strpos($main,"GCU_SCHEMA_VERSION', 10005")&&false!==strpos($main,"GCU_FUTURE_SCHEMA_VERSION', 1"),'Tenth cycle must not invent a schema change.');
+tenth_assert(false!==strpos($main,"GCU_SCHEMA_VERSION', 10006")&&false!==strpos($main,"GCU_FUTURE_SCHEMA_VERSION', 1"),'Current schema identity must include the governed cleanup-index migration.');
 foreach(array('gcu_event_identity_query_failed') as$m){tenth_assert(false!==strpos($rest,$m),'REST DB fail-close missing: '.$m);}
 foreach(array('privacy_export_event_query_failed','privacy_export_report_query_failed','legal_hold_applies','gcu_privacy_legal_hold','privacy_legal_hold_check_failed') as$m){tenth_assert(false!==strpos($privacy,$m),'Privacy lifecycle hardening missing: '.$m);}
 foreach(array('gcu_event_token_store_failed','gcu_event_duplicate_query_failed','gcu_event_identity_conflict','content_superseded','gcu_supersede_governance_failed','gcu_content_version_read_failed','gcu_workflow_read_failed','gcu_placement_dependency_read_failed','gcu_claim_read_failed','gcu_claim_history_read_failed','gcu_command_read_failed','fail_command_claim','lifecycle_cleanup_failed','outbox_select_failed','inbox_select_failed') as$m){tenth_assert(false!==strpos($repo,$m),'Repository tenth-cycle hardening missing: '.$m);}
