@@ -441,7 +441,11 @@ final class GCU_Future_Intelligence {
 	public static function claim_freshness_sentinel() {
 		global $wpdb;
 		$t = GCU_Install::tables();
+		$wpdb->last_error = '';
 		$rows = $wpdb->get_results( "SELECT * FROM {$t['claims']} WHERE status='active' AND ((review_due_at IS NOT NULL AND review_due_at<=UTC_TIMESTAMP()) OR (expires_at IS NOT NULL AND expires_at<=UTC_TIMESTAMP())) LIMIT 100", ARRAY_A );
+		if ( '' !== (string) $wpdb->last_error || ! is_array( $rows ) ) {
+			return new WP_Error( 'gcu_future_claim_freshness_query_failed', __( 'Claim freshness could not be evaluated safely.', 'global-clinic-usp-integration' ), array( 'status' => 503 ) );
+		}
 		$count = 0;
 		foreach ( is_array( $rows ) ? $rows : array() as $row ) {
 			$lock = GCU_Hardening::acquire_db_lock( 'future-claim:' . $row['claim_key'], 3 );
@@ -666,7 +670,14 @@ final class GCU_Future_Intelligence {
 	public static function consistency_graph() {
 		global $wpdb;
 		$t = GCU_Install::tables();
-		$rows = $wpdb->get_results( "SELECT block_key,locale,title,body,cta_label,claim_keys FROM {$t['blocks']} WHERE status='active' ORDER BY block_key,locale", ARRAY_A );
+		$wpdb->last_error = '';
+		$rows = $wpdb->get_results( "SELECT block_key,locale,title,body,cta_label,claim_keys FROM {$t['blocks']} WHERE status='active' ORDER BY block_key,locale LIMIT 1001", ARRAY_A );
+		if ( '' !== (string) $wpdb->last_error || ! is_array( $rows ) ) {
+			return new WP_Error( 'gcu_future_consistency_query_failed', __( 'Message consistency could not be evaluated safely.', 'global-clinic-usp-integration' ), array( 'status' => 503 ) );
+		}
+		if ( count( $rows ) > 1000 ) {
+			return new WP_Error( 'gcu_future_consistency_scan_ceiling', __( 'Message consistency requires operator review because the active-content scan ceiling was exceeded.', 'global-clinic-usp-integration' ), array( 'status' => 503, 'ceiling' => 1000 ) );
+		}
 		$nodes = array();
 		$issues = array();
 		foreach ( is_array( $rows ) ? $rows : array() as $row ) {
@@ -904,12 +915,16 @@ final class GCU_Future_Intelligence {
 			$where .= " AND status='active' AND is_public=1 AND (review_due_at IS NULL OR review_due_at>UTC_TIMESTAMP())";
 		}
 		$sql = "SELECT record_type,record_key,locale,region,status,is_public,payload,row_version,review_due_at,updated_at FROM {$t['records']} WHERE $where ORDER BY updated_at DESC LIMIT $limit";
+		$wpdb->last_error = '';
 		$rows = $args ? $wpdb->get_results( $wpdb->prepare( $sql, $args ), ARRAY_A ) : $wpdb->get_results( $sql, ARRAY_A );
-		foreach ( is_array( $rows ) ? $rows : array() as &$row ) {
+		if ( '' !== (string) $wpdb->last_error || ! is_array( $rows ) ) {
+			return new WP_Error( 'gcu_future_records_query_failed', __( 'Future records could not be read safely.', 'global-clinic-usp-integration' ), array( 'status' => 503 ) );
+		}
+		foreach ( $rows as &$row ) {
 			$row['payload'] = self::json_array( $row['payload'] );
 		}
 		unset( $row );
-		return is_array( $rows ) ? $rows : array();
+		return $rows;
 	}
 
 	public static function public_change_log( $limit = 20 ) {
