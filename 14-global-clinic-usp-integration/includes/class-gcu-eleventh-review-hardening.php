@@ -3,7 +3,7 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Eleventh-cycle postcondition guards.
+ * Consolidated installation/schema postcondition guards for File 14.
  *
  * These guards do not create a second schema/migration owner. They verify and,
  * where safe and deterministic, repair File 14's own installation receipts
@@ -32,12 +32,20 @@ final class GCU_Eleventh_Review_Hardening {
 		if ( GCU_VERSION !== (string) get_option( GCU_Install::VERSION_OPTION, '' ) || GCU_SCHEMA_VERSION !== (int) get_option( GCU_Install::SCHEMA_OPTION, 0 ) ) { return; }
 		$result = self::verify_all( false );
 		if ( is_wp_error( $result ) ) {
+			update_option( 'gcu_enabled', 0, false );
 			update_option( GCU_Future_Intelligence::SAFE_MODE_OPTION, 1, false );
+			update_option( GCU_Install::UPGRADE_ERROR, array( 'code' => sanitize_key( $result->get_error_code() ), 'occurred_at' => time(), 'version' => GCU_VERSION, 'schema' => GCU_SCHEMA_VERSION ), false );
 			GCU_Observability::log( 'error', 'eleventh_postcondition_failed', array( 'code' => $result->get_error_code() ) );
 		}
 	}
 
 	public static function verify_all( $repair = false ) {
+		$base_schema = GCU_Install::verify_schema();
+		if ( is_wp_error( $base_schema ) ) { return $base_schema; }
+		$future_schema = GCU_Future_Intelligence::verify_schema();
+		if ( is_wp_error( $future_schema ) ) { return $future_schema; }
+		$constraints = self::verify_schema_constraints();
+		if ( is_wp_error( $constraints ) ) { return $constraints; }
 		$snapshot = self::verify_snapshot_integrity();
 		if ( is_wp_error( $snapshot ) ) { return $snapshot; }
 		$migration = self::verify_migration_receipt( $repair );
@@ -47,6 +55,54 @@ final class GCU_Eleventh_Review_Hardening {
 		$cron = self::verify_future_cron( $repair );
 		if ( is_wp_error( $cron ) ) { return $cron; }
 		return true;
+	}
+
+	private static function verify_schema_constraints() {
+		global $wpdb;
+		$base = GCU_Install::tables();
+		$future = GCU_Future_Intelligence::tables();
+		$expected = array(
+			$base['claims'] => array( 'PRIMARY' => array( 'id' ), 'public_id' => array( 'public_id' ), 'claim_key' => array( 'claim_key' ) ),
+			$base['claim_history'] => array( 'PRIMARY' => array( 'id' ), 'claim_version' => array( 'claim_key', 'row_version' ) ),
+			$base['blocks'] => array( 'PRIMARY' => array( 'id' ), 'public_id' => array( 'public_id' ), 'block_locale_version' => array( 'block_key', 'locale', 'content_version' ) ),
+			$base['placements'] => array( 'PRIMARY' => array( 'id' ), 'public_id' => array( 'public_id' ), 'placement_key' => array( 'placement_key' ) ),
+			$base['experiments'] => array( 'PRIMARY' => array( 'id' ), 'public_id' => array( 'public_id' ), 'experiment_key' => array( 'experiment_key' ) ),
+			$base['events'] => array( 'PRIMARY' => array( 'id' ), 'event_id' => array( 'event_id' ) ),
+			$base['audit'] => array( 'PRIMARY' => array( 'id' ), 'row_hash' => array( 'row_hash' ) ),
+			$base['outbox'] => array( 'PRIMARY' => array( 'id' ), 'event_id' => array( 'event_id' ) ),
+			$base['inbox'] => array( 'PRIMARY' => array( 'id' ), 'event_id' => array( 'event_id' ) ),
+			$base['event_tokens'] => array( 'PRIMARY' => array( 'id' ), 'token_id' => array( 'token_id' ), 'token_hash' => array( 'token_hash' ) ),
+			$base['rate_limits'] => array( 'PRIMARY' => array( 'id' ), 'bucket_key' => array( 'bucket_key' ) ),
+			$base['commands'] => array( 'PRIMARY' => array( 'id' ), 'command_key' => array( 'command_key' ) ),
+			$future['records'] => array( 'PRIMARY' => array( 'id' ), 'record_identity' => array( 'record_type', 'record_key', 'locale', 'region' ) ),
+			$future['reports'] => array( 'PRIMARY' => array( 'id' ), 'public_id' => array( 'public_id' ) ),
+		);
+
+		$missing = array();
+		foreach ( $expected as $table => $indexes ) {
+			$wpdb->last_error = '';
+			$rows = $wpdb->get_results( "SHOW INDEX FROM `$table`", ARRAY_A );
+			if ( '' !== (string) $wpdb->last_error || ! is_array( $rows ) ) {
+				return new WP_Error( 'gcu_schema_index_probe_failed', __( 'File 14 database constraints could not be verified safely.', 'global-clinic-usp-integration' ), array( 'table' => $table ) );
+			}
+			$actual = array();
+			foreach ( $rows as $row ) {
+				if ( ! isset( $row['Key_name'], $row['Column_name'], $row['Non_unique'] ) || 0 !== (int) $row['Non_unique'] ) { continue; }
+				$name = (string) $row['Key_name'];
+				$seq = isset( $row['Seq_in_index'] ) ? max( 1, (int) $row['Seq_in_index'] ) : count( isset( $actual[ $name ] ) ? $actual[ $name ] : array() ) + 1;
+				$actual[ $name ][ $seq ] = (string) $row['Column_name'];
+			}
+			foreach ( $actual as $name => $columns ) {
+				ksort( $columns, SORT_NUMERIC );
+				$actual[ $name ] = array_values( $columns );
+			}
+			foreach ( $indexes as $name => $columns ) {
+				if ( ! isset( $actual[ $name ] ) || $columns !== $actual[ $name ] ) {
+					$missing[ $table ][ $name ] = $columns;
+				}
+			}
+		}
+		return $missing ? new WP_Error( 'gcu_schema_constraints_unverified', __( 'File 14 database uniqueness constraints are incomplete or inconsistent.', 'global-clinic-usp-integration' ), array( 'missing_indexes' => $missing ) ) : true;
 	}
 
 	private static function verify_snapshot_integrity() {
