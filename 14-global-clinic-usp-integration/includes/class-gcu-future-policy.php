@@ -159,7 +159,8 @@ final class GCU_Future_Policy {
 		foreach ( $variants as $index => $variant ) {
 			$text = is_array( $variant ) ? wp_json_encode( $variant ) : (string) $variant;
 			$scan = self::dark_pattern_scan( $text );
-			foreach ( $scan['flags'] as $flag ) {
+			$business = self::business_policy_contradiction_scan( $text );
+			foreach ( array_merge( $scan['flags'], $business['flags'] ) as $flag ) {
 				$flags[] = 'variant_' . absint( $index ) . ':' . $flag;
 			}
 		}

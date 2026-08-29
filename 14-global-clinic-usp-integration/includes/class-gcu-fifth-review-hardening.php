@@ -233,7 +233,13 @@ final class GCU_Fifth_Review_Hardening {
 		}
 
 		$tables = GCU_Install::tables();
+		$wpdb->last_error = '';
 		$rows = $wpdb->get_results( "SELECT * FROM {$tables['experiments']} WHERE status='running' LIMIT 50", ARRAY_A );
+		if ( '' !== (string) $wpdb->last_error || ! is_array( $rows ) ) {
+			update_option( GCU_Future_Intelligence::SAFE_MODE_OPTION, 1, false );
+			GCU_Observability::log( 'error', 'future_early_stop_experiment_query_failed', array( 'containment' => 'future_safe_mode' ) );
+			return new WP_Error( 'gcu_future_early_stop_experiment_query_failed', __( 'Running experiments could not be verified for the mandatory safety stop.', 'global-clinic-usp-integration' ), array( 'status' => 503 ) );
+		}
 		$count = 0;
 		foreach ( is_array( $rows ) ? $rows : array() as $row ) {
 			$lock = GCU_Hardening::acquire_db_lock( 'experiment-early-stop:' . $row['public_id'], 3 );
