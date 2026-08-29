@@ -190,6 +190,8 @@ final class GCU_Future_Intelligence {
 	}
 
 	public static function rest_report( WP_REST_Request $request ) {
+		$rate = GCU_Plugin::instance()->repository()->consume_rate_limit( 'future-report-entry', 5 );
+		if ( is_wp_error( $rate ) ) { return $rate; }
 		$key = self::required_idempotency_key( $request );
 		if ( is_wp_error( $key ) ) { return $key; }
 		$data = $request->get_json_params();
@@ -818,8 +820,20 @@ final class GCU_Future_Intelligence {
 		if ( self::report_contains_sensitive_data( $message ) ) { return new WP_Error( 'gcu_future_report_sensitive_data', __( 'Do not include personal, contact, identity or clinical details in a copy-quality report.', 'global-clinic-usp-integration' ), array( 'status' => 400 ) ); }
 		$route = sanitize_key( isset( $data['route_key'] ) ? $data['route_key'] : 'global_clinic' );
 		if ( ! in_array( $route, array( 'global_clinic', 'how_it_works' ), true ) ) { $route = 'global_clinic'; }
-		$block = sanitize_key( isset( $data['block_key'] ) ? $data['block_key'] : '' );
+		$block = GCU_Hardening::bounded_text( sanitize_key( isset( $data['block_key'] ) ? $data['block_key'] : '' ), 191 );
 		$locale = GCU_Policy::sanitize_locale( isset( $data['locale'] ) ? $data['locale'] : 'en-US' );
+		if ( $block ) {
+			global $wpdb;
+			$base_tables = GCU_Install::tables();
+			$wpdb->last_error = '';
+			$known_block = $wpdb->get_var( $wpdb->prepare( "SELECT block_key FROM {$base_tables['blocks']} WHERE block_key=%s LIMIT 1", $block ) );
+			if ( '' !== (string) $wpdb->last_error ) {
+				return new WP_Error( 'gcu_future_report_block_query_failed', __( 'The reported content reference could not be verified safely.', 'global-clinic-usp-integration' ), array( 'status' => 503 ) );
+			}
+			if ( ! $known_block || ! hash_equals( (string) $known_block, (string) $block ) ) {
+				return new WP_Error( 'gcu_future_report_block_invalid', __( 'The reported content reference is not a known File 14 block.', 'global-clinic-usp-integration' ), array( 'status' => 400 ) );
+			}
+		}
 		$id = isset( $data['report_id'] ) && wp_is_uuid( $data['report_id'] ) ? sanitize_text_field( $data['report_id'] ) : wp_generate_uuid4();
 		$actor_hash = is_user_logged_in() ? GCU_Integrity::future_actor_hash( get_current_user_id() ) : null;
 		$identity = array( 'report_type'=>'copy_quality', 'route_key'=>$route, 'block_key'=>$block, 'locale'=>$locale, 'reason_code'=>$reason, 'message'=>$message, 'actor_hash'=>null === $actor_hash ? '' : $actor_hash );
