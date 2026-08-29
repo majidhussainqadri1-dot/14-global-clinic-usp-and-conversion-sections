@@ -20,7 +20,7 @@ $baseline_workflow = eighth_text( $root . '/.github/workflows/baseline-import-an
 $version = '';
 if ( preg_match( '/Version:\s*([0-9]+\.[0-9]+\.[0-9]+)/', $main, $match ) ) { $version = $match[1]; }
 eighth_assert( '' !== $version && version_compare( $version, '1.4.6', '>=' ) && false !== strpos( $main, "GCU_VERSION', '" . $version . "'" ), 'Eighth-cycle invariants require a release identity at or after v1.4.6.' );
-eighth_assert( false !== strpos( $main, "GCU_SCHEMA_VERSION', 10005" ) && false !== strpos( $main, "GCU_FUTURE_SCHEMA_VERSION', 1" ), 'Patch releases must not invent a schema change.' );
+eighth_assert( false !== strpos( $main, "GCU_SCHEMA_VERSION', 10006" ) && false !== strpos( $main, "GCU_FUTURE_SCHEMA_VERSION', 1" ), 'Current schema identity must remain explicit after governed migrations.' );
 
 eighth_assert( false !== strpos( $rest, "if(!empty(\$x['deduplicated']))" ) && substr_count( $rest, 'event_identity_guard($d)' ) >= 2, 'Concurrent duplicate conversion events must be identity-rechecked after deduplication.' );
 eighth_assert( false !== strpos( $rest, 'gcu_event_destination_required' ) && false !== strpos( $rest, "'cta_selected','destination_loaded','application_started','booking_started'" ), 'Destination-bound funnel stages must require a canonical destination at REST.' );
