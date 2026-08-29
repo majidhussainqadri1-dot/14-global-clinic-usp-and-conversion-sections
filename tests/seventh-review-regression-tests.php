@@ -11,7 +11,7 @@ $rest=file_get_contents($p.'/includes/class-gcu-rest.php');
 $ignore=file_get_contents($root.'/.gitignore');
 $version='';if(preg_match('/Version:\s*([0-9]+\.[0-9]+\.[0-9]+)/',$main,$m)){$version=$m[1];}
 
-s7(''!==$version&&version_compare($version,'1.4.5','>=')&&false!==strpos($main,"GCU_VERSION', '".$version."'")&&false!==strpos($main,"GCU_SCHEMA_VERSION', 10005"),'Seventh-review release/schema baseline regressed.');
+s7(''!==$version&&version_compare($version,'1.4.5','>=')&&false!==strpos($main,"GCU_VERSION', '".$version."'")&&false!==strpos($main,"GCU_SCHEMA_VERSION', 10006"),'Seventh-review release/schema baseline regressed.');
 s7(false!==strpos($main,"GCU_CURRENT_REPOSITORY_ALIAS', '14-global-clinic-usp-and-conversion-sections'"),'Current GitHub repository alias is not recorded beside the plan-canonical repository identity.');
 s7(false!==strpos($cap,"apply_filters( 'gcu_authorize', false")&&false!==strpos($cap,"true === apply_filters"),'File 00 authorization adapter is not explicit-grant fail closed.');
 s7(false!==strpos($hard,"if ( '' === \$scope ) { return false; }") ,'Normalized empty DB lock scopes are not rejected.');
