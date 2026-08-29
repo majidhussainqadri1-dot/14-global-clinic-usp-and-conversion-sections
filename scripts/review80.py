@@ -74,7 +74,7 @@ checks: list[tuple[str, bool]] = [
     ("15 STATUS follows current repository candidate truth", current_version and f"v{current_version}" in status and f"Software candidate: `{current_version}`" in status),
     ("16 release-evidence follows current candidate truth", current_version and f"v{current_version}" in release and f"Software candidate: `{current_version}`" in release),
     ("17 corrective round ledger and complete defect index exist", "Defects were discovered in rounds **02, 03, 04, 05, 06, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 38, 40 and 58**" in ledger and "| 80 |" in ledger),
-    ("18 base schema remains 10005 and separate from patch version", "GCU_SCHEMA_VERSION', 10005" in loader),
+    ("18 base schema is 10006 after governed cleanup-index migration and remains separate from patch version", "GCU_SCHEMA_VERSION', 10006" in loader),
     ("19 Future additive schema remains 1 with InnoDB verification", "GCU_FUTURE_SCHEMA_VERSION', 1" in loader and "SHOW TABLE STATUS" in install and "innodb" in install.lower()),
     ("20 install/upgrade named lock retained", "SELECT GET_LOCK" in install),
     ("21 transaction boundaries retained", "START TRANSACTION" in install and "begin_owned_transaction" in repo and "commit_owned_transaction" in repo),
