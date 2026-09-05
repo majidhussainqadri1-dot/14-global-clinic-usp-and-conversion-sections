@@ -23,8 +23,12 @@ $approval_ok = is_array( $approval )
 	&& (int) $approval['approved_at'] >= $now - DAY_IN_SECONDS
 	&& ! empty( $approval['backup_verified_at'] )
 	&& (int) $approval['backup_verified_at'] <= $now
+	&& (int) $approval['backup_verified_at'] >= $now - DAY_IN_SECONDS
+	&& (int) $approval['backup_verified_at'] <= (int) $approval['approved_at']
 	&& ! empty( $approval['restore_verified_at'] )
-	&& (int) $approval['restore_verified_at'] <= $now;
+	&& (int) $approval['restore_verified_at'] <= $now
+	&& (int) $approval['restore_verified_at'] >= $now - DAY_IN_SECONDS
+	&& (int) $approval['restore_verified_at'] <= (int) $approval['approved_at'];
 $allow = defined( 'GCU_ALLOW_PURGE' ) && true === GCU_ALLOW_PURGE && (bool) get_option( 'gcu_purge_on_uninstall', false ) && $approval_ok;
 if ( ! $allow ) {
 	return;
