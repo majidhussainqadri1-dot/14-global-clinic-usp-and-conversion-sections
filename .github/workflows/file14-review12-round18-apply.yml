@@ -26,7 +26,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add 14-global-clinic-usp-integration/includes/class-gcu-contracts.php 14-global-clinic-usp-integration/uninstall.php tests/twelfth-cycle-round18-regression-tests.php scripts/quality.sh
+          git add 14-global-clinic-usp-integration/includes/class-gcu-repository.php 14-global-clinic-usp-integration/uninstall.php tests/twelfth-cycle-round18-regression-tests.php scripts/quality.sh
           git diff --cached --check
           git commit -m "review12 round-18: harden contract version and purge evidence"
           git push origin HEAD:review/file14-twelfth-20-round-2026-08-29
