@@ -70,7 +70,7 @@ version_ok = bool(vm and cm and current_version == cm.group(1))
 checks: list[tuple[str, bool]] = [
     ("01 exact software and plan identity", version_ok and "SSH-F14-PLAN-2026-v1.0" in loader and "SSH-F14-FUTURE-CTI-2026-v2.0" in loader),
     ("02 traceability current-version truth", current_version and f"Requirements Traceability — v{current_version}" in trace and f"File 14 v{current_version} may only claim a status" in trace),
-    ("03 current schema identities remain separated", "GCU_SCHEMA_VERSION', 10005" in loader and "GCU_FUTURE_SCHEMA_VERSION', 1" in loader),
+    ("03 current schema identities remain separated", "GCU_SCHEMA_VERSION', 10006" in loader and "GCU_FUTURE_SCHEMA_VERSION', 1" in loader),
     ("04 status prose is not contradictory candidate-plus-merged state", current_version and f"v{current_version}" in status and "Repository Candidate" in status and "Corrective Candidate — Merged" not in status),
     ("05 release evidence uses current candidate framing", current_version and f"v{current_version}" in release and "Repository Candidate" in release and "exact review/main SHA being accepted" in release and "fresh post-merge" in release),
     ("06 obsolete v1.4.0 PR-3 one-shot release automation removed", not exists(".github/workflows/file14-one-shot-release-gate.yml")),
