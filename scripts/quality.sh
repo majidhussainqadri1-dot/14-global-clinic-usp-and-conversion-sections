@@ -1,6 +1,17 @@
 #!/usr/bin/env bash
 set -euo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+
+# Repository hygiene is a release invariant: generated Python bytecode/cache
+# must never be committed. py_compile below may create local ignored caches,
+# so inspect the Git index rather than the working tree.
+tracked_python_artifacts="$(git -C "$ROOT" ls-files | grep -E '(^|/)__pycache__/|\.py[co]$' || true)"
+if [[ -n "$tracked_python_artifacts" ]]; then
+  echo "Tracked generated Python artifacts are forbidden:" >&2
+  printf '%s\n' "$tracked_python_artifacts" >&2
+  exit 1
+fi
+
 find "$ROOT/14-global-clinic-usp-integration" "$ROOT/tests" -name '*.php' -print0 | xargs -0 -n1 php -l
 php "$ROOT/tests/policy-tests.php"
 php "$ROOT/tests/contract-tests.php"
