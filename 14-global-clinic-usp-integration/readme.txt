@@ -4,7 +4,7 @@ Tags: clinic, doctors, conversion, accessibility, privacy, governance, trust, ex
 Requires at least: 6.6
 Tested up to: 7.0.1
 Requires PHP: 7.4
-Stable tag: 1.4.4
+Stable tag: 1.4.5
 License: GPLv2 or later
 
 Canonical File 14 implementation for approved Worldwide Clinic value-proposition content, ethical conversion journeys, claim governance, destination contracts, Future Conversion & Trust Intelligence and privacy-minimized measurement.
@@ -12,7 +12,7 @@ Canonical File 14 implementation for approved Worldwide Clinic value-proposition
 == Description ==
 File 14 owns approved patient/doctor value-proposition blocks, File 20 placement contracts, claim evidence/version history, ethical conversion diagnostics, `/global-clinic/`, `/clinic/how-it-works/`, and versioned destinations to Files 07/08/09. It never owns doctor profiles, verification evidence, clinic records, appointments, payments, clinical records, the global shell/navigation or visual-system truth.
 
-Version 1.4.0 added the Founder-approved `SSH-F14-FUTURE-CTI-2026-v2.0` amendment as a bounded intelligence layer. Versions 1.4.1 and 1.4.2 delivered four independent eighty-pass corrective reviews. Version 1.4.3 re-opens the exact post-fourth-review main state and adds a fifth independent review hardening layer for runtime schema truth, Founder-controlled public Future governance, conversion-event identity, AI-copy privacy/multilingual safety and transactionally audited experiment early-stop behavior.
+Version 1.4.0 added the Founder-approved `SSH-F14-FUTURE-CTI-2026-v2.0` amendment as a bounded intelligence layer. Versions 1.4.1 and 1.4.2 delivered four independent eighty-pass corrective reviews. Version 1.4.3 added the fifth independent review layer; version 1.4.4 completed the sixth independent eighty-pass review. Version 1.4.5 adds an exact cross-file compatibility correction against the current File 00/07/08/09/20/24/25 repository contracts plus a dedicated twenty-pass cross-file completeness gate.
 
 == Future Conversion & Trust Intelligence — 24 approved enhancements ==
 * F14-FUT-01 Ethical Intent Router.
@@ -69,7 +69,7 @@ Public content works without measurement. Measurement requires explicit consent,
 
 Future analytics suppress total cohorts below 10 and each individual funnel stage below 10. FAQ intelligence consumes approved aggregate question signals only after direct personal/contact/identity markers are rejected. AI copy assistance receives approved claims and produces draft suggestions only; the fifth review blocks personal/contact/identity/clinical base text before provider invocation and filters Urdu/Arabic dark-pattern or guarantee output before response delivery. AI assistance never auto-publishes.
 
-The File 14 surface includes complete File 14-owned American English, Urdu and Arabic interface chrome, logical LTR/RTL direction, 44px targets, focus-visible treatment, reduced motion/data, forced-colors support, fluid reflow down to the 320px class and no inline executable markup. File 20 remains the sole owner of global navigation; File 14 consumes its declared shell contracts and does not emit a local Back/Home shell fallback.
+The File 14 surface includes complete File 14-owned American English, Urdu and Arabic interface chrome, logical LTR/RTL direction, 44px targets, focus-visible treatment, reduced motion/data, forced-colors support, fluid reflow down to the 320px class and no inline executable markup. File 20 remains the sole owner of the global shell/navigation. File 14 registers its navigation item and contextual fallback through File 20's current hooks; only when File 20 is absent does File 14 render a bounded local Back/Home recovery control so its own public route is not trapped.
 
 == Installation ==
 1. Install only on staging first.
@@ -82,8 +82,17 @@ The File 14 surface includes complete File 14-owned American English, Urdu and A
 8. Obtain explicit Founder acceptance before production deployment.
 
 == Changelog ==
+= 1.4.5 =
+* Reconciled File 14 with the exact current File 00/07/08/09/20/24/25 repository contracts instead of relying on historical placeholder hooks.
+* Action-time authorization now consumes File 00 versioned membership assertions while WordPress capabilities remain necessary and any legacy File14 authorization filter may only restrict.
+* Destination readiness now probes File 07 `DDD_Contracts::dependency_health()`, File 08 `WCA_Contracts::contract_manifest()`, and File 09 `GDO_Operations::health()` plus the canonical File 09 application URL; recent historical availability events remain a compatibility fallback only.
+* File 14 semantic placements no longer depend on the nonexistent File 20 `sabri_shell_slot_ready_v1` hook; File 20 integration now uses its actual navigation, module-health and contextual-navigation contracts.
+* Added File 25 reusable state/card/button integration and a complete File 24 assurance manifest without transferring domain ownership.
+* Added exact companion dependency observability, a dedicated cross-file integration regression suite and a twenty-pass cross-file coding-completeness gate.
+* Corrected canonical repository identity and release documentation. Repository QA remains separate from staging, deployed and operational acceptance.
+
 = 1.4.4 =
-* Fifth independent eighty-pass corrective release reopened from exact post-fourth-review main.
+* Sixth independent eighty-pass corrective release completed from the exact fifth-review main baseline.
 * Runtime readiness now fail-closes when base or Future tables/engines/required columns do not match the declared schema, even if version options still look current.
 * Public/active Future governance records require Founder-level approval in addition to content-management permission.
 * Reused conversion event UUIDs are accepted as idempotent only when stage, destination, pseudonymous subject and campaign identity match the stored event.
