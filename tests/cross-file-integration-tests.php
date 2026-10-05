@@ -38,7 +38,7 @@ xfit( false !== strpos( $comp, 'spcrc/module_manifests' ) && false !== strpos( $
 
 xfit( false !== strpos( $con, 'GCU_Companion_Adapters::destination_probe' ), 'Request-time owner destination probe missing.' );
 xfit( false !== strpos( $con, "'source'=>'owner_event'" ), 'Legacy owner event compatibility path missing.' );
-xfit( false !== strpos( $con, "$url='';" ), 'Unavailable destination does not clear its delivery URL.' );
+xfit( false !== strpos( $con, '$url=\'\';' ), 'Unavailable destination does not clear its delivery URL.' );
 
 xfit( false !== strpos( $obs, 'GCU_Companion_Adapters::dependency_health' ), 'Observability does not report actual companion health.' );
 xfit( false !== strpos( $comp, "'file24_assurance'" ) && false !== strpos( $comp, "'file25_visual'" ), 'Assurance/visual dependencies are not observable.' );
