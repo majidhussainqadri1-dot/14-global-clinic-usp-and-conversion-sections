@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Sixth independent 80-pass exact-source review gate for File 14 v1.4.4.
+"""Sixth-lineage independent 80-pass exact-source review gate for File 14 v1.4.5.
 
 This gate is repository evidence only. It does not prove staging, deployed-code,
 live database, migration or operational state.
@@ -16,6 +16,7 @@ install=r('14-global-clinic-usp-integration/includes/class-gcu-install.php')
 repo=r('14-global-clinic-usp-integration/includes/class-gcu-repository.php')
 rest=r('14-global-clinic-usp-integration/includes/class-gcu-rest.php')
 contracts=r('14-global-clinic-usp-integration/includes/class-gcu-contracts.php')
+companion=r('14-global-clinic-usp-integration/includes/class-gcu-companion-adapters.php')
 hard=r('14-global-clinic-usp-integration/includes/class-gcu-hardening.php')
 integrity=r('14-global-clinic-usp-integration/includes/class-gcu-integrity.php')
 privacy=r('14-global-clinic-usp-integration/includes/class-gcu-privacy.php')
@@ -43,13 +44,13 @@ build=r('scripts/build.py')
 checks=[]
 def add(label, ok): checks.append((label,bool(ok)))
 
-add('01 exact sixth-review release identity', 'Version: 1.4.4' in loader and "GCU_VERSION', '1.4.4" in loader and "GCU_SCHEMA_VERSION', 10005" in loader)
+add('01 current release retains sixth-review schema lineage', 'Version: 1.4.5' in loader and "GCU_VERSION', '1.4.5" in loader and "GCU_SCHEMA_VERSION', 10005" in loader)
 add('02 governing File14 and Future plan identities', 'SSH-F14-PLAN-2026-v1.0' in loader and 'SSH-F14-FUTURE-CTI-2026-v2.0' in loader)
-add('03 active public blocks re-check File20 slot readiness at request time', 'placement_ready($row)' in repo)
+add('03 active public blocks re-check File14 placement semantics at request time', 'placement_ready($row)' in repo and 'gcu_file14_placement_ready_v1' in contracts)
 add('04 File07 remains doctor-directory destination owner', "'doctor_directory'=>array('owner'=>'File 07'" in contracts)
 add('05 File08 remains clinic destination owner', "'clinic'=>array('owner'=>'File 08'" in contracts)
 add('06 File09 remains onboarding destination owner', "'doctor_onboarding'=>array('owner'=>'File 09'" in contracts)
-add('07 File00 authorization adapter remains fail-closed', 'authorization_adapter_available' in caps and '! self::authorization_adapter_available()' in caps)
+add('07 File00 authorization adapter remains fail-closed', 'authorization_adapter_available' in caps and 'GCU_Companion_Adapters::authorize' in caps and 'smc_membership_assertions' in companion)
 add('08 stable File14 privacy HMAC identity exists', 'PRIVACY_KEY_OPTION' in integrity and 'user_subject_hash' in integrity and 'future_actor_hash' in integrity)
 add('09 stable File14 audit HMAC and legacy rehash migration exist', 'AUDIT_KEY_OPTION' in integrity and 'migrate_audit_chain' in integrity and 'legacy_audit_row_hash' in integrity)
 add('10 invalid audit chain enters containment', 'audit_chain_integrity_failed' in obs and "update_option('gcu_enabled',0,false)" in obs)
@@ -86,8 +87,8 @@ add('40 uninstall remains non-destructive by default with dual purge guards', 'G
 add('41 strict same-origin validation checks scheme host effective port and userinfo', all(x in hard for x in ('strict_same_origin_url','effective_port',"isset( $target['user'] )","isset( $target['pass'] )")))
 add('42 public destination DTO remains minimized', 'public_destination($key)' in contracts and "'owner'=>" not in contracts.split('public function public_destination($key)',1)[1].split('public function public_destination_health',1)[0])
 add('43 owner destination readiness has bounded freshness', 'time()-DAY_IN_SECONDS' in contracts.replace(' ',''))
-add('44 File20 remains sole shell/navigation owner without duplicate fallback', 'sabri_shell_back_home_controls' in front and 'data-gcu-shell-fallback' not in front)
-add('45 File25 remains presentation boundary, not domain truth', 'File 25-compatible classes/tokens' in trace and 'visual-system truth' in trace)
+add('44 File20 remains sole shell owner and File14 fallback is conditional', 'sabri_file20_navigation_items' in companion and 'sabri_shell_context_navigation_fallback_url' in companion and 'GCU_Companion_Adapters::file20_available' in front)
+add('45 File25 remains presentation boundary, not domain truth', 'File 25-compatible classes/tokens' in trace and 'visual-system truth' in trace and 'Sabri\\\\PublicExperience\\\\Components' in companion)
 add('46 Global Privacy Control is honored', 'HTTP_SEC_GPC' in privacy)
 add('47 Save-Data/reduced-data is honored', 'HTTP_SAVE_DATA' in privacy and 'low_bandwidth_requested' in privacy)
 add('48 sensitive routes are excluded from measurement', 'is_sensitive_path' in privacy)
