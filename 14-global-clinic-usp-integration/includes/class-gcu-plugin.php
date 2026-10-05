@@ -25,6 +25,7 @@ final class GCU_Plugin {
 		$this->ran = true;
 		load_plugin_textdomain( 'global-clinic-usp-integration', false, dirname( GCU_BASENAME ) . '/languages' );
 		$upgrade=GCU_Install::maybe_upgrade();if(is_wp_error($upgrade)){GCU_Observability::log('error','runtime_upgrade_pending',array('code'=>$upgrade->get_error_code()));}
+		GCU_Companion_Adapters::hooks();
 		$this->contracts()->hooks();
 		$this->privacy()->hooks();
 		$this->frontend()->hooks();
