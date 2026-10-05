@@ -13,9 +13,9 @@ final class GCU_Companion_Adapters {
 	const REVIEW_BASELINE = '2026-10-05-review20-cross-file-v1';
 
 	public static function hooks() {
-		add_filter( 'sabri_file20_navigation_items', array( __CLASS__, 'file20_navigation_items' ), 30, 1 );
-		add_filter( 'sabri_file20_module_health', array( __CLASS__, 'file20_module_health' ), 30, 1 );
 		add_filter( 'sabri_shell_context_navigation_fallback_url', array( __CLASS__, 'context_fallback_url' ), 30, 2 );
+		add_filter( 'sabri_shell_route_result_allowed', array( __CLASS__, 'file20_route_result_allowed' ), 30, 5 );
+		add_filter( 'sabri_shell_system_check_sections', array( __CLASS__, 'file20_system_check_sections' ), 30, 1 );
 		add_filter( 'spcrc/module_manifests', array( __CLASS__, 'file24_manifest' ), 30, 1 );
 	}
 
@@ -135,27 +135,42 @@ final class GCU_Companion_Adapters {
 		return defined( 'SPCRC_VERSION' ) || class_exists( 'Sabri\\Platform\\Security\\Registry\\ModuleRegistry' );
 	}
 
-	public static function file20_navigation_items( $items ) {
-		$items = is_array( $items ) ? $items : array();
-		if ( ! isset( $items['global-clinic'] ) ) {
-			$items['global-clinic'] = array(
-				'label'      => __( 'Global Clinic', 'global-clinic-usp-integration' ),
-				'url'        => home_url( '/global-clinic/' ),
-				'capability' => 'read',
-			);
+	public static function file20_route_result_allowed( $allowed, $key, $url, $source, $destination ) {
+		if ( ! $allowed ) {
+			return false;
 		}
-		return $items;
+		if ( 'clinic' !== sanitize_key( (string) $key ) ) {
+			return true;
+		}
+		$safe = GCU_Hardening::strict_same_origin_url( $url );
+		if ( '' === $safe ) {
+			return false;
+		}
+		$path = wp_parse_url( $safe, PHP_URL_PATH );
+		$path = is_string( $path ) ? '/' . trim( $path, '/' ) : '';
+		if ( '/global-clinic' === $path ) {
+			return ! is_wp_error( GCU_Install::ready_for_runtime() );
+		}
+		// File 20 may resolve its existing Worldwide Clinic destination to File 08.
+		// File 14 never claims or manufactures a second global navigation owner.
+		return true;
 	}
 
-	public static function file20_module_health( $health ) {
-		$health = is_array( $health ) ? $health : array();
-		$health['file-14-global-clinic-usp'] = array(
-			'version'      => GCU_VERSION,
-			'plan_version' => GCU_PLAN_VERSION,
-			'ready'        => ! is_wp_error( GCU_Install::ready_for_runtime() ),
-			'destinations' => GCU_Plugin::instance()->contracts()->public_destination_health(),
+	public static function file20_system_check_sections( $sections ) {
+		$sections = is_array( $sections ) ? $sections : array();
+		$ready = ! is_wp_error( GCU_Install::ready_for_runtime() );
+		$sections['file14-global-clinic-usp'] = array(
+			'label'              => 'File 14 — Global Clinic USP',
+			'status'             => $ready ? 'pass' : 'warn',
+			'severity'           => $ready ? 'info' : 'high',
+			'version'            => GCU_VERSION,
+			'plan_version'       => GCU_PLAN_VERSION,
+			'dependency_health'  => self::dependency_health(),
+			'destination_health' => GCU_Plugin::instance()->contracts()->public_destination_health(),
+			'owner'              => 'File 14',
+			'shell_owner'        => 'File 20',
 		);
-		return $health;
+		return $sections;
 	}
 
 	public static function context_fallback_url( $default, $home_url ) {
