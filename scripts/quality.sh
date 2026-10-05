@@ -19,9 +19,9 @@ python3 "$ROOT/scripts/review80-second.py"
 python3 "$ROOT/scripts/review80-third.py"
 python3 "$ROOT/scripts/review80-fourth.py"
 python3 "$ROOT/scripts/review80-fifth.py"
-python3 "$ROOT/scripts/review80-sixth.py" "$ROOT/scripts/review20-cross-file.py"
+python3 "$ROOT/scripts/review80-sixth.py"
 python3 "$ROOT/scripts/review20-cross-file.py"
-python3 -m py_compile "$ROOT/scripts/build.py" "$ROOT/scripts/review80.py" "$ROOT/scripts/review80-second.py" "$ROOT/scripts/review80-third.py" "$ROOT/scripts/review80-fourth.py" "$ROOT/scripts/review80-fifth.py" "$ROOT/scripts/review80-sixth.py"
+python3 -m py_compile "$ROOT/scripts/build.py" "$ROOT/scripts/review80.py" "$ROOT/scripts/review80-second.py" "$ROOT/scripts/review80-third.py" "$ROOT/scripts/review80-fourth.py" "$ROOT/scripts/review80-fifth.py" "$ROOT/scripts/review80-sixth.py" "$ROOT/scripts/review20-cross-file.py"
 if grep -RInE "(password|secret|api[_-]?key|private[_-]?key)[[:space:]]*[:=][[:space:]]*['\"][^'\"]+" "$ROOT/14-global-clinic-usp-integration" --exclude='*.md' --exclude='readme.txt'; then echo "Potential embedded secret detected" >&2; exit 1; fi
 if grep -RInE "onclick=|onerror=|onload=|javascript:" "$ROOT/14-global-clinic-usp-integration" --include='*.php' --include='*.html' --include='*.txt'; then echo "Inline executable markup detected" >&2; exit 1; fi
 if grep -RIn "data-gcu-event-token" "$ROOT/14-global-clinic-usp-integration"; then echo "Single-use measurement token found in package source/HTML path" >&2; exit 1; fi
