@@ -32,6 +32,7 @@ public function public_destination_health(){$out=array();foreach(array_keys($thi
 public function placement_ready(array$p){
 $slot=sanitize_key(isset($p['slot_key'])?$p['slot_key']:'');$route=sanitize_key(isset($p['route_key'])?$p['route_key']:'');
 if('global_clinic'!==$route||!in_array($slot,array('global_clinic_primary','global_clinic_trust','global_clinic_steps','global_clinic_faq'),true)){return false;}
+if(!class_exists('GCU_Companion_Adapters')||!GCU_Companion_Adapters::placement_contract_ready($route,$slot)){return false;}
 $ready=apply_filters('gcu_file14_placement_ready_v1',true,$route,$slot,'File 14');
 return true===$ready;
 }
