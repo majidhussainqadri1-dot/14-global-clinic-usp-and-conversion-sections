@@ -21,6 +21,8 @@ final class GCU_Companion_Adapters {
 		add_filter( 'sabri_shell_route_result_allowed', array( __CLASS__, 'file20_route_result_allowed' ), 30, 5 );
 		add_filter( 'sabri_shell_system_check_sections', array( __CLASS__, 'file20_system_check_sections' ), 30, 1 );
 		add_filter( 'spcrc/module_manifests', array( __CLASS__, 'file24_manifest' ), 30, 1 );
+		add_action( 'init', array( __CLASS__, 'register_file19_producer' ), 40 );
+		add_action( 'gcu_operational_alert_v1', array( __CLASS__, 'notify_file19' ), 30, 1 );
 	}
 
 	public static function file00_available() {
@@ -247,6 +249,7 @@ final class GCU_Companion_Adapters {
 			'state'                   => 'registered',
 			'required'                => array(
 				$dependency( 'file-00', '1.2.44', 'Canonical identity, eligibility and action-time authorization assertions.', 'Protected mutations fail closed.' ),
+				$dependency( 'file-01', '2.0.1', 'Canonical module, route and contract registry plus platform integration backbone.', 'File 14 route/contract readiness remains degraded and semantic placement activation fails closed.' ),
 				$dependency( 'file-07', '1.2.0', 'Canonical doctor discovery destination.', 'Doctor-discovery CTA is unavailable.' ),
 				$dependency( 'file-08', '1.2.15', 'Canonical clinic and appointment destination health.', 'Clinic/appointment journey is unavailable.' ),
 				$dependency( 'file-09', '1.3.0', 'Canonical doctor onboarding and verification destination.', 'Doctor onboarding CTA is unavailable.' ),
@@ -254,7 +257,7 @@ final class GCU_Companion_Adapters {
 				$dependency( 'file-25', '0.15.0', 'Canonical public visual components and accessibility presentation.', 'Accessible scoped File 14 fallback components are used.' ),
 			),
 			'optional'                => array(
-				$dependency( 'file-19', '1.0.0', 'Unified notification delivery for future approved operational notices.', 'File 14 continues without notification delivery.' ),
+				$dependency( 'file-19', '3.0.5', 'Unified notification delivery for explicitly addressed operational notices.', 'File 14 continues without notification delivery; no recipient is guessed.' ),
 				$dependency( 'file-24', '0.99.0', 'Cross-cutting security, privacy, compliance and resilience assurance.', 'Assurance remains unassessed and release readiness is degraded.' ),
 			),
 			'capabilities'            => GCU_Capabilities::all(),
@@ -267,7 +270,7 @@ final class GCU_Companion_Adapters {
 			'writes'                  => array(),
 			'global_shell_owner'      => false,
 			'application_shell_owner' => false,
-			'health'                  => array( 'contract' => 'gcu.health.v1', 'callback' => 'GCU_Observability::health' ),
+			'health'                  => array( 'contract' => 'gcu.health.v1', 'callback' => 'GCU_Companion_Adapters::file01_health' ),
 		);
 	}
 
@@ -445,6 +448,86 @@ final class GCU_Companion_Adapters {
 
 	public static function file19_available() {
 		return function_exists( 'sun_ingest_domain_event' ) && function_exists( 'sun_register_notification_producer' );
+	}
+
+	public static function file01_health() {
+		$runtime = GCU_Install::ready_for_runtime();
+		$registry = self::file01_route_registry_state();
+		return array(
+			'available'            => ! is_wp_error( $runtime ),
+			'route_registry_ready' => ! empty( $registry['ready'] ),
+			'missing_routes'       => isset( $registry['missing'] ) ? array_values( $registry['missing'] ) : array(),
+			'route_conflicts'      => isset( $registry['conflicts'] ) ? array_values( $registry['conflicts'] ) : array(),
+			'version'              => GCU_VERSION,
+			'contract'             => 'gcu.health.v1',
+		);
+	}
+
+	public static function register_file19_producer() {
+		if ( ! self::file19_available() ) {
+			return false;
+		}
+		return (bool) sun_register_notification_producer(
+			'file14-global-clinic-usp',
+			array(
+				'owner'               => 'File 14',
+				'event_types'         => array( 'ClinicUSP.OperationalAlert' ),
+				'schema_versions'     => array( '1.0' ),
+				'allowed_data_fields' => array( 'summary', 'status', 'count', 'actions', 'why', 'group_key' ),
+			)
+		);
+	}
+
+	public static function notify_file19( $alert ) {
+		if ( ! self::file19_available() || ! is_array( $alert ) ) {
+			return false;
+		}
+		self::register_file19_producer();
+		$recipients = apply_filters( 'gcu_operational_notification_recipients', array(), $alert );
+		$recipients = is_array( $recipients ) ? array_values( array_unique( array_filter( array_map( 'absint', $recipients ) ) ) ) : array();
+		if ( ! $recipients ) {
+			// File 19 requires explicit canonical recipients. File 14 never guesses operators.
+			return false;
+		}
+		$severity = sanitize_key( isset( $alert['severity'] ) ? (string) $alert['severity'] : 'warning' );
+		$report = isset( $alert['report'] ) && is_array( $alert['report'] ) ? $alert['report'] : array();
+		$problems = 0;
+		foreach ( array( 'missing_tables', 'non_innodb_tables', 'localization_missing' ) as $key ) {
+			if ( ! empty( $report[ $key ] ) && is_array( $report[ $key ] ) ) {
+				$problems += count( $report[ $key ] );
+			}
+		}
+		if ( isset( $report['stale_claims'] ) ) {
+			$problems += max( 0, (int) $report['stale_claims'] );
+		}
+		$event_id = 'gcu-alert-' . substr( hash( 'sha256', wp_json_encode( array( GCU_VERSION, $severity, $problems, gmdate( 'Y-m-d-H' ) ) ) ), 0, 32 );
+		$event = array(
+			'producer'       => 'file14-global-clinic-usp',
+			'owner'          => 'File 14',
+			'event_id'       => $event_id,
+			'event_type'     => 'ClinicUSP.OperationalAlert',
+			'schema_version' => '1.0',
+			'occurred_at'    => gmdate( 'c' ),
+			'recipients'     => $recipients,
+			'category'       => 'system',
+			'priority'       => in_array( $severity, array( 'critical', 'error' ), true ) ? 'critical' : 'high',
+			'sensitivity'    => 'restricted',
+			'deep_link'      => admin_url( 'admin.php?page=gcu-settings' ),
+			'deep_context'   => 'file14-health',
+			'trace_id'       => GCU_Policy::trace_id(),
+			'idempotency_key'=> $event_id,
+			'source_version' => GCU_VERSION,
+			'data'           => array(
+				'summary'   => __( 'File 14 detected an operational condition that requires review.', 'global-clinic-usp-integration' ),
+				'status'    => $severity,
+				'count'     => $problems,
+				'actions'   => 'open_file14_health',
+				'why'       => 'governance_health_check',
+				'group_key' => 'file14-operational-health',
+			),
+		);
+		$result = sun_ingest_domain_event( $event );
+		return ! is_wp_error( $result );
 	}
 
 	public static function file20_route_result_allowed( $allowed, $key, $url, $source, $destination ) {
