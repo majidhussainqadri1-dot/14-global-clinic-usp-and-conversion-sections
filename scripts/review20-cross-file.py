@@ -47,8 +47,9 @@ add("03 central canonical-owner boundaries remain explicit",
     "File 14" in policy and "no_cure_guarantee" in policy and "'platform_commission_percent' => 0" in policy)
 
 add("04 File00 action-time authorization uses current versioned assertions",
-    "smc_membership_assertions" in companion
-    and "SMC_Contracts" in companion
+    "SMC_Contracts" in companion
+    and "smc_assertions_v1" in companion
+    and "smc_restricted_capabilities" in companion
     and "GCU_Companion_Adapters::authorize" in caps)
 
 add("05 File07 doctor-directory integration uses current runtime contract",
@@ -64,8 +65,8 @@ add("07 File09 onboarding integration uses current runtime contract",
     and "GDO_Plugin::application_url" in companion)
 
 add("08 File20 remains shell/navigation owner through current hooks",
-    "sabri_file20_navigation_items" in companion
-    and "sabri_file20_module_health" in companion
+    "sabri_shell_route_result_allowed" in companion
+    and "sabri_shell_system_check_sections" in companion
     and "sabri_shell_context_navigation_fallback_url" in companion
     and "sabri_shell_back_home_controls" not in front)
 
@@ -74,13 +75,17 @@ add("09 File25 visual system is consumed without taking domain truth",
     and "sabri-ui-card" in front
     and "sabri-ui-button" in front)
 
-add("10 File24 assurance-plane manifest is registered",
+add("10 File24 assurance-plane manifest is registered without fabricated acceptance evidence",
     "spcrc/module_manifests" in companion
     and "'canonical_data_owner'" in companion
-    and "'release_gate'" in companion)
+    and "'release_gate'" in companion
+    and "'posture'                => 'unassessed'" in companion
+    and "'last_security_test'     => ''" in companion)
 
-add("11 File14 semantic placements no longer depend on a nonexistent File20 slot API",
+add("11 File14 placements require File01 canonical routes and File20 shell readiness",
     "gcu_file14_placement_ready_v1" in contracts
+    and "GCU_Companion_Adapters::placement_contract_ready" in contracts
+    and "file01_route_registry_state" in companion
     and "sabri_shell_slot_ready_v1" not in contracts)
 
 add("12 destination readiness is request-time owner verified and fail-closed",
@@ -113,9 +118,10 @@ add("19 deterministic package and automated repository QA remain",
     and "php -l" in quality
     and "cross-file-integration-tests.php" in quality)
 
-add("20 repository/staging/live truth separation remains explicit",
+add("20 repository/staging/live truth separation and optional File19 health remain explicit",
     "No `Staging-Accepted`, `Live-Deployed` or `Operational` claim" in status
-    and "repository evidence only" in status.lower())
+    and "repository evidence only" in status.lower()
+    and "file19_notifications" in obs)
 
 if len(checks) != 20:
     print(f"Review definition error: {len(checks)} passes", file=sys.stderr)
