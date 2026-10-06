@@ -85,6 +85,10 @@ add("11 File14 placements require File01 canonical routes and File20 shell readi
     "gcu_file14_placement_ready_v1" in contracts
     and "GCU_Companion_Adapters::placement_contract_ready" in contracts
     and "file01_route_registry_state" in companion
+    and "sync_file01_registry" in companion
+    and "SPF_Registry::register_manifest" in companion
+    and "SPF_Registry::map_route" in companion
+    and "SPF_Registry::register_contract" in companion
     and "sabri_shell_slot_ready_v1" not in contracts)
 
 add("12 destination readiness is request-time owner verified and fail-closed",
