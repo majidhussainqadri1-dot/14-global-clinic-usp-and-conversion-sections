@@ -1,6 +1,6 @@
 <?php
 $root=dirname(__DIR__);$plugin=$root.'/14-global-clinic-usp-integration';
-$files=array('install'=>$plugin.'/includes/class-gcu-install.php','repo'=>$plugin.'/includes/class-gcu-repository.php','rest'=>$plugin.'/includes/class-gcu-rest.php','privacy'=>$plugin.'/includes/class-gcu-privacy.php','contracts'=>$plugin.'/includes/class-gcu-contracts.php','frontend'=>$plugin.'/includes/class-gcu-frontend.php','obs'=>$plugin.'/includes/class-gcu-observability.php','future'=>$plugin.'/includes/class-gcu-future-intelligence.php','uninstall'=>$plugin.'/uninstall.php');
+$files=array('install'=>$plugin.'/includes/class-gcu-install.php','repo'=>$plugin.'/includes/class-gcu-repository.php','rest'=>$plugin.'/includes/class-gcu-rest.php','privacy'=>$plugin.'/includes/class-gcu-privacy.php','contracts'=>$plugin.'/includes/class-gcu-contracts.php','companion'=>$plugin.'/includes/class-gcu-companion-adapters.php','frontend'=>$plugin.'/includes/class-gcu-frontend.php','obs'=>$plugin.'/includes/class-gcu-observability.php','future'=>$plugin.'/includes/class-gcu-future-intelligence.php','uninstall'=>$plugin.'/uninstall.php');
 $src=array();foreach($files as$k=>$p){$src[$k]=file_exists($p)?file_get_contents($p):'';}$fail=array();function must($c,$m){global$fail;if(!$c){$fail[]=$m;}}
 must(substr_count($src['install'],'CREATE TABLE')>=12,'Expected 12 base owner tables.');
 must(false!==strpos($src['install'],'ENGINE=InnoDB'),'InnoDB schema enforcement absent.');
@@ -27,7 +27,7 @@ must(false!==strpos($src['privacy'],'global_privacy_control_requested')&&false!=
 must(false!==strpos($src['contracts'],'gcu_destination_state_'),'Independent owner destination state absent.');
 must(false!==strpos($src['contracts'],'strict_same_origin_url'),'Strict owner URL validation absent.');
 must(false!==strpos($src['contracts'],'may never elevate'),'Readiness elevation boundary absent.');
-must(false!==strpos($src['contracts'],'sabri_shell_slot_ready_v1'),'File 20 placement readiness absent.');
+must(false!==strpos($src['contracts'],'GCU_Companion_Adapters::placement_contract_ready')&&false!==strpos($src['companion'],'file01_route_registry_state')&&false!==strpos($src['companion'],'SABRI_SHELL_VERSION'),'Current File 01/File 20 placement readiness absent.');
 must(false!==strpos($src['obs'],'audit_chain')&&false!==strpos($src['obs'],'non_innodb_tables'),'Health does not expose integrity/engine evidence.');
 must(false!==strpos($src['future'],'gcu_future_records')&&false!==strpos($src['future'],'gcu_future_reports')&&false!==strpos($src['future'],'verify_schema'),'Future CTI additive storage verification absent.');
 must(false!==strpos($src['future'],'claim_freshness_sentinel')&&false!==strpos($src['future'],'early_stop_guard'),'Future trust/reliability guards absent.');
