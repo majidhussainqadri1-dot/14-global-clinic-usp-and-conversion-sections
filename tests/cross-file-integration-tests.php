@@ -26,7 +26,7 @@ xfit( false !== strpos( $caps, 'GCU_Companion_Adapters::authorize' ) && false ==
 
 xfit( false !== strpos( $comp, 'DDD_Contracts::dependency_health' ) && false !== strpos( $comp, "home_url( '/doctors/' )" ), 'File 07 current directory contract missing.' );
 xfit( false !== strpos( $comp, 'WCA_Contracts::contract_manifest' ) && false !== strpos( $comp, "home_url( '/appointments/' )" ), 'File 08 current clinic contract missing.' );
-xfit( false !== strpos( $comp, 'GDO_Operations::health' ) && false !== strpos( $comp, 'GDO_Plugin::application_url' ), 'File 09 current onboarding contract missing.' );
+xfit( false !== strpos( $comp, 'gdo_file14_onboarding_destination' ), 'File 09 current onboarding contract missing.' );
 
 xfit( false !== strpos( $comp, 'SPF_Registry' ) && false !== strpos( $comp, 'file01_route_registry_state' ) && false !== strpos( $comp, 'placement_contract_ready' ), 'File 01 canonical route-registry contract missing.' );
 
