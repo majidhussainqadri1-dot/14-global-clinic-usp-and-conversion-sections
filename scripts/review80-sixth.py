@@ -88,7 +88,7 @@ add('41 strict same-origin validation checks scheme host effective port and user
 add('42 public destination DTO remains minimized', 'public_destination($key)' in contracts and "'owner'=>" not in contracts.split('public function public_destination($key)',1)[1].split('public function public_destination_health',1)[0])
 add('43 owner destination readiness has bounded freshness', 'time()-DAY_IN_SECONDS' in contracts.replace(' ',''))
 add('44 File20 remains sole shell owner and File14 fallback is conditional', 'sabri_shell_route_result_allowed' in companion and 'sabri_shell_system_check_sections' in companion and 'sabri_shell_context_navigation_fallback_url' in companion and 'GCU_Companion_Adapters::file20_available' in front)
-add('45 File25 remains presentation boundary, not domain truth', 'File 25-compatible classes/tokens' in trace and 'visual-system truth' in trace and 'Sabri\\\\PublicExperience\\\\Components' in companion)
+add('45 File25 remains presentation boundary, not domain truth', 'Sabri\\\\PublicExperience\\\\Components' in trace and 'visual-system truth' in trace and 'Sabri\\\\PublicExperience\\\\Components' in companion)
 add('46 Global Privacy Control is honored', 'HTTP_SEC_GPC' in privacy)
 add('47 Save-Data/reduced-data is honored', 'HTTP_SAVE_DATA' in privacy and 'low_bandwidth_requested' in privacy)
 add('48 sensitive routes are excluded from measurement', 'is_sensitive_path' in privacy)
