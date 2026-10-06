@@ -22,12 +22,13 @@ The **third independent eighty-pass** review established the durable exact-curre
 
 The 2026-10-05 review compared File 14 against its governing plan, the consolidated central plan and the current source-repository contracts of Files 00/01/07/08/09/20/24/25. It identified and corrected historical compatibility assumptions that were not present in the current companion repositories:
 
-- File 00 authorization now consumes current versioned membership assertions rather than requiring the File14-only `gcu_authorize` filter to exist.
+- File 00 authorization now consumes current `SMC_Contracts::assertions()` plus the `smc_assertions_v1` action-time hardening filter; File 14 capabilities participate in File 00 restricted-capability containment, while the legacy `gcu_authorize` bridge may only restrict.
 - Files 07/08/09 destination health now uses their current owner-native runtime contracts; historical availability events remain compatibility-only.
 - File 14 semantic content placements no longer require the nonexistent File 20 `sabri_shell_slot_ready_v1` hook.
-- File 20 integration now uses `sabri_file20_navigation_items`, `sabri_file20_module_health` and `sabri_shell_context_navigation_fallback_url`.
+- File 01 canonical route-registry readiness is now checked for all four File 14 public routes before semantic placements are treated as ready.
+- File 20 integration now uses the actual `sabri_shell_route_result_allowed`, `sabri_shell_system_check_sections` and `sabri_shell_context_navigation_fallback_url` contracts.
 - File 25 current reusable state/card/button contract is consumed without transferring domain ownership.
-- File 24 receives a bounded module assurance manifest while native File 14 security/authorization/privacy controls remain local.
+- File 24 receives a bounded module assurance manifest while native File 14 security/authorization/privacy controls remain local; repository code declares the assurance posture `unassessed` and does not fabricate a `last_security_test` timestamp.
 - Observability now exposes actual File 00/07/08/09/20/24/25 dependency states.
 - Exact companion repository baselines are recorded in `STATUS.md` and the twenty-pass review ledger; they are repository truth only and do not prove deployed parity.
 
