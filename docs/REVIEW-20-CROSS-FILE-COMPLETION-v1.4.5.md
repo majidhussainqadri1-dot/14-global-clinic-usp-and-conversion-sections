@@ -38,7 +38,7 @@ These SHAs identify source-repository truth only. They are not evidence that tho
 | 11 | Active semantic placement behavior | **HIGH FUNCTIONAL DEFECT** — active File 14 blocks depended on a nonexistent File 20 slot-ready filter and the File 01 route registry was not consumed | File 14 validates its semantic route/slots locally, requires all four canonical File 14 routes to be registered to `file-14` in File 01, and requires File 20 runtime readiness without transferring semantic-content ownership |
 | 12 | Destination fail-closed behavior | **DEFECT** — historical fallback URLs could survive owner-unconfirmed state | Unavailable companion destinations now clear the handoff URL; current owner runtime probe is primary and recent historical owner events are compatibility-only |
 | 13 | Public navigation recovery | **DEFECT** — with File 20 unavailable, File 14 supplied no recovery control at all | File 20 remains sole global shell owner; bounded local Back/Home recovery appears only when File 20 itself is unavailable |
-| 14 | Dependency observability | **DEFECT** — health report tested obsolete hooks and omitted registry/notification integration | Health now reports File 00, File 01 route registry, Files 07/08/09, optional File 19 notification availability, File 20, File 24 and File 25 current dependency states |
+| 14 | Dependency observability and File 19 delivery boundary | **DEFECT** — health report tested obsolete hooks and omitted registry/notification integration | Health now reports File 00, File 01 route registry, Files 07/08/09, File 19, File 20, File 24 and File 25; File 19 operational alerts use its current producer/ingest API only with explicit canonical recipients, never guessed recipients |
 | 15 | Canonical ownership / direct-write audit | CLEAN after correction | New adapter performs no direct SQL writes to companion owners and consumes read/health contracts only |
 | 16 | Privacy, consent, GPC, attribution, export/erase | CLEAN | Existing privacy-minimized implementation retained; File 24 manifest exposes privacy operations without transferring ownership |
 | 17 | Security, same-origin, REST authorization, abuse controls | CLEAN with File 00 integration correction | Fail-closed authorization retained; current File 00 assertion source inserted at action time |
@@ -49,7 +49,7 @@ These SHAs identify source-repository truth only. They are not evidence that tho
 ## Corrective files
 
 Primary runtime correction:
-- `includes/class-gcu-companion-adapters.php` — new current-contract adapter layer.
+- `includes/class-gcu-companion-adapters.php` — current-contract adapter layer for File 00/01/07/08/09/19/20/24/25, including File 01 registry synchronization and explicit-recipient File 19 operational notices.
 - `includes/class-gcu-capabilities.php` — File 00 action-time assertion consumption.
 - `includes/class-gcu-contracts.php` — owner-runtime destination probes and corrected semantic placement law.
 - `includes/class-gcu-frontend.php` — current File 20/File 25 presentation integration and bounded fallback.
@@ -60,7 +60,7 @@ Regression/evidence correction:
 - `tests/cross-file-integration-tests.php`
 - `scripts/review20-cross-file.py`
 - `scripts/quality.sh`
-- central/contract/sixth-lineage regression gates
+- central/contract/reliability/sixth-lineage regression gates and both fresh post-code review scripts
 - `README/readme.txt`, `MANIFEST.md`, `STATUS.md`, `docs/RELEASE-EVIDENCE.md`, `docs/REQUIREMENTS-TRACEABILITY.md`
 
 ## Final repository-gate meaning
