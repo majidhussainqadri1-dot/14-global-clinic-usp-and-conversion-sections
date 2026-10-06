@@ -20,7 +20,7 @@ The **third independent eighty-pass** review established the durable exact-curre
 
 ## Twenty-pass cross-file corrective evidence
 
-The 2026-10-05 review compared File 14 against its governing plan, the consolidated central plan and the current source-repository contracts of Files 00/01/07/08/09/20/24/25. It identified and corrected historical compatibility assumptions that were not present in the current companion repositories:
+The 2026-10-05 review compared File 14 against its governing plan, the consolidated central plan and the current source-repository contracts of Files 00/01/07/08/09/19/20/24/25. It identified and corrected historical compatibility assumptions that were not present in the current companion repositories:
 
 - File 00 authorization now consumes current `SMC_Contracts::assertions()` plus the `smc_assertions_v1` action-time hardening filter; File 14 capabilities participate in File 00 restricted-capability containment, while the legacy `gcu_authorize` bridge may only restrict.
 - Files 07/08/09 destination health now uses their current owner-native runtime contracts; historical availability events remain compatibility-only.
@@ -29,7 +29,8 @@ The 2026-10-05 review compared File 14 against its governing plan, the consolida
 - File 20 integration now uses the actual `sabri_shell_route_result_allowed`, `sabri_shell_system_check_sections` and `sabri_shell_context_navigation_fallback_url` contracts.
 - File 25 current reusable state/card/button contract is consumed without transferring domain ownership.
 - File 24 receives a bounded module assurance manifest while native File 14 security/authorization/privacy controls remain local; repository code declares the assurance posture `unassessed` and does not fabricate a `last_security_test` timestamp.
-- Observability now exposes actual File 00/07/08/09/20/24/25 dependency states.
+- File 19 integration now registers a bounded File 14 producer and submits only privacy-minimized operational alerts to explicitly supplied canonical recipients; File 14 never guesses recipients or takes delivery ownership.
+- Observability now exposes actual File 00/01/07/08/09/19/20/24/25 dependency states.
 - Exact companion repository baselines are recorded in `STATUS.md` and the twenty-pass review ledger; they are repository truth only and do not prove deployed parity.
 
 Round-by-round evidence is maintained in `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.5.md`.
@@ -49,6 +50,6 @@ Round-by-round evidence is maintained in:
 
 ## External evidence still mandatory
 
-Repository success cannot prove WordPress/Hostinger staging or live behavior. Staging, deployed code, live DB/schema/migration and operational behavior remain separate evidence classes. Separate gates still include exact deployed artifact/checksum parity, fresh install/upgrade with real WordPress/MySQL/InnoDB, File00/07/08/09/20/24/25 integration, browser/accessibility/RTL/LTR/400% zoom evidence, performance/failure drills, verified backup restore and rollback rehearsal, explicit Founder staging acceptance, production deployment, live smoke tests, monitoring and deployed-artifact parity confirmation.
+Repository success cannot prove WordPress/Hostinger staging or live behavior. Staging, deployed code, live DB/schema/migration and operational behavior remain separate evidence classes. Separate gates still include exact deployed artifact/checksum parity, fresh install/upgrade with real WordPress/MySQL/InnoDB, File00/01/07/08/09/19/20/24/25 integration, browser/accessibility/RTL/LTR/400% zoom evidence, performance/failure drills, verified backup restore and rollback rehearsal, explicit Founder staging acceptance, production deployment, live smoke tests, monitoring and deployed-artifact parity confirmation.
 
 No `Staging-Accepted`, `Live-Deployed` or `Operational` claim is made by this repository document.
