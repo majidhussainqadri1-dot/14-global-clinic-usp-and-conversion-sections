@@ -75,7 +75,7 @@ checks=[
 ('26 public claims enforce review_due_at at query time','review_due_at IS NULL OR review_due_at>UTC_TIMESTAMP()' in repo),
 ('27 founder-approved copy receives a new review due date',"$u['review_due_at']=gmdate" in repo),
 ('28 canonical governed claims are deterministic English source text',"'The platform charges 0% commission on approved clinic transactions.'" in policy and "__( 'The platform charges 0% commission on approved clinic transactions.'" not in policy),
-('29 authorization filters cannot elevate native capability denial','if ( ! $allowed ) { return false; }' in caps),
+('29 authorization filters cannot elevate native capability denial','if ( ! current_user_can( $capability ) ) { return false; }' in caps and 'GCU_Companion_Adapters::authorize' in caps),
 ('30 public report sensitive-data gate covers Urdu and Arabic','شناختی' in future and 'هوية' in future),
 ('31 FAQ aggregate sensitive-data gate covers Urdu and Arabic','شناختی' in review and 'هوية' in review),
 ('32 scenario notes are internal-only','gcu_future_scenario_note_private' in guards),

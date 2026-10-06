@@ -3,15 +3,15 @@ from pathlib import Path
 import re
 ROOT=Path(__file__).resolve().parents[1]
 def r(p): return (ROOT/p).read_text(encoding='utf-8')
-loader=r('14-global-clinic-usp-integration/global-clinic-usp-integration.php');caps=r('14-global-clinic-usp-integration/includes/class-gcu-capabilities.php');policy=r('14-global-clinic-usp-integration/includes/class-gcu-policy.php');repo=r('14-global-clinic-usp-integration/includes/class-gcu-repository.php');front=r('14-global-clinic-usp-integration/includes/class-gcu-frontend.php');install=r('14-global-clinic-usp-integration/includes/class-gcu-install.php');plugin=r('14-global-clinic-usp-integration/includes/class-gcu-plugin.php');obs=r('14-global-clinic-usp-integration/includes/class-gcu-observability.php');admin=r('14-global-clinic-usp-integration/includes/class-gcu-admin.php');contracts=r('14-global-clinic-usp-integration/includes/class-gcu-contracts.php');hard=r('14-global-clinic-usp-integration/includes/class-gcu-hardening.php');privacy=r('14-global-clinic-usp-integration/includes/class-gcu-privacy.php');future=r('14-global-clinic-usp-integration/includes/class-gcu-future-intelligence.php');guards=r('14-global-clinic-usp-integration/includes/class-gcu-future-guards.php');review=r('14-global-clinic-usp-integration/includes/class-gcu-review80-hardening.php');fi18n=r('14-global-clinic-usp-integration/includes/class-gcu-future-i18n.php');css=r('14-global-clinic-usp-integration/assets/css/global-clinic-usp-integration.css');future_css=r('14-global-clinic-usp-integration/assets/css/gcu-future-intelligence.css');readme=r('14-global-clinic-usp-integration/readme.txt');status=r('STATUS.md');release=r('docs/RELEASE-EVIDENCE.md');trace=r('docs/REQUIREMENTS-TRACEABILITY.md');workflow=r('.github/workflows/file14-quality.yml');build=r('scripts/build.py');quality=r('scripts/quality.sh');ledger=r('docs/REVIEW-80-FOURTH-LEDGER-v1.4.2.md')
+loader=r('14-global-clinic-usp-integration/global-clinic-usp-integration.php');caps=r('14-global-clinic-usp-integration/includes/class-gcu-capabilities.php');policy=r('14-global-clinic-usp-integration/includes/class-gcu-policy.php');repo=r('14-global-clinic-usp-integration/includes/class-gcu-repository.php');front=r('14-global-clinic-usp-integration/includes/class-gcu-frontend.php');install=r('14-global-clinic-usp-integration/includes/class-gcu-install.php');plugin=r('14-global-clinic-usp-integration/includes/class-gcu-plugin.php');obs=r('14-global-clinic-usp-integration/includes/class-gcu-observability.php');admin=r('14-global-clinic-usp-integration/includes/class-gcu-admin.php');contracts=r('14-global-clinic-usp-integration/includes/class-gcu-contracts.php');companion=r('14-global-clinic-usp-integration/includes/class-gcu-companion-adapters.php');hard=r('14-global-clinic-usp-integration/includes/class-gcu-hardening.php');privacy=r('14-global-clinic-usp-integration/includes/class-gcu-privacy.php');future=r('14-global-clinic-usp-integration/includes/class-gcu-future-intelligence.php');guards=r('14-global-clinic-usp-integration/includes/class-gcu-future-guards.php');review=r('14-global-clinic-usp-integration/includes/class-gcu-review80-hardening.php');fi18n=r('14-global-clinic-usp-integration/includes/class-gcu-future-i18n.php');css=r('14-global-clinic-usp-integration/assets/css/global-clinic-usp-integration.css');future_css=r('14-global-clinic-usp-integration/assets/css/gcu-future-intelligence.css');readme=r('14-global-clinic-usp-integration/readme.txt');status=r('STATUS.md');release=r('docs/RELEASE-EVIDENCE.md');trace=r('docs/REQUIREMENTS-TRACEABILITY.md');workflow=r('.github/workflows/file14-quality.yml');build=r('scripts/build.py');quality=r('scripts/quality.sh');ledger=r('docs/REVIEW-80-FOURTH-LEDGER-v1.4.2.md')
 vm=re.search(r'Version:\s*([0-9]+)\.([0-9]+)\.([0-9]+)',loader)
 version_ok=bool(vm) and tuple(map(int,vm.groups())) >= (1,4,2)
 checks=[
 ('01 v1.4.2-or-later + governing plans',version_ok and 'SSH-F14-PLAN-2026-v1.0' in loader and 'SSH-F14-FUTURE-CTI-2026-v2.0' in loader),
-('02 canonical logical repository identity','14-global-clinic-usp-and-conversion-integration' in loader),
+('02 canonical repository identity','14-global-clinic-usp-and-conversion-sections' in loader),
 ('03 File00 authorization adapter presence is testable','authorization_adapter_available' in caps),
 ('04 privileged auth fails closed without File00 adapter','! self::authorization_adapter_available()' in caps),
-('05 native denial cannot be elevated','if ( ! $allowed ) { return false; }' in caps),
+('05 native denial cannot be elevated','if ( ! current_user_can( $capability ) ) { return false; }' in caps and 'GCU_Companion_Adapters::authorize' in caps),
 ('06 campaign sensitive-value gate exists','campaign_value_is_sensitive' in policy),
 ('07 campaign email rejection exists','@[A-Z0-9.' in policy),
 ('08 campaign phone-like rejection exists',"{7,}" in policy),
@@ -29,7 +29,7 @@ checks=[
 ('20 audit recent tail uses anchored offset','OFFSET %d' in repo and 'anchor_missing' in repo),
 ('21 governed shortcode pages force cache revalidation',"has_shortcode($body,'gcu_block')" in front and 'nocache_headers()' in front),
 ('22 File14 does not ship duplicate shell fallback','data-gcu-shell-fallback' not in front),
-('23 File20 Back/Home adapter remains the sole requested nav contract','sabri_shell_back_home_controls' in front),
+('23 File20 contextual navigation remains the global shell contract','sabri_shell_context_navigation_fallback_url' in companion and 'GCU_Companion_Adapters::file20_available' in front and 'sabri_shell_back_home_controls' not in front),
 ('24 activation propagates Future schema failure','$future=self::ensure_future_schema(true)' in install and 'safe_error_record($future)' in install),
 ('25 routine upgrade propagates Future schema failure',install.count('$future=self::ensure_future_schema')>=2),
 ('26 rollback never wholesale deletes owner tables','DELETE FROM `$table`' not in install),
@@ -37,8 +37,8 @@ checks=[
 ('28 rollback restores snapshot rows by replace/insert','$wpdb->replace' in install and "$wpdb->insert($table,$row)" in install),
 ('29 plugin boot logs pending upgrade truth','runtime_upgrade_pending' in plugin),
 ('30 health report includes Future schema truth',"'future'=>$future" in obs and 'schema_verified' in obs),
-('31 health report includes File00 auth dependency','file00_authorization_adapter' in obs),
-('32 health report includes File20 nav/slot dependencies','file20_navigation_adapter' in obs and 'file20_slot_adapter' in obs),
+('31 health report includes File00 auth dependency',"'file00_authorization'" in obs or 'GCU_Companion_Adapters::dependency_health' in obs),
+('32 health report includes current cross-file dependencies','GCU_Companion_Adapters::dependency_health' in obs and "'file20_shell'" in companion and "'file01_route_registry'" in companion),
 ('33 health report includes all File14 cron readiness',"'cron'=>$cron" in obs and 'gcu_future_hourly_intelligence' in obs),
 ('34 health report includes rewrite-route readiness',"'routes'=>$routes" in obs and 'gcu_route=global_clinic' in obs),
 ('35 partial audit coverage warns',"'full'!==$r['audit_chain']['scope']" in obs),

@@ -35,6 +35,7 @@ def section(text: str, start: str, end: str) -> str:
 
 loader = read("14-global-clinic-usp-integration/global-clinic-usp-integration.php")
 contracts = read("14-global-clinic-usp-integration/includes/class-gcu-contracts.php")
+companion = read("14-global-clinic-usp-integration/includes/class-gcu-companion-adapters.php")
 rest = read("14-global-clinic-usp-integration/includes/class-gcu-rest.php")
 future = read("14-global-clinic-usp-integration/includes/class-gcu-future-intelligence.php")
 review = read("14-global-clinic-usp-integration/includes/class-gcu-review80-hardening.php")
@@ -72,11 +73,11 @@ checks: list[tuple[str, bool]] = [
     ("02 traceability current-version truth", current_version and f"Requirements Traceability — v{current_version}" in trace and f"File 14 v{current_version} may only claim a status" in trace),
     ("03 current schema identities remain separated", "GCU_SCHEMA_VERSION', 10005" in loader and "GCU_FUTURE_SCHEMA_VERSION', 1" in loader),
     ("04 status prose is not contradictory candidate-plus-merged state", current_version and f"v{current_version}" in status and "Repository Candidate" in status and "Corrective Candidate — Merged" not in status),
-    ("05 release evidence uses current candidate framing", current_version and f"v{current_version}" in release and "Repository Candidate" in release and "exact review/main SHA being accepted" in release and "fresh post-merge" in release),
+    ("05 release evidence uses current candidate framing", current_version and f"v{current_version}" in release and "Repository Candidate" in release and "exact review/main SHA" in release and "fresh post-merge" in release),
     ("06 obsolete v1.4.0 PR-3 one-shot release automation removed", not exists(".github/workflows/file14-one-shot-release-gate.yml")),
     ("07 temporary corrective patch machinery removed", not exists(".github/workflows/file14-second-review-corrective-patch.yml") and not exists("scripts/apply-file14-second-review-corrections.py")),
     ("08 canonical package folder and text domain retained", "global-clinic-usp-integration" in loader and "Text Domain: global-clinic-usp-integration" in loader),
-    ("09 canonical repository identity retained", "14-global-clinic-usp-and-conversion-integration" in loader),
+    ("09 canonical repository identity retained", "14-global-clinic-usp-and-conversion-sections" in loader),
     ("10 public destination internal health remains available only for trusted internal consumers", "all_destination_health" in contracts),
     ("11 dedicated public destination DTO exists", "public function public_destination($key)" in contracts and "public function public_destination_health()" in contracts),
     ("12 public destination DTO strips internal owner/contract/freshness fields", all(x not in public_dto for x in ("'owner'=>", "'contract'=>", "'verified_at'=>"))),
@@ -84,7 +85,7 @@ checks: list[tuple[str, bool]] = [
     ("14 destination availability cannot be elevated by consumer filter", "false===(bool)$filtered['available']" in contracts and "available=true" not in section(contracts, "apply_filters('gcu_destination_contract_v1'", "return array('key'=>$key")),
     ("15 strict same-origin scheme host and effective port retained", all(x in hard for x in ("strict_same_origin_url", "home_scheme", "target_scheme", "effective_port"))),
     ("16 File 07/08/09 remain destination owners", all(x in contracts for x in ("'File 07'", "'File 08'", "'File 09'"))),
-    ("17 File 20 placement readiness contract retained", "sabri_shell_slot_ready_v1" in contracts),
+    ("17 File 01/File 20 placement readiness contract retained", "GCU_Companion_Adapters::placement_contract_ready" in contracts and "file01_route_registry_state" in companion and "SABRI_SHELL_VERSION" in companion),
     ("18 Future bootstrap performs no schema migration on every request", "ensure_schema" not in bootstrap),
     ("19 Future schema migration is serialized by named advisory lock", "acquire_db_lock( 'future-schema', 5 )" in ensure and "release_db_lock( $lock )" in ensure),
     ("20 activation and controlled repair explicitly ensure Future schema", "activate(){$r=self::install_or_upgrade(true)" in install and "self::ensure_future_schema(true);" in install and "private static function ensure_future_schema($force_verify=false)" in install),

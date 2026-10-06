@@ -13,7 +13,7 @@ f4c(false!==strpos($repo,'source_event_id'),'CTA source-event correlation missin
 f4c(false!==strpos($repo,'inbound_event_identity_conflict')&&false!==strpos($repo,'SELECT event_name,payload_hash'),'Conflicting inbound event replay detection missing.');
 f4c(false!==strpos($repo,'recent_tail')&&false!==strpos($repo,'OFFSET %d'),'Recent audit tail verification missing.');
 f4c(false!==strpos($front,'has_shortcode')&&false!==strpos($front,'gcu_block')&&false!==strpos($front,'nocache_headers()'),'Shortcode cache freshness missing.');
-f4c(false!==strpos($front,'sabri_shell_back_home_controls')&&false===strpos($front,'data-gcu-shell-fallback'),'File20-only navigation ownership regressed.');
+f4c(false===strpos($front,'sabri_shell_back_home_controls')&&false!==strpos($front,'GCU_Companion_Adapters::file20_available')&&false===strpos($front,'data-gcu-shell-fallback'),'File20-only navigation ownership regressed.');
 f4c(substr_count($install,'$future=self::ensure_future_schema')>=2&&false!==strpos($install,'safe_error_record($future)'),'Future-schema error propagation missing.');
 f4c(false===strpos($install,'DELETE FROM `$table`')&&false!==strpos($install,'captured_at')&&false!==strpos($install,'$wpdb->replace'),'Rollback can destructively delete post-snapshot data.');
 f4c(false!==strpos($plugin,'runtime_upgrade_pending'),'Runtime upgrade error observability missing.');
