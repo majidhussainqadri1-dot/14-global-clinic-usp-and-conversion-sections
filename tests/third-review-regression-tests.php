@@ -31,7 +31,7 @@ tr_check(false!==strpos($obs,"update_option('gcu_enabled',0,false)")&&false!==st
 tr_check(false!==strpos($repo,"b.review_due_at IS NULL OR b.review_due_at>UTC_TIMESTAMP()")&&false!==strpos($repo,'$all_claims=array()'),'Block freshness/linked-claim fail-close missing.');
 tr_check(false!==strpos($repo,"review_due_at IS NULL OR review_due_at>UTC_TIMESTAMP()")&&false!==strpos($repo,"\$u['review_due_at']=gmdate"),'Claim/copy review horizon fail-close missing.');
 tr_check(false===strpos($repo,"\${'all_claims'}"),'Correction artifact variable-variable syntax remains.');
-tr_check(false!==strpos($caps,'if ( ! $allowed ) { return false; }'),'Authorization adapter may still elevate a native denial.');
+tr_check(false!==strpos($caps,'if ( ! current_user_can( $capability ) ) { return false; }')&&false!==strpos($caps,'GCU_Companion_Adapters::authorize'),'Authorization adapter may still elevate a native denial.');
 tr_check(false!==strpos($policy,"'The platform charges 0% commission on approved clinic transactions.'")&&false===strpos($policy,"__( 'The platform charges 0% commission on approved clinic transactions.'"),'Canonical claim source truth is still locale-dependent.');
 $exportStart=strpos($privacy,'public function export_data(');$captureStart=strpos($privacy,'public function capture_attribution(');$privacySubject=substr($privacy,$exportStart,$captureStart-$exportStart);
 tr_check(false===strpos($privacySubject,'$_COOKIE'),'Privacy export/erase still reads the operator browser guest cookies.');
