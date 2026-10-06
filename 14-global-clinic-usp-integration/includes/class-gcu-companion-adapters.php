@@ -244,7 +244,7 @@ final class GCU_Companion_Adapters {
 			'namespace_prefix'        => 'GCU_',
 			'software_version'        => GCU_VERSION,
 			'contract_version'        => '1.0.0',
-			'state'                   => 'active',
+			'state'                   => 'registered',
 			'required'                => array(
 				$dependency( 'file-00', '1.2.44', 'Canonical identity, eligibility and action-time authorization assertions.', 'Protected mutations fail closed.' ),
 				$dependency( 'file-07', '1.2.0', 'Canonical doctor discovery destination.', 'Doctor-discovery CTA is unavailable.' ),
@@ -364,6 +364,10 @@ final class GCU_Companion_Adapters {
 
 		$manifest = self::file01_manifest();
 		$existing = SPF_Registry::get_module( 'file-14' );
+		// Registration never promotes or demotes File 01 maturity implicitly.
+		if ( is_array( $existing ) && ! empty( $existing['state'] ) ) {
+			$manifest['state'] = sanitize_key( (string) $existing['state'] );
+		}
 		$context = array( 'purpose' => 'file14_cross_file_registry_sync' );
 		if ( is_array( $existing ) && isset( $existing['record_version'] ) ) {
 			$context['expected_version'] = (int) $existing['record_version'];
