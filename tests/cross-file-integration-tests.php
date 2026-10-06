@@ -29,6 +29,8 @@ xfit( false !== strpos( $comp, 'WCA_Contracts::contract_manifest' ) && false !==
 xfit( false !== strpos( $comp, 'gdo_file14_onboarding_destination' ), 'File 09 current onboarding contract missing.' );
 
 xfit( false !== strpos( $comp, 'SPF_Registry' ) && false !== strpos( $comp, 'file01_route_registry_state' ) && false !== strpos( $comp, 'placement_contract_ready' ), 'File 01 canonical route-registry contract missing.' );
+xfit( false !== strpos( $comp, 'sync_file01_registry' ) && false !== strpos( $comp, 'SPF_Registry::register_manifest' ) && false !== strpos( $comp, 'SPF_Registry::map_route' ) && false !== strpos( $comp, 'SPF_Registry::register_contract' ), 'File 01 authorized manifest/route/API-event registry sync missing.' );
+xfit( false !== strpos( $comp, "'file14-global-clinic'" ) && false !== strpos( $comp, "'/global-clinic/'" ) && false !== strpos( $comp, "'/find-a-global-doctor/'" ) && false !== strpos( $comp, "'/start-your-global-clinic/'" ) && false !== strpos( $comp, "'/clinic/how-it-works/'" ), 'File 14 canonical File 01 route declarations incomplete.' );
 
 xfit( false !== strpos( $comp, 'sabri_shell_route_result_allowed' ) && false !== strpos( $comp, 'sabri_shell_system_check_sections' ), 'File 20 current shell contracts missing.' );
 xfit( false !== strpos( $comp, 'sabri_shell_context_navigation_fallback_url' ), 'File 20 contextual navigation contract missing.' );
