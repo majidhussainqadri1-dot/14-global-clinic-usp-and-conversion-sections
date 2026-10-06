@@ -61,8 +61,7 @@ add("06 File08 clinic/appointment integration uses current runtime contract",
     and "home_url( '/appointments/' )" in companion)
 
 add("07 File09 onboarding integration uses current runtime contract",
-    "GDO_Operations::health" in companion
-    and "GDO_Plugin::application_url" in companion)
+    "gdo_file14_onboarding_destination" in companion)
 
 add("08 File20 remains shell/navigation owner through current hooks",
     "sabri_shell_route_result_allowed" in companion
