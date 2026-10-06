@@ -121,10 +121,13 @@ add("19 deterministic package and automated repository QA remain",
     and "php -l" in quality
     and "cross-file-integration-tests.php" in quality)
 
-add("20 repository/staging/live truth separation and optional File19 health remain explicit",
+add("20 repository/staging/live truth separation and File19 addressed-alert integration remain explicit",
     "No `Staging-Accepted`, `Live-Deployed` or `Operational` claim" in status
     and "repository evidence only" in status.lower()
-    and "file19_notifications" in obs)
+    and "file19_notifications" in obs
+    and "sun_register_notification_producer" in companion
+    and "sun_ingest_domain_event" in companion
+    and "gcu_operational_notification_recipients" in companion)
 
 if len(checks) != 20:
     print(f"Review definition error: {len(checks)} passes", file=sys.stderr)
