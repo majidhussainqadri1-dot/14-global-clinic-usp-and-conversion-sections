@@ -107,12 +107,13 @@ final class GCU_Companion_Adapters {
 				return self::probe_result( $key, 'File 08', false, '', 'owner_contract_unavailable', '' );
 
 			case 'doctor_onboarding':
-				if ( class_exists( 'GDO_Operations' ) && is_callable( array( 'GDO_Operations', 'health' ) ) && class_exists( 'GDO_Plugin' ) && is_callable( array( 'GDO_Plugin', 'application_url' ) ) ) {
-					$health = GDO_Operations::health();
-					$ready = is_array( $health ) && isset( $health['status'] ) && 'degraded' !== sanitize_key( (string) $health['status'] );
-					$url = GDO_Plugin::application_url();
-					$version = defined( 'GDO_INTEGRATION_CONTRACT_VERSION' ) ? GDO_INTEGRATION_CONTRACT_VERSION : ( defined( 'GDO_VERSION' ) ? GDO_VERSION : 'runtime' );
-					return self::probe_result( $key, 'File 09', $ready, $url, $ready ? 'owner_runtime_ready' : 'owner_runtime_degraded', $version );
+				if ( function_exists( 'gdo_file14_onboarding_destination' ) ) {
+					$destination = gdo_file14_onboarding_destination();
+					$ready = is_array( $destination ) && ! empty( $destination['available'] ) && 'file09' === sanitize_key( isset( $destination['owner'] ) ? (string) $destination['owner'] : '' );
+					$url = is_array( $destination ) && ! empty( $destination['canonical_url'] ) ? (string) $destination['canonical_url'] : '';
+					$reason = is_array( $destination ) && ! empty( $destination['reason_code'] ) ? sanitize_key( (string) $destination['reason_code'] ) : ( $ready ? 'owner_runtime_ready' : 'owner_runtime_degraded' );
+					$version = is_array( $destination ) && ! empty( $destination['contract_version'] ) ? (string) $destination['contract_version'] : '';
+					return self::probe_result( $key, 'File 09', $ready, $url, $reason, $version );
 				}
 				return self::probe_result( $key, 'File 09', false, '', 'owner_contract_unavailable', '' );
 		}
