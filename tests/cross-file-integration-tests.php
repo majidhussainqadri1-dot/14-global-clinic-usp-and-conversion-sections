@@ -28,7 +28,7 @@ xfit( false !== strpos( $comp, 'DDD_Contracts::dependency_health' ) && false !==
 xfit( false !== strpos( $comp, 'WCA_Contracts::contract_manifest' ) && false !== strpos( $comp, "home_url( '/appointments/' )" ), 'File 08 current clinic contract missing.' );
 xfit( false !== strpos( $comp, 'gdo_file14_onboarding_destination' ), 'File 09 current onboarding contract missing.' );
 
-xfit( false !== strpos( $comp, 'SPF_Registry' ) && false !== strpos( $comp, 'file01_route_registry_state' ) && false !== strpos( $comp, 'placement_contract_ready' ), 'File 01 canonical route-registry contract missing.' );
+xfit( false !== strpos( $comp, 'SPF_Registry' ) && false !== strpos( $comp, 'file01_route_registry_state' ) && false !== strpos( $comp, 'placement_contract_ready' ) && false !== strpos( $comp, "'file-01', '2.0.1'" ) && false !== strpos( $comp, 'GCU_Companion_Adapters::file01_health' ), 'File 01 canonical registry/health contract missing.' );
 xfit( false !== strpos( $comp, 'sync_file01_registry' ) && false !== strpos( $comp, 'SPF_Registry::register_manifest' ) && false !== strpos( $comp, 'SPF_Registry::map_route' ) && false !== strpos( $comp, 'SPF_Registry::register_contract' ), 'File 01 authorized manifest/route/API-event registry sync missing.' );
 xfit( false !== strpos( $comp, "'file14-global-clinic'" ) && false !== strpos( $comp, "'/global-clinic/'" ) && false !== strpos( $comp, "'/find-a-global-doctor/'" ) && false !== strpos( $comp, "'/start-your-global-clinic/'" ) && false !== strpos( $comp, "'/clinic/how-it-works/'" ), 'File 14 canonical File 01 route declarations incomplete.' );
 
@@ -46,6 +46,7 @@ xfit( false !== strpos( $con, "'source'=>'owner_event'" ), 'Legacy owner event c
 xfit( false !== strpos( $con, '$url=\'\';' ), 'Unavailable destination does not clear its delivery URL.' );
 
 xfit( false !== strpos( $obs, 'GCU_Companion_Adapters::dependency_health' ), 'Observability does not report actual companion health.' );
+xfit( false !== strpos( $comp, "'file19_notifications'" ) && false !== strpos( $comp, 'sun_register_notification_producer' ) && false !== strpos( $comp, 'sun_ingest_domain_event' ) && false !== strpos( $comp, 'gcu_operational_notification_recipients' ), 'File 19 explicit-recipient notification integration missing.' );
 xfit( false !== strpos( $comp, "'file24_assurance'" ) && false !== strpos( $comp, "'file25_visual'" ), 'Assurance/visual dependencies are not observable.' );
 
 xfit( false === strpos( $comp, '$wpdb->prefix' ) && false === strpos( $comp, 'INSERT INTO' ) && false === strpos( $comp, 'UPDATE ' ), 'Cross-file adapter must not write companion owner tables.' );
