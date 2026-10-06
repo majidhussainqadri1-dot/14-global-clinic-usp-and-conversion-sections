@@ -13,6 +13,7 @@ final class GCU_Companion_Adapters {
 	const REVIEW_BASELINE = '2026-10-05-review20-cross-file-v1';
 
 	public static function hooks() {
+		add_filter( 'smc_restricted_capabilities', array( __CLASS__, 'file00_restricted_capabilities' ), 30, 1 );
 		add_filter( 'sabri_shell_context_navigation_fallback_url', array( __CLASS__, 'context_fallback_url' ), 30, 2 );
 		add_filter( 'sabri_shell_route_result_allowed', array( __CLASS__, 'file20_route_result_allowed' ), 30, 5 );
 		add_filter( 'sabri_shell_system_check_sections', array( __CLASS__, 'file20_system_check_sections' ), 30, 1 );
@@ -20,8 +21,7 @@ final class GCU_Companion_Adapters {
 	}
 
 	public static function file00_available() {
-		return function_exists( 'smc_membership_assertions' )
-			|| ( class_exists( 'SMC_Contracts' ) && is_callable( array( 'SMC_Contracts', 'assertions' ) ) );
+		return class_exists( 'SMC_Contracts' ) && is_callable( array( 'SMC_Contracts', 'assertions' ) );
 	}
 
 	public static function file00_assertions( $user_id ) {
@@ -30,10 +30,10 @@ final class GCU_Companion_Adapters {
 			return new WP_Error( 'gcu_file00_unavailable', __( 'The canonical File 00 authorization provider is unavailable.', 'global-clinic-usp-integration' ) );
 		}
 
-		if ( function_exists( 'smc_membership_assertions' ) ) {
-			$assertions = smc_membership_assertions( $user_id );
-		} else {
-			$assertions = SMC_Contracts::assertions( $user_id );
+		$assertions = SMC_Contracts::assertions( $user_id );
+		if ( is_array( $assertions ) && function_exists( 'apply_filters' ) ) {
+			// Consume File 00's current assertion hardening (including action-time age containment).
+			$assertions = apply_filters( 'smc_assertions_v1', $assertions, $user_id );
 		}
 
 		if ( ! is_array( $assertions ) || absint( isset( $assertions['user_id'] ) ? $assertions['user_id'] : 0 ) !== $user_id ) {
@@ -46,6 +46,11 @@ final class GCU_Companion_Adapters {
 		}
 
 		return $assertions;
+	}
+
+	public static function file00_restricted_capabilities( $capabilities ) {
+		$capabilities = is_array( $capabilities ) ? $capabilities : array();
+		return array_values( array_unique( array_merge( $capabilities, GCU_Capabilities::all() ) ) );
 	}
 
 	/**
@@ -61,7 +66,14 @@ final class GCU_Companion_Adapters {
 		}
 
 		$purpose = sanitize_key( (string) $purpose );
-		if ( '' === $purpose || empty( $claim['eligible'] ) || ! empty( $claim['suspended'] ) ) {
+		$blocked_statuses = array( 'rejected', 'suspended', 'expired', 'appeal_review', 'erasure_pending', 'invalid_application', 'effects_reconciliation' );
+		$status = sanitize_key( isset( $claim['status'] ) ? (string) $claim['status'] : '' );
+		if (
+			'' === $purpose ||
+			empty( $claim['eligible'] ) ||
+			! empty( $claim['suspended'] ) ||
+			in_array( $status, $blocked_statuses, true )
+		) {
 			return false;
 		}
 
@@ -123,6 +135,93 @@ final class GCU_Companion_Adapters {
 		);
 	}
 
+	public static function file01_available() {
+		return class_exists( 'SPF_Registry' )
+			&& is_callable( array( 'SPF_Registry', 'get_module' ) )
+			&& is_callable( array( 'SPF_Registry', 'list_routes' ) );
+	}
+
+	public static function file01_route_registry_state() {
+		$expected = array(
+			'global-clinic'             => '/global-clinic/',
+			'find-a-global-doctor'      => '/find-a-global-doctor/',
+			'start-your-global-clinic'  => '/start-your-global-clinic/',
+			'clinic-how-it-works'       => '/clinic/how-it-works/',
+		);
+		$state = array(
+			'available'  => false,
+			'registered' => false,
+			'ready'      => false,
+			'missing'    => array_values( $expected ),
+			'conflicts'  => array(),
+		);
+		if ( ! self::file01_available() ) {
+			return $state;
+		}
+		$module = SPF_Registry::get_module( 'file-14' );
+		$routes = SPF_Registry::list_routes();
+		if ( is_wp_error( $routes ) || ! is_array( $routes ) ) {
+			$state['available'] = true;
+			return $state;
+		}
+		$state['available'] = true;
+		$state['registered'] = is_array( $module )
+			&& isset( $module['module_key'] )
+			&& 'file-14' === sanitize_key( (string) $module['module_key'] );
+
+		$seen = array();
+		foreach ( $routes as $route ) {
+			if ( ! is_array( $route ) ) {
+				continue;
+			}
+			$owner = sanitize_key( isset( $route['owner_module'] ) ? (string) $route['owner_module'] : '' );
+			$path = isset( $route['route_path'] ) ? (string) $route['route_path'] : '';
+			$path = '/' . trim( (string) wp_parse_url( $path, PHP_URL_PATH ), '/' ) . '/';
+			if ( '//' === $path ) {
+				$path = '/';
+			}
+			$status = sanitize_key( isset( $route['status'] ) ? (string) $route['status'] : '' );
+			foreach ( $expected as $key => $expected_path ) {
+				if ( untrailingslashit( $path ) !== untrailingslashit( $expected_path ) ) {
+					continue;
+				}
+				if ( 'file-14' !== $owner ) {
+					$state['conflicts'][] = $expected_path . ':' . ( $owner ? $owner : 'unknown-owner' );
+					continue;
+				}
+				if ( in_array( $status, array( 'registered', 'active', 'redirect' ), true ) ) {
+					$seen[ $key ] = true;
+				}
+			}
+		}
+		$state['missing'] = array();
+		foreach ( $expected as $key => $expected_path ) {
+			if ( empty( $seen[ $key ] ) ) {
+				$state['missing'][] = $expected_path;
+			}
+		}
+		$state['conflicts'] = array_values( array_unique( $state['conflicts'] ) );
+		$state['ready'] = $state['registered'] && empty( $state['missing'] ) && empty( $state['conflicts'] );
+		return $state;
+	}
+
+	public static function placement_contract_ready( $route, $slot ) {
+		$route = sanitize_key( (string) $route );
+		$slot = sanitize_key( (string) $slot );
+		if (
+			'global_clinic' !== $route ||
+			! in_array( $slot, array( 'global_clinic_primary', 'global_clinic_trust', 'global_clinic_steps', 'global_clinic_faq' ), true ) ||
+			! self::file20_available()
+		) {
+			return false;
+		}
+		$registry = self::file01_route_registry_state();
+		if ( empty( $registry['ready'] ) ) {
+			return false;
+		}
+		return true;
+	}
+
 	public static function file20_available() {
 		return defined( 'SABRI_SHELL_VERSION' ) && class_exists( 'Sabri\\UnifiedShell\\Plugin' );
 	}
@@ -133,6 +232,10 @@ final class GCU_Companion_Adapters {
 
 	public static function file24_available() {
 		return defined( 'SPCRC_VERSION' ) || class_exists( 'Sabri\\Platform\\Security\\Registry\\ModuleRegistry' );
+	}
+
+	public static function file19_available() {
+		return function_exists( 'sun_ingest_domain_event' ) && function_exists( 'sun_register_notification_producer' );
 	}
 
 	public static function file20_route_result_allowed( $allowed, $key, $url, $source, $destination ) {
@@ -203,7 +306,7 @@ final class GCU_Companion_Adapters {
 			'name'                   => 'Global Clinic USP and Conversion Integration',
 			'version'                => GCU_VERSION,
 			'owner'                  => 'File 14',
-			'posture'                => 'foundation',
+			'posture'                => 'unassessed',
 			'data_classes'           => array( 'public-content', 'public-claim', 'placement', 'experiment', 'consented-conversion-measurement', 'audit' ),
 			'public_routes'          => array( '/global-clinic/', '/clinic/how-it-works/', '/find-a-global-doctor/', '/start-your-global-clinic/' ),
 			'private_routes'         => array( '/wp-admin/admin.php', '/wp-json/gcu/v1/content', '/wp-json/gcu/v1/placements', '/wp-json/gcu/v1/experiments', '/wp-json/gcu/v1/analytics/funnel', '/wp-json/gcu/v1/health' ),
@@ -216,7 +319,7 @@ final class GCU_Companion_Adapters {
 			'exporters'              => array( 'gcu-conversion-attribution' ),
 			'erasers'                => array( 'gcu-conversion-attribution' ),
 			'emergency_callbacks'    => array( 'gcu_daily_governance_check', 'gcu_operational_alert_v1' ),
-			'last_security_test'     => '2026-10-05T10:53:00Z',
+			'last_security_test'     => '',
 			'verification_level'     => 'not-applicable',
 			'contract_version'       => '1.0.0',
 			'canonical_data_owner'   => 'File 14 USP copy placements experiments and conversion measurement',
@@ -229,14 +332,17 @@ final class GCU_Companion_Adapters {
 	}
 
 	public static function dependency_health() {
+		$file01 = self::file01_route_registry_state();
 		return array(
-			'file00_authorization' => self::file00_available(),
-			'file07_directory'     => ! empty( self::destination_probe( 'doctor_directory' )['available'] ),
-			'file08_clinic'        => ! empty( self::destination_probe( 'clinic' )['available'] ),
-			'file09_onboarding'    => ! empty( self::destination_probe( 'doctor_onboarding' )['available'] ),
-			'file20_shell'         => self::file20_available(),
-			'file24_assurance'     => self::file24_available(),
-			'file25_visual'        => self::file25_available(),
+			'file00_authorization'   => self::file00_available(),
+			'file01_route_registry'  => ! empty( $file01['ready'] ),
+			'file07_directory'       => ! empty( self::destination_probe( 'doctor_directory' )['available'] ),
+			'file08_clinic'          => ! empty( self::destination_probe( 'clinic' )['available'] ),
+			'file09_onboarding'      => ! empty( self::destination_probe( 'doctor_onboarding' )['available'] ),
+			'file19_notifications'   => self::file19_available(),
+			'file20_shell'           => self::file20_available(),
+			'file24_assurance'       => self::file24_available(),
+			'file25_visual'          => self::file25_available(),
 		);
 	}
 }
