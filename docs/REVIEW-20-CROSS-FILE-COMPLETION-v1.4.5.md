@@ -13,10 +13,11 @@
 | File 01 — Platform foundation | `adf6dbb9980a85f25f7cf4c2ee679b52703c2e71` |
 | File 07 — Doctors Directory | `67c32ec4af45a7de6e3d9c1dbf0f8614d6b5a844` |
 | File 08 — Clinic/Appointments | `70541974ce0ffb16aebef557c3016eb7447662f4` |
-| File 09 — Doctor Onboarding | `d35eb982becdf0224a5b850a0c6fb4ace8bf075b` |
+| File 09 — Doctor Onboarding | `9639f75ba046ac1a36e39d5e9aae56c7bae3279b` |
+| File 19 — Unified Notifications | `04078025b643ab7696e4cb4e37826bf152defa18` |
 | File 20 — Unified Application Shell | `8a4dbcaf4fef8e926b9b834ecfde16c21a0f00ca` |
 | File 24 — Security/Privacy/Compliance assurance | `a5b8d49968a7a5a7d6f3f4655bea541bf38a9acb` |
-| File 25 — Public UI/Visual Experience | `59927df876dc92c7461351420c7b7c95c65c6a93` |
+| File 25 — Public UI/Visual Experience | `19009a0934970d63ca60fda1fe9df1ac7288d42a` |
 
 These SHAs identify source-repository truth only. They are not evidence that those exact artifacts are deployed on staging or production.
 
@@ -30,7 +31,7 @@ These SHAs identify source-repository truth only. They are not evidence that tho
 | 04 | File 00 institutional authorization | **CRITICAL INTEGRATION DEFECT** — File 14 required `gcu_authorize`, but current File 00 does not publish that hook and its current-age containment is exposed through `smc_assertions_v1` | Added `SMC_Contracts::assertions()` + `smc_assertions_v1`; File 14 caps join File 00 restricted-capability containment; WordPress capability remains necessary and the legacy File14 filter may restrict only |
 | 05 | File 07 doctor-directory relationship | **DEFECT** — File 14 expected historical `DoctorDirectoryAvailable.v1`; current File 07 exposes `DDD_Contracts::dependency_health()` | Added request-time File 07 owner-native health probe and canonical `/doctors/` handoff |
 | 06 | File 08 clinic/appointment relationship | **DEFECT** — File 14 expected historical `ClinicBookingAvailable.v1` and a non-current generic fallback route | Added `WCA_Contracts::contract_manifest()` probe and current `/appointments/` contract boundary; no invented clinic truth |
-| 07 | File 09 onboarding relationship | **DEFECT** — File 14 expected historical `DoctorOnboardingAvailable.v1` | Added `gdo_file14_onboarding_destination()` and `gdo_file14_onboarding_destination()` owner-native handoff |
+| 07 | File 09 onboarding relationship | **DEFECT + DEPENDENCY DRIFT** — File 14 initially expected historical `DoctorOnboardingAvailable.v1`; File 09 later advanced during this audit | Re-froze File 09 at `9639f75...` and now consumes its dedicated `gdo_file14_onboarding_destination()` contract, including owner, availability, canonical URL, reason and contract version |
 | 08 | File 20 global shell/navigation relationship | **HIGH DEFECT** — File 14 depended on nonexistent `sabri_shell_slot_ready_v1` and `sabri_shell_back_home_controls` hooks | Replaced with current `sabri_shell_route_result_allowed`, `sabri_shell_system_check_sections`, and `sabri_shell_context_navigation_fallback_url` contracts |
 | 09 | File 25 public visual-system relationship | **GAP** — File 25 ownership was documented but not consumed in runtime | Added current `Sabri\PublicExperience\Components` state rendering and `sabri-ui-card` / `sabri-ui-button` compatibility classes |
 | 10 | File 24 assurance-plane relationship | **GAP** — no current File 14 module manifest supplied to the assurance plane | Added bounded `spcrc/module_manifests` manifest with explicit owner, data, routes, capabilities, privacy operations, degraded behavior and release gate; posture remains `unassessed` and security-test timestamp stays blank until real evidence exists |
