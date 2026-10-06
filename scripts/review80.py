@@ -28,6 +28,7 @@ repo = read("14-global-clinic-usp-integration/includes/class-gcu-repository.php"
 install = read("14-global-clinic-usp-integration/includes/class-gcu-install.php")
 privacy = read("14-global-clinic-usp-integration/includes/class-gcu-privacy.php")
 contracts = read("14-global-clinic-usp-integration/includes/class-gcu-contracts.php")
+companion = read("14-global-clinic-usp-integration/includes/class-gcu-companion-adapters.php")
 hard = read("14-global-clinic-usp-integration/includes/class-gcu-hardening.php")
 rest = read("14-global-clinic-usp-integration/includes/class-gcu-rest.php")
 frontend = read("14-global-clinic-usp-integration/includes/class-gcu-frontend.php")
@@ -90,7 +91,7 @@ checks: list[tuple[str, bool]] = [
     ("29 inbox processing and stale-lock recovery retained", "process_inbox" in repo and "DATE_SUB(UTC_TIMESTAMP(),INTERVAL 10 MINUTE)" in repo),
     ("30 same-origin validation covers scheme host and effective port", all(x in hard for x in ("home_scheme", "target_scheme", "effective_port", "strict_same_origin_url"))),
     ("31 consumer cannot elevate owner readiness", "may never elevate owner readiness" in contracts),
-    ("32 File 20 placement readiness contract retained", "sabri_shell_slot_ready_v1" in contracts),
+    ("32 File 01/File 20 placement readiness contract retained", "GCU_Companion_Adapters::placement_contract_ready" in contracts and "file01_route_registry_state" in companion and "SABRI_SHELL_VERSION" in companion),
     ("33 File 20 remains sole shell/navigation owner", "File 20 remains the sole global shell/navigation owner" in root_readme),
     ("34 File 25 visual/design boundary remains traceable", "File 25" in trace and "visual" in trace.lower()),
     ("35 File 07 directory destination ownership retained", "'File 07'" in contracts),
@@ -100,7 +101,7 @@ checks: list[tuple[str, bool]] = [
     ("39 public-safe blocks endpoint remains browseable", "'/blocks'" in rest and "__return_true" in rest),
     ("40 privileged Future endpoints retain least-privilege permission callbacks", all(x in future for x in ("can_manage_content", "can_manage_experiments", "can_view_analytics", "can_system_check", "can_approve_claims"))),
     ("41 workflow state-transition validation retained", "transition_allowed" in policy),
-    ("42 no direct companion write/post backend introduced", re.search(r"wp_insert_post\s*\(", all_php) is None and "Files 00/07/08/09/20/24/25" in review),
+    ("42 no direct companion write/post backend introduced", re.search(r"wp_insert_post\s*\(", all_php) is None and "$wpdb->prefix" not in companion and "INSERT INTO" not in companion),
     ("43 measurement still requires consent", "analytics_consent" in privacy and "measurement_allowed" in privacy),
     ("44 Global Privacy Control retained", "HTTP_SEC_GPC" in privacy),
     ("45 Save-Data / reduced-data suppression retained", "HTTP_SAVE_DATA" in privacy and "low_bandwidth_requested" in privacy),
@@ -130,7 +131,7 @@ checks: list[tuple[str, bool]] = [
     ("69 forced-colors support retained", "forced-colors" in future_css),
     ("70 320px-class reflow gate retained", "max-width: 360px" in css and "320" in trace),
     ("71 400% zoom remains an explicit external acceptance gate", "400%" in trace and "400%" in status),
-    ("72 File 20 Back/Home contract retained", "sabri_shell_back_home_controls" in frontend),
+    ("72 File 20 contextual navigation contract retained", "sabri_shell_context_navigation_fallback_url" in companion and "GCU_Companion_Adapters::file20_available" in frontend and "sabri_shell_back_home_controls" not in frontend),
     ("73 degraded routes remain noindex", "noindex,nofollow" in frontend),
     ("74 inline executable markup remains forbidden by quality gate", "onclick=|onerror=|onload=|javascript:" in quality),
     ("75 embedded-secret scan remains in quality gate", "Potential embedded secret detected" in quality),
