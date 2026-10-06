@@ -48,3 +48,5 @@ The following remain external release gates until independently proven in the ta
 - Controlled production deployment, live smoke test, monitoring and deployed-artifact parity confirmation.
 
 No `Staging-Accepted`, `Live-Deployed` or `Operational` claim is made by this repository status file.
+
+**Repository evidence only:** every status in this file is source-repository evidence unless an external staging/deployment/live evidence record is explicitly cited.
