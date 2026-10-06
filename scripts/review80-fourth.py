@@ -38,7 +38,7 @@ checks=[
 ('29 plugin boot logs pending upgrade truth','runtime_upgrade_pending' in plugin),
 ('30 health report includes Future schema truth',"'future'=>$future" in obs and 'schema_verified' in obs),
 ('31 health report includes File00 auth dependency',"'file00_authorization'" in obs or 'GCU_Companion_Adapters::dependency_health' in obs),
-('32 health report includes current cross-file dependencies','GCU_Companion_Adapters::dependency_health' in obs and "'file20_shell'" in companion and "'file01_registry'" in companion),
+('32 health report includes current cross-file dependencies','GCU_Companion_Adapters::dependency_health' in obs and "'file20_shell'" in companion and "'file01_route_registry'" in companion),
 ('33 health report includes all File14 cron readiness',"'cron'=>$cron" in obs and 'gcu_future_hourly_intelligence' in obs),
 ('34 health report includes rewrite-route readiness',"'routes'=>$routes" in obs and 'gcu_route=global_clinic' in obs),
 ('35 partial audit coverage warns',"'full'!==$r['audit_chain']['scope']" in obs),
