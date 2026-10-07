@@ -10,7 +10,42 @@ defined( 'ABSPATH' ) || exit;
  * owner-native read/health contracts and never write companion domain truth.
  */
 final class GCU_Companion_Adapters {
-	const REVIEW_BASELINE = '2026-10-05-review20-cross-file-v1';
+	const REVIEW_BASELINE = '2026-10-07-review20-r2-current-companions-v1';
+
+	const FILE00_MIN_VERSION = '1.2.44';
+	const FILE00_MIN_CONTRACT = '1.2.3';
+	const FILE00_MAX_CONTRACT_EXCLUSIVE = '2.0.0';
+	const FILE01_MIN_VERSION = '2.0.1';
+	const FILE01_MIN_CONTRACT = '2.0.0';
+	const FILE01_MAX_CONTRACT_EXCLUSIVE = '3.0.0';
+	const FILE07_MIN_VERSION = '1.2.0';
+	const FILE07_MIN_CONTRACT = '1.2.0';
+	const FILE07_MAX_CONTRACT_EXCLUSIVE = '2.0.0';
+	const FILE08_MIN_VERSION = '1.2.15';
+	const FILE08_MIN_API = '1.0.0';
+	const FILE08_MAX_API_EXCLUSIVE = '2.0.0';
+	const FILE09_MIN_VERSION = '1.3.0';
+	const FILE09_MIN_CONTRACT = '1.1.0';
+	const FILE09_MAX_CONTRACT_EXCLUSIVE = '2.0.0';
+	const FILE19_MIN_VERSION = '3.0.5';
+	const FILE20_MIN_VERSION = '1.4.17';
+	const FILE24_MIN_VERSION = '0.99.0';
+	const FILE25_MIN_VERSION = '0.15.0';
+	const FILE25_MIN_CONTRACT = '1.9.0';
+	const FILE25_MAX_CONTRACT_EXCLUSIVE = '2.0.0';
+	const FILE25_MIN_COMPONENT_CONTRACT = '1.2.0';
+	const FILE25_MAX_COMPONENT_CONTRACT_EXCLUSIVE = '2.0.0';
+
+	private static function version_at_least( $version, $minimum ) {
+		$version = trim( (string) $version );
+		return '' !== $version && version_compare( $version, $minimum, '>=' );
+	}
+
+	private static function version_in_range( $version, $minimum, $maximum_exclusive ) {
+		$version = trim( (string) $version );
+		return self::version_at_least( $version, $minimum )
+			&& ( '' === $maximum_exclusive || version_compare( $version, $maximum_exclusive, '<' ) );
+	}
 
 	public static function hooks() {
 		add_filter( 'smc_restricted_capabilities', array( __CLASS__, 'file00_restricted_capabilities' ), 30, 1 );
@@ -26,7 +61,12 @@ final class GCU_Companion_Adapters {
 	}
 
 	public static function file00_available() {
-		return class_exists( 'SMC_Contracts' ) && is_callable( array( 'SMC_Contracts', 'assertions' ) );
+		return defined( 'SMC_VERSION' )
+			&& defined( 'SMC_CONTRACT_VERSION' )
+			&& self::version_at_least( SMC_VERSION, self::FILE00_MIN_VERSION )
+			&& self::version_in_range( SMC_CONTRACT_VERSION, self::FILE00_MIN_CONTRACT, self::FILE00_MAX_CONTRACT_EXCLUSIVE )
+			&& class_exists( 'SMC_Contracts' )
+			&& is_callable( array( 'SMC_Contracts', 'assertions' ) );
 	}
 
 	public static function file00_assertions( $user_id ) {
@@ -46,8 +86,11 @@ final class GCU_Companion_Adapters {
 		}
 
 		$version = isset( $assertions['contract_version'] ) ? (string) $assertions['contract_version'] : '';
-		if ( '' === $version || ! preg_match( '/^\d+\.\d+(?:\.\d+)?$/', $version ) ) {
-			return new WP_Error( 'gcu_file00_contract_invalid', __( 'The canonical File 00 authorization contract version is invalid.', 'global-clinic-usp-integration' ) );
+		if (
+			! preg_match( '/^\d+\.\d+(?:\.\d+)?$/', $version )
+			|| ! self::version_in_range( $version, self::FILE00_MIN_CONTRACT, self::FILE00_MAX_CONTRACT_EXCLUSIVE )
+		) {
+			return new WP_Error( 'gcu_file00_contract_invalid', __( 'The canonical File 00 authorization contract version is invalid or unsupported.', 'global-clinic-usp-integration' ) );
 		}
 
 		return $assertions;
@@ -90,37 +133,74 @@ final class GCU_Companion_Adapters {
 		return $allowed;
 	}
 
+	public static function file07_available() {
+		return defined( 'DDD_VERSION' )
+			&& defined( 'DDD_CONTRACT_VERSION' )
+			&& self::version_at_least( DDD_VERSION, self::FILE07_MIN_VERSION )
+			&& self::version_in_range( DDD_CONTRACT_VERSION, self::FILE07_MIN_CONTRACT, self::FILE07_MAX_CONTRACT_EXCLUSIVE )
+			&& class_exists( 'DDD_Contracts' )
+			&& is_callable( array( 'DDD_Contracts', 'dependency_health' ) );
+	}
+
+	public static function file08_available() {
+		return defined( 'WCA_VERSION' )
+			&& self::version_at_least( WCA_VERSION, self::FILE08_MIN_VERSION )
+			&& class_exists( 'WCA_Contracts' )
+			&& is_callable( array( 'WCA_Contracts', 'contract_manifest' ) );
+	}
+
+	public static function file09_available() {
+		return defined( 'GDO_VERSION' )
+			&& self::version_at_least( GDO_VERSION, self::FILE09_MIN_VERSION )
+			&& function_exists( 'gdo_file14_onboarding_destination' );
+	}
+
 	public static function destination_probe( $key ) {
 		$key = sanitize_key( (string) $key );
 		switch ( $key ) {
 			case 'doctor_directory':
-				if ( class_exists( 'DDD_Contracts' ) && is_callable( array( 'DDD_Contracts', 'dependency_health' ) ) ) {
+				if ( self::file07_available() ) {
 					$health = DDD_Contracts::dependency_health();
 					$ready = is_array( $health ) && ! empty( $health['ready'] );
-					return self::probe_result( $key, 'File 07', $ready, home_url( '/doctors/' ), $ready ? 'owner_runtime_ready' : 'owner_runtime_degraded', defined( 'DDD_CONTRACT_VERSION' ) ? DDD_CONTRACT_VERSION : 'runtime' );
+					return self::probe_result( $key, 'File 07', $ready, home_url( '/doctors/' ), $ready ? 'owner_runtime_ready' : 'owner_runtime_degraded', DDD_CONTRACT_VERSION );
 				}
-				return self::probe_result( $key, 'File 07', false, home_url( '/doctors/' ), 'owner_contract_unavailable', '' );
+				return self::probe_result( $key, 'File 07', false, '', 'owner_contract_unavailable_or_incompatible', '' );
 
 			case 'clinic':
-				if ( class_exists( 'WCA_Contracts' ) && is_callable( array( 'WCA_Contracts', 'contract_manifest' ) ) ) {
+				if ( self::file08_available() ) {
 					$manifest = WCA_Contracts::contract_manifest();
 					$routes = is_array( $manifest ) && isset( $manifest['routes'] ) && is_array( $manifest['routes'] ) ? $manifest['routes'] : array();
-					$ready = is_array( $manifest ) && ! empty( $manifest['runtime_version'] ) && isset( $routes['appointments'] );
-					$version = is_array( $manifest ) && ! empty( $manifest['api_version'] ) ? (string) $manifest['api_version'] : 'runtime';
-					return self::probe_result( $key, 'File 08', $ready, home_url( '/appointments/' ), $ready ? 'owner_runtime_ready' : 'owner_runtime_degraded', $version );
+					$runtime_version = is_array( $manifest ) && isset( $manifest['runtime_version'] ) ? (string) $manifest['runtime_version'] : '';
+					$api_version = is_array( $manifest ) && isset( $manifest['api_version'] ) ? (string) $manifest['api_version'] : '';
+					$appointments = isset( $routes['appointments'] ) && is_array( $routes['appointments'] ) ? $routes['appointments'] : array();
+					$ready = is_array( $manifest )
+						&& self::version_at_least( $runtime_version, self::FILE08_MIN_VERSION )
+						&& self::version_in_range( $api_version, self::FILE08_MIN_API, self::FILE08_MAX_API_EXCLUSIVE )
+						&& '/appointments' === ( isset( $appointments['pattern'] ) ? (string) $appointments['pattern'] : '' )
+						&& 0 === (int) ( isset( $manifest['commission_percent'] ) ? $manifest['commission_percent'] : -1 )
+						&& empty( $manifest['donation_visibility_link'] );
+					return self::probe_result( $key, 'File 08', $ready, home_url( '/appointments/' ), $ready ? 'owner_runtime_ready' : 'owner_runtime_degraded_or_policy_mismatch', $api_version );
 				}
-				return self::probe_result( $key, 'File 08', false, '', 'owner_contract_unavailable', '' );
+				return self::probe_result( $key, 'File 08', false, '', 'owner_contract_unavailable_or_incompatible', '' );
 
 			case 'doctor_onboarding':
-				if ( function_exists( 'gdo_file14_onboarding_destination' ) ) {
+				if ( self::file09_available() ) {
 					$destination = gdo_file14_onboarding_destination();
-					$ready = is_array( $destination ) && ! empty( $destination['available'] ) && 'file09' === sanitize_key( isset( $destination['owner'] ) ? (string) $destination['owner'] : '' );
-					$url = is_array( $destination ) && ! empty( $destination['canonical_url'] ) ? (string) $destination['canonical_url'] : '';
-					$reason = is_array( $destination ) && ! empty( $destination['reason_code'] ) ? sanitize_key( (string) $destination['reason_code'] ) : ( $ready ? 'owner_runtime_ready' : 'owner_runtime_degraded' );
 					$version = is_array( $destination ) && ! empty( $destination['contract_version'] ) ? (string) $destination['contract_version'] : '';
+					$contract_ok = self::version_in_range( $version, self::FILE09_MIN_CONTRACT, self::FILE09_MAX_CONTRACT_EXCLUSIVE );
+					$owner_ok = is_array( $destination )
+						&& 'file09' === sanitize_key( isset( $destination['owner'] ) ? (string) $destination['owner'] : '' )
+						&& 'file14' === sanitize_key( isset( $destination['consumer'] ) ? (string) $destination['consumer'] : '' );
+					$read_only = is_array( $destination )
+						&& array_key_exists( 'writes_data', $destination ) && false === (bool) $destination['writes_data']
+						&& array_key_exists( 'automatic_enrollment', $destination ) && false === (bool) $destination['automatic_enrollment']
+						&& array_key_exists( 'automatic_verification', $destination ) && false === (bool) $destination['automatic_verification'];
+					$ready = $contract_ok && $owner_ok && $read_only && ! empty( $destination['available'] );
+					$url = is_array( $destination ) && ! empty( $destination['canonical_url'] ) ? (string) $destination['canonical_url'] : '';
+					$reason = is_array( $destination ) && ! empty( $destination['reason_code'] ) ? sanitize_key( (string) $destination['reason_code'] ) : ( $ready ? 'owner_runtime_ready' : 'owner_runtime_degraded_or_contract_mismatch' );
 					return self::probe_result( $key, 'File 09', $ready, $url, $reason, $version );
 				}
-				return self::probe_result( $key, 'File 09', false, '', 'owner_contract_unavailable', '' );
+				return self::probe_result( $key, 'File 09', false, '', 'owner_contract_unavailable_or_incompatible', '' );
 		}
 
 		return null;
@@ -142,7 +222,11 @@ final class GCU_Companion_Adapters {
 	}
 
 	public static function file01_available() {
-		return class_exists( 'SPF_Registry' )
+		return defined( 'SPF_VERSION' )
+			&& defined( 'SPF_CONTRACT_VERSION' )
+			&& self::version_at_least( SPF_VERSION, self::FILE01_MIN_VERSION )
+			&& self::version_in_range( SPF_CONTRACT_VERSION, self::FILE01_MIN_CONTRACT, self::FILE01_MAX_CONTRACT_EXCLUSIVE )
+			&& class_exists( 'SPF_Registry' )
 			&& is_callable( array( 'SPF_Registry', 'get_module' ) )
 			&& is_callable( array( 'SPF_Registry', 'list_routes' ) );
 	}
@@ -435,19 +519,54 @@ final class GCU_Companion_Adapters {
 	}
 
 	public static function file20_available() {
-		return defined( 'SABRI_SHELL_VERSION' ) && class_exists( 'Sabri\\UnifiedShell\\Plugin' );
+		return defined( 'SABRI_SHELL_VERSION' )
+			&& self::version_at_least( SABRI_SHELL_VERSION, self::FILE20_MIN_VERSION )
+			&& class_exists( 'Sabri\\UnifiedShell\\Plugin' );
+	}
+
+	public static function file25_contract() {
+		if (
+			! defined( 'SABRI_PUBLIC_EXPERIENCE_VERSION' )
+			|| ! self::version_at_least( SABRI_PUBLIC_EXPERIENCE_VERSION, self::FILE25_MIN_VERSION )
+			|| ! function_exists( 'sabri_visual_experience_contract' )
+			|| ! function_exists( 'sabri_visual_experience_render_state' )
+		) {
+			return array();
+		}
+		$contract = sabri_visual_experience_contract();
+		if ( ! is_array( $contract ) ) {
+			return array();
+		}
+		$version = isset( $contract['contract_version'] ) ? (string) $contract['contract_version'] : '';
+		$runtime = isset( $contract['runtime_version'] ) ? (string) $contract['runtime_version'] : '';
+		$components = isset( $contract['components'] ) && is_array( $contract['components'] ) ? $contract['components'] : array();
+		$component_version = isset( $components['contract_version'] ) ? (string) $components['contract_version'] : '';
+		if (
+			! self::version_in_range( $version, self::FILE25_MIN_CONTRACT, self::FILE25_MAX_CONTRACT_EXCLUSIVE )
+			|| ! self::version_at_least( $runtime, self::FILE25_MIN_VERSION )
+			|| ! self::version_in_range( $component_version, self::FILE25_MIN_COMPONENT_CONTRACT, self::FILE25_MAX_COMPONENT_CONTRACT_EXCLUSIVE )
+			|| 'file-25' !== sanitize_key( isset( $contract['visual_system_owner'] ) ? (string) $contract['visual_system_owner'] : '' )
+			|| 'file-20' !== sanitize_key( isset( $contract['global_shell_owner'] ) ? (string) $contract['global_shell_owner'] : '' )
+		) {
+			return array();
+		}
+		return $contract;
 	}
 
 	public static function file25_available() {
-		return class_exists( 'Sabri\\PublicExperience\\Components' );
+		return ! empty( self::file25_contract() );
 	}
 
 	public static function file24_available() {
-		return defined( 'SPCRC_VERSION' ) || class_exists( 'Sabri\\Platform\\Security\\Registry\\ModuleRegistry' );
+		return defined( 'SPCRC_VERSION' )
+			&& self::version_at_least( SPCRC_VERSION, self::FILE24_MIN_VERSION );
 	}
 
 	public static function file19_available() {
-		return function_exists( 'sun_ingest_domain_event' ) && function_exists( 'sun_register_notification_producer' );
+		return defined( 'SUN_VERSION' )
+			&& self::version_at_least( SUN_VERSION, self::FILE19_MIN_VERSION )
+			&& function_exists( 'sun_ingest_domain_event' )
+			&& function_exists( 'sun_register_notification_producer' );
 	}
 
 	public static function file01_health() {
@@ -578,8 +697,8 @@ final class GCU_Companion_Adapters {
 	}
 
 	public static function visual_state( $type, $title, $message ) {
-		if ( self::file25_available() && is_callable( array( 'Sabri\\PublicExperience\\Components', 'render_state' ) ) ) {
-			return Sabri\PublicExperience\Components::render_state(
+		if ( self::file25_available() ) {
+			return sabri_visual_experience_render_state(
 				array(
 					'type'    => sanitize_key( $type ),
 					'title'   => sanitize_text_field( $title ),
@@ -616,7 +735,7 @@ final class GCU_Companion_Adapters {
 			'contract_version'       => '1.0.0',
 			'canonical_data_owner'   => 'File 14 USP copy placements experiments and conversion measurement',
 			'canonical_action_owner' => 'File 14 governed content placement experiment and measurement actions',
-			'evidence_source'        => 'file14-review20-cross-file-20261005',
+			'evidence_source'        => 'file14-review20-r2-current-companions-20261007',
 			'degraded_behavior'      => 'Protected actions fail closed and unavailable companion destinations remain unavailable without permissive fallback.',
 			'release_gate'           => 'Repository QA is necessary only; staging restore accessibility Founder acceptance deployment and live verification remain separate.',
 		);
