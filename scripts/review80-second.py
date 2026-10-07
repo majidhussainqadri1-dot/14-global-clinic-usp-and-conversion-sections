@@ -139,7 +139,7 @@ checks: list[tuple[str, bool]] = [
     ("68 F14-FR-016 claim audit/freshness remains", "F14-FR-016" in trace and "claim_freshness_sentinel" in future and "claim_history" in repo),
     ("69 all 24 Future CTI capability IDs remain present", len(set(re.findall(r"F14-FUT-\d{2}", future_policy))) == 24 and "F14-FUT-24" in trace),
     ("70 release-evidence pre-merge candidate wording is truthful", "Eighty-Pass Corrective Candidate" not in release and "Repository Candidate" in release and "main merged" in release),
-    ("71 status candidate/merged wording is truthful", "Corrective Candidate — Merged" not in status and "Repository Candidate" in status and "exact resulting `main` SHA" in status),
+    ("71 status candidate/merged wording is truthful", "Corrective Candidate — Merged" not in status and "Repository Candidate" in status and ("exact resulting `main` SHA" in status or "resulting exact `main` SHA" in status)),
     ("72 Sabri Green remains exact", "#087A4E" in loader and "#087A4E" in css and "#087A4E" in future_css),
     ("73 RTL/LTR localization support retained", "direction" in frontend and "rtl" in css.lower() and "'ur-PK'" in fi18n and "'ar-SA'" in fi18n),
     ("74 reduced motion/data and forced-colors retained", "prefers-reduced-motion" in css and "prefers-reduced-data" in css and "forced-colors" in future_css),

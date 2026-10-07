@@ -4,7 +4,7 @@ Tags: clinic, doctors, conversion, accessibility, privacy, governance, trust, ex
 Requires at least: 6.6
 Tested up to: 7.0.1
 Requires PHP: 7.4
-Stable tag: 1.4.5
+Stable tag: 1.4.6
 License: GPLv2 or later
 
 Canonical File 14 implementation for approved Worldwide Clinic value-proposition content, ethical conversion journeys, claim governance, destination contracts, Future Conversion & Trust Intelligence and privacy-minimized measurement.
@@ -12,7 +12,7 @@ Canonical File 14 implementation for approved Worldwide Clinic value-proposition
 == Description ==
 File 14 owns approved patient/doctor value-proposition blocks, File 20 placement contracts, claim evidence/version history, ethical conversion diagnostics, `/global-clinic/`, `/clinic/how-it-works/`, and versioned destinations to Files 07/08/09. It never owns doctor profiles, verification evidence, clinic records, appointments, payments, clinical records, the global shell/navigation or visual-system truth.
 
-Version 1.4.0 added the Founder-approved `SSH-F14-FUTURE-CTI-2026-v2.0` amendment as a bounded intelligence layer. Versions 1.4.1 and 1.4.2 delivered four independent eighty-pass corrective reviews. Version 1.4.3 added the fifth independent review layer; version 1.4.4 completed the sixth independent eighty-pass review. Version 1.4.5 adds an exact cross-file compatibility correction against the current File 00/07/08/09/20/24/25 repository contracts plus a dedicated twenty-pass cross-file completeness gate.
+Version 1.4.0 added the Founder-approved `SSH-F14-FUTURE-CTI-2026-v2.0` amendment as a bounded intelligence layer. Versions 1.4.1 and 1.4.2 delivered four independent eighty-pass corrective reviews. Version 1.4.3 added the fifth independent review layer; version 1.4.4 completed the sixth independent eighty-pass review. Version 1.4.5 adds an exact cross-file compatibility correction against the current File 00/07/08/09/20/24/25 repository contracts plus a dedicated twenty-pass cross-file completeness gate. Version 1.4.6 performs a second twenty-pass current-companion audit, freezes the 2026-10-07 File 09/File 25 heads, and fail-closes all required companion integrations when their runtime or published contract version is below the reviewed compatibility floor; File 25 state rendering now uses its public versioned visual contract instead of an internal class call.
 
 == Future Conversion & Trust Intelligence — 24 approved enhancements ==
 * F14-FUT-01 Ethical Intent Router.
@@ -82,6 +82,14 @@ The File 14 surface includes complete File 14-owned American English, Urdu and A
 8. Obtain explicit Founder acceptance before production deployment.
 
 == Changelog ==
+= 1.4.6 =
+* Completed a second 20-pass File 14 plan + central-plan + current-companion audit from exact main `55e44d38b23304d50fad22b4d3a2c67fe4721209`.
+* Added fail-closed runtime compatibility floors for Files 00/01/07/08/09/19/20/24/25, matching the dependency versions already declared by File 14.
+* File 08 readiness now validates its versioned API, canonical appointments route, 0% commission policy and donor-neutral visibility before File 14 treats the clinic handoff as healthy.
+* File 09 onboarding now requires the current File 14 consumer contract, compatible contract version, File 09 ownership and explicit read-only/no-auto-enrollment/no-auto-verification invariants.
+* File 25 integration now consumes `sabri_visual_experience_contract()` and `sabri_visual_experience_render_state()`, verifies File 25/File 20 ownership plus component/design-system contract ranges, and falls back locally if incompatible.
+* Refreshed exact companion-source evidence to File 09 `448d41f34586369ca5875693583b9cd8a6133167` and File 25 `2d02c93356b050313e30e29aeceb57080771c2a5`; no staging/live/deployed-state claim is inferred.
+
 = 1.4.5 =
 * Reconciled File 14 with the exact current File 00/07/08/09/20/24/25 repository contracts instead of relying on historical placeholder hooks.
 * Action-time authorization now consumes File 00 `SMC_Contracts::assertions()` plus its `smc_assertions_v1` hardening filter; File 14 capabilities are included in File 00 restricted-capability containment, WordPress capabilities remain necessary, and any legacy File14 authorization filter may only restrict.
