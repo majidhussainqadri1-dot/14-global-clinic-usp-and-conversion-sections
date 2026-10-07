@@ -60,7 +60,7 @@ add("08 conflicting conversion event identity rejected", "gcu_conversion_event_i
 add("09 legacy hourly early-stop worker replaced", "remove_action( 'gcu_future_hourly_intelligence'" in fifth)
 add("10 early-stop transaction boundary", "transactional_early_stop_guard" in fifth and (("START TRANSACTION" in fifth and "COMMIT" in fifth) or ("begin_owned_transaction()" in fifth and "commit_owned_transaction()" in fifth)))
 add("11 early-stop mandatory audit rollback", "experiment_early_stopped" in fifth and "if ( false === $audit )" in fifth and ("ROLLBACK" in fifth or "rollback_owned_transaction()" in fifth))
-add("12 release documentation lists the six retained review ledgers", "The six historical repository review ledgers are:" in status)
+add("12 release documentation lists the six retained review ledgers", "Historical eighty-pass ledgers:" in status and status.count("docs/REVIEW-80-") >= 6)
 add("13 plugin header/version parity follows current candidate", bool(current_version) and f"Version: {current_version}" in main and f"GCU_VERSION', '{current_version}" in main)
 add("14 stable tag parity follows current candidate", bool(current_version) and f"Stable tag: {current_version}" in readme)
 add("15 root README version parity follows current candidate", bool(current_version) and f"Software candidate: `{current_version}`" in root_readme)
