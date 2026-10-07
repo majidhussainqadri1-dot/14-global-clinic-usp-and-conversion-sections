@@ -1,11 +1,11 @@
-# Release Evidence — v1.4.5 Twenty-Pass Cross-File Repository Candidate
+# Release Evidence — v1.4.6 Second Twenty-Pass Current-Companion Repository Candidate
 
 ## Governing scope
 
 - Base plan: `SSH-F14-PLAN-2026-v1.0`.
 - Additive Founder-approved amendment: `SSH-F14-FUTURE-CTI-2026-v2.0`.
-- Cross-file correction baseline: exact starting `main` `db60c4bc5c37a5c88126b78c31b34c75236f33d7` (v1.4.4 sixth-review merge).
-- Software candidate: `1.4.5`.
+- Second twenty-pass baseline: exact starting `main` `55e44d38b23304d50fad22b4d3a2c67fe4721209` (v1.4.5 first twenty-pass merge).
+- Software candidate: `1.4.6`.
 - Base schema: `10005`; Future CTI additive schema: `1`.
 - Requirements retained: original File 14 FR/NFR plus `F14-FUT-01`–`F14-FUT-24`.
 - Ownership remains bounded: no doctor/clinic/application/appointment/payment/verification/shell source of truth is created here.
@@ -17,6 +17,14 @@ Historical green results are supporting history only. For every current File 14 
 The **third independent eighty-pass** review established the durable exact-current-main rule; the fourth, fifth and sixth reviews retain and strengthen that rule rather than replacing it.
 
 `Automated-QA Green`, `Packaged`, `main merged`, `Staging-Accepted`, `Live-Deployed` and `Operational` remain separate evidence claims.
+
+## Second twenty-pass current-companion corrective evidence — 2026-10-07
+
+The second 20-pass review re-froze File 14 against the governing File 14 plan, the consolidated central plan and current exact source heads for Files 00/01/07/08/09/19/20/24/25. File 09 had advanced to `448d41f34586369ca5875693583b9cd8a6133167` and File 25 to `2d02c93356b050313e30e29aeceb57080771c2a5`; both remained semantically compatible, but File 14's runtime adapters did not consistently enforce the minimum versions already declared in its File 01 dependency manifest.
+
+v1.4.6 therefore adds one fail-closed compatibility baseline: File 00/01/07/08/09/19/20/24/25 runtime/version checks; File 08 API/route/business-policy parity; File 09 exact owner/consumer/read-only/no-auto-verification contract invariants; and File 25 public design-system/component contract validation through `sabri_visual_experience_contract()` and `sabri_visual_experience_render_state()`. Declared dependency floors and runtime enforcement now share the same constants.
+
+The permanent round ledger is `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.6-R2.md`. The earlier v1.4.5 twenty-pass ledger remains historical evidence and is not rewritten.
 
 ## Twenty-pass cross-file corrective evidence
 
@@ -50,6 +58,6 @@ Round-by-round evidence is maintained in:
 
 ## External evidence still mandatory
 
-Repository success cannot prove WordPress/Hostinger staging or live behavior. Staging, deployed code, live DB/schema/migration and operational behavior remain separate evidence classes. Separate gates still include exact deployed artifact/checksum parity, fresh install/upgrade with real WordPress/MySQL/InnoDB, File00/01/07/08/09/19/20/24/25 integration, browser/accessibility/RTL/LTR/400% zoom evidence, performance/failure drills, verified backup restore and rollback rehearsal, explicit Founder staging acceptance, production deployment, live smoke tests, monitoring and deployed-artifact parity confirmation.
+Repository success cannot prove WordPress/Hostinger staging or live behavior. Staging, deployed code, live DB/schema/migration and operational behavior remain separate evidence classes. Separate gates still include exact deployed artifact/checksum parity, fresh install/upgrade with real WordPress/MySQL/InnoDB, File00/01/07/08/09/19/20/24/25 versioned integration, browser/accessibility/RTL/LTR/400% zoom evidence, performance/failure drills, verified backup restore and rollback rehearsal, explicit Founder staging acceptance, production deployment, live smoke tests, monitoring and deployed-artifact parity confirmation.
 
 No `Staging-Accepted`, `Live-Deployed` or `Operational` claim is made by this repository document.
