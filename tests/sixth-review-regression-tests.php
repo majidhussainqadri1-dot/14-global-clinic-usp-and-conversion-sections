@@ -15,9 +15,9 @@ $admin=file_get_contents($p.'/includes/class-gcu-admin.php');
 $obs=file_get_contents($p.'/includes/class-gcu-observability.php');
 $hard=file_get_contents($p.'/includes/class-gcu-hardening.php');
 
-s6(false!==strpos($main,'Version: 1.4.5')&&false!==strpos($main,"GCU_SCHEMA_VERSION', 10005"),'Current release/sixth-review lineage identity drift.');
+s6(false!==strpos($main,'Version: 1.4.6')&&false!==strpos($main,"GCU_SCHEMA_VERSION', 10005"),'Current release/sixth-review lineage identity drift.');
 s6(false!==strpos($repo,'placement_ready($row)')&&false!==strpos($contracts,'gcu_file14_placement_ready_v1'),'Active placement request-time owner validation missing.');
-s6(false!==strpos($companion,'DDD_Contracts')&&false!==strpos($companion,'WCA_Contracts')&&false!==strpos($companion,'gdo_file14_onboarding_destination'),'Current File07/08/09 runtime probes missing.');
+s6(false!==strpos($companion,'DDD_Contracts')&&false!==strpos($companion,'WCA_Contracts')&&false!==strpos($companion,'gdo_file14_onboarding_destination'),'Current File07/08/09 runtime probes missing.');s6(false!==strpos($companion,'FILE07_MIN_VERSION')&&false!==strpos($companion,'FILE08_MIN_VERSION')&&false!==strpos($companion,'FILE09_MIN_CONTRACT')&&false!==strpos($companion,'sabri_visual_experience_contract'),'Current companion compatibility hardening missing.');
 s6(false!==strpos($companion,'SMC_Contracts')&&false!==strpos($companion,'smc_assertions_v1'),'Current File00 authorization adapter missing.');
 s6(false!==strpos($companion,'SPF_Registry')&&false!==strpos($companion,'file01_route_registry_state'),'Current File01 route-registry adapter missing.');
 s6(false!==strpos($integrity,'AUDIT_KEY_OPTION')&&false!==strpos($integrity,'PRIVACY_KEY_OPTION')&&false!==strpos($integrity,'migrate_legacy_hashes'),'Stable integrity/privacy key migration missing.');
