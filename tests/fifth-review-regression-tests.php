@@ -49,7 +49,7 @@ fifth_assert( false !== strpos( $hardening, 'rollback_owned_transaction()' ) && 
 fifth_assert( false !== strpos( $readme, 'Stable tag: 1.4.6' ), 'Readme stable tag must match v1.4.6.' );
 fifth_assert( false !== strpos( $readme, 'File 20 remains the sole owner of the global shell/navigation' ) && false !== strpos( $readme, 'only when File 20 is absent' ), 'File 20 sole global shell ownership and bounded recovery behavior must be stated accurately.' );
 fifth_assert( false === strpos( $readme, 'future record/report updates' ), 'Readme must not falsely claim generic future record/report transactionality.' );
-fifth_assert( false !== strpos( $status, 'The six historical repository review ledgers are:' ), 'Status must count all six review ledgers accurately.' );
+fifth_assert( false !== strpos( $status, 'Historical eighty-pass ledgers:' ) && substr_count( $status, 'docs/REVIEW-80-' ) >= 6, 'Status must retain all six historical review ledgers accurately.' );
 fifth_assert( false !== strpos( $status, 'REVIEW-80-FIFTH-LEDGER-v1.4.3.md' ), 'Fifth ledger must remain part of release truth with its historical release identity.' );
 
 if ( $failures ) {
