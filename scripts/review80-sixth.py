@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Sixth-lineage independent 80-pass exact-source review gate for File 14 v1.4.5.
+"""Sixth-lineage independent 80-pass exact-source review gate for File 14 v1.4.6.
 
 This gate is repository evidence only. It does not prove staging, deployed-code,
 live database, migration or operational state.
@@ -44,7 +44,7 @@ build=r('scripts/build.py')
 checks=[]
 def add(label, ok): checks.append((label,bool(ok)))
 
-add('01 current release retains sixth-review schema lineage', 'Version: 1.4.5' in loader and "GCU_VERSION', '1.4.5" in loader and "GCU_SCHEMA_VERSION', 10005" in loader)
+add('01 current release retains sixth-review schema lineage', 'Version: 1.4.6' in loader and "GCU_VERSION', '1.4.6" in loader and "GCU_SCHEMA_VERSION', 10005" in loader)
 add('02 governing File14 and Future plan identities', 'SSH-F14-PLAN-2026-v1.0' in loader and 'SSH-F14-FUTURE-CTI-2026-v2.0' in loader)
 add('03 active public blocks re-check File14 placement semantics at request time', 'placement_ready($row)' in repo and 'gcu_file14_placement_ready_v1' in contracts)
 add('04 File07 remains doctor-directory destination owner', "'doctor_directory'=>array('owner'=>'File 07'" in contracts)
@@ -88,7 +88,7 @@ add('41 strict same-origin validation checks scheme host effective port and user
 add('42 public destination DTO remains minimized', 'public_destination($key)' in contracts and "'owner'=>" not in contracts.split('public function public_destination($key)',1)[1].split('public function public_destination_health',1)[0])
 add('43 owner destination readiness has bounded freshness', 'time()-DAY_IN_SECONDS' in contracts.replace(' ',''))
 add('44 File20 remains sole shell owner and File14 fallback is conditional', 'sabri_shell_route_result_allowed' in companion and 'sabri_shell_system_check_sections' in companion and 'sabri_shell_context_navigation_fallback_url' in companion and 'GCU_Companion_Adapters::file20_available' in front)
-add('45 File25 remains presentation boundary, not domain truth', 'Sabri\\\\PublicExperience\\\\Components' in trace and 'visual-system truth' in trace and 'Sabri\\\\PublicExperience\\\\Components' in companion)
+add('45 File25 remains presentation boundary, not domain truth', 'sabri_visual_experience_contract()' in trace and 'visual-system truth' in trace and 'sabri_visual_experience_render_state' in companion and 'Sabri\\\\PublicExperience\\\\Components::render_state' not in companion)
 add('46 Global Privacy Control is honored', 'HTTP_SEC_GPC' in privacy)
 add('47 Save-Data/reduced-data is honored', 'HTTP_SAVE_DATA' in privacy and 'low_bandwidth_requested' in privacy)
 add('48 sensitive routes are excluded from measurement', 'is_sensitive_path' in privacy)
