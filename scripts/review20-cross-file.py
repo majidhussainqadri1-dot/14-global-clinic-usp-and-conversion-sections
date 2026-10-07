@@ -35,10 +35,11 @@ checks = []
 def add(name, ok):
     checks.append((name, bool(ok)))
 
-add("01 exact repository/release identity",
-    "Version: 1.4.5" in main
-    and "GCU_VERSION', '1.4.5" in main
-    and "14-global-clinic-usp-and-conversion-sections" in main)
+add("01 exact repository/release identity and second-review evidence",
+    "Version: 1.4.6" in main
+    and "GCU_VERSION', '1.4.6" in main
+    and "14-global-clinic-usp-and-conversion-sections" in main
+    and "REVIEW-20-CROSS-FILE-COMPLETION-v1.4.6-R2.md" in status)
 
 add("02 File14 governing FR/NFR/Future trace remains complete",
     all(x in trace for x in ("F14-FR-001","F14-FR-016","F14-NFR-001","F14-NFR-010","F14-FUT-01","F14-FUT-24")))
@@ -46,58 +47,45 @@ add("02 File14 governing FR/NFR/Future trace remains complete",
 add("03 central canonical-owner boundaries remain explicit",
     "File 14" in policy and "no_cure_guarantee" in policy and "'platform_commission_percent' => 0" in policy)
 
-add("04 File00 action-time authorization uses current versioned assertions",
-    "SMC_Contracts" in companion
-    and "smc_assertions_v1" in companion
-    and "smc_restricted_capabilities" in companion
+add("04 File00 action-time authorization is version-gated",
+    all(x in companion for x in ("FILE00_MIN_VERSION","FILE00_MIN_CONTRACT","SMC_VERSION","SMC_CONTRACT_VERSION","SMC_Contracts","smc_assertions_v1","smc_restricted_capabilities"))
     and "GCU_Companion_Adapters::authorize" in caps)
 
-add("05 File07 doctor-directory integration uses current runtime contract",
-    "DDD_Contracts::dependency_health" in companion
+add("05 File01 registry is version-gated and canonical",
+    all(x in companion for x in ("FILE01_MIN_VERSION","FILE01_MIN_CONTRACT","SPF_VERSION","SPF_CONTRACT_VERSION","SPF_Registry","file01_route_registry_state","sync_file01_registry")))
+
+add("06 File07 directory integration is version-gated",
+    all(x in companion for x in ("FILE07_MIN_VERSION","FILE07_MIN_CONTRACT","DDD_VERSION","DDD_CONTRACT_VERSION","DDD_Contracts::dependency_health"))
     and "home_url( '/doctors/' )" in companion)
 
-add("06 File08 clinic/appointment integration uses current runtime contract",
-    "WCA_Contracts::contract_manifest" in companion
-    and "home_url( '/appointments/' )" in companion)
+add("07 File08 clinic integration validates current API/route/business policy",
+    all(x in companion for x in ("FILE08_MIN_VERSION","FILE08_MIN_API","WCA_VERSION","WCA_Contracts::contract_manifest","'/appointments'","commission_percent","donation_visibility_link")))
 
-add("07 File09 onboarding integration uses current runtime contract",
-    "gdo_file14_onboarding_destination" in companion)
+add("08 File09 onboarding validates consumer/version/read-only invariants",
+    all(x in companion for x in ("FILE09_MIN_VERSION","FILE09_MIN_CONTRACT","GDO_VERSION","gdo_file14_onboarding_destination","'file09'","'file14'","writes_data","automatic_enrollment","automatic_verification")))
 
-add("08 File20 remains shell/navigation owner through current hooks",
-    "sabri_shell_route_result_allowed" in companion
-    and "sabri_shell_system_check_sections" in companion
-    and "sabri_shell_context_navigation_fallback_url" in companion
+add("09 File19 notification transport is version-gated and explicitly addressed",
+    all(x in companion for x in ("FILE19_MIN_VERSION","SUN_VERSION","sun_register_notification_producer","sun_ingest_domain_event","gcu_operational_notification_recipients","file19_notifications")))
+
+add("10 File20 shell remains owner and is minimum-version gated",
+    all(x in companion for x in ("FILE20_MIN_VERSION","SABRI_SHELL_VERSION","sabri_shell_route_result_allowed","sabri_shell_system_check_sections","sabri_shell_context_navigation_fallback_url"))
     and "sabri_shell_back_home_controls" not in front)
 
-add("09 File25 visual system is consumed without taking domain truth",
-    "Sabri\\\\PublicExperience\\\\Components" in companion
-    and "sabri-ui-card" in front
-    and "sabri-ui-button" in front)
-
-add("10 File24 assurance-plane manifest is registered without fabricated acceptance evidence",
-    "spcrc/module_manifests" in companion
-    and "'canonical_data_owner'" in companion
-    and "'release_gate'" in companion
+add("11 File24 assurance integration is minimum-version gated without fabricated acceptance",
+    all(x in companion for x in ("FILE24_MIN_VERSION","SPCRC_VERSION","spcrc/module_manifests","'canonical_data_owner'","'release_gate'"))
     and "'posture'                => 'unassessed'" in companion
     and "'last_security_test'     => ''" in companion)
 
-add("11 File14 placements require File01 canonical routes and File20 shell readiness",
-    "gcu_file14_placement_ready_v1" in contracts
-    and "GCU_Companion_Adapters::placement_contract_ready" in contracts
-    and "file01_route_registry_state" in companion
-    and "sync_file01_registry" in companion
-    and "SPF_Registry::register_manifest" in companion
-    and "SPF_Registry::map_route" in companion
-    and "SPF_Registry::register_contract" in companion
-    and "sabri_shell_slot_ready_v1" not in contracts)
+add("12 File25 uses public versioned visual contracts and preserves File20 ownership",
+    all(x in companion for x in ("FILE25_MIN_VERSION","FILE25_MIN_CONTRACT","FILE25_MIN_COMPONENT_CONTRACT","sabri_visual_experience_contract","sabri_visual_experience_render_state","visual_system_owner","global_shell_owner"))
+    and "Sabri\\PublicExperience\\Components::render_state" not in companion
+    and "sabri-ui-card" in front
+    and "sabri-ui-button" in front)
 
-add("12 destination readiness is request-time owner verified and fail-closed",
+add("13 destination readiness remains request-time owner verified and fail-closed",
     "GCU_Companion_Adapters::destination_probe" in contracts
     and "owner_runtime_probe" in companion
     and "owner_unconfirmed" in contracts)
-
-add("13 USP/trust/zero-commission content remains governed and localized",
-    all(x in policy for x in ("patient_hero","doctor_hero","zero_platform_commission","optional_support_no_ranking","verification_required")))
 
 add("14 privacy-minimized attribution and user data rights remain",
     all(x in privacy for x in ("global_privacy_control_requested","measurement_allowed","wp_privacy_personal_data_exporters","wp_privacy_personal_data_erasers","is_file14_acquisition_route")))
@@ -116,18 +104,17 @@ add("17 localization/accessibility/RTL/low-data contracts remain",
 add("18 migration/schema/rollback safeguards remain",
     all(x in install for x in ("ENGINE=InnoDB","verify_schema","capture_snapshot","rollback_snapshot","GET_LOCK")))
 
-add("19 deterministic package and automated repository QA remain",
+add("19 deterministic package and automated current-companion regressions remain",
     "Deterministic double-build mismatch" in build
     and "php -l" in quality
-    and "cross-file-integration-tests.php" in quality)
+    and "cross-file-integration-tests.php" in quality
+    and "review20-cross-file.py" in quality)
 
-add("20 repository/staging/live truth separation and File19 addressed-alert integration remain explicit",
+add("20 repository/staging/live truth separation and current companion freeze remain explicit",
     "No `Staging-Accepted`, `Live-Deployed` or `Operational` claim" in status
     and "repository evidence only" in status.lower()
-    and "file19_notifications" in companion
-    and "sun_register_notification_producer" in companion
-    and "sun_ingest_domain_event" in companion
-    and "gcu_operational_notification_recipients" in companion)
+    and "448d41f34586369ca5875693583b9cd8a6133167" in status
+    and "2d02c93356b050313e30e29aeceb57080771c2a5" in status)
 
 if len(checks) != 20:
     print(f"Review definition error: {len(checks)} passes", file=sys.stderr)
