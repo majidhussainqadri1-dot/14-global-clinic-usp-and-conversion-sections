@@ -1,4 +1,4 @@
-# File 14 — Fresh Central + File Plan + Future CTI Requirements Traceability — v1.4.6
+# File 14 — Fresh Central + File Plan + Future CTI Requirements Traceability — v1.4.7
 
 ## Governing freeze
 
@@ -37,7 +37,7 @@ File 14 owns approved Worldwide Clinic value-proposition copy, reusable semantic
 | F14-FR-006 Business copy | 0% commission, one free tier, optional support/no advantage, direct fee-owner boundary | policy + future parity tests |
 | F14-FR-007 Placement registry | File14-owned semantic route/slot/audience/priority placements; readiness requires File 01 canonical route registration and File 20 shell availability, while File 20 remains the surrounding shell/navigation owner | schema/cross-file/contract tests |
 | F14-FR-008 Reusable content blocks | Semantic block DTO/API plus File 25 public `sabri_visual_experience_contract()` and `sabri_visual_experience_render_state()` integration; local scoped fallback remains available when the versioned visual contract is incompatible | cross-file + contract tests |
-| F14-FR-009 Destination health | Request-time owner-native File 07/08/09 health probes with minimum runtime/contract compatibility enforcement, bounded compatibility-event fallback and honest unavailable state with no permissive URL | cross-file + contract/frontend tests |
+| F14-FR-009 Destination health | Request-time owner-native File 07/08/09 health probes with minimum runtime/contract compatibility enforcement; File 07 also requires owner system health and File 08 requires owner runtime health before a CTA is exposed; malformed/throwing companions fail closed and unavailable destinations keep an honest no-URL state | cross-file + contract/frontend tests |
 | F14-FR-010 Campaign attribution | Consent, GPC, File 14 route allowlist, sanitized first/last attribution and 30-day expiry | privacy/static tests |
 | F14-FR-011 Funnel events | Impression/CTA stages, single-use event token, no click-as-success inference; fifth review rejects conflicting replay identity for an existing event UUID | REST/repository/fifth tests |
 | F14-FR-012 Experiment governance | Hypothesis/variants/audience/guardrails/sample/privacy and Founder-gated lifecycle; automatic early-stop state+audit is transactional in the scheduled path | policy/contract + future/fifth tests |
@@ -81,7 +81,7 @@ File 14 owns approved Worldwide Clinic value-proposition copy, reusable semantic
 |---|---|---|
 | F14-NFR-001 Authorization | Native File14 capabilities plus action-time File 00 versioned assertions, object/purpose/state/version checks and fail-closed REST; compatibility filter may restrict but never elevate | real-role/IDOR staging matrix |
 | F14-NFR-002 Privacy lifecycle | Consent/GPC, minimization, export/erase, bounded attribution, non-destructive uninstall, cohort suppression, PII-minimized reports and sensitive AI-input rejection | WordPress privacy-tool/provider staging acceptance |
-| F14-NFR-003 Reliability | Idempotent event write, outbox/inbox, bounded retry/dead-letter; base/Future actual schema fail-close; transactional scheduled experiment early-stop | queue/provider-failure staging test |
+| F14-NFR-003 Reliability | Idempotent event write, outbox/inbox, bounded retry/dead-letter; base/Future actual schema fail-close; transactional scheduled experiment early-stop; companion-owner exceptions are isolated into fail-closed/degraded results with bounded logging | queue/provider-failure staging test |
 | F14-NFR-004 Performance | Bounded queries, conditional assets, low-data suppression and background work; Future quality marks performance provisional without measured input | measured p75/p95 on Hostinger-equivalent staging |
 | F14-NFR-005 Accessibility | File 20 global shell contract, File 25 reusable public state components, bounded local recovery only when shell unavailable, lang/dir, focus, 320px reflow, reduced motion/data and forced colors | screen reader, 320–1920px and 400% zoom acceptance |
 | F14-NFR-006 Observability | Base health plus current File 00/01/07/08/09/19/20/24/25 dependency compatibility states, Future parity/anomaly/quality/consistency/report indicators and conversion-event identity conflict warning | real logging/alert ownership acceptance |
@@ -101,4 +101,4 @@ File 14 owns approved Worldwide Clinic value-proposition copy, reusable semantic
 
 ## Truth-status rule
 
-`Specified`, `Coded`, `Packaged`, `Automated-QA Green`, `Staging-Accepted`, `Live-Deployed`, and `Operational` are separate statuses. File 14 v1.4.6 may only claim a status for which current exact-head evidence exists. The Future CTI implementation and sixth-review corrections do not alter that rule.
+`Specified`, `Coded`, `Packaged`, `Automated-QA Green`, `Staging-Accepted`, `Live-Deployed`, and `Operational` are separate statuses. File 14 v1.4.7 may only claim a status for which current exact-head evidence exists. The Future CTI implementation and sixth-review corrections do not alter that rule.

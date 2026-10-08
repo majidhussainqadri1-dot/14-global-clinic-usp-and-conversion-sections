@@ -5,7 +5,7 @@ P="$ROOT/14-global-clinic-usp-integration"
 fail=0
 need(){ grep -RqsF "$1" "$2" || { echo "ROUND1 missing: $1 in $2" >&2; fail=1; }; }
 forbid(){ if grep -RqsE "$1" "$2"; then echo "ROUND1 forbidden pattern: $1 in $2" >&2; fail=1; fi; }
-need "Version: 1.4.6" "$P/global-clinic-usp-integration.php"
+need "Version: 1.4.7" "$P/global-clinic-usp-integration.php"
 need "GCU_SCHEMA_VERSION', 10005" "$P/global-clinic-usp-integration.php"
 need "SSH-F14-FUTURE-CTI-2026-v2.0" "$P/global-clinic-usp-integration.php"
 need "GCU_FUTURE_SCHEMA_VERSION', 1" "$P/global-clinic-usp-integration.php"
@@ -40,6 +40,11 @@ need "GCU_Companion_Adapters::placement_contract_ready" "$P/includes/class-gcu-c
 need "FILE00_MIN_VERSION" "$P/includes/class-gcu-companion-adapters.php"
 need "FILE01_MIN_VERSION" "$P/includes/class-gcu-companion-adapters.php"
 need "FILE07_MIN_VERSION" "$P/includes/class-gcu-companion-adapters.php"
+need "FILE07_MIN_CONTRACT" "$P/includes/class-gcu-companion-adapters.php"
+need "DDD_Observability" "$P/includes/class-gcu-companion-adapters.php"
+need "WCA_Observability" "$P/includes/class-gcu-companion-adapters.php"
+need "owner_call" "$P/includes/class-gcu-companion-adapters.php"
+need "companion_contract_exception" "$P/includes/class-gcu-companion-adapters.php"
 need "FILE08_MIN_VERSION" "$P/includes/class-gcu-companion-adapters.php"
 need "FILE09_MIN_CONTRACT" "$P/includes/class-gcu-companion-adapters.php"
 need "FILE19_MIN_VERSION" "$P/includes/class-gcu-companion-adapters.php"

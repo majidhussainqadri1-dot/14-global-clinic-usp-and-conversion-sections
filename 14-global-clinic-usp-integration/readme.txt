@@ -4,7 +4,7 @@ Tags: clinic, doctors, conversion, accessibility, privacy, governance, trust, ex
 Requires at least: 6.6
 Tested up to: 7.0.1
 Requires PHP: 7.4
-Stable tag: 1.4.6
+Stable tag: 1.4.7
 License: GPLv2 or later
 
 Canonical File 14 implementation for approved Worldwide Clinic value-proposition content, ethical conversion journeys, claim governance, destination contracts, Future Conversion & Trust Intelligence and privacy-minimized measurement.
@@ -12,7 +12,7 @@ Canonical File 14 implementation for approved Worldwide Clinic value-proposition
 == Description ==
 File 14 owns approved patient/doctor value-proposition blocks, File 20 placement contracts, claim evidence/version history, ethical conversion diagnostics, `/global-clinic/`, `/clinic/how-it-works/`, and versioned destinations to Files 07/08/09. It never owns doctor profiles, verification evidence, clinic records, appointments, payments, clinical records, the global shell/navigation or visual-system truth.
 
-Version 1.4.0 added the Founder-approved `SSH-F14-FUTURE-CTI-2026-v2.0` amendment as a bounded intelligence layer. Versions 1.4.1 and 1.4.2 delivered four independent eighty-pass corrective reviews. Version 1.4.3 added the fifth independent review layer; version 1.4.4 completed the sixth independent eighty-pass review. Version 1.4.5 adds an exact cross-file compatibility correction against the current File 00/07/08/09/20/24/25 repository contracts plus a dedicated twenty-pass cross-file completeness gate. Version 1.4.6 performs a second twenty-pass current-companion audit, freezes the 2026-10-07 File 09/File 25 heads, and fail-closes all required companion integrations when their runtime or published contract version is below the reviewed compatibility floor; File 25 state rendering now uses its public versioned visual contract instead of an internal class call.
+Version 1.4.0 added the Founder-approved `SSH-F14-FUTURE-CTI-2026-v2.0` amendment as a bounded intelligence layer. Versions 1.4.1 and 1.4.2 delivered four independent eighty-pass corrective reviews. Version 1.4.3 added the fifth independent review layer; version 1.4.4 completed the sixth independent eighty-pass review. Version 1.4.5 adds an exact cross-file compatibility correction against the current File 00/07/08/09/20/24/25 repository contracts plus a dedicated twenty-pass cross-file completeness gate. Version 1.4.6 performs a second twenty-pass current-companion audit, freezes the 2026-10-07 File 09/File 25 heads, and fail-closes all required companion integrations when their runtime or published contract version is below the reviewed compatibility floor; File 25 state rendering now uses its public versioned visual contract instead of an internal class call. Version 1.4.7 performs a third twenty-pass audit against the 2026-10-08 exact companion heads, advances the required File 07 floor to its centrally reconciled 1.2.1 contract, verifies File 07/File 08 owner runtime health before exposing destination CTAs, and exception-isolates owner calls so a companion failure degrades safely instead of taking down File 14.
 
 == Future Conversion & Trust Intelligence — 24 approved enhancements ==
 * F14-FUT-01 Ethical Intent Router.
@@ -82,6 +82,15 @@ The File 14 surface includes complete File 14-owned American English, Urdu and A
 8. Obtain explicit Founder acceptance before production deployment.
 
 == Changelog ==
+= 1.4.7 =
+* Completed a third 20-pass File 14 plan + central-plan + exact-current-companion audit from main `f64e7d17268daff4e3097c18ad510116e6eaf105`.
+* Raised the required File 07 runtime/contract floor to 1.2.1, the current central/cross-file reconciled release.
+* File 07 destination readiness now requires both current cross-file dependency health and owner runtime/system health, so stale schema or missing managed routes cannot be promoted as a healthy CTA.
+* File 08 destination readiness now requires its owner runtime health in addition to API/route/0%-commission/donor-neutral policy parity.
+* Added bounded exception isolation around File 00 authorization, File 01 registry, File 07/08/09 destination providers, File 19 notification transport and File 25 visual contracts/rendering; owner exceptions fail closed and are logged without PII.
+* Refreshed exact repository evidence to File 07 `2f4a89707724fd2b9946600afe10ddab27ec3c2d`, File 09 `cfc5f781a766330314dc98c42abeca0eb7786eba` and File 25 `e35563b7f3d8ebf0acbbc80982b7bcf2e1b78c0a`.
+* Repository evidence only; exact deployed code, DB/schema, migration, staging and live state remain separate.
+
 = 1.4.6 =
 * Completed a second 20-pass File 14 plan + central-plan + current-companion audit from exact main `55e44d38b23304d50fad22b4d3a2c67fe4721209`.
 * Added fail-closed runtime compatibility floors for Files 00/01/07/08/09/19/20/24/25, matching the dependency versions already declared by File 14.
