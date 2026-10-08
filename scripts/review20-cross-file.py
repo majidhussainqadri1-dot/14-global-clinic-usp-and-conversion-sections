@@ -55,11 +55,11 @@ add("05 File01 registry is version-gated, canonical and exception-isolated",
     all(x in companion for x in ("FILE01_MIN_VERSION","FILE01_MIN_CONTRACT","SPF_VERSION","SPF_CONTRACT_VERSION","SPF_Registry","file01_route_registry_state","sync_file01_registry","register_manifest","map_route","list_contracts","register_contract","owner_call")))
 
 add("06 File07 current 1.2.1 contract and owner system health gate are required",
-    all(x in companion for x in ("FILE07_MIN_VERSION = '1.2.1'","FILE07_MIN_CONTRACT = '1.2.1'","DDD_VERSION","DDD_CONTRACT_VERSION","DDD_Contracts::dependency_health","DDD_Observability","system_check","owner_runtime_degraded_readable"))
+    all(x in companion for x in ("FILE07_MIN_VERSION = '1.2.1'","FILE07_MIN_CONTRACT = '1.2.1'","DDD_VERSION","DDD_CONTRACT_VERSION","array( 'DDD_Contracts', 'dependency_health' )","DDD_Observability","system_check","owner_runtime_degraded_readable"))
     and "home_url( '/doctors/' )" in companion)
 
 add("07 File08 clinic integration requires owner health plus API/route/business parity",
-    all(x in companion for x in ("FILE08_MIN_VERSION","FILE08_MIN_API","WCA_VERSION","WCA_Contracts::contract_manifest","WCA_Observability","runtime_health","'/appointments'","commission_percent","donation_visibility_link")))
+    all(x in companion for x in ("FILE08_MIN_VERSION","FILE08_MIN_API","WCA_VERSION","array( 'WCA_Contracts', 'contract_manifest' )","WCA_Observability","runtime_health","'/appointments'","commission_percent","donation_visibility_link")))
 
 add("08 File09 onboarding remains versioned/read-only and exception-isolated",
     all(x in companion for x in ("FILE09_MIN_VERSION","FILE09_MIN_CONTRACT","GDO_VERSION","gdo_file14_onboarding_destination","'file09'","'file14'","writes_data","automatic_enrollment","automatic_verification","onboarding_destination","owner_call")))
