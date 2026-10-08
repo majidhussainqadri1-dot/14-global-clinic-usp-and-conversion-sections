@@ -26,7 +26,7 @@ sr_check( false !== strpos( $review, 'get_headers()' ) && false !== strpos( $rev
 sr_check( ! file_exists( $root . '/.github/workflows/file14-one-shot-release-gate.yml' ), 'Obsolete v1.4.0/PR-3 release automation remains.' );
 sr_check( false !== strpos( $trace, 'Requirements Traceability — v1.4.7' ) && false !== strpos( $trace, 'File 14 v1.4.7 may only claim a status' ), 'Traceability current-version truth is stale.' );
 sr_check( false !== strpos( $status, 'v1.4.7 Third Twenty-Pass Current-Companion Repository Candidate' ) && false !== strpos( $status, 'Exact-current-head rule' ) && false === strpos( $status, 'Corrective Candidate — Merged' ), 'Status wording remains contradictory.' );
-sr_check( false !== strpos( $release, 'v1.4.7 Second Twenty-Pass Current-Companion Repository Candidate' ) && false !== strpos( $release, 'exact review/main SHA' ) && false !== strpos( $release, 'fresh post-merge' ), 'Release evidence does not enforce current exact-head/post-merge truth.' );
+sr_check( false !== strpos( $release, 'v1.4.7 Third Twenty-Pass Current-Companion Repository Candidate' ) && false !== strpos( $release, 'exact review/main SHA' ) && false !== strpos( $release, 'fresh post-merge' ), 'Release evidence does not enforce current exact-head/post-merge truth.' );
 
 if ( $failures ) {
     fwrite( STDERR, "Second-review regression tests failed:\n- " . implode( "\n- ", $failures ) . "\n" );
