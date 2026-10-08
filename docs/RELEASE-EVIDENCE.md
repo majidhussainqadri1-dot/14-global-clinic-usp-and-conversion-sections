@@ -30,9 +30,9 @@ The permanent ledger is `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.7-R3.md`. Rep
 
 The second 20-pass review re-froze File 14 against the governing File 14 plan, the consolidated central plan and current exact source heads for Files 00/01/07/08/09/19/20/24/25. File 09 had advanced to `448d41f34586369ca5875693583b9cd8a6133167` and File 25 to `2d02c93356b050313e30e29aeceb57080771c2a5`; both remained semantically compatible, but File 14's runtime adapters did not consistently enforce the minimum versions already declared in its File 01 dependency manifest.
 
-v1.4.7 therefore adds one fail-closed compatibility baseline: File 00/01/07/08/09/19/20/24/25 runtime/version checks; File 08 API/route/business-policy parity; File 09 exact owner/consumer/read-only/no-auto-verification contract invariants; and File 25 public design-system/component contract validation through `sabri_visual_experience_contract()` and `sabri_visual_experience_render_state()`. Declared dependency floors and runtime enforcement now share the same constants.
+v1.4.6 therefore added one fail-closed compatibility baseline: File 00/01/07/08/09/19/20/24/25 runtime/version checks; File 08 API/route/business-policy parity; File 09 exact owner/consumer/read-only/no-auto-verification contract invariants; and File 25 public design-system/component contract validation through `sabri_visual_experience_contract()` and `sabri_visual_experience_render_state()`. Declared dependency floors and runtime enforcement now share the same constants.
 
-The permanent round ledger is `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.7-R2.md`. The earlier v1.4.5 twenty-pass ledger remains historical evidence and is not rewritten.
+The permanent round ledger is `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.6-R2.md`. The earlier v1.4.5 twenty-pass ledger remains historical evidence and is not rewritten.
 
 ## Twenty-pass cross-file corrective evidence
 
