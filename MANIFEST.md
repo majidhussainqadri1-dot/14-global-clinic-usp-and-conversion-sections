@@ -1,4 +1,4 @@
-# File 14 v1.4.6 Manifest
+# File 14 v1.4.7 Manifest
 
 Canonical plugin folder: `14-global-clinic-usp-integration`
 
@@ -6,9 +6,10 @@ Contents:
 - bootstrap and GCU classes
 - native schema/migration/rollback
 - governed policy, claims, blocks, placements and experiments
-- version-gated owner-native destination adapters for Files 07/08/09 and File 00 authorization assertions
+- version-gated owner-native destination adapters for Files 07/08/09, File 07/File 08 runtime-health gates and File 00 authorization assertions
 - File 20 navigation/module-health/context integration without duplicate global shell ownership
 - File 24 assurance manifest and File 25 public versioned visual-contract integration with local fail-closed fallback
+- companion-owner exception isolation for Files 00/01/07/08/09/19/25
 - privacy-safe attribution and funnel measurement
 - outbox/inbox reliability
 - public routes, localized content, green responsive CSS and semantic icons
