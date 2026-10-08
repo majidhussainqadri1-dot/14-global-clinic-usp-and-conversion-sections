@@ -10,7 +10,7 @@ defined( 'ABSPATH' ) || exit;
  * owner-native read/health contracts and never write companion domain truth.
  */
 final class GCU_Companion_Adapters {
-	const REVIEW_BASELINE = '2026-10-07-review20-r2-current-companions-v1';
+	const REVIEW_BASELINE = '2026-10-08-review20-r3-current-companions-v1';
 
 	const FILE00_MIN_VERSION = '1.2.44';
 	const FILE00_MIN_CONTRACT = '1.2.3';
@@ -18,8 +18,8 @@ final class GCU_Companion_Adapters {
 	const FILE01_MIN_VERSION = '2.0.1';
 	const FILE01_MIN_CONTRACT = '2.0.0';
 	const FILE01_MAX_CONTRACT_EXCLUSIVE = '3.0.0';
-	const FILE07_MIN_VERSION = '1.2.0';
-	const FILE07_MIN_CONTRACT = '1.2.0';
+	const FILE07_MIN_VERSION = '1.2.1';
+	const FILE07_MIN_CONTRACT = '1.2.1';
 	const FILE07_MAX_CONTRACT_EXCLUSIVE = '2.0.0';
 	const FILE08_MIN_VERSION = '1.2.15';
 	const FILE08_MIN_API = '1.0.0';
@@ -45,6 +45,30 @@ final class GCU_Companion_Adapters {
 		$version = trim( (string) $version );
 		return self::version_at_least( $version, $minimum )
 			&& ( '' === $maximum_exclusive || version_compare( $version, $maximum_exclusive, '<' ) );
+	}
+
+	/**
+	 * Execute a companion-owner read/action boundary without allowing an
+	 * exception in another module to take down File 14. Failures are logged
+	 * with bounded non-PII context and callers must choose a fail-closed fallback.
+	 */
+	private static function owner_call( $owner, $surface, $callback, $fallback = null ) {
+		try {
+			return call_user_func( $callback );
+		} catch ( Throwable $exception ) {
+			if ( class_exists( 'GCU_Observability' ) ) {
+				GCU_Observability::log(
+					'warning',
+					'companion_contract_exception',
+					array(
+						'owner'           => sanitize_key( (string) $owner ),
+						'surface'         => sanitize_key( (string) $surface ),
+						'exception_class' => sanitize_key( get_class( $exception ) ),
+					)
+				);
+			}
+			return $fallback;
+		}
 	}
 
 	public static function hooks() {
@@ -75,11 +99,19 @@ final class GCU_Companion_Adapters {
 			return new WP_Error( 'gcu_file00_unavailable', __( 'The canonical File 00 authorization provider is unavailable.', 'global-clinic-usp-integration' ) );
 		}
 
-		$assertions = SMC_Contracts::assertions( $user_id );
-		if ( is_array( $assertions ) && function_exists( 'apply_filters' ) ) {
-			// Consume File 00's current assertion hardening (including action-time age containment).
-			$assertions = apply_filters( 'smc_assertions_v1', $assertions, $user_id );
-		}
+		$assertions = self::owner_call(
+			'file00',
+			'authorization_assertions',
+			static function() use ( $user_id ) {
+				$claim = SMC_Contracts::assertions( $user_id );
+				if ( is_array( $claim ) && function_exists( 'apply_filters' ) ) {
+					// Consume File 00's current assertion hardening (including action-time age containment).
+					$claim = apply_filters( 'smc_assertions_v1', $claim, $user_id );
+				}
+				return $claim;
+			},
+			null
+		);
 
 		if ( ! is_array( $assertions ) || absint( isset( $assertions['user_id'] ) ? $assertions['user_id'] : 0 ) !== $user_id ) {
 			return new WP_Error( 'gcu_file00_claim_invalid', __( 'The canonical File 00 authorization claim is invalid.', 'global-clinic-usp-integration' ) );
@@ -139,14 +171,18 @@ final class GCU_Companion_Adapters {
 			&& self::version_at_least( DDD_VERSION, self::FILE07_MIN_VERSION )
 			&& self::version_in_range( DDD_CONTRACT_VERSION, self::FILE07_MIN_CONTRACT, self::FILE07_MAX_CONTRACT_EXCLUSIVE )
 			&& class_exists( 'DDD_Contracts' )
-			&& is_callable( array( 'DDD_Contracts', 'dependency_health' ) );
+			&& is_callable( array( 'DDD_Contracts', 'dependency_health' ) )
+			&& class_exists( 'DDD_Observability' )
+			&& is_callable( array( 'DDD_Observability', 'system_check' ) );
 	}
 
 	public static function file08_available() {
 		return defined( 'WCA_VERSION' )
 			&& self::version_at_least( WCA_VERSION, self::FILE08_MIN_VERSION )
 			&& class_exists( 'WCA_Contracts' )
-			&& is_callable( array( 'WCA_Contracts', 'contract_manifest' ) );
+			&& is_callable( array( 'WCA_Contracts', 'contract_manifest' ) )
+			&& class_exists( 'WCA_Observability' )
+			&& is_callable( array( 'WCA_Observability', 'health' ) );
 	}
 
 	public static function file09_available() {
@@ -160,20 +196,28 @@ final class GCU_Companion_Adapters {
 		switch ( $key ) {
 			case 'doctor_directory':
 				if ( self::file07_available() ) {
-					$health = DDD_Contracts::dependency_health();
-					$ready = is_array( $health ) && ! empty( $health['ready'] );
-					return self::probe_result( $key, 'File 07', $ready, home_url( '/doctors/' ), $ready ? 'owner_runtime_ready' : 'owner_runtime_degraded', DDD_CONTRACT_VERSION );
+					$health = self::owner_call( 'file07', 'dependency_health', array( 'DDD_Contracts', 'dependency_health' ), null );
+					$system = self::owner_call( 'file07', 'system_check', array( 'DDD_Observability', 'system_check' ), null );
+					$overall = is_array( $system ) && isset( $system['overall'] ) ? sanitize_key( (string) $system['overall'] ) : 'fail';
+					$ready = is_array( $health )
+						&& ! empty( $health['ready'] )
+						&& in_array( $overall, array( 'pass', 'degraded' ), true );
+					$reason = $ready ? ( 'degraded' === $overall ? 'owner_runtime_degraded_readable' : 'owner_runtime_ready' ) : 'owner_runtime_unhealthy';
+					return self::probe_result( $key, 'File 07', $ready, home_url( '/doctors/' ), $reason, DDD_CONTRACT_VERSION );
 				}
 				return self::probe_result( $key, 'File 07', false, '', 'owner_contract_unavailable_or_incompatible', '' );
 
 			case 'clinic':
 				if ( self::file08_available() ) {
-					$manifest = WCA_Contracts::contract_manifest();
+					$manifest = self::owner_call( 'file08', 'contract_manifest', array( 'WCA_Contracts', 'contract_manifest' ), null );
+					$runtime_health = self::owner_call( 'file08', 'runtime_health', array( 'WCA_Observability', 'health' ), null );
 					$routes = is_array( $manifest ) && isset( $manifest['routes'] ) && is_array( $manifest['routes'] ) ? $manifest['routes'] : array();
 					$runtime_version = is_array( $manifest ) && isset( $manifest['runtime_version'] ) ? (string) $manifest['runtime_version'] : '';
 					$api_version = is_array( $manifest ) && isset( $manifest['api_version'] ) ? (string) $manifest['api_version'] : '';
 					$appointments = isset( $routes['appointments'] ) && is_array( $routes['appointments'] ) ? $routes['appointments'] : array();
 					$ready = is_array( $manifest )
+						&& is_array( $runtime_health )
+						&& ! empty( $runtime_health['ok'] )
 						&& self::version_at_least( $runtime_version, self::FILE08_MIN_VERSION )
 						&& self::version_in_range( $api_version, self::FILE08_MIN_API, self::FILE08_MAX_API_EXCLUSIVE )
 						&& '/appointments' === ( isset( $appointments['pattern'] ) ? (string) $appointments['pattern'] : '' )
@@ -185,7 +229,7 @@ final class GCU_Companion_Adapters {
 
 			case 'doctor_onboarding':
 				if ( self::file09_available() ) {
-					$destination = gdo_file14_onboarding_destination();
+					$destination = self::owner_call( 'file09', 'onboarding_destination', 'gdo_file14_onboarding_destination', null );
 					$version = is_array( $destination ) && ! empty( $destination['contract_version'] ) ? (string) $destination['contract_version'] : '';
 					$contract_ok = self::version_in_range( $version, self::FILE09_MIN_CONTRACT, self::FILE09_MAX_CONTRACT_EXCLUSIVE );
 					$owner_ok = is_array( $destination )
@@ -248,8 +292,8 @@ final class GCU_Companion_Adapters {
 		if ( ! self::file01_available() ) {
 			return $state;
 		}
-		$module = SPF_Registry::get_module( 'file-14' );
-		$routes = SPF_Registry::list_routes();
+		$module = self::owner_call( 'file01', 'get_module', static function() { return SPF_Registry::get_module( 'file-14' ); }, null );
+		$routes = self::owner_call( 'file01', 'list_routes', array( 'SPF_Registry', 'list_routes' ), new WP_Error( 'gcu_file01_routes_exception' ) );
 		if ( is_wp_error( $routes ) || ! is_array( $routes ) ) {
 			$state['available'] = true;
 			return $state;
@@ -450,7 +494,7 @@ final class GCU_Companion_Adapters {
 		);
 
 		$manifest = self::file01_manifest();
-		$existing = SPF_Registry::get_module( 'file-14' );
+		$existing = self::owner_call( 'file01', 'get_module_for_sync', static function() { return SPF_Registry::get_module( 'file-14' ); }, null );
 		// Registration never promotes or demotes File 01 maturity implicitly.
 		if ( is_array( $existing ) && ! empty( $existing['state'] ) ) {
 			$manifest['state'] = sanitize_key( (string) $existing['state'] );
@@ -460,7 +504,12 @@ final class GCU_Companion_Adapters {
 			$context['expected_version'] = (int) $existing['record_version'];
 		}
 		$current = self::file01_manifest_current( $existing, $manifest );
-		$result = $current ? array( 'unchanged' => true ) : SPF_Registry::register_manifest( $manifest, $context );
+		$result = $current ? array( 'unchanged' => true ) : self::owner_call(
+			'file01',
+			'register_manifest',
+			static function() use ( $manifest, $context ) { return SPF_Registry::register_manifest( $manifest, $context ); },
+			new WP_Error( 'gcu_file01_manifest_exception' )
+		);
 		if ( is_wp_error( $result ) ) {
 			$status['error'] = $result->get_error_code();
 			update_option( 'gcu_file01_registry_sync', $status, false );
@@ -468,7 +517,7 @@ final class GCU_Companion_Adapters {
 		}
 		$status['manifest'] = true;
 
-		$routes = SPF_Registry::list_routes();
+		$routes = self::owner_call( 'file01', 'list_routes_for_sync', array( 'SPF_Registry', 'list_routes' ), new WP_Error( 'gcu_file01_routes_exception' ) );
 		if ( is_wp_error( $routes ) ) {
 			$status['error'] = $routes->get_error_code();
 			update_option( 'gcu_file01_registry_sync', $status, false );
@@ -487,11 +536,21 @@ final class GCU_Companion_Adapters {
 				$route_context['expected_version'] = (int) $current_route['record_version'];
 			}
 			$route_current = self::file01_route_current( $current_route, $route );
-			$mapped = $route_current ? array( 'unchanged' => true ) : SPF_Registry::map_route( $route, $route_context );
+			$mapped = $route_current ? array( 'unchanged' => true ) : self::owner_call(
+				'file01',
+				'map_route',
+				static function() use ( $route, $route_context ) { return SPF_Registry::map_route( $route, $route_context ); },
+				new WP_Error( 'gcu_file01_route_exception' )
+			);
 			$status['routes'][ $route['route_key'] ] = is_wp_error( $mapped ) ? $mapped->get_error_code() : ( $route_current ? 'unchanged' : 'ok' );
 		}
 
-		$existing_contracts = SPF_Registry::list_contracts( array( 'owner_module' => 'file-14', 'limit' => 100 ) );
+		$existing_contracts = self::owner_call(
+			'file01',
+			'list_contracts',
+			static function() { return SPF_Registry::list_contracts( array( 'owner_module' => 'file-14', 'limit' => 100 ) ); },
+			new WP_Error( 'gcu_file01_contracts_exception' )
+		);
 		if ( is_wp_error( $existing_contracts ) ) {
 			$status['error'] = $existing_contracts->get_error_code();
 			update_option( 'gcu_file01_registry_sync', $status, false );
@@ -511,7 +570,12 @@ final class GCU_Companion_Adapters {
 				$contract_context['expected_version'] = (int) $current_contract['record_version'];
 			}
 			$contract_current = self::file01_contract_current( $current_contract, $contract );
-			$registered = $contract_current ? array( 'unchanged' => true ) : SPF_Registry::register_contract( $contract, $contract_context );
+			$registered = $contract_current ? array( 'unchanged' => true ) : self::owner_call(
+				'file01',
+				'register_contract',
+				static function() use ( $contract, $contract_context ) { return SPF_Registry::register_contract( $contract, $contract_context ); },
+				new WP_Error( 'gcu_file01_contract_exception' )
+			);
 			$status['contracts'][ $key ] = is_wp_error( $registered ) ? $registered->get_error_code() : ( $contract_current ? 'unchanged' : 'ok' );
 		}
 
@@ -533,7 +597,7 @@ final class GCU_Companion_Adapters {
 		) {
 			return array();
 		}
-		$contract = sabri_visual_experience_contract();
+		$contract = self::owner_call( 'file25', 'visual_contract', 'sabri_visual_experience_contract', null );
 		if ( ! is_array( $contract ) ) {
 			return array();
 		}
@@ -586,14 +650,21 @@ final class GCU_Companion_Adapters {
 		if ( ! self::file19_available() ) {
 			return false;
 		}
-		return (bool) sun_register_notification_producer(
-			'file14-global-clinic-usp',
-			array(
-				'owner'               => 'File 14',
-				'event_types'         => array( 'ClinicUSP.OperationalAlert' ),
-				'schema_versions'     => array( '1.0' ),
-				'allowed_data_fields' => array( 'summary', 'status', 'count', 'actions', 'why', 'group_key' ),
-			)
+		return (bool) self::owner_call(
+			'file19',
+			'register_producer',
+			static function() {
+				return sun_register_notification_producer(
+					'file14-global-clinic-usp',
+					array(
+						'owner'               => 'File 14',
+						'event_types'         => array( 'ClinicUSP.OperationalAlert' ),
+						'schema_versions'     => array( '1.0' ),
+						'allowed_data_fields' => array( 'summary', 'status', 'count', 'actions', 'why', 'group_key' ),
+					)
+				);
+			},
+			false
 		);
 	}
 
@@ -645,7 +716,12 @@ final class GCU_Companion_Adapters {
 				'group_key' => 'file14-operational-health',
 			),
 		);
-		$result = sun_ingest_domain_event( $event );
+		$result = self::owner_call(
+			'file19',
+			'ingest_domain_event',
+			static function() use ( $event ) { return sun_ingest_domain_event( $event ); },
+			new WP_Error( 'gcu_file19_ingest_exception' )
+		);
 		return ! is_wp_error( $result );
 	}
 
@@ -698,13 +774,21 @@ final class GCU_Companion_Adapters {
 
 	public static function visual_state( $type, $title, $message ) {
 		if ( self::file25_available() ) {
-			return sabri_visual_experience_render_state(
-				array(
-					'type'    => sanitize_key( $type ),
-					'title'   => sanitize_text_field( $title ),
-					'message' => sanitize_text_field( $message ),
-				)
+			$state = self::owner_call(
+				'file25',
+				'render_state',
+				static function() use ( $type, $title, $message ) {
+					return sabri_visual_experience_render_state(
+						array(
+							'type'    => sanitize_key( $type ),
+							'title'   => sanitize_text_field( $title ),
+							'message' => sanitize_text_field( $message ),
+						)
+					);
+				},
+				''
 			);
+			return is_string( $state ) ? $state : '';
 		}
 		return '';
 	}
@@ -735,7 +819,7 @@ final class GCU_Companion_Adapters {
 			'contract_version'       => '1.0.0',
 			'canonical_data_owner'   => 'File 14 USP copy placements experiments and conversion measurement',
 			'canonical_action_owner' => 'File 14 governed content placement experiment and measurement actions',
-			'evidence_source'        => 'file14-review20-r2-current-companions-20261007',
+			'evidence_source'        => 'file14-review20-r3-current-companions-20261008',
 			'degraded_behavior'      => 'Protected actions fail closed and unavailable companion destinations remain unavailable without permissive fallback.',
 			'release_gate'           => 'Repository QA is necessary only; staging restore accessibility Founder acceptance deployment and live verification remain separate.',
 		);
