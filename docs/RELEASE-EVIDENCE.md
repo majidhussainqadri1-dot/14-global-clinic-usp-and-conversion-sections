@@ -1,11 +1,11 @@
-# Release Evidence — v1.4.6 Second Twenty-Pass Current-Companion Repository Candidate
+# Release Evidence — v1.4.7 Third Twenty-Pass Current-Companion Repository Candidate
 
 ## Governing scope
 
 - Base plan: `SSH-F14-PLAN-2026-v1.0`.
 - Additive Founder-approved amendment: `SSH-F14-FUTURE-CTI-2026-v2.0`.
-- Second twenty-pass baseline: exact starting `main` `55e44d38b23304d50fad22b4d3a2c67fe4721209` (v1.4.5 first twenty-pass merge).
-- Software candidate: `1.4.6`.
+- Third twenty-pass baseline: exact starting `main` `f64e7d17268daff4e3097c18ad510116e6eaf105` (v1.4.6 second twenty-pass merge).
+- Software candidate: `1.4.7`.
 - Base schema: `10005`; Future CTI additive schema: `1`.
 - Requirements retained: original File 14 FR/NFR plus `F14-FUT-01`–`F14-FUT-24`.
 - Ownership remains bounded: no doctor/clinic/application/appointment/payment/verification/shell source of truth is created here.
@@ -18,13 +18,21 @@ The **third independent eighty-pass** review established the durable exact-curre
 
 `Automated-QA Green`, `Packaged`, `main merged`, `Staging-Accepted`, `Live-Deployed` and `Operational` remain separate evidence claims.
 
+## Third twenty-pass current-companion/runtime-health corrective evidence — 2026-10-08
+
+The third 20-pass review re-froze File 14 against the File 14 governing plan, the consolidated central plan and the exact current source heads of Files 00/01/07/08/09/19/20/24/25. File 07 had advanced to `2f4a89707724fd2b9946600afe10ddab27ec3c2d` (runtime/contract 1.2.1), File 09 to `cfc5f781a766330314dc98c42abeca0eb7786eba`, and File 25 to `e35563b7f3d8ebf0acbbc80982b7bcf2e1b78c0a`.
+
+The review found that File 14's File 07 floor still admitted 1.2.0, File 07/File 08 destination readiness did not consume owner runtime health, and exceptions from companion calls could escape instead of degrading/failing closed. v1.4.7 raises File 07 to the reviewed 1.2.1 family, consumes File 07 system health and File 08 owner health before exposing destination CTAs, and adds bounded non-PII exception isolation for Files 00/01/07/08/09/19/25.
+
+The permanent ledger is `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.7-R3.md`. Repository QA remains separate from staging/live/deployed-state evidence.
+
 ## Second twenty-pass current-companion corrective evidence — 2026-10-07
 
 The second 20-pass review re-froze File 14 against the governing File 14 plan, the consolidated central plan and current exact source heads for Files 00/01/07/08/09/19/20/24/25. File 09 had advanced to `448d41f34586369ca5875693583b9cd8a6133167` and File 25 to `2d02c93356b050313e30e29aeceb57080771c2a5`; both remained semantically compatible, but File 14's runtime adapters did not consistently enforce the minimum versions already declared in its File 01 dependency manifest.
 
-v1.4.6 therefore adds one fail-closed compatibility baseline: File 00/01/07/08/09/19/20/24/25 runtime/version checks; File 08 API/route/business-policy parity; File 09 exact owner/consumer/read-only/no-auto-verification contract invariants; and File 25 public design-system/component contract validation through `sabri_visual_experience_contract()` and `sabri_visual_experience_render_state()`. Declared dependency floors and runtime enforcement now share the same constants.
+v1.4.7 therefore adds one fail-closed compatibility baseline: File 00/01/07/08/09/19/20/24/25 runtime/version checks; File 08 API/route/business-policy parity; File 09 exact owner/consumer/read-only/no-auto-verification contract invariants; and File 25 public design-system/component contract validation through `sabri_visual_experience_contract()` and `sabri_visual_experience_render_state()`. Declared dependency floors and runtime enforcement now share the same constants.
 
-The permanent round ledger is `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.6-R2.md`. The earlier v1.4.5 twenty-pass ledger remains historical evidence and is not rewritten.
+The permanent round ledger is `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.7-R2.md`. The earlier v1.4.5 twenty-pass ledger remains historical evidence and is not rewritten.
 
 ## Twenty-pass cross-file corrective evidence
 
