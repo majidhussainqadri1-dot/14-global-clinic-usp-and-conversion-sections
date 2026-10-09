@@ -32,7 +32,7 @@ Current cross-file review ledgers:
 - `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.7-R3.md` — historical R3.
 - `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.8-R4.md` — current R4.
 
-Historical eighty-pass ledgers remain preserved:
+Historical eighty-pass ledgers:
 - `docs/REVIEW-80-LEDGER-v1.4.1.md`
 - `docs/REVIEW-80-SECOND-LEDGER-v1.4.1.md`
 - `docs/REVIEW-80-THIRD-LEDGER-v1.4.1.md`
