@@ -82,7 +82,7 @@ add("13 File20 remains sole shell owner with bounded File14 recovery",
     and "sabri_shell_back_home_controls" not in front)
 
 add("14 File24 availability requires successful boot/service truth",
-    all(x in companion for x in ("FILE24_MIN_VERSION","SPCRC_VERSION","did_action( 'spcrc/booted' )","spcrc/governed_artifact_registry","Sabri\\Platform\\Security\\Plugin")))
+    all(x in companion for x in ("FILE24_MIN_VERSION","SPCRC_VERSION","did_action( 'spcrc/booted' )","spcrc/governed_artifact_registry","class_exists( 'Sabri\\\\Platform\\\\Security\\\\Plugin' )")))
 
 add("15 File24 assurance manifest remains truthful and unassessed without fabricated evidence",
     all(x in companion for x in ("spcrc/module_manifests","'posture'                => 'unassessed'","'last_security_test'     => ''","'canonical_data_owner'","'release_gate'")))
