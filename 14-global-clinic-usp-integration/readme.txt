@@ -4,7 +4,7 @@ Tags: clinic, doctors, conversion, accessibility, privacy, governance, trust, ex
 Requires at least: 6.6
 Tested up to: 7.0.1
 Requires PHP: 7.4
-Stable tag: 1.4.7
+Stable tag: 1.4.8
 License: GPLv2 or later
 
 Canonical File 14 implementation for approved Worldwide Clinic value-proposition content, ethical conversion journeys, claim governance, destination contracts, Future Conversion & Trust Intelligence and privacy-minimized measurement.
@@ -82,6 +82,14 @@ The File 14 surface includes complete File 14-owned American English, Urdu and A
 8. Obtain explicit Founder acceptance before production deployment.
 
 == Changelog ==
+= 1.4.8 =
+* Completed a fourth 20-pass File 14 plan + central-plan + exact-current-companion audit from main `f8b98b35a00f920dd2a74c1a4e4b7f707a8b53ae`.
+* File 01 readiness now fails closed when the File 14 module is degraded/suspended/retired or when either canonical File 14 registry contract is missing/stale/incompatible, even if routes still exist.
+* File 20 readiness now validates the owner-native CentralPlanContract row for File 14: contract 1.0.x, approved-clinic-cta scope, slots-only shell boundary, cta-hidden failure behavior and owner-aware bounded cache policy.
+* File 24 readiness now requires successful Security Center boot evidence (`spcrc/booted`) and the governed-artifact service filter, preventing a defined version constant from masquerading as a healthy assurance plane after a boot-blocking upgrade/schema failure.
+* Expanded File 01 health DTO and repository regression gates for module lifecycle, contract-registry readiness, File 20 semantic contract truth and File 24 boot truth.
+* Repository evidence only; exact deployed code, DB/schema, migration, staging and live state remain unverified.
+
 = 1.4.7 =
 * Completed a third 20-pass File 14 plan + central-plan + exact-current-companion audit from main `f64e7d17268daff4e3097c18ad510116e6eaf105`.
 * Raised the required File 07 runtime/contract floor to 1.2.1, the current central/cross-file reconciled release.

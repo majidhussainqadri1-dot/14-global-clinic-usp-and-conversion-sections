@@ -1,11 +1,11 @@
-# Release Evidence — v1.4.7 Third Twenty-Pass Current-Companion Repository Candidate
+# Release Evidence — v1.4.8 Fourth Twenty-Pass Cross-File Contract-Truth Repository Candidate
 
 ## Governing scope
 
 - Base plan: `SSH-F14-PLAN-2026-v1.0`.
 - Additive Founder-approved amendment: `SSH-F14-FUTURE-CTI-2026-v2.0`.
-- Third twenty-pass baseline: exact starting `main` `f64e7d17268daff4e3097c18ad510116e6eaf105` (v1.4.6 second twenty-pass merge).
-- Software candidate: `1.4.7`.
+- Fourth twenty-pass baseline: exact starting `main` `f8b98b35a00f920dd2a74c1a4e4b7f707a8b53ae` (v1.4.7 third twenty-pass merge).
+- Software candidate: `1.4.8`.
 - Base schema: `10005`; Future CTI additive schema: `1`.
 - Requirements retained: original File 14 FR/NFR plus `F14-FUT-01`–`F14-FUT-24`.
 - Ownership remains bounded: no doctor/clinic/application/appointment/payment/verification/shell source of truth is created here.
@@ -17,6 +17,16 @@ Historical green results are supporting history only. For every current File 14 
 The **third independent eighty-pass** review established the durable exact-current-main rule; the fourth, fifth and sixth reviews retain and strengthen that rule rather than replacing it.
 
 `Automated-QA Green`, `Packaged`, `main merged`, `Staging-Accepted`, `Live-Deployed` and `Operational` remain separate evidence claims.
+
+## Fourth twenty-pass cross-file contract-truth corrective evidence — 2026-10-09
+
+R4 re-froze exact File 14 main `f8b98b35a00f920dd2a74c1a4e4b7f707a8b53ae` plus current Files 00/01/07/08/09/19/20/24/25. Companion source heads were unchanged from R3, so this pass concentrated on semantic/runtime truth rather than version drift.
+
+Six defect-bearing rounds were proven before correction. File 01 placement readiness did not reject degraded/suspended/retired File 14 module state and did not require the two canonical File 14 registry contracts. File 20 availability trusted runtime version + class presence without validating its native CentralPlanContract semantics for File 14. File 24 availability trusted `SPCRC_VERSION` even though File 24 defines it before an upgrade/schema failure can block actual boot. Regression and current release evidence did not cover these conditions.
+
+v1.4.8 corrects those boundaries. File 01 now requires eligible module lifecycle plus exact current API/events registry contracts; File 20 validates its native File 14 row and supported 1.0.x contract semantics; File 24 requires successful `spcrc/booted` evidence and its governed-artifact service. Permanent evidence: `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.8-R4.md`.
+
+Repository QA is necessary but not staging/live/deployed-state proof.
 
 ## Third twenty-pass current-companion/runtime-health corrective evidence — 2026-10-08
 

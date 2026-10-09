@@ -10,7 +10,7 @@ defined( 'ABSPATH' ) || exit;
  * owner-native read/health contracts and never write companion domain truth.
  */
 final class GCU_Companion_Adapters {
-	const REVIEW_BASELINE = '2026-10-08-review20-r3-current-companions-v1';
+	const REVIEW_BASELINE = '2026-10-09-review20-r4-contract-truth-v1';
 
 	const FILE00_MIN_VERSION = '1.2.44';
 	const FILE00_MIN_CONTRACT = '1.2.3';
@@ -29,6 +29,8 @@ final class GCU_Companion_Adapters {
 	const FILE09_MAX_CONTRACT_EXCLUSIVE = '2.0.0';
 	const FILE19_MIN_VERSION = '3.0.5';
 	const FILE20_MIN_VERSION = '1.4.17';
+	const FILE20_MIN_CONTRACT = '1.0.0';
+	const FILE20_MAX_CONTRACT_EXCLUSIVE = '2.0.0';
 	const FILE24_MIN_VERSION = '0.99.0';
 	const FILE25_MIN_VERSION = '0.15.0';
 	const FILE25_MIN_CONTRACT = '1.9.0';
@@ -283,25 +285,37 @@ final class GCU_Companion_Adapters {
 			'clinic-how-it-works'       => '/clinic/how-it-works/',
 		);
 		$state = array(
-			'available'  => false,
-			'registered' => false,
-			'ready'      => false,
-			'missing'    => array_values( $expected ),
-			'conflicts'  => array(),
+			'available'              => false,
+			'registered'             => false,
+			'module_state'           => 'unavailable',
+			'contracts_ready'        => false,
+			'ready'                  => false,
+			'missing'                => array_values( $expected ),
+			'conflicts'              => array(),
+			'missing_contracts'      => array(),
+			'incompatible_contracts' => array(),
 		);
 		if ( ! self::file01_available() ) {
 			return $state;
 		}
 		$module = self::owner_call( 'file01', 'get_module', static function() { return SPF_Registry::get_module( 'file-14' ); }, null );
 		$routes = self::owner_call( 'file01', 'list_routes', array( 'SPF_Registry', 'list_routes' ), new WP_Error( 'gcu_file01_routes_exception' ) );
-		if ( is_wp_error( $routes ) || ! is_array( $routes ) ) {
+		$contracts = self::owner_call(
+			'file01',
+			'list_contracts_for_readiness',
+			static function() { return SPF_Registry::list_contracts( array( 'owner_module' => 'file-14', 'limit' => 100 ) ); },
+			new WP_Error( 'gcu_file01_contracts_exception' )
+		);
+		if ( is_wp_error( $routes ) || ! is_array( $routes ) || is_wp_error( $contracts ) || ! is_array( $contracts ) ) {
 			$state['available'] = true;
 			return $state;
 		}
 		$state['available'] = true;
+		$state['module_state'] = is_array( $module ) && isset( $module['state'] ) ? sanitize_key( (string) $module['state'] ) : 'unavailable';
 		$state['registered'] = is_array( $module )
 			&& isset( $module['module_key'] )
-			&& 'file-14' === sanitize_key( (string) $module['module_key'] );
+			&& 'file-14' === sanitize_key( (string) $module['module_key'] )
+			&& in_array( $state['module_state'], array( 'registered', 'compatible', 'active' ), true );
 
 		$seen = array();
 		foreach ( $routes as $route ) {
@@ -335,7 +349,30 @@ final class GCU_Companion_Adapters {
 			}
 		}
 		$state['conflicts'] = array_values( array_unique( $state['conflicts'] ) );
-		$state['ready'] = $state['registered'] && empty( $state['missing'] ) && empty( $state['conflicts'] );
+
+		$by_contract = array();
+		foreach ( $contracts as $contract ) {
+			if ( is_array( $contract ) && isset( $contract['contract_key'], $contract['contract_version'] ) ) {
+				$by_contract[ (string) $contract['contract_key'] . '@' . (string) $contract['contract_version'] ] = $contract;
+			}
+		}
+		foreach ( self::file01_registry_contracts() as $wanted ) {
+			$key = $wanted['contract_key'] . '@' . $wanted['contract_version'];
+			if ( ! isset( $by_contract[ $key ] ) ) {
+				$state['missing_contracts'][] = $key;
+				continue;
+			}
+			if ( ! self::file01_contract_current( $by_contract[ $key ], $wanted ) ) {
+				$state['incompatible_contracts'][] = $key;
+			}
+		}
+		$state['missing_contracts'] = array_values( array_unique( $state['missing_contracts'] ) );
+		$state['incompatible_contracts'] = array_values( array_unique( $state['incompatible_contracts'] ) );
+		$state['contracts_ready'] = empty( $state['missing_contracts'] ) && empty( $state['incompatible_contracts'] );
+		$state['ready'] = $state['registered']
+			&& $state['contracts_ready']
+			&& empty( $state['missing'] )
+			&& empty( $state['conflicts'] );
 		return $state;
 	}
 
@@ -582,10 +619,39 @@ final class GCU_Companion_Adapters {
 		update_option( 'gcu_file01_registry_sync', $status, false );
 	}
 
+	public static function file20_contract() {
+		if (
+			! defined( 'SABRI_SHELL_VERSION' )
+			|| ! self::version_at_least( SABRI_SHELL_VERSION, self::FILE20_MIN_VERSION )
+			|| ! class_exists( 'Sabri\\UnifiedShell\\Plugin' )
+			|| ! class_exists( 'Sabri\\UnifiedShell\\CentralPlanContract' )
+			|| ! is_callable( array( 'Sabri\\UnifiedShell\\CentralPlanContract', 'canonical_contracts' ) )
+		) {
+			return array();
+		}
+		$registry = self::owner_call(
+			'file20',
+			'central_plan_contract_registry',
+			array( 'Sabri\\UnifiedShell\\CentralPlanContract', 'canonical_contracts' ),
+			null
+		);
+		$row = is_array( $registry ) && isset( $registry['14'] ) && is_array( $registry['14'] ) ? $registry['14'] : array();
+		$version = isset( $row['contract_version'] ) ? (string) $row['contract_version'] : '';
+		if (
+			empty( $row )
+			|| ! self::version_in_range( $version, self::FILE20_MIN_CONTRACT, self::FILE20_MAX_CONTRACT_EXCLUSIVE )
+			|| 'approved-clinic-cta' !== sanitize_key( isset( $row['native_scope'] ) ? (string) $row['native_scope'] : '' )
+			|| 'slots-only' !== sanitize_key( isset( $row['file20_boundary'] ) ? (string) $row['file20_boundary'] : '' )
+			|| 'cta-hidden' !== sanitize_key( isset( $row['failure_behavior'] ) ? (string) $row['failure_behavior'] : '' )
+			|| 'owner-aware-bounded' !== sanitize_key( isset( $row['cache_policy'] ) ? (string) $row['cache_policy'] : '' )
+		) {
+			return array();
+		}
+		return $row;
+	}
+
 	public static function file20_available() {
-		return defined( 'SABRI_SHELL_VERSION' )
-			&& self::version_at_least( SABRI_SHELL_VERSION, self::FILE20_MIN_VERSION )
-			&& class_exists( 'Sabri\\UnifiedShell\\Plugin' );
+		return ! empty( self::file20_contract() );
 	}
 
 	public static function file25_contract() {
@@ -623,7 +689,11 @@ final class GCU_Companion_Adapters {
 
 	public static function file24_available() {
 		return defined( 'SPCRC_VERSION' )
-			&& self::version_at_least( SPCRC_VERSION, self::FILE24_MIN_VERSION );
+			&& self::version_at_least( SPCRC_VERSION, self::FILE24_MIN_VERSION )
+			&& function_exists( 'did_action' )
+			&& did_action( 'spcrc/booted' ) > 0
+			&& class_exists( 'Sabri\\Platform\\Security\\Plugin' )
+			&& false !== has_filter( 'spcrc/governed_artifact_registry' );
 	}
 
 	public static function file19_available() {
@@ -637,12 +707,16 @@ final class GCU_Companion_Adapters {
 		$runtime = GCU_Install::ready_for_runtime();
 		$registry = self::file01_route_registry_state();
 		return array(
-			'available'            => ! is_wp_error( $runtime ),
-			'route_registry_ready' => ! empty( $registry['ready'] ),
-			'missing_routes'       => isset( $registry['missing'] ) ? array_values( $registry['missing'] ) : array(),
-			'route_conflicts'      => isset( $registry['conflicts'] ) ? array_values( $registry['conflicts'] ) : array(),
-			'version'              => GCU_VERSION,
-			'contract'             => 'gcu.health.v1',
+			'available'                => ! is_wp_error( $runtime ),
+			'route_registry_ready'     => ! empty( $registry['ready'] ),
+			'module_state'             => isset( $registry['module_state'] ) ? $registry['module_state'] : 'unavailable',
+			'contracts_ready'          => ! empty( $registry['contracts_ready'] ),
+			'missing_routes'           => isset( $registry['missing'] ) ? array_values( $registry['missing'] ) : array(),
+			'route_conflicts'          => isset( $registry['conflicts'] ) ? array_values( $registry['conflicts'] ) : array(),
+			'missing_contracts'        => isset( $registry['missing_contracts'] ) ? array_values( $registry['missing_contracts'] ) : array(),
+			'incompatible_contracts'   => isset( $registry['incompatible_contracts'] ) ? array_values( $registry['incompatible_contracts'] ) : array(),
+			'version'                  => GCU_VERSION,
+			'contract'                 => 'gcu.health.v1',
 		);
 	}
 
@@ -819,7 +893,7 @@ final class GCU_Companion_Adapters {
 			'contract_version'       => '1.0.0',
 			'canonical_data_owner'   => 'File 14 USP copy placements experiments and conversion measurement',
 			'canonical_action_owner' => 'File 14 governed content placement experiment and measurement actions',
-			'evidence_source'        => 'file14-review20-r3-current-companions-20261008',
+			'evidence_source'        => 'file14-review20-r4-contract-truth-20261009',
 			'degraded_behavior'      => 'Protected actions fail closed and unavailable companion destinations remain unavailable without permissive fallback.',
 			'release_gate'           => 'Repository QA is necessary only; staging restore accessibility Founder acceptance deployment and live verification remain separate.',
 		);
