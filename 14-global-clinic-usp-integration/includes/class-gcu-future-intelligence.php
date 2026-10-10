@@ -516,7 +516,9 @@ final class GCU_Future_Intelligence {
 		}
 		$selected = isset( $counts['cta_selected'] ) ? $counts['cta_selected'] : 0;
 		$loaded = isset( $counts['destination_loaded'] ) ? $counts['destination_loaded'] : 0;
-		$handoff = GCU_Future_Policy::cohort_allowed( $selected ) ? min( 100, round( 100 * $loaded / max( 1, $selected ), 1 ) ) : 0;
+		$accessibility = apply_filters( 'gcu_future_accessibility_score', null );
+		$performance = apply_filters( 'gcu_future_performance_score', null );
+		$evidence = GCU_Future_Policy::quality_evidence_status( $selected, $loaded, $accessibility, $performance, GCU_Future_Policy::owner_confirmation_contract_ready() );
 		$parity = self::parity_status();
 		$stale = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$t['claims']} WHERE status='review_required' OR (status='active' AND review_due_at IS NOT NULL AND review_due_at<=UTC_TIMESTAMP())" );
 		$open_reports = (int) $wpdb->get_var( 'SELECT COUNT(*) FROM ' . self::tables()['reports'] . " WHERE status IN ('open','reviewing')" );
@@ -526,18 +528,30 @@ final class GCU_Future_Intelligence {
 			$healthy += ! empty( $destination['available'] ) ? 1 : 0;
 		}
 		$destination_score = $destinations ? round( 100 * $healthy / count( $destinations ), 1 ) : 0;
-		$performance = apply_filters( 'gcu_future_performance_score', null );
-		$performance_verified = is_numeric( $performance );
 		$metrics = array(
-			'handoff_success' => $handoff,
-			'accessibility' => (float) apply_filters( 'gcu_future_accessibility_score', 100 ),
+			'handoff_success' => $loaded > 0 && GCU_Future_Policy::cohort_allowed( $selected ) ? min( 100, round( 100 * $loaded / max( 1, $selected ), 1 ) ) : null,
+			'accessibility' => is_numeric( $accessibility ) ? (float) $accessibility : null,
 			'claim_freshness' => $stale ? max( 0, 100 - 20 * $stale ) : 100,
 			'privacy' => 100,
 			'complaint_health' => max( 0, 100 - min( 100, $open_reports * 10 ) ),
 			'destination_health' => $destination_score,
-			'performance' => $performance_verified ? (float) $performance : 50,
+			'performance' => is_numeric( $performance ) ? (float) $performance : null,
 		);
-		return array( 'score' => GCU_Future_Policy::conversion_quality_score( $metrics ), 'provisional' => ! $performance_verified || ! GCU_Future_Policy::cohort_allowed( $selected ), 'metrics' => $metrics, 'sample_count' => GCU_Future_Policy::cohort_allowed( $selected ) ? $selected : null, 'small_cohort_suppressed' => ! GCU_Future_Policy::cohort_allowed( $selected ), 'cohort_threshold' => GCU_Future_Policy::MIN_COHORT, 'parity' => $parity, 'performance_verified' => $performance_verified );
+		// A provisional score would misleadingly turn missing evidence into zero or
+		// perfect marks. Publish no composite score until mandatory data exists.
+		return array(
+			'score' => $evidence['complete'] ? GCU_Future_Policy::conversion_quality_score( $metrics ) : null,
+			'provisional' => ! $evidence['complete'],
+			'measurement_status' => $evidence['complete'] ? 'measured' : 'insufficient_verified_evidence',
+			'missing_evidence' => $evidence['missing'],
+			'metrics' => $metrics,
+			'sample_count' => GCU_Future_Policy::cohort_allowed( $selected ) ? $selected : null,
+			'small_cohort_suppressed' => ! GCU_Future_Policy::cohort_allowed( $selected ),
+			'cohort_threshold' => GCU_Future_Policy::MIN_COHORT,
+			'parity' => $parity,
+			'performance_verified' => is_numeric( $performance ),
+			'accessibility_verified' => is_numeric( $accessibility ),
+		);
 	}
 
 	public static function friction_summary( $days = 30 ) {
@@ -552,22 +566,31 @@ final class GCU_Future_Intelligence {
 			$stages[ $row['funnel_stage'] ] = (int) $row['total'];
 		}
 		if ( ! GCU_Future_Policy::cohort_allowed( $total ) ) {
-			return array( 'suppressed' => true, 'threshold' => GCU_Future_Policy::MIN_COHORT, 'days' => $days, 'stages' => array(), 'dropoffs' => array() );
+			return array( 'suppressed' => true, 'threshold' => GCU_Future_Policy::MIN_COHORT, 'days' => $days, 'stages' => array(), 'dropoffs' => array(), 'dropoff_status' => 'insufficient_sample' );
 		}
-		$order = array( 'impression', 'cta_selected', 'destination_loaded', 'application_started', 'booking_started' );
-		$dropoffs = array();
-		$previous = null;
-		foreach ( $order as $stage ) {
-			$count = isset( $stages[ $stage ] ) ? $stages[ $stage ] : 0;
-			if ( null !== $previous && GCU_Future_Policy::cohort_allowed( $previous ) ) {
-				$dropoffs[ $stage ] = round( max( 0, 100 * ( $previous - min( $previous, $count ) ) / max( 1, $previous ) ), 1 );
-			}
-			$previous = $count;
-		}
-		return array( 'suppressed' => false, 'threshold' => GCU_Future_Policy::MIN_COHORT, 'days' => $days, 'stages' => $stages, 'dropoffs' => $dropoffs );
+		// These are independently emitted stage totals, NOT a correlated cohort.
+		// A patient booking is not downstream of doctor application. Never
+		// fabricate dropoff percentages by subtracting unrelated branches.
+		// Owner-native correlated transition evidence is required before rates.
+		return array(
+			'suppressed' => false,
+			'threshold' => GCU_Future_Policy::MIN_COHORT,
+			'days' => $days,
+			'stages' => $stages,
+			'dropoffs' => array(),
+			'dropoff_status' => 'owner_correlated_transition_evidence_unavailable',
+		);
 	}
 
 	public static function anomaly_detector() {
+		// Browser-side stage totals are not owner-attested booking/application
+		// outcomes. Suppress anomaly judgments until a versioned File07/08/09
+		// acknowledgement contract is independently accepted.
+		if ( ! GCU_Future_Policy::owner_confirmation_contract_ready() ) {
+			$result = array( 'status' => 'owner_confirmation_unavailable', 'severity' => 'none', 'suppressed' => true, 'current_sample' => null, 'baseline_sample' => null, 'checked_at' => gmdate( 'c' ) );
+			update_option( self::LAST_ANOMALY_OPTION, $result, false );
+			return $result;
+		}
 		global $wpdb;
 		$t = GCU_Install::tables();
 		$current = $wpdb->get_row( "SELECT SUM(funnel_stage='cta_selected') selected,SUM(funnel_stage='destination_loaded') loaded FROM {$t['events']} WHERE occurred_at>=DATE_SUB(UTC_TIMESTAMP(),INTERVAL 24 HOUR)", ARRAY_A );

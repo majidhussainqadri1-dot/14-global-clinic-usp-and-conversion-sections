@@ -1,11 +1,21 @@
-# Release Evidence — v1.4.9 Fifth Twenty-Pass Exact-Companion Repository Candidate
+# Release Evidence — v1.4.10 Sixth Twenty-Area Measurement-Evidence Repository Candidate
+
+## R6 corrective source evidence — 2026-10-10
+
+Frozen audited parent `843c0b4c2376f82698fdec2776da277f710f144c`; 20 source review areas, 17 clean, 3 defects. Evidence gaps: File 14 does not originate an owner-confirmed `destination_loaded` event; no source can truthfully infer patient/doctor transitions from unrelated independent totals; an unspecified accessibility measure cannot legitimately equal 100. Source fixes in `GCU_Future_Policy`, `GCU_Future_Intelligence` and `GCU_REST` now reject browser-forged owner-only completion events, gate unattested outcome anomalies and return unavailable/provisional evidence and decline unverified cross-branch dropoff rates. Added regression tests and current v1.4.10 release gates. See `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.10-R6.md`.
+
+External File 07/08/09 versioned owner-acknowledgement support for measured conversion is pending. Deployed artifact parity, DB/migrations, staging and live confirmation are NOT verified; exact branch CI and post-merge main CI remain required.
+
+## Historical R5 release evidence (preserved)
+
+Historical identity: v1.4.9 Fifth Twenty-Pass Exact-Companion Repository Candidate.
 
 ## Governing scope
 
 - Base plan: `SSH-F14-PLAN-2026-v1.0`.
 - Additive Founder-approved amendment: `SSH-F14-FUTURE-CTI-2026-v2.0`.
 - Fifth twenty-pass baseline: exact starting `main` `080e2198d84dfb7491bb0b75946e14a5fe118b91` (v1.4.8 fourth twenty-pass merge).
-- Software candidate: `1.4.9`.
+- Software candidate: `1.4.10`.
 - Base schema: `10005`; Future CTI additive schema: `1`.
 - Requirements retained: original File 14 FR/NFR plus `F14-FUT-01`–`F14-FUT-24`.
 - Ownership remains bounded: no doctor/clinic/application/appointment/payment/verification/shell source of truth is created here.

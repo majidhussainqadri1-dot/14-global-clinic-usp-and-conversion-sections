@@ -17,7 +17,7 @@ $con  = xft( $p . '/includes/class-gcu-contracts.php' );
 $front= xft( $p . '/includes/class-gcu-frontend.php' );
 $obs  = xft( $p . '/includes/class-gcu-observability.php' );
 
-xfit( false !== strpos( $main, "GCU_VERSION', '1.4.9" ), 'Release version is not 1.4.9.' );
+xfit( false !== strpos( $main, "GCU_VERSION', '1.4.10" ), 'Release version is not 1.4.10.' );
 xfit( false !== strpos( $main, "GCU_CANONICAL_REPOSITORY', '14-global-clinic-usp-and-conversion-sections" ), 'Current repository identity is not exact.' );
 xfit( false !== strpos( $main, 'class-gcu-companion-adapters.php' ), 'Companion adapter bootstrap missing.' );
 

@@ -35,9 +35,9 @@ checks = []
 def add(name, ok):
     checks.append((name, bool(ok)))
 
-add("01 exact v1.4.9 repository identity and R5 evidence",
-    "Version: 1.4.9" in main
-    and "GCU_VERSION', '1.4.9" in main
+add("01 exact v1.4.10 repository identity and R5 evidence",
+    "Version: 1.4.10" in main
+    and "GCU_VERSION', '1.4.10" in main
     and "14-global-clinic-usp-and-conversion-sections" in main
     and "REVIEW-20-CROSS-FILE-COMPLETION-v1.4.9-R5.md" in status)
 
