@@ -1,4 +1,14 @@
-# Release Evidence — v1.4.11 Seventh Twenty-Area Cross-Plan Repository Candidate
+# Release Evidence — v1.4.12 Eighth Twenty-Round Owner-Event Integrity Repository Candidate
+
+## R8 code-source audit and correction evidence
+
+Frozen prior main `7863c2bf2aa70cb34a043c10af488b08e58827aa`. Twenty source rounds ran with 15 shared plus one additional focused predicate in each (320 static predicates): 15 clean rounds; 4 File14-owned defects found and corrected in passes 1/2/4/5, while native outcome producer integration in pass 3 remains an explicit open issue (#19). Corrected a narrow automated-probe false-negative during manual inspection *before* coding. See `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.12-R8.md` for per-pass evidence, the root cause and exact code locations.
+
+R8 fixes source-level ingestion and unverified historical conversion metrics; unchanged target base schema `10005` and Future CTI `1`. Preserve legacy DB rows for audit/retention rather than silently claiming erased or migrated records. CI evidence requires exact branch and post-merge main SHA, PHP 7.4/8.3, deterministic package/SBOM, and both fresh post-code review rounds. Real deployed plugin/DB/migration/runtime/staging/rollback/Founder acceptance are **unverified**.
+
+## Historical R7 release evidence
+
+Historical identity: v1.4.11 Seventh Twenty-Area Cross-Plan Repository Candidate
 
 ## R7 source correction and external-gate declaration
 
@@ -25,7 +35,7 @@ Historical identity: v1.4.9 Fifth Twenty-Pass Exact-Companion Repository Candida
 - Base plan: `SSH-F14-PLAN-2026-v1.0`.
 - Additive Founder-approved amendment: `SSH-F14-FUTURE-CTI-2026-v2.0`.
 - Fifth twenty-pass baseline: exact starting `main` `080e2198d84dfb7491bb0b75946e14a5fe118b91` (v1.4.8 fourth twenty-pass merge).
-- Software candidate: `1.4.11`.
+- Software candidate: `1.4.12`.
 - Base schema: `10005`; Future CTI additive schema: `1`.
 - Requirements retained: original File 14 FR/NFR plus `F14-FUT-01`–`F14-FUT-24`.
 - Ownership remains bounded: no doctor/clinic/application/appointment/payment/verification/shell source of truth is created here.

@@ -171,6 +171,16 @@ final class GCU_Future_Policy {
 	 * contract registered between File14 and Files07/08/09. Do not infer one
 	 * from a browser-supplied stage or a raw aggregate.
 	 */
+	/**
+	 * File 14 can record only its own acquisition interactions. Destination
+	 * arrival, doctor application and booking are canonical companion facts:
+	 * they require a separate, versioned owner-native acknowledgement contract.
+	 * This predicate also excludes untrusted historical events from analytics.
+	 */
+	public static function acquisition_stage_reportable( $stage ) {
+		return in_array( sanitize_key( (string) $stage ), array( 'impression', 'cta_selected' ), true );
+	}
+
 	public static function owner_confirmation_contract_ready() {
 		return false;
 	}

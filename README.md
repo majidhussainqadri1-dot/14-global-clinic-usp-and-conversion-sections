@@ -6,7 +6,7 @@ Canonical File 14 implementation for the **Sabri Social Homeopathy Platform**.
 - Fresh central governing baseline: 2026-08-10
 - Base File plan: `SSH-F14-PLAN-2026-v1.0`
 - Founder-approved additive amendment: `SSH-F14-FUTURE-CTI-2026-v2.0`
-- Software candidate: `1.4.11`
+- Software candidate: `1.4.12`
 - Base schema candidate: `10005`
 - Future CTI additive schema: `1`
 - Current canonical source repository: `14-global-clinic-usp-and-conversion-sections`
@@ -35,3 +35,8 @@ Twenty independently checked source areas exposed three correctable measurement/
 
 ### 2026-10-10 R7 / v1.4.11
 Twenty independent source/contract review areas found 3 File14-correctable deficiencies (AI factual copy, unmeasured privacy quality, public governance record provenance), fixed with regression coverage. Verified owner acknowledgement remains a separate File07/08/09 integration and staging gate, not a green-coded outcome. See `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.11-R7.md`.
+
+
+### 2026-10-10 R8 / v1.4.12 (historical owner-event integrity)
+
+A fresh twenty-round static audit found four File14-owned issues caused by direct/internal and historical owner-only conversion stage contamination. Both the repository writer and reporting surfaces now enforce acquisition-only semantics while preserving old audit rows. Missing owner-native, versioned File07/08/09 outcome attestation stays an open cross-repository task, Issue #19. See `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.12-R8.md`.

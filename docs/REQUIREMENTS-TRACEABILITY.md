@@ -1,4 +1,4 @@
-# File 14 — Fresh Central + File Plan + Future CTI Requirements Traceability — v1.4.11
+# File 14 — Fresh Central + File Plan + Future CTI Requirements Traceability — v1.4.12
 
 ## Governing freeze
 
@@ -101,7 +101,7 @@ File 14 owns approved Worldwide Clinic value-proposition copy, reusable semantic
 
 ## Truth-status rule
 
-`Specified`, `Coded`, `Packaged`, `Automated-QA Green`, `Staging-Accepted`, `Live-Deployed`, and `Operational` are separate statuses. File 14 v1.4.11 may only claim a status for which current exact-head evidence exists. The Future CTI implementation and sixth-review corrections do not alter that rule.
+`Specified`, `Coded`, `Packaged`, `Automated-QA Green`, `Staging-Accepted`, `Live-Deployed`, and `Operational` are separate statuses. File 14 v1.4.12 may only claim a status for which current exact-head evidence exists. The Future CTI implementation and sixth-review corrections do not alter that rule.
 
 ## R5 registry-truth continuation
 
@@ -125,3 +125,12 @@ Latest reviewed File 25 repository source HEAD: `347a4ff4d4c233c5ea6cd82c7786ee5
 - F14-FUT-06, 20, 22 → `GCU_Future_Policy::validate_public_record_payload` → `GCU_Future_Intelligence::upsert_record` and public projection checks → regression R7-D03. Existing incomplete public governance records fail closed pending managed correction.
 - F14-FR-011 and F14-FUT-11/13/14 → R7-G01 deferred. Only native File07/08/09 approved, authenticated, versioned owner events can affirm arrival/application/booking. File14 cannot invent those facts; no scoring until approved contracts, integration QA and live parity checks.
 - Twenty-area source audit ledger: `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.11-R7.md`. Historical R6 source evidence remains independently preserved.
+
+
+## R8 — F14-FR-011 canonical lifecycle evidence, 2026-10-10
+
+- `F14-FR-011` / `F14-FUT-11/13/14`: File14 owns `impression` and `cta_selected` acquisition facts only. The actual loaded destination, doctor application, and booking state are canonical native File07/08/09 owner facts, not browser/inferred success.
+- `GCU_Future_Policy::acquisition_stage_reportable` governs both `GCU_Repository::record_event` and historical acquisition report filtering. Repository-level event validation is independent of the REST check.
+- `GCU_Repository::funnel_summary` and `GCU_Future_Intelligence::friction_summary` exclude legacy unverified owner-only rows and explicitly mark `owner_stage_evidence_status=not_attested_excluded`.
+- `GCU_Future_Intelligence::quality_score` uses no historic unauthenticated `destination_loaded` rows as confirmed handoffs. Composite score remains unavailable until formally registered native owner-producer evidence and other necessary measurements exist.
+- R8 owner confirmations beyond File14 remain deferred under Issue #19. The source audit is not staging or live acceptance. Detailed 20 source rounds: `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.12-R8.md`.
