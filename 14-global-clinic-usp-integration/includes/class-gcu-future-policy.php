@@ -166,6 +166,15 @@ final class GCU_Future_Policy {
 	 * actually been observed. A click is not proof of an owner-side arrival.
 	 * Unknown accessibility/performance evidence must never default to 100%.
 	 */
+	/**
+	 * There is currently no approved, versioned owner-origin acknowledgement
+	 * contract registered between File14 and Files07/08/09. Do not infer one
+	 * from a browser-supplied stage or a raw aggregate.
+	 */
+	public static function owner_confirmation_contract_ready() {
+		return false;
+	}
+
 	public static function quality_evidence_status( $selected, $owner_loaded, $accessibility, $performance, $owner_attested = false ) {
 		$missing = array();
 		if ( ! self::cohort_allowed( $selected ) ) {
