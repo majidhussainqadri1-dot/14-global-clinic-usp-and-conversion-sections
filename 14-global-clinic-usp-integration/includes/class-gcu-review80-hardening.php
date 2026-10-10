@@ -276,7 +276,9 @@ final class GCU_Review80_Hardening {
 			if ( empty( $data['performance_verified'] ) ) {
 				$unverified[] = 'performance';
 			}
-			$unverified[] = 'privacy_effectiveness';
+			if ( empty( $data['privacy_verified'] ) ) {
+				$unverified[] = 'privacy_effectiveness';
+			}
 			$data['unverified_metrics'] = array_values( array_unique( $unverified ) );
 			$data['provisional'] = ! empty( $data['provisional'] ) || ! empty( $unverified );
 			$response->set_data( $data );
