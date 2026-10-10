@@ -166,12 +166,12 @@ final class GCU_Future_Policy {
 	 * actually been observed. A click is not proof of an owner-side arrival.
 	 * Unknown accessibility/performance evidence must never default to 100%.
 	 */
-	public static function quality_evidence_status( $selected, $owner_loaded, $accessibility, $performance ) {
+	public static function quality_evidence_status( $selected, $owner_loaded, $accessibility, $performance, $owner_attested = false ) {
 		$missing = array();
 		if ( ! self::cohort_allowed( $selected ) ) {
 			$missing[] = 'insufficient_cta_sample';
 		}
-		if ( (int) $owner_loaded < 1 ) {
+		if ( (int) $owner_loaded < 1 || true !== $owner_attested ) {
 			$missing[] = 'owner_handoff_confirmation_unavailable';
 		}
 		if ( ! is_numeric( $accessibility ) ) {
