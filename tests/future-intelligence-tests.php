@@ -139,6 +139,20 @@ assert_future( false !== strpos( $r7_future_code, "'privacy_verified' => is_nume
 assert_future( false !== strpos( $r7_future_code, 'gcu_future_record_evidence_required' ), 'R7 active/public Future governance records require server-side content-provenance gates.' );
 assert_future( false !== strpos( $r7_future_code, 'approved_vocabulary_guard( $text, $base, $claim_texts )' ), 'R7 AI provider output is grounded before draft suggestions are returned.' );
 
+
+// R8: the File 14 acquisition owner cannot certify File 07/08/09 outcomes.
+assert_future( true === GCU_Future_Policy::acquisition_stage_reportable( 'impression' ), 'R8: impression belongs to File 14.' );
+assert_future( true === GCU_Future_Policy::acquisition_stage_reportable( 'cta_selected' ), 'R8: CTA choice belongs to File 14.' );
+foreach ( array( 'destination_loaded', 'application_started', 'booking_started', 'invented_stage' ) as $stage ) {
+    assert_future( false === GCU_Future_Policy::acquisition_stage_reportable( $stage ), 'R8: owner/invalid stage must not be an acquisition event: ' . $stage );
+}
+$r8_repo_source = file_get_contents( __DIR__ . '/../14-global-clinic-usp-integration/includes/class-gcu-repository.php' );
+assert_future( false !== strpos( $r8_repo_source, 'if(!GCU_Future_Policy::acquisition_stage_reportable($stage))' ), 'R8: repository-level write rejects owner-forged stage independently of REST.' );
+assert_future( false !== strpos( $r8_repo_source, 'array_filter(is_array($rows)?$rows:array()' ), 'R8: legacy owner-only rows must be excluded from acquisition analytics.' );
+$r8_future_source = file_get_contents( __DIR__ . '/../14-global-clinic-usp-integration/includes/class-gcu-future-intelligence.php' );
+assert_future( false !== strpos( $r8_future_source, "owner_stage_evidence_status' => 'not_attested_excluded" ), 'R8: friction report must disclose excluded historical owner events.' );
+assert_future( false !== strpos( $r8_future_source, 'GCU_Future_Policy::acquisition_stage_reportable( isset( $row' ), 'R8: friction totals must reject legacy owner-only rows.' );
+assert_future( false !== strpos( $r8_future_source, '$loaded = 0;' ), 'R8: unsigned legacy destination_loaded records cannot create fake handoff success.' );
 $terms = GCU_Future_Policy::terminology_lock();
 assert_future( isset( $terms['verified_doctor']['en-US'], $terms['verified_doctor']['ur-PK'], $terms['verified_doctor']['ar-SA'] ), 'Terminology lock must cover English, Urdu and Arabic.' );
 $ur = GCU_Future_I18n::strings( 'ur-PK' );
