@@ -33,9 +33,9 @@ Method: Twenty independent source-based review areas were examined **before maki
 ## Single correction batch performed after all 20 reviews
 
 - New software candidate `1.4.10`, unchanged base schema `10005` and Future CTI schema `1`.
-- `GCU_Future_Policy::quality_evidence_status()` requires a reportable CTA cohort, actual owner-side arrival event and explicitly measured accessibility/performance evidence.
+- `GCU_Future_Policy::quality_evidence_status()` requires a reportable CTA cohort, **attested owner-origin arrival contract** and explicitly measured accessibility/performance evidence. A mere recorded `destination_loaded` stage is not sufficient.
 - `GCU_Future_Intelligence::quality_score()` now reports `score=null`, `provisional=true`, `missing_evidence` and truthful measurement status when those required measurements are missing. It never awards a perfect accessibility score without a measurement.
-- `GCU_Future_Intelligence::friction_summary()` retains privacy-thresholded aggregate stage counts but does **not** compute false cross-branch dropoff rates. Instead it reports `dropoff_status=owner_correlated_transition_evidence_unavailable`.
+- `GCU_REST::event()` rejects public-browser `destination_loaded` / `application_started` / `booking_started` events: those are owner-only lifecycle facts. Future owner acknowledgements must be versioned/authorized, and until that contract exists owner confirmation and outcome anomalies fail closed.\n- `GCU_Future_Intelligence::friction_summary()` retains privacy-thresholded aggregate stage counts but does **not** compute false cross-branch dropoff rates. Instead it reports `dropoff_status=owner_correlated_transition_evidence_unavailable`.
 - Added pure-policy regression cases and source assertions in `tests/future-intelligence-tests.php`; adjusted exact-version release gates.
 
 ## Remaining integration evidence explicitly pending
