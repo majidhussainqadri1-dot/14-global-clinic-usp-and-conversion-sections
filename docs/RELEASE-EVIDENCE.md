@@ -2,7 +2,7 @@
 
 ## R6 corrective source evidence — 2026-10-10
 
-Frozen audited parent `843c0b4c2376f82698fdec2776da277f710f144c`; 20 source review areas, 17 clean, 3 defects. Evidence gaps: File 14 does not originate an owner-confirmed `destination_loaded` event; no source can truthfully infer patient/doctor transitions from unrelated independent totals; an unspecified accessibility measure cannot legitimately equal 100. Source fixes in `GCU_Future_Policy` and `GCU_Future_Intelligence` now return unavailable/provisional evidence and decline unverified cross-branch dropoff rates. Added regression tests and current v1.4.10 release gates. See `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.10-R6.md`.
+Frozen audited parent `843c0b4c2376f82698fdec2776da277f710f144c`; 20 source review areas, 17 clean, 3 defects. Evidence gaps: File 14 does not originate an owner-confirmed `destination_loaded` event; no source can truthfully infer patient/doctor transitions from unrelated independent totals; an unspecified accessibility measure cannot legitimately equal 100. Source fixes in `GCU_Future_Policy`, `GCU_Future_Intelligence` and `GCU_REST` now reject browser-forged owner-only completion events, gate unattested outcome anomalies and return unavailable/provisional evidence and decline unverified cross-branch dropoff rates. Added regression tests and current v1.4.10 release gates. See `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.10-R6.md`.
 
 External File 07/08/09 versioned owner-acknowledgement support for measured conversion is pending. Deployed artifact parity, DB/migrations, staging and live confirmation are NOT verified; exact branch CI and post-merge main CI remain required.
 
