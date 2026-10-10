@@ -67,6 +67,23 @@ assert_future( false === $sensitive['safe'], 'Sensitive health profiling must be
 assert_future( false === GCU_Future_Policy::cohort_allowed( 9 ), 'Cohorts below 10 must be suppressed.' );
 assert_future( true === GCU_Future_Policy::cohort_allowed( 10 ), 'Cohorts at the approved minimum may be reported.' );
 
+// R6: never publish a composite score based on an unconfirmed owner arrival,
+// fabricated perfect accessibility, missing performance or a tiny cohort.
+$no_owner = GCU_Future_Policy::quality_evidence_status( 25, 0, 95, 90 );
+assert_future( false === $no_owner['complete'] && in_array( 'owner_handoff_confirmation_unavailable', $no_owner['missing'], true ), 'CTA clicks alone do not prove owner-side handoff.' );
+$no_accessibility = GCU_Future_Policy::quality_evidence_status( 25, 12, null, 90 );
+assert_future( false === $no_accessibility['complete'] && in_array( 'accessibility_measurement_unavailable', $no_accessibility['missing'], true ), 'Missing measured accessibility must never score as 100.' );
+$no_performance = GCU_Future_Policy::quality_evidence_status( 25, 12, 90, null );
+assert_future( false === $no_performance['complete'] && in_array( 'performance_measurement_unavailable', $no_performance['missing'], true ), 'Missing performance evidence blocks the composite score.' );
+$small_quality_cohort = GCU_Future_Policy::quality_evidence_status( 9, 3, 90, 90 );
+assert_future( false === $small_quality_cohort['complete'] && in_array( 'insufficient_cta_sample', $small_quality_cohort['missing'], true ), 'A small cohort cannot produce a quality score.' );
+$verified_quality = GCU_Future_Policy::quality_evidence_status( 25, 12, 93, 91 );
+assert_future( true === $verified_quality['complete'] && empty( $verified_quality['missing'] ), 'Measured owner handoff, accessibility and performance permit scoring.' );
+$future_source = file_get_contents( __DIR__ . '/../14-global-clinic-usp-integration/includes/class-gcu-future-intelligence.php' );
+assert_future( false !== strpos( $future_source, "'dropoff_status' => 'owner_correlated_transition_evidence_unavailable'" ), 'Unrelated doctor/patient paths must never be reported as one sequential dropoff funnel.' );
+assert_future( false === strpos( $future_source, "array( 'impression', 'cta_selected', 'destination_loaded', 'application_started', 'booking_started' )" ), 'Obsolete linear patient/doctor stage chain must be absent.' );
+
+
 $score = GCU_Future_Policy::conversion_quality_score( array( 'handoff_success' => 100, 'accessibility' => 100, 'claim_freshness' => 100, 'privacy' => 100, 'complaint_health' => 100, 'destination_health' => 100, 'performance' => 100 ) );
 assert_future( 100.0 === $score, 'Perfect conversion quality inputs must score 100.' );
 $low_score = GCU_Future_Policy::conversion_quality_score( array( 'handoff_success' => -5, 'privacy' => 150 ) );
