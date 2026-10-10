@@ -1,4 +1,14 @@
-# Release Evidence — v1.4.10 Sixth Twenty-Area Measurement-Evidence Repository Candidate
+# Release Evidence — v1.4.11 Seventh Twenty-Area Cross-Plan Repository Candidate
+
+## R7 source correction and external-gate declaration
+
+Audit baseline main `8a6e85cb79db7f6b0435fc30f9debf32d7a03ac5`. New 20 independent plan/code/companion-source checks: 16 limited source checks clean, R7-D01 AI unsupported novel facts corrected, R7-D02 fabricated privacy score corrected, R7-D03 public governance record provenance validation corrected. R7-G01 is still unresolved: no versioned native owner confirmation for destination/doctor onboarding/booking events; owner-outcome scores remain unavailable rather than fabricated. See `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.11-R7.md`.
+
+Current R7 candidate targets software 1.4.11, base schema 10005 and Future schema 1. Exact branch PHP 7.4/8.3, package/SBOM, fresh review rounds and subsequent exact-main post-merge CI are required. Live WordPress runtime/database/migration/artifact parity, staging and founder acceptance remain **unverified**.
+
+## Historical R6 (preserved)
+
+Historical identity: v1.4.10 Sixth Twenty-Area Measurement-Evidence Repository Candidate
 
 ## R6 corrective source evidence — 2026-10-10
 
@@ -15,7 +25,7 @@ Historical identity: v1.4.9 Fifth Twenty-Pass Exact-Companion Repository Candida
 - Base plan: `SSH-F14-PLAN-2026-v1.0`.
 - Additive Founder-approved amendment: `SSH-F14-FUTURE-CTI-2026-v2.0`.
 - Fifth twenty-pass baseline: exact starting `main` `080e2198d84dfb7491bb0b75946e14a5fe118b91` (v1.4.8 fourth twenty-pass merge).
-- Software candidate: `1.4.10`.
+- Software candidate: `1.4.11`.
 - Base schema: `10005`; Future CTI additive schema: `1`.
 - Requirements retained: original File 14 FR/NFR plus `F14-FUT-01`–`F14-FUT-24`.
 - Ownership remains bounded: no doctor/clinic/application/appointment/payment/verification/shell source of truth is created here.
