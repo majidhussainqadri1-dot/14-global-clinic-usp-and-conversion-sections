@@ -112,7 +112,7 @@ Latest reviewed File 25 repository source HEAD: `347a4ff4d4c233c5ea6cd82c7786ee5
 
 ## R6 F14-FUT-11 / F14-FUT-13 measurement truth clarification
 
-- The current code correctly refuses to publish a composite Conversion Quality Score without a sufficiently large CTA cohort, owner-confirmed destination arrival events, measured accessibility and measured performance.
-- Stage counts can be shown after privacy thresholds, but unrelated doctor application and patient booking paths must not be combined to invent a sequential dropoff rate. Current truthful status is `owner_correlated_transition_evidence_unavailable`.
+- The current code correctly refuses to publish a composite Conversion Quality Score without a sufficiently large CTA cohort, **attested** owner-confirmed destination arrival events, measured accessibility and measured performance.
+- The public event REST endpoint accepts only impression/CTA events; owner-only arrival/application/booking events cannot be self-asserted. Owner-confirmation readiness defaults fail-closed until File07/08/09 versioned contracts are verified. Stage counts can be shown after privacy thresholds, but unrelated doctor application and patient booking paths must not be combined to invent a sequential dropoff rate. Current truthful status is `owner_correlated_transition_evidence_unavailable`.
 - Complete source-side measurement requires separate, approved versioned owner acknowledgements from Files 07/08/09, File 01 registration and real staging validation. Do not classify unimplemented owner-sourced outcome instrumentation as complete.
 - Review evidence: `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.10-R6.md` and `tests/future-intelligence-tests.php`.
