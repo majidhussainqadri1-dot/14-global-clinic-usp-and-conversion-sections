@@ -4,7 +4,7 @@
  * WordPress database, schema, staging deployment or runtime integration.
  */
 define('ABSPATH', __DIR__);
-define('GCU_VERSION', '1.4.10');
+define('GCU_VERSION', '1.4.11');
 define('SPF_VERSION', '2.0.1');
 define('SPF_CONTRACT_VERSION', '2.0.0');
 class WP_Error { public function __construct($code = '') {} }
