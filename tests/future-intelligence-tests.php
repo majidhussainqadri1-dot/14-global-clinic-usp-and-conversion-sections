@@ -94,6 +94,51 @@ assert_future( 100.0 === $score, 'Perfect conversion quality inputs must score 1
 $low_score = GCU_Future_Policy::conversion_quality_score( array( 'handoff_success' => -5, 'privacy' => 150 ) );
 assert_future( $low_score >= 0 && $low_score <= 100, 'Conversion quality score must be bounded.' );
 
+
+$r7_grounded = GCU_Future_Policy::approved_vocabulary_guard(
+    'Global Clinic doctor support',
+    'Global Clinic doctor',
+    array( 'Voluntary support is optional.' )
+);
+assert_future( true === $r7_grounded['safe'], 'R7 source-grounded AI wording may be suggested as a draft.' );
+$r7_hallucination = GCU_Future_Policy::approved_vocabulary_guard(
+    'Global Clinic has 200000 doctors',
+    'Global Clinic has doctors',
+    array( 'Doctor verification requires review.' )
+);
+assert_future( false === $r7_hallucination['safe'] && $r7_hallucination['novel_term_count'] >= 1, 'R7 AI provider cannot invent unsupported doctor totals.' );
+$r7_ur = GCU_Future_Policy::approved_vocabulary_guard( 'عالمی کلینک', 'عالمی کلینک', array() );
+assert_future( true === $r7_ur['safe'], 'R7 Unicode-aware provider vocabulary must preserve Urdu terms.' );
+
+$r7_change = array(
+    'title' => 'Approved update', 'summary' => 'Transparent change',
+    'effective_date' => '2026-10-10',
+    'source' => GCU_Future_Policy::PLAN_ID,
+    'reviewer' => 'Approved reviewer', 'provenance' => 'Governed review'
+);
+assert_future( true === GCU_Future_Policy::validate_public_record_payload( 'change_log', $r7_change )['safe'], 'R7 dated, sourced and reviewed change log is eligible for publication checks.' );
+$r7_missing = GCU_Future_Policy::validate_public_record_payload( 'change_log', array( 'title' => 'Unsupported' ) );
+assert_future( false === $r7_missing['safe'] && in_array( 'source', $r7_missing['missing'], true ), 'R7 source-free public change logs must be rejected.' );
+$r7_bad_date = $r7_change;
+$r7_bad_date['effective_date'] = '2026-02-30';
+assert_future( false === GCU_Future_Policy::validate_public_record_payload( 'change_log', $r7_bad_date )['safe'], 'R7 invalid effective dates must not publish.' );
+$r7_bad_region = GCU_Future_Policy::validate_public_record_payload( 'jurisdiction_copy', array( 'body' => 'Available' ) );
+assert_future( false === $r7_bad_region['safe'], 'R7 regional copy requires approved source, reviewer and date.' );
+$r7_lock = GCU_Future_Policy::validate_public_record_payload( 'terminology_lock', array(
+    'terms' => GCU_Future_Policy::terminology_lock(), 'source' => GCU_Future_Policy::PLAN_ID,
+    'reviewer' => 'Founder-approved plan', 'provenance' => 'Approved amendment'
+) );
+assert_future( true === $r7_lock['safe'], 'R7 complete three-language protected terminology lock passes the evidence shape gate.' );
+$r7_bad_lock = GCU_Future_Policy::validate_public_record_payload( 'terminology_lock', array(
+    'terms' => array( 'appointment' => array( 'en-US' => 'Appointment' ) ),
+    'source' => 'Plan', 'reviewer' => 'Reviewer', 'provenance' => 'Reviewed'
+) );
+assert_future( false === $r7_bad_lock['safe'], 'R7 partial protected language coverage must not publish.' );
+$r7_future_code = file_get_contents( __DIR__ . '/../14-global-clinic-usp-integration/includes/class-gcu-future-intelligence.php' );
+assert_future( false !== strpos( $r7_future_code, "'privacy_verified' => is_numeric" ) && false === strpos( $r7_future_code, "'privacy' => 100" ), 'R7 privacy effectiveness must not be set to a fabricated constant 100.' );
+assert_future( false !== strpos( $r7_future_code, 'gcu_future_record_evidence_required' ), 'R7 active/public Future governance records require server-side content-provenance gates.' );
+assert_future( false !== strpos( $r7_future_code, 'approved_vocabulary_guard( $text, $base, $claim_texts )' ), 'R7 AI provider output is grounded before draft suggestions are returned.' );
+
 $terms = GCU_Future_Policy::terminology_lock();
 assert_future( isset( $terms['verified_doctor']['en-US'], $terms['verified_doctor']['ur-PK'], $terms['verified_doctor']['ar-SA'] ), 'Terminology lock must cover English, Urdu and Arabic.' );
 $ur = GCU_Future_I18n::strings( 'ur-PK' );

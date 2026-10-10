@@ -6,7 +6,7 @@ Canonical File 14 implementation for the **Sabri Social Homeopathy Platform**.
 - Fresh central governing baseline: 2026-08-10
 - Base File plan: `SSH-F14-PLAN-2026-v1.0`
 - Founder-approved additive amendment: `SSH-F14-FUTURE-CTI-2026-v2.0`
-- Software candidate: `1.4.10`
+- Software candidate: `1.4.11`
 - Base schema candidate: `10005`
 - Future CTI additive schema: `1`
 - Current canonical source repository: `14-global-clinic-usp-and-conversion-sections`
@@ -31,3 +31,7 @@ Repository code/package/automated QA, staging acceptance, live deployment and op
 ### 2026-10-10 R6 — measured-outcome truth (v1.4.10)
 
 Twenty independently checked source areas exposed three correctable measurement/truth defects. The new candidate does not turn unverified owner handoffs into a numeric success score, does not rate unmeasured accessibility at 100%, and does not conflate patient booking and doctor application stage counts. See `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.10-R6.md`; provider-acknowledged outcomes remain a separate integration and staging gate.
+
+
+### 2026-10-10 R7 / v1.4.11
+Twenty independent source/contract review areas found 3 File14-correctable deficiencies (AI factual copy, unmeasured privacy quality, public governance record provenance), fixed with regression coverage. Verified owner acknowledgement remains a separate File07/08/09 integration and staging gate, not a green-coded outcome. See `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.11-R7.md`.

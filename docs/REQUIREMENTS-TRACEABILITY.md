@@ -1,4 +1,4 @@
-# File 14 — Fresh Central + File Plan + Future CTI Requirements Traceability — v1.4.10
+# File 14 — Fresh Central + File Plan + Future CTI Requirements Traceability — v1.4.11
 
 ## Governing freeze
 
@@ -101,7 +101,7 @@ File 14 owns approved Worldwide Clinic value-proposition copy, reusable semantic
 
 ## Truth-status rule
 
-`Specified`, `Coded`, `Packaged`, `Automated-QA Green`, `Staging-Accepted`, `Live-Deployed`, and `Operational` are separate statuses. File 14 v1.4.10 may only claim a status for which current exact-head evidence exists. The Future CTI implementation and sixth-review corrections do not alter that rule.
+`Specified`, `Coded`, `Packaged`, `Automated-QA Green`, `Staging-Accepted`, `Live-Deployed`, and `Operational` are separate statuses. File 14 v1.4.11 may only claim a status for which current exact-head evidence exists. The Future CTI implementation and sixth-review corrections do not alter that rule.
 
 ## R5 registry-truth continuation
 
@@ -116,3 +116,12 @@ Latest reviewed File 25 repository source HEAD: `347a4ff4d4c233c5ea6cd82c7786ee5
 - The public event REST endpoint accepts only impression/CTA events; owner-only arrival/application/booking events cannot be self-asserted. Owner-confirmation readiness defaults fail-closed until File07/08/09 versioned contracts are verified. Stage counts can be shown after privacy thresholds, but unrelated doctor application and patient booking paths must not be combined to invent a sequential dropoff rate. Current truthful status is `owner_correlated_transition_evidence_unavailable`.
 - Complete source-side measurement requires separate, approved versioned owner acknowledgements from Files 07/08/09, File 01 registration and real staging validation. Do not classify unimplemented owner-sourced outcome instrumentation as complete.
 - Review evidence: `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.10-R6.md` and `tests/future-intelligence-tests.php`.
+
+
+## R7 compliance and measurement provenance trace (2026-10-10)
+
+- F14-FUT-21 → `GCU_Future_Policy::approved_vocabulary_guard` → AI provider candidate filter → `tests/future-intelligence-tests.php` → R7-D01. Provider candidates with out-of-source tokens rejected, human semantic approval retained.
+- F14-FUT-11 → `GCU_Future_Intelligence::quality_score` + `GCU_Future_Policy::conversion_quality_score` → measured privacy required; unverifiable metric/null explicitly surfaced → regression R7-D02.
+- F14-FUT-06, 20, 22 → `GCU_Future_Policy::validate_public_record_payload` → `GCU_Future_Intelligence::upsert_record` and public projection checks → regression R7-D03. Existing incomplete public governance records fail closed pending managed correction.
+- F14-FR-011 and F14-FUT-11/13/14 → R7-G01 deferred. Only native File07/08/09 approved, authenticated, versioned owner events can affirm arrival/application/booking. File14 cannot invent those facts; no scoring until approved contracts, integration QA and live parity checks.
+- Twenty-area source audit ledger: `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.11-R7.md`. Historical R6 source evidence remains independently preserved.

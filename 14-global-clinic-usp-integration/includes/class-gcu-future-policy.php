@@ -193,7 +193,7 @@ final class GCU_Future_Policy {
 	}
 
 	public static function conversion_quality_score( array $metrics ) {
-		$defaults = array( 'handoff_success' => 0, 'accessibility' => 100, 'claim_freshness' => 100, 'privacy' => 100, 'complaint_health' => 100, 'destination_health' => 100, 'performance' => 100 );
+		$defaults = array( 'handoff_success' => 0, 'accessibility' => 0, 'claim_freshness' => 0, 'privacy' => 0, 'complaint_health' => 0, 'destination_health' => 0, 'performance' => 0 );
 		$m = array_merge( $defaults, $metrics );
 		$weights = array( 'handoff_success' => 25, 'accessibility' => 15, 'claim_freshness' => 15, 'privacy' => 15, 'complaint_health' => 10, 'destination_health' => 10, 'performance' => 10 );
 		$score = 0.0;
@@ -241,6 +241,77 @@ final class GCU_Future_Policy {
 			}
 		}
 		return array( 'score' => (int) round( 100 * $complete / count( $items ) ), 'missing' => $missing, 'binding' => false, 'verification_owner' => 'File 09 / File 00' );
+	}
+
+	/**
+	 * Future governance records may be marked active/public only with verifiable
+	 * content shape and provenance. This does not grant publication permission:
+	 * Founder approval and state/ownership checks remain separately mandatory.
+	 */
+	public static function validate_public_record_payload( $type, array $payload ) {
+		$required = array(
+			'jurisdiction_copy' => array( 'body', 'source', 'reviewer', 'provenance', 'effective_date' ),
+			'terminology_lock' => array( 'source', 'reviewer', 'provenance' ),
+			'change_log' => array( 'title', 'summary', 'effective_date', 'source', 'reviewer', 'provenance' ),
+		);
+		$type = sanitize_key( $type );
+		if ( ! isset( $required[ $type ] ) ) {
+			return array( 'safe' => true, 'missing' => array() );
+		}
+		$missing = array();
+		foreach ( $required[ $type ] as $key ) {
+			if ( ! isset( $payload[ $key ] ) || ! is_string( $payload[ $key ] ) || '' === trim( $payload[ $key ] ) ) {
+				$missing[] = $key;
+			}
+		}
+		if ( in_array( $type, array( 'jurisdiction_copy', 'change_log' ), true ) && isset( $payload['effective_date'] ) ) {
+			$date = (string) $payload['effective_date'];
+			if ( ! preg_match( '/^([0-9]{4})-([0-9]{2})-([0-9]{2})$/D', $date, $part )
+				|| ! checkdate( (int) $part[2], (int) $part[3], (int) $part[1] ) ) {
+				$missing[] = 'valid_effective_date';
+			}
+		}
+		if ( 'terminology_lock' === $type ) {
+			if ( empty( $payload['terms'] ) || ! is_array( $payload['terms'] ) ) {
+				$missing[] = 'terms';
+			} else {
+				foreach ( $payload['terms'] as $term => $locales ) {
+					if ( ! is_array( $locales ) ) {
+						$missing[] = 'term_locales';
+						break;
+					}
+					foreach ( array( 'en-US', 'ur-PK', 'ar-SA' ) as $locale ) {
+						if ( empty( $locales[ $locale ] ) || ! is_string( $locales[ $locale ] ) ) {
+							$missing[] = 'term_locale_' . sanitize_key( $locale );
+						}
+					}
+				}
+			}
+		}
+		return array( 'safe' => empty( $missing ), 'missing' => array_values( array_unique( $missing ) ) );
+	}
+
+	/**
+	 * Conservative source-grounding of provider-created AI copy drafts:
+	 * new words/numbers outside the editor's input and current approved claims
+	 * are refused. Human semantic review is still mandatory for every draft.
+	 */
+	public static function approved_vocabulary_guard( $candidate, $base, array $approved_claim_texts ) {
+		$source = self::normalize_text( (string) $base . ' ' . implode( ' ', array_map( 'strval', $approved_claim_texts ) ) );
+		$draft = self::normalize_text( $candidate );
+		$allowed = preg_split( '/[^\\p{L}\\p{N}%]+/u', $source, -1, PREG_SPLIT_NO_EMPTY );
+		$words = preg_split( '/[^\\p{L}\\p{N}%]+/u', $draft, -1, PREG_SPLIT_NO_EMPTY );
+		if ( ! is_array( $allowed ) || ! is_array( $words ) || empty( $words ) ) {
+			return array( 'safe' => false, 'novel_term_count' => 0 );
+		}
+		$lookup = array_fill_keys( $allowed, true );
+		$unapproved = 0;
+		foreach ( array_unique( $words ) as $word ) {
+			if ( ! isset( $lookup[ $word ] ) ) {
+				$unapproved++;
+			}
+		}
+		return array( 'safe' => 0 === $unapproved, 'novel_term_count' => $unapproved );
 	}
 
 	public static function ai_copy_guard( $draft, array $approved_claim_texts ) {

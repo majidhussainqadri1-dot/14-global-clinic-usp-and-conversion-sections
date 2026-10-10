@@ -40,7 +40,7 @@ need "question_contains_sensitive_data" "$P/includes/class-gcu-review80-hardenin
 need "gcu_fifth_ai_sensitive_input_blocked" "$P/includes/class-gcu-fifth-review-hardening.php"
 need "multilingual_dark_pattern_scan" "$P/includes/class-gcu-fifth-review-hardening.php"
 need "multilingual_guard_applied" "$P/includes/class-gcu-fifth-review-hardening.php"
-need "Stable tag: 1.4.10" "$P/readme.txt"
+need "Stable tag: 1.4.11" "$P/readme.txt"
 need "file20_contract" "$P/includes/class-gcu-companion-adapters.php"
 need "missing_contracts" "$P/includes/class-gcu-companion-adapters.php"
 need "incompatible_contracts" "$P/includes/class-gcu-companion-adapters.php"
