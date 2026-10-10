@@ -518,7 +518,7 @@ final class GCU_Future_Intelligence {
 		$loaded = isset( $counts['destination_loaded'] ) ? $counts['destination_loaded'] : 0;
 		$accessibility = apply_filters( 'gcu_future_accessibility_score', null );
 		$performance = apply_filters( 'gcu_future_performance_score', null );
-		$evidence = GCU_Future_Policy::quality_evidence_status( $selected, $loaded, $accessibility, $performance );
+		$evidence = GCU_Future_Policy::quality_evidence_status( $selected, $loaded, $accessibility, $performance, GCU_Future_Policy::owner_confirmation_contract_ready() );
 		$parity = self::parity_status();
 		$stale = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$t['claims']} WHERE status='review_required' OR (status='active' AND review_due_at IS NOT NULL AND review_due_at<=UTC_TIMESTAMP())" );
 		$open_reports = (int) $wpdb->get_var( 'SELECT COUNT(*) FROM ' . self::tables()['reports'] . " WHERE status IN ('open','reviewing')" );
@@ -583,6 +583,14 @@ final class GCU_Future_Intelligence {
 	}
 
 	public static function anomaly_detector() {
+		// Browser-side stage totals are not owner-attested booking/application
+		// outcomes. Suppress anomaly judgments until a versioned File07/08/09
+		// acknowledgement contract is independently accepted.
+		if ( ! GCU_Future_Policy::owner_confirmation_contract_ready() ) {
+			$result = array( 'status' => 'owner_confirmation_unavailable', 'severity' => 'none', 'suppressed' => true, 'current_sample' => null, 'baseline_sample' => null, 'checked_at' => gmdate( 'c' ) );
+			update_option( self::LAST_ANOMALY_OPTION, $result, false );
+			return $result;
+		}
 		global $wpdb;
 		$t = GCU_Install::tables();
 		$current = $wpdb->get_row( "SELECT SUM(funnel_stage='cta_selected') selected,SUM(funnel_stage='destination_loaded') loaded FROM {$t['events']} WHERE occurred_at>=DATE_SUB(UTC_TIMESTAMP(),INTERVAL 24 HOUR)", ARRAY_A );
