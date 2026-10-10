@@ -4,7 +4,7 @@
 
 - Frozen audited parent main: `843c0b4c2376f82698fdec2776da277f710f144c`.
 - Twenty distinct source audit areas: 17 clean source probes, 3 defect-bearing areas; the packaging text-probe false positive was independently cleared against actual PHP 7.4/8.3 CI matrix.
-- v1.4.10 corrects unsupported handoff-quality scoring, fabricated cross-branch funnel dropoffs, and default-100 unmeasured accessibility. Owner-correlated destination arrival instrumentation is still pending a versioned File 07/08/09 acknowledgement integration; no false positive success is recorded.
+- v1.4.10 corrects unsupported handoff-quality scoring, fabricated cross-branch funnel dropoffs, and default-100 unmeasured accessibility. Public REST additionally rejects browser-forged owner-only `destination_loaded`, `application_started` and `booking_started` stages; missing owner acknowledgement also suppresses anomaly determinations. Owner-correlated destination arrival instrumentation is still pending a versioned File 07/08/09 acknowledgement integration; no false positive success is recorded.
 - `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.10-R6.md` is the current correction ledger. R5 is retained as historical source evidence.
 - This repository candidate must pass exact branch/head QA and two fresh reviews, then independent post-merge exact-main QA before a release claim. No staging/live/deployed DB or migration claim.
 
