@@ -77,7 +77,12 @@ $no_performance = GCU_Future_Policy::quality_evidence_status( 25, 12, 90, null )
 assert_future( false === $no_performance['complete'] && in_array( 'performance_measurement_unavailable', $no_performance['missing'], true ), 'Missing performance evidence blocks the composite score.' );
 $small_quality_cohort = GCU_Future_Policy::quality_evidence_status( 9, 3, 90, 90 );
 assert_future( false === $small_quality_cohort['complete'] && in_array( 'insufficient_cta_sample', $small_quality_cohort['missing'], true ), 'A small cohort cannot produce a quality score.' );
-$verified_quality = GCU_Future_Policy::quality_evidence_status( 25, 12, 93, 91 );
+$unattested_quality = GCU_Future_Policy::quality_evidence_status( 25, 12, 93, 91 );
+assert_future( false === $unattested_quality['complete'] && in_array( 'owner_handoff_confirmation_unavailable', $unattested_quality['missing'], true ), 'A forged browser destination_loaded count is never owner attestation.' );
+assert_future( false === GCU_Future_Policy::owner_confirmation_contract_ready(), 'No versioned owner handoff attestation is currently registered.' );
+$rest_source = file_get_contents( __DIR__ . '/../14-global-clinic-usp-integration/includes/class-gcu-rest.php' );
+assert_future( false !== strpos( $rest_source, 'gcu_owner_stage_attestation_required' ), 'The public event endpoint must reject owner-only completion stages.' );
+$verified_quality = GCU_Future_Policy::quality_evidence_status( 25, 12, 93, 91, true );
 assert_future( true === $verified_quality['complete'] && empty( $verified_quality['missing'] ), 'Measured owner handoff, accessibility and performance permit scoring.' );
 $future_source = file_get_contents( __DIR__ . '/../14-global-clinic-usp-integration/includes/class-gcu-future-intelligence.php' );
 assert_future( false !== strpos( $future_source, "'dropoff_status' => 'owner_correlated_transition_evidence_unavailable'" ), 'Unrelated doctor/patient paths must never be reported as one sequential dropoff funnel.' );
