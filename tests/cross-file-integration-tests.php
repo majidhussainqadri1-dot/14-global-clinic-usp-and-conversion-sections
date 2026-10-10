@@ -17,7 +17,7 @@ $con  = xft( $p . '/includes/class-gcu-contracts.php' );
 $front= xft( $p . '/includes/class-gcu-frontend.php' );
 $obs  = xft( $p . '/includes/class-gcu-observability.php' );
 
-xfit( false !== strpos( $main, "GCU_VERSION', '1.4.8" ), 'Release version is not 1.4.8.' );
+xfit( false !== strpos( $main, "GCU_VERSION', '1.4.9" ), 'Release version is not 1.4.9.' );
 xfit( false !== strpos( $main, "GCU_CANONICAL_REPOSITORY', '14-global-clinic-usp-and-conversion-sections" ), 'Current repository identity is not exact.' );
 xfit( false !== strpos( $main, 'class-gcu-companion-adapters.php' ), 'Companion adapter bootstrap missing.' );
 
@@ -29,6 +29,7 @@ xfit( false !== strpos( $comp, 'FILE08_MIN_VERSION' ) && false !== strpos( $comp
 xfit( false !== strpos( $comp, 'FILE09_MIN_VERSION' ) && false !== strpos( $comp, 'FILE09_MIN_CONTRACT' ) && false !== strpos( $comp, 'GDO_VERSION' ) && false !== strpos( $comp, 'gdo_file14_onboarding_destination' ) && false !== strpos( $comp, "'file09'" ) && false !== strpos( $comp, "'file14'" ) && false !== strpos( $comp, 'writes_data' ) && false !== strpos( $comp, 'automatic_enrollment' ) && false !== strpos( $comp, 'automatic_verification' ), 'File 09 current onboarding contract invariants missing.' );
 
 xfit( false !== strpos( $comp, 'FILE01_MIN_VERSION' ) && false !== strpos( $comp, 'FILE01_MIN_CONTRACT' ) && false !== strpos( $comp, 'SPF_VERSION' ) && false !== strpos( $comp, 'SPF_CONTRACT_VERSION' ) && false !== strpos( $comp, 'SPF_Registry' ) && false !== strpos( $comp, 'file01_route_registry_state' ) && false !== strpos( $comp, 'placement_contract_ready' ) && false !== strpos( $comp, 'GCU_Companion_Adapters::file01_health' ) && false !== strpos( $comp, 'contracts_ready' ) && false !== strpos( $comp, 'missing_contracts' ) && false !== strpos( $comp, 'incompatible_contracts' ) && false !== strpos( $comp, "registered', 'compatible', 'active" ), 'File 01 canonical lifecycle/route/contract readiness missing.' );
+xfit( false !== strpos( $comp, 'file01_manifest_current( $module, $expected_manifest )' ) && false !== strpos( $comp, 'expected_routes' ) && false !== strpos( $comp, 'contract-drift' ) && false !== strpos( $comp, "'route_key'" ) && false !== strpos( $comp, "'redirects'" ), 'R5 File 01 full-manifest route semantics missing.' );
 xfit( false !== strpos( $comp, 'sync_file01_registry' ) && false !== strpos( $comp, 'SPF_Registry::register_manifest' ) && false !== strpos( $comp, 'SPF_Registry::map_route' ) && false !== strpos( $comp, 'SPF_Registry::register_contract' ), 'File 01 authorized manifest/route/API-event registry sync missing.' );
 xfit( false !== strpos( $comp, "'file14-global-clinic'" ) && false !== strpos( $comp, "'/global-clinic/'" ) && false !== strpos( $comp, "'/find-a-global-doctor/'" ) && false !== strpos( $comp, "'/start-your-global-clinic/'" ) && false !== strpos( $comp, "'/clinic/how-it-works/'" ), 'File 14 canonical File 01 route declarations incomplete.' );
 
