@@ -135,7 +135,7 @@ $r7_bad_lock = GCU_Future_Policy::validate_public_record_payload( 'terminology_l
 ) );
 assert_future( false === $r7_bad_lock['safe'], 'R7 partial protected language coverage must not publish.' );
 $r7_future_code = file_get_contents( __DIR__ . '/../14-global-clinic-usp-integration/includes/class-gcu-future-intelligence.php' );
-assert_future( false !== strpos( $r7_future_code, "'privacy_effectiveness' => " ) || false !== strpos( $r7_future_code, "'privacy' => is_numeric( $privacy_effectiveness )" ), 'R7 privacy effectiveness may not be set to a fabricated constant 100.' );
+assert_future( false !== strpos( $r7_future_code, "'privacy_verified' => is_numeric" ) && false === strpos( $r7_future_code, "'privacy' => 100" ), 'R7 privacy effectiveness must not be set to a fabricated constant 100.' );
 assert_future( false !== strpos( $r7_future_code, 'gcu_future_record_evidence_required' ), 'R7 active/public Future governance records require server-side content-provenance gates.' );
 assert_future( false !== strpos( $r7_future_code, 'approved_vocabulary_guard( $text, $base, $claim_texts )' ), 'R7 AI provider output is grounded before draft suggestions are returned.' );
 
