@@ -1,4 +1,4 @@
-# File 14 — Fresh Central + File Plan + Future CTI Requirements Traceability — v1.4.8
+# File 14 — Fresh Central + File Plan + Future CTI Requirements Traceability — v1.4.9
 
 ## Governing freeze
 
@@ -35,7 +35,7 @@ File 14 owns approved Worldwide Clinic value-proposition copy, reusable semantic
 | F14-FR-004 How it works | Patient/doctor step journeys and canonical process route | contract tests |
 | F14-FR-005 Trust content | Verification limits, privacy, emergency and no-outcome-guarantee claims | policy/contract tests |
 | F14-FR-006 Business copy | 0% commission, one free tier, optional support/no advantage, direct fee-owner boundary | policy + future parity tests |
-| F14-FR-007 Placement registry | File14-owned semantic route/slot/audience/priority placements; readiness requires an eligible File 01 module lifecycle state, all four canonical File 14 routes, both current File 14 API/events registry contracts, and validated File 20 owner-native shell contract semantics while File 20 remains the surrounding shell/navigation owner | schema/cross-file/contract tests |
+| F14-FR-007 Placement registry | File14-owned semantic route/slot/audience/priority placements; readiness requires an eligible File 01 lifecycle state and exact current File 14 module manifest, all four canonical routes with correct key/owner/status/layout/destination and no unapproved redirects, both current File 14 API/events registry contracts, and validated File 20 owner-native shell contract semantics while File 20 remains the surrounding shell/navigation owner | schema/cross-file/contract tests |
 | F14-FR-008 Reusable content blocks | Semantic block DTO/API plus File 25 public `sabri_visual_experience_contract()` and `sabri_visual_experience_render_state()` integration; local scoped fallback remains available when the versioned visual contract is incompatible | cross-file + contract tests |
 | F14-FR-009 Destination health | Request-time owner-native File 07/08/09 health probes with minimum runtime/contract compatibility enforcement; File 07 also requires owner system health and File 08 requires owner runtime health before a CTA is exposed; malformed/throwing companions fail closed and unavailable destinations keep an honest no-URL state | cross-file + contract/frontend tests |
 | F14-FR-010 Campaign attribution | Consent, GPC, File 14 route allowlist, sanitized first/last attribution and 30-day expiry | privacy/static tests |
@@ -101,4 +101,10 @@ File 14 owns approved Worldwide Clinic value-proposition copy, reusable semantic
 
 ## Truth-status rule
 
-`Specified`, `Coded`, `Packaged`, `Automated-QA Green`, `Staging-Accepted`, `Live-Deployed`, and `Operational` are separate statuses. File 14 v1.4.8 may only claim a status for which current exact-head evidence exists. The Future CTI implementation and sixth-review corrections do not alter that rule.
+`Specified`, `Coded`, `Packaged`, `Automated-QA Green`, `Staging-Accepted`, `Live-Deployed`, and `Operational` are separate statuses. File 14 v1.4.9 may only claim a status for which current exact-head evidence exists. The Future CTI implementation and sixth-review corrections do not alter that rule.
+
+## R5 registry-truth continuation
+
+| R5-CROSS-01 | File 01 current module manifest identity/version and exact canonical route key/path/owner/layout/destination/redirect state are necessary for placement readiness; legacy redirect aliases cannot masquerade as canonical File 14 routes | executable 19-case `tests/review20-r5-behavioral.php`, File 01 current source DTO, current review20 and regression gates |
+
+Latest reviewed File 25 repository source HEAD: `347a4ff4d4c233c5ea6cd82c7786ee5398ea9d1e`; source-interface compatibility only. Live/staging evidence remains external.

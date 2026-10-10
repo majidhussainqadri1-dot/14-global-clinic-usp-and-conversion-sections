@@ -35,11 +35,11 @@ checks = []
 def add(name, ok):
     checks.append((name, bool(ok)))
 
-add("01 exact v1.4.8 repository identity and R4 evidence",
-    "Version: 1.4.8" in main
-    and "GCU_VERSION', '1.4.8" in main
+add("01 exact v1.4.9 repository identity and R5 evidence",
+    "Version: 1.4.9" in main
+    and "GCU_VERSION', '1.4.9" in main
     and "14-global-clinic-usp-and-conversion-sections" in main
-    and "REVIEW-20-CROSS-FILE-COMPLETION-v1.4.8-R4.md" in status)
+    and "REVIEW-20-CROSS-FILE-COMPLETION-v1.4.9-R5.md" in status)
 
 add("02 File14 governing FR/NFR/Future trace remains complete",
     all(x in trace for x in ("F14-FR-001","F14-FR-016","F14-NFR-001","F14-NFR-010","F14-FUT-01","F14-FUT-24")))
@@ -51,13 +51,14 @@ add("04 File00 action-time authorization remains version-gated and exception-iso
     all(x in companion for x in ("FILE00_MIN_VERSION","FILE00_MIN_CONTRACT","SMC_VERSION","SMC_CONTRACT_VERSION","SMC_Contracts","smc_assertions_v1","owner_call","authorization_assertions"))
     and "GCU_Companion_Adapters::authorize" in caps)
 
-add("05 File01 readiness rejects degraded/suspended/retired module lifecycle",
-    all(x in companion for x in ("module_state","registered', 'compatible', 'active","file01_route_registry_state"))
+add("05 File01 full current module identity/version and lifecycle",
+    all(x in companion for x in ("file01_manifest_current( $module, $expected_manifest )","module_state","registered', 'compatible', 'active","'owner_file'","'software_version'","'global_shell_owner'"))
+    and "file01_manifest_current" in companion
     and "degraded" in status and "suspended" in status and "retired" in status)
 
-add("06 File01 route ownership/conflict detection remains bounded",
-    all(x in companion for x in ("file14-global-clinic","file14-find-global-doctor","file14-start-global-clinic","file14-clinic-how-it-works","route_conflicts"))
-    and "'file-14' !== $owner" in companion)
+add("06 File01 canonical route key/layout/destination/redirect truth",
+    all(x in companion for x in ("expected_routes","file01_route_current( $route","contract-drift","array( 'registered', 'active' )","'route_key'","'redirects'","'layout_context'","'destination'"))
+    and "review20-r5-behavioral.php" in quality)
 
 add("07 File01 readiness requires exact current API/events registry contracts",
     all(x in companion for x in ("contracts_ready","missing_contracts","incompatible_contracts","gcu.file14.api","gcu.file14.events","file01_contract_current","list_contracts_for_readiness")))
@@ -87,9 +88,10 @@ add("14 File24 availability requires successful boot/service truth",
 add("15 File24 assurance manifest remains truthful and unassessed without fabricated evidence",
     all(x in companion for x in ("spcrc/module_manifests","'posture'                => 'unassessed'","'last_security_test'     => ''","'canonical_data_owner'","'release_gate'")))
 
-add("16 File25 public visual contracts fail safely on owner exceptions",
+add("16 File25 current source-visual contracts fail safely on exceptions",
     all(x in companion for x in ("FILE25_MIN_VERSION","FILE25_MIN_CONTRACT","FILE25_MIN_COMPONENT_CONTRACT","sabri_visual_experience_contract","sabri_visual_experience_render_state","visual_system_owner","global_shell_owner","owner_call"))
-    and "Sabri\\PublicExperience\\Components::render_state" not in companion)
+    and "Sabri\\PublicExperience\\Components::render_state" not in companion
+    and "347a4ff4d4c233c5ea6cd82c7786ee5398ea9d1e" in status)
 
 add("17 privacy/localization/accessibility/low-data contracts remain",
     all(x in privacy for x in ("global_privacy_control_requested","measurement_allowed","wp_privacy_personal_data_exporters","wp_privacy_personal_data_erasers","is_file14_acquisition_route"))
@@ -99,17 +101,18 @@ add("17 privacy/localization/accessibility/low-data contracts remain",
 add("18 migration/schema/rollback safeguards remain",
     all(x in install for x in ("ENGINE=InnoDB","verify_schema","capture_snapshot","rollback_snapshot","GET_LOCK")))
 
-add("19 deterministic package and R4 regression gates remain governed",
+add("19 deterministic package and executable R5 regressions remain governed",
     "Deterministic double-build mismatch" in build
     and "php -l" in quality
     and "cross-file-integration-tests.php" in quality
+    and "review20-r5-behavioral.php" in quality
     and "review20-cross-file.py" in quality
-    and "v1.4.8" in status)
+    and "v1.4.9" in status)
 
-add("20 repository/live truth separation and exact 2026-10-09 freeze remain explicit",
+add("20 repository/live truth separation and exact 2026-10-10 freeze remain explicit",
     "No `Staging-Accepted`, `Live-Deployed` or `Operational` claim" in status
     and "repository evidence only" in status.lower()
-    and "f8b98b35a00f920dd2a74c1a4e4b7f707a8b53ae" in status
+    and "080e2198d84dfb7491bb0b75946e14a5fe118b91" in status
     and "2f4a89707724fd2b9946600afe10ddab27ec3c2d" in status
     and "8a4dbcaf4fef8e926b9b834ecfde16c21a0f00ca" in status
     and "a5b8d49968a7a5a7d6f3f4655bea541bf38a9acb" in status)

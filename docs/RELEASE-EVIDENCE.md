@@ -1,11 +1,11 @@
-# Release Evidence — v1.4.8 Fourth Twenty-Pass Cross-File Contract-Truth Repository Candidate
+# Release Evidence — v1.4.9 Fifth Twenty-Pass Exact-Companion Repository Candidate
 
 ## Governing scope
 
 - Base plan: `SSH-F14-PLAN-2026-v1.0`.
 - Additive Founder-approved amendment: `SSH-F14-FUTURE-CTI-2026-v2.0`.
-- Fourth twenty-pass baseline: exact starting `main` `f8b98b35a00f920dd2a74c1a4e4b7f707a8b53ae` (v1.4.7 third twenty-pass merge).
-- Software candidate: `1.4.8`.
+- Fifth twenty-pass baseline: exact starting `main` `080e2198d84dfb7491bb0b75946e14a5fe118b91` (v1.4.8 fourth twenty-pass merge).
+- Software candidate: `1.4.9`.
 - Base schema: `10005`; Future CTI additive schema: `1`.
 - Requirements retained: original File 14 FR/NFR plus `F14-FUT-01`–`F14-FUT-24`.
 - Ownership remains bounded: no doctor/clinic/application/appointment/payment/verification/shell source of truth is created here.
@@ -17,6 +17,14 @@ Historical green results are supporting history only. For every current File 14 
 The **third independent eighty-pass** review established the durable exact-current-main rule; the fourth, fifth and sixth reviews retain and strengthen that rule rather than replacing it.
 
 `Automated-QA Green`, `Packaged`, `main merged`, `Staging-Accepted`, `Live-Deployed` and `Operational` remain separate evidence claims.
+
+## Fifth twenty-pass exact-companion/registry-identity evidence — 2026-10-10
+
+Exact File 14 `main` source freeze `080e2198d84dfb7491bb0b75946e14a5fe118b91`. Current companion File 25 source advanced to `347a4ff4d4c233c5ea6cd82c7786ee5398ea9d1e` (its runtime/visual interface remains 0.15.0/1.9.0/1.2.0). File 00/01/07/08/09/19/20/24 exact repository heads remained unchanged.
+
+Twenty completed review areas yielded 5 defect-bearing and 15 clean results, documented in `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.9-R5.md`. File 01 readiness failed to bind its module to the exact canonical manifest/installed version and accepted route path/owner alone, including redirects and wrong canonical route identity/layout/destination. Corrected those failures *only inside File 14-owned read/health consumers and route comparison*. Nineteen PHP behavioral cases now test those boundaries in addition to existing source-regression gates.
+
+`1.4.9` is a repository candidate until the exact post-code branch HEAD passes full PHP 7.4/8.3 quality, regression, both fresh review rounds, review20-R5, deterministic package/SBOM and baseline integrity. The exact merged main must then pass new post-merge workflows. External staging, deployed package parity, real schema/migration, backup-restore, browser accessibility and live re-test remain unverified.
 
 ## Fourth twenty-pass cross-file contract-truth corrective evidence — 2026-10-09
 

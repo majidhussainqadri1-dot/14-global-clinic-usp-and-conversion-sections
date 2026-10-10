@@ -10,7 +10,7 @@ defined( 'ABSPATH' ) || exit;
  * owner-native read/health contracts and never write companion domain truth.
  */
 final class GCU_Companion_Adapters {
-	const REVIEW_BASELINE = '2026-10-09-review20-r4-contract-truth-v1';
+	const REVIEW_BASELINE = '2026-10-10-review20-r5-registry-truth-v1';
 
 	const FILE00_MIN_VERSION = '1.2.44';
 	const FILE00_MIN_CONTRACT = '1.2.3';
@@ -312,11 +312,21 @@ final class GCU_Companion_Adapters {
 		}
 		$state['available'] = true;
 		$state['module_state'] = is_array( $module ) && isset( $module['state'] ) ? sanitize_key( (string) $module['state'] ) : 'unavailable';
+		$expected_manifest = self::file01_manifest();
+		$expected_manifest['state'] = $state['module_state'];
 		$state['registered'] = is_array( $module )
 			&& isset( $module['module_key'] )
-			&& 'file-14' === sanitize_key( (string) $module['module_key'] )
-			&& in_array( $state['module_state'], array( 'registered', 'compatible', 'active' ), true );
+			&& 'file-14' === (string) $module['module_key']
+			&& in_array( $state['module_state'], array( 'registered', 'compatible', 'active' ), true )
+			// File 01 is the source of module identity and installed contract state.
+			// A module with stale software/contract identity or a changed ownership
+			// manifest cannot authorize new public placements merely by owning routes.
+			&& self::file01_manifest_current( $module, $expected_manifest );
 
+		$expected_routes = array();
+		foreach ( self::file01_routes() as $wanted_route ) {
+			$expected_routes[ untrailingslashit( $wanted_route['route_path'] ) ] = $wanted_route;
+		}
 		$seen = array();
 		foreach ( $routes as $route ) {
 			if ( ! is_array( $route ) ) {
@@ -337,8 +347,19 @@ final class GCU_Companion_Adapters {
 					$state['conflicts'][] = $expected_path . ':' . ( $owner ? $owner : 'unknown-owner' );
 					continue;
 				}
-				if ( in_array( $status, array( 'registered', 'active', 'redirect' ), true ) ) {
+				// Canonical File 14 routes must remain routable on their own
+				// identity, layout and destination. A redirect, wrong route key
+				// or stale/foreign destination cannot count as a healthy route.
+				$wanted_route = isset( $expected_routes[ untrailingslashit( $expected_path ) ] )
+					? $expected_routes[ untrailingslashit( $expected_path ) ] : null;
+				if (
+					is_array( $wanted_route )
+					&& in_array( $status, array( 'registered', 'active' ), true )
+					&& self::file01_route_current( $route, array_merge( $wanted_route, array( 'status' => $status ) ) )
+				) {
 					$seen[ $key ] = true;
+				} else {
+					$state['conflicts'][] = $expected_path . ':contract-drift';
 				}
 			}
 		}
@@ -493,6 +514,8 @@ final class GCU_Companion_Adapters {
 
 	private static function file01_route_current( $current, $wanted ) {
 		return is_array( $current )
+			&& ( $current['route_key'] ?? '' ) === $wanted['route_key']
+			&& wp_json_encode( $current['redirects'] ?? array() ) === wp_json_encode( $wanted['redirects'] ?? array() )
 			&& ( $current['route_path'] ?? '' ) === $wanted['route_path']
 			&& ( $current['owner_module'] ?? '' ) === $wanted['owner_module']
 			&& ( $current['layout_context'] ?? '' ) === $wanted['layout_context']
@@ -893,7 +916,7 @@ final class GCU_Companion_Adapters {
 			'contract_version'       => '1.0.0',
 			'canonical_data_owner'   => 'File 14 USP copy placements experiments and conversion measurement',
 			'canonical_action_owner' => 'File 14 governed content placement experiment and measurement actions',
-			'evidence_source'        => 'file14-review20-r4-contract-truth-20261009',
+			'evidence_source'        => 'file14-review20-r5-registry-truth-20261010',
 			'degraded_behavior'      => 'Protected actions fail closed and unavailable companion destinations remain unavailable without permissive fallback.',
 			'release_gate'           => 'Repository QA is necessary only; staging restore accessibility Founder acceptance deployment and live verification remain separate.',
 		);

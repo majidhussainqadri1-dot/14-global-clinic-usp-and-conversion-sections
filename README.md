@@ -6,7 +6,7 @@ Canonical File 14 implementation for the **Sabri Social Homeopathy Platform**.
 - Fresh central governing baseline: 2026-08-10
 - Base File plan: `SSH-F14-PLAN-2026-v1.0`
 - Founder-approved additive amendment: `SSH-F14-FUTURE-CTI-2026-v2.0`
-- Software candidate: `1.4.8`
+- Software candidate: `1.4.9`
 - Base schema candidate: `10005`
 - Future CTI additive schema: `1`
 - Current canonical source repository: `14-global-clinic-usp-and-conversion-sections`
@@ -20,7 +20,7 @@ Version 1.4.0 implemented all 24 Founder-approved `F14-FUT-01`–`F14-FUT-24` en
 
 Version 1.4.7 adds the 2026-10-08 third twenty-pass current-companion/runtime-health review. It advances the required File 07 floor to the current centrally reconciled 1.2.1 contract, validates File 07/File 08 owner runtime health before destination CTAs are exposed, and isolates exceptions from companion-owner calls so cross-module failure degrades safely.
 
-Version 1.4.8 adds the 2026-10-09 fourth twenty-pass cross-file contract-truth review. It requires a non-degraded File 01 module state plus both current File 14 registry contracts, validates File 20's owner-native File 14 CentralPlanContract semantics before treating shell placement as available, and requires successful File 24 boot evidence instead of trusting its version constant alone.
+Version 1.4.9 adds the 2026-10-10 fifth twenty-pass File 14/central/companion review. It requires a complete current File 01 module manifest and validates all canonical route-key/status/owner/layout/destination/redirect semantics. A 19-case executable File 01 readiness fixture and current File 25 source freeze guard these conditions.\n\nVersion 1.4.8 adds the 2026-10-09 fourth twenty-pass cross-file contract-truth review. It requires a non-degraded File 01 module state plus both current File 14 registry contracts, validates File 20's owner-native File 14 CentralPlanContract semantics before treating shell placement as available, and requires successful File 24 boot evidence instead of trusting its version constant alone.
 
 The implementation remains intentionally bounded: it may explain, lint, preview, measure, report and hand off, but it may not create a second doctor, clinic, appointment, payment, verification or shell source of truth.
 
