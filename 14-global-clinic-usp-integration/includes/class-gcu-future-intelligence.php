@@ -515,7 +515,9 @@ final class GCU_Future_Intelligence {
 			$counts[ $row['funnel_stage'] ] = (int) $row['total'];
 		}
 		$selected = isset( $counts['cta_selected'] ) ? $counts['cta_selected'] : 0;
-		$loaded = isset( $counts['destination_loaded'] ) ? $counts['destination_loaded'] : 0;
+		// Historic owner-only events were not authenticated by an owner-native contract.
+		// They cannot be used as successful handoffs, even if rows still exist.
+		$loaded = 0;
 		$accessibility = apply_filters( 'gcu_future_accessibility_score', null );
 		$performance = apply_filters( 'gcu_future_performance_score', null );
 		$privacy_effectiveness = apply_filters( 'gcu_future_privacy_effectiveness_score', null );
@@ -568,11 +570,12 @@ final class GCU_Future_Intelligence {
 		$total = 0;
 		$stages = array();
 		foreach ( is_array( $rows ) ? $rows : array() as $row ) {
+			if ( ! GCU_Future_Policy::acquisition_stage_reportable( isset( $row['funnel_stage'] ) ? $row['funnel_stage'] : '' ) ) { continue; }
 			$total += (int) $row['total'];
 			$stages[ $row['funnel_stage'] ] = (int) $row['total'];
 		}
 		if ( ! GCU_Future_Policy::cohort_allowed( $total ) ) {
-			return array( 'suppressed' => true, 'threshold' => GCU_Future_Policy::MIN_COHORT, 'days' => $days, 'stages' => array(), 'dropoffs' => array(), 'dropoff_status' => 'insufficient_sample' );
+			return array( 'suppressed' => true, 'threshold' => GCU_Future_Policy::MIN_COHORT, 'days' => $days, 'stages' => array(), 'dropoffs' => array(), 'dropoff_status' => 'insufficient_sample', 'owner_stage_evidence_status' => 'not_attested_excluded' );
 		}
 		// These are independently emitted stage totals, NOT a correlated cohort.
 		// A patient booking is not downstream of doctor application. Never
@@ -585,6 +588,7 @@ final class GCU_Future_Intelligence {
 			'stages' => $stages,
 			'dropoffs' => array(),
 			'dropoff_status' => 'owner_correlated_transition_evidence_unavailable',
+			'owner_stage_evidence_status' => 'not_attested_excluded',
 		);
 	}
 
