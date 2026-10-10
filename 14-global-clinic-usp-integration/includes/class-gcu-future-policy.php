@@ -161,6 +161,28 @@ final class GCU_Future_Policy {
 		return array( 'safe' => empty( $flags ), 'flags' => array_values( array_unique( $flags ) ) );
 	}
 
+	/**
+	 * An aggregate score is publishable only when its essential components have
+	 * actually been observed. A click is not proof of an owner-side arrival.
+	 * Unknown accessibility/performance evidence must never default to 100%.
+	 */
+	public static function quality_evidence_status( $selected, $owner_loaded, $accessibility, $performance ) {
+		$missing = array();
+		if ( ! self::cohort_allowed( $selected ) ) {
+			$missing[] = 'insufficient_cta_sample';
+		}
+		if ( (int) $owner_loaded < 1 ) {
+			$missing[] = 'owner_handoff_confirmation_unavailable';
+		}
+		if ( ! is_numeric( $accessibility ) ) {
+			$missing[] = 'accessibility_measurement_unavailable';
+		}
+		if ( ! is_numeric( $performance ) ) {
+			$missing[] = 'performance_measurement_unavailable';
+		}
+		return array( 'complete' => empty( $missing ), 'missing' => $missing );
+	}
+
 	public static function conversion_quality_score( array $metrics ) {
 		$defaults = array( 'handoff_success' => 0, 'accessibility' => 100, 'claim_freshness' => 100, 'privacy' => 100, 'complaint_health' => 100, 'destination_health' => 100, 'performance' => 100 );
 		$m = array_merge( $defaults, $metrics );
