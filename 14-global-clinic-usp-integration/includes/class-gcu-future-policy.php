@@ -165,6 +165,22 @@ final class GCU_Future_Policy {
 		return is_string( $value ) && preg_match( '/^[a-z][a-z0-9_]{0,63}$/D', $value ) ? $value : '';
 	}
 
+	/** R20: Public query fields must be scalar, bounded and canonical-shaped. */
+	public static function public_blocks_query_is_typed( $slot, $audience, $locale ) {
+		if ( null !== $slot && ( ! is_string( $slot ) || strlen( $slot ) > 80 || ( '' !== $slot && ! preg_match( '/^[a-z0-9_]+$/D', $slot ) ) ) ) { return false; }
+		if ( null !== $audience && ( ! is_string( $audience ) || ! in_array( $audience, array( '', 'all', 'patient', 'doctor', 'guest', 'member' ), true ) ) ) { return false; }
+		if ( null !== $locale && ( ! is_string( $locale ) || strlen( $locale ) > 20 || ( '' !== $locale && ! preg_match( '/^[a-zA-Z_-]+$/D', $locale ) ) ) ) { return false; }
+		return true;
+	}
+
+	/** R20: Only typed acquisition event fields may reach File14's writer. */
+	public static function acquisition_event_input_is_typed( array $input ) {
+		if ( ! isset( $input['stage'] ) || ! is_string( $input['stage'] ) || ! in_array( $input['stage'], array( 'impression', 'cta_selected', 'destination_loaded', 'application_started', 'booking_started' ), true ) ) { return false; }
+		if ( isset( $input['destination'] ) && ( ! is_string( $input['destination'] ) || strlen( $input['destination'] ) > 80 || ( '' !== $input['destination'] && ! preg_match( '/^[a-z][a-z0-9_]*$/D', $input['destination'] ) ) ) ) { return false; }
+		if ( isset( $input['event_id'] ) && ( ! is_string( $input['event_id'] ) || ! preg_match( '/^[a-fA-F0-9]{8}(?:-[a-fA-F0-9]{4}){3}-[a-fA-F0-9]{12}$/D', $input['event_id'] ) ) ) { return false; }
+		return true;
+	}
+
 	public static function sanitize_handoff_context( array $input ) {
 		$country = isset( $input['country'] ) && is_string( $input['country'] ) ? strtoupper( sanitize_text_field( $input['country'] ) ) : '';
 		if ( ! preg_match( '/^[A-Z]{2}$/', $country ) ) {
