@@ -1,4 +1,10 @@
-# Release Evidence — v1.4.24 R20 Candidate
+# Release Evidence — v1.4.25 R21 Candidate (Event Replay Identity)
+
+Software candidate: `1.4.25`. Reviewed frozen prior `main` `faf6be5f7860a6517b380b894b2d3fe6a1e15733`. Exactly twenty current-source/companion-plan lenses performed before one correction batch (15 source-present, three local defects, Issues #19/#22 external/design open). Review/changes: `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.25-R21.md`. Require exact review/main SHA PHP7.4/8.3 quality, behavioral regressions, deterministic ZIP + SHA-256/SBOM, PR CI and fresh post-merge CI; do not claim these checks passed until verified. Actual installed plugin, DB/options/migrations, staging, backup restore and live acceptance **unknown**. Source schema targets base10005/Future1; no schema change.
+
+---
+
+# Historical Release Evidence — v1.4.24 R20
 
 Software candidate: `1.4.24`. Frozen previous main `3b9a926613f9d9f1b5c22c2e44174df00ef0519f`. Twenty source/plan checks completed before changes; 15 source-present, 3 local defects corrected, 2 external/design issues open. Report: `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.24-R20.md`. Verify **exact review/main SHA**, PHP 7.4/8.3 QA, Fresh Reviews, package/SBOM and **fresh post-merge** checks independently before repository release acceptance. Source DB targets 10005/Future1; deployed artifact, actual DB/option/migration, staging and live **unverified**. GitHub green is not production verification.
 

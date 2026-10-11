@@ -1,4 +1,12 @@
-# File 14 Status — v1.4.24 R20 Public REST Input-Type Repository Candidate
+# File 14 Status — v1.4.25 R21 Conversion Event Replay Repository Candidate
+
+Exact-current-head rule: the exact reviewed branch SHA and exact merged-main SHA must each pass their own QA; neither confirms installed production parity.
+
+Software candidate: `1.4.25`; frozen reviewed prior main `faf6be5f7860a6517b380b894b2d3fe6a1e15733`. Twenty independent current-source/central/File07/09/25 cross-plan lenses completed **before** the corrective batch: 15 source-present (not live proof), 3 local defects addressed, 2 external/design gaps Issues #19/#22 open. Candidate commits/CI, PR tests, exact final merged-main CI and deployed reality are independent evidence gates. Source DB schema target base `10005`, Future `1`, unchanged: actual installed schema and migration **unverified**. Audit: `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.25-R21.md`. Deployed plugin/checksum, wp_options, database rows, runtime logs and staging/live re-test **not inspected**.
+
+---
+
+# Historical R20 — v1.4.24 (before R21)
 
 Software candidate: `1.4.24`. Frozen audited prior main `3b9a926613f9d9f1b5c22c2e44174df00ef0519f`; twenty current-source/cross-plan lenses completed before correction: fifteen local source-presence guards, three File14 typed-input defects corrected, two external/design gaps Issues #19/#22 explicitly open. Full ledger: `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.24-R20.md`. Source schema targets base 10005 / Future 1 unchanged; no migration. Candidate CI, package, fresh post-merge CI and staging/live acceptance require separate evidence. Installed plugin checksum/version, actual DB/options/migrations and live runtime logs **unverified**.
 

@@ -169,7 +169,7 @@ final class GCU_Future_Policy {
 	public static function public_blocks_query_is_typed( $slot, $audience, $locale ) {
 		if ( null !== $slot && ( ! is_string( $slot ) || strlen( $slot ) > 80 || ( '' !== $slot && ! preg_match( '/^[a-z0-9_]+$/D', $slot ) ) ) ) { return false; }
 		if ( null !== $audience && ( ! is_string( $audience ) || ! in_array( $audience, array( '', 'all', 'patient', 'doctor', 'guest', 'member' ), true ) ) ) { return false; }
-		if ( null !== $locale && ( ! is_string( $locale ) || strlen( $locale ) > 20 || ( '' !== $locale && ! preg_match( '/^[a-zA-Z_-]+$/D', $locale ) ) ) ) { return false; }
+		if ( null !== $locale && ( ! is_string( $locale ) || ! in_array( $locale, array( '', 'en', 'en-US', 'en_US', 'ur', 'ur-PK', 'ur_PK', 'ar', 'ar-SA', 'ar_SA' ), true ) ) ) { return false; }
 		return true;
 	}
 
@@ -178,6 +178,19 @@ final class GCU_Future_Policy {
 		if ( ! isset( $input['stage'] ) || ! is_string( $input['stage'] ) || ! in_array( $input['stage'], array( 'impression', 'cta_selected', 'destination_loaded', 'application_started', 'booking_started' ), true ) ) { return false; }
 		if ( isset( $input['destination'] ) && ( ! is_string( $input['destination'] ) || strlen( $input['destination'] ) > 80 || ( '' !== $input['destination'] && ! preg_match( '/^[a-z][a-z0-9_]*$/D', $input['destination'] ) ) ) ) { return false; }
 		if ( isset( $input['event_id'] ) && ( ! is_string( $input['event_id'] ) || ! preg_match( '/^[a-fA-F0-9]{8}(?:-[a-fA-F0-9]{4}){3}-[a-fA-F0-9]{12}$/D', $input['event_id'] ) ) ) { return false; }
+		return true;
+	}
+
+	/** Database-level idempotency: a reused UUID only names the same canonical event. */
+	public static function same_acquisition_event_identity( array $stored, array $expected ) {
+		if ( ! isset( $stored['event_type'], $stored['event_version'], $stored['consent_state'] )
+			|| 'ClinicUSPFunnelEvent' !== $stored['event_type']
+			|| 1 !== (int) $stored['event_version']
+			|| 'granted' !== $stored['consent_state'] ) { return false; }
+		foreach ( array( 'funnel_stage', 'destination_key', 'subject_hash', 'source_value', 'medium_value', 'campaign_value', 'ref_value' ) as $field ) {
+			if ( ! array_key_exists( $field, $stored ) || ! array_key_exists( $field, $expected )
+				|| ! hash_equals( (string) $stored[ $field ], (string) $expected[ $field ] ) ) { return false; }
+		}
 		return true;
 	}
 
