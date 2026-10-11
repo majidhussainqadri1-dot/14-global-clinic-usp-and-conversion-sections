@@ -6,7 +6,7 @@ Canonical File 14 implementation for the **Sabri Social Homeopathy Platform**.
 - Fresh central governing baseline: 2026-08-10
 - Base File plan: `SSH-F14-PLAN-2026-v1.0`
 - Founder-approved additive amendment: `SSH-F14-FUTURE-CTI-2026-v2.0`
-- Software candidate: `1.4.19`
+- Software candidate: `1.4.20`
 - Base schema candidate: `10005`
 - Future CTI additive schema: `1`
 - Current canonical source repository: `14-global-clinic-usp-and-conversion-sections`
@@ -73,3 +73,8 @@ Twenty independent plan/source checks found two File14-local defects now correct
 ### 2026-10-11 R15 / v1.4.19 — governed input and ethical experiment preflight
 
 Twenty independent static source/plan/companion checks (15 limited source-clean, three File14 defects corrected, two owner/design requirements pending). Governed REST record writing, claim revalidation and sampling/privacy policy preflight now reject nested/invalid typed inputs instead of silently coercing them. Regression tests enforce all cases. See `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.19-R15.md`. Native owner-stage events Issue #19 and experiment baseline restore Issue #22 remain open; no live/staging proof.
+
+
+### 2026-10-11 R16 / v1.4.20 — guardrail effectiveness and measured evidence
+
+Twenty distinct source/plan/companion reviews: 15 narrow source-clean, three File14-local defects corrected, two external/design contracts remain open. Copy preflight refuses nested text fields, experiment preflight rejects disabled/empty safety controls, and quality evidence cannot treat percentages outside 0..100 as completed. Tests: `tests/future-intelligence-tests.php`; evidence: `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.20-R16.md`. Owner confirmations Issue #19, experiment baseline Issue #22, staging/live parity are not yet proven.
