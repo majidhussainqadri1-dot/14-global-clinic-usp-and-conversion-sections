@@ -979,11 +979,14 @@ final class GCU_Future_Intelligence {
 		}
 		$sql = "SELECT record_type,record_key,locale,region,status,is_public,payload,row_version,review_due_at,updated_at FROM {$t['records']} WHERE $where ORDER BY updated_at DESC, id DESC LIMIT $limit OFFSET $offset";
 		$rows = $args ? $wpdb->get_results( $wpdb->prepare( $sql, $args ), ARRAY_A ) : $wpdb->get_results( $sql, ARRAY_A );
-		foreach ( is_array( $rows ) ? $rows : array() as &$row ) {
-			$row['payload'] = self::json_array( $row['payload'] );
+		// Decode the actual array returned to consumers. Iterating over a
+		// ternary expression by reference modifies a temporary copy instead.
+		$rows = is_array( $rows ) ? $rows : array();
+		foreach ( $rows as &$row ) {
+			$row['payload'] = self::json_array( isset( $row['payload'] ) ? $row['payload'] : '' );
 		}
 		unset( $row );
-		return is_array( $rows ) ? $rows : array();
+		return $rows;
 	}
 
 	public static function public_change_log( $limit = 20 ) {
