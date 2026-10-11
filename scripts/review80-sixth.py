@@ -114,7 +114,7 @@ add('67 FAQ intelligence can never auto-publish', 'gcu_future_faq_suggestion_can
 add('68 public trust/change log is governed owner data', 'public_change_log' in future and 'change_log' in future)
 add('69 Choose Safely guide remains educational', 'Choose Safely' in future_policy or 'choose safely' in future_policy.lower())
 add('70 doctor readiness remains non-binding and verification-owned by File09/File00', 'binding' in future_policy and 'File 09 / File 00' in future_policy)
-add('71 American English source plus complete Urdu/Arabic Future locale coverage remains', "'ur-PK'" in future_i18n and "'ar-SA'" in future_i18n and 'if ( ! $strings )' in future_i18n and 'Preparation estimate:' in future_i18n and 'American English canonical File 14 chrome' in trace)
+add('71 American English source plus complete Urdu/Arabic Future locale coverage remains', "'ur-PK'" in future_i18n and "'ar-SA'" in future_i18n and 'if ( $strings )' in future_i18n and 'localize_fragment(' in future_i18n and 'preg_replace_callback(' in future_i18n and '<!--gcu-future-start-->' in future and 'Preparation estimate:' in future_i18n and 'American English canonical File 14 chrome' in trace)
 add('72 RTL/LTR direction support remains', 'rtl' in css.lower() and ('rtl' in front.lower() or 'dir=' in front))
 add('73 protected terminology/provenance remains', 'terminology_lock' in future_policy and 'provenance' in future_policy.lower())
 add('74 Sabri Green remains exact primary token', '#087A4E' in loader and '#087A4E' in css and '#087A4E' in future_css)
