@@ -1,4 +1,10 @@
-# File 14 Status — v1.4.23 R19 Legacy REST Typed-Input Repository Candidate
+# File 14 Status — v1.4.24 R20 Public REST Input-Type Repository Candidate
+
+Software candidate: `1.4.24`. Frozen audited prior main `3b9a926613f9d9f1b5c22c2e44174df00ef0519f`; twenty current-source/cross-plan lenses completed before correction: fifteen local source-presence guards, three File14 typed-input defects corrected, two external/design gaps Issues #19/#22 explicitly open. Full ledger: `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.24-R20.md`. Source schema targets base 10005 / Future 1 unchanged; no migration. Candidate CI, package, fresh post-merge CI and staging/live acceptance require separate evidence. Installed plugin checksum/version, actual DB/options/migrations and live runtime logs **unverified**.
+
+---
+
+# Historical R19 — v1.4.23 (before R20)
 
 Software candidate: `1.4.23` — source only; no deployed-state assertion.
 
