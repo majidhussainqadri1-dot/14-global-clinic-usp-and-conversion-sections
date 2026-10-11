@@ -83,6 +83,9 @@ The File 14 surface includes complete File 14-owned American English, Urdu and A
 
 == Changelog ==
 = 1.4.16 =
+* R12 twenty source/plan checks: prevent false positive doctor readiness from truthy text; require all protected en-US/ur-PK/ar-SA concepts before terminology lock approval. Owner conversion and experiment rollback are still pending separate contracts.
+
+= 1.4.16 =
 * R12 twenty distinct source-plan reviews: reject truthy-but-unchecked doctor readiness values; require the complete approved multilingual protected terminology set before governing publication. Real owner conversion confirmations and experiment baseline restoration remain gated.
 
 = 1.4.15 =
