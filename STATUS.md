@@ -1,5 +1,7 @@
 # File 14 Status — v1.4.25 R21 Event Replay Identity Repository Candidate
 
+Exact-current-head rule: the exact reviewed branch SHA and exact merged-main SHA must each pass their own QA; neither confirms installed production parity.
+
 Software candidate: `1.4.25`; frozen reviewed prior main `faf6be5f7860a6517b380b894b2d3fe6a1e15733`. Twenty independent current-source/central/File07/09/25 cross-plan lenses completed **before** the corrective batch: 15 source-present (not live proof), 3 local defects addressed, 2 external/design gaps Issues #19/#22 open. Candidate commits/CI, PR tests, exact final merged-main CI and deployed reality are independent evidence gates. Source DB schema target base `10005`, Future `1`, unchanged: actual installed schema and migration **unverified**. Audit: `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.25-R21.md`. Deployed plugin/checksum, wp_options, database rows, runtime logs and staging/live re-test **not inspected**.
 
 ---
