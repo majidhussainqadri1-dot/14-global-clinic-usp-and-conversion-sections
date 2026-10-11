@@ -1,4 +1,4 @@
-# File 14 — Fresh Central + File Plan + Future CTI Requirements Traceability — v1.4.12
+# File 14 — Fresh Central + File Plan + Future CTI Requirements Traceability — v1.4.13
 
 ## Governing freeze
 
@@ -101,7 +101,7 @@ File 14 owns approved Worldwide Clinic value-proposition copy, reusable semantic
 
 ## Truth-status rule
 
-`Specified`, `Coded`, `Packaged`, `Automated-QA Green`, `Staging-Accepted`, `Live-Deployed`, and `Operational` are separate statuses. File 14 v1.4.12 may only claim a status for which current exact-head evidence exists. The Future CTI implementation and sixth-review corrections do not alter that rule.
+`Specified`, `Coded`, `Packaged`, `Automated-QA Green`, `Staging-Accepted`, `Live-Deployed`, and `Operational` are separate statuses. File 14 v1.4.13 may only claim a status for which current exact-head evidence exists. The Future CTI implementation and sixth-review corrections do not alter that rule.
 
 ## R5 registry-truth continuation
 
@@ -134,3 +134,11 @@ Latest reviewed File 25 repository source HEAD: `347a4ff4d4c233c5ea6cd82c7786ee5
 - `GCU_Repository::funnel_summary` and `GCU_Future_Intelligence::friction_summary` exclude legacy unverified owner-only rows and explicitly mark `owner_stage_evidence_status=not_attested_excluded`.
 - `GCU_Future_Intelligence::quality_score` uses no historic unauthenticated `destination_loaded` rows as confirmed handoffs. Composite score remains unavailable until formally registered native owner-producer evidence and other necessary measurements exist.
 - R8 owner confirmations beyond File14 remain deferred under Issue #19. The source audit is not staging or live acceptance. Detailed 20 source rounds: `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.12-R8.md`.
+
+
+## R9 requirements-to-code safety trace (2026-10-11)
+
+- F14-FR-NFR for safe degradation, migration readiness and operational reliability → `GCU_Future_Intelligence::rest_storage_ready()` → 11 DB-dependent Future REST endpoints, guarded by runtime + physically verified schema and sanitized 503 → `tests/future-intelligence-tests.php`. Public File14 base page remains readable when Future storage is unavailable.
+- F14-FUT-21 and REST abuse/cost controls → `rest_ai_copy()` + `GCU_Repository::consume_rate_limit('future-ai-copy',12)` → provider calls limited per actor per minute and fail closed on DB/rate issue; draft-only/semantic review unchanged.
+- F14-FR-011, F14-FUT-11/13/14 → R9-G01, native owner-authenticated File07/08/09 lifecycle confirmations and File01 registration still unimplemented; Issue #19 is open. Do not equate File14 CTA with booking/application success.
+- Twenty independent code/plan source reviews recorded in `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.13-R9.md`; verified deployed artifact/runtime is a separate truth.

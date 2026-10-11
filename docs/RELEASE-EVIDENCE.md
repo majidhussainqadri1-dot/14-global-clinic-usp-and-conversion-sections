@@ -1,4 +1,14 @@
-# Release Evidence — v1.4.12 Eighth Twenty-Round Owner-Event Integrity Repository Candidate
+# Release Evidence — v1.4.13 Ninth Twenty-Pass Future REST and Provider Safety Repository Candidate
+
+## R9 source and release evidence
+
+Source baseline main `ce098bc239cb8e761b92d0bb92302b3bf8758c07`: twenty distinct static reviews, 17 narrow source-clean, 2 File14-owned defects R9-D01/D02 corrected, 1 File07/08/09 owner-ack contract R9-G01 pending Issue #19. The read-surface guard verifies physical Future schema before DB-backed endpoints and fails with sanitized 503. AI copy requires bounded per-actor provider requests. Tests are in `tests/future-intelligence-tests.php`, plan/source ledger `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.13-R9.md`.
+
+Version target 1.4.13, base schema target 10005, Future 1; **deployed plugin, DB version, migrations, Live Runtime and WordPress staging are not verified**. Reproducible ZIP + checksum/SBOM, branch PHP 7.4/8.3, two fresh reviews and independent post-merge main CI required. No production deployment.
+
+## Historical R8 (preserved)
+
+Historical identity: v1.4.12 Eighth Twenty-Round Owner-Event Integrity Repository Candidate
 
 ## R8 code-source audit and correction evidence
 
@@ -35,7 +45,7 @@ Historical identity: v1.4.9 Fifth Twenty-Pass Exact-Companion Repository Candida
 - Base plan: `SSH-F14-PLAN-2026-v1.0`.
 - Additive Founder-approved amendment: `SSH-F14-FUTURE-CTI-2026-v2.0`.
 - Fifth twenty-pass baseline: exact starting `main` `080e2198d84dfb7491bb0b75946e14a5fe118b91` (v1.4.8 fourth twenty-pass merge).
-- Software candidate: `1.4.12`.
+- Software candidate: `1.4.13`.
 - Base schema: `10005`; Future CTI additive schema: `1`.
 - Requirements retained: original File 14 FR/NFR plus `F14-FUT-01`–`F14-FUT-24`.
 - Ownership remains bounded: no doctor/clinic/application/appointment/payment/verification/shell source of truth is created here.

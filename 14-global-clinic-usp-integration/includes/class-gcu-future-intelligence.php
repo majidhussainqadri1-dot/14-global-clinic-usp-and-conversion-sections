@@ -100,6 +100,27 @@ final class GCU_Future_Intelligence {
 		return true;
 	}
 
+	/**
+	 * Fail closed before any Future REST read touches DB tables when a migration
+	 * is deferred, partially deployed or an option version is stale. Cache the
+	 * schema check for this PHP request only; do not trust options as DB proof.
+	 * Never leak table/column details through a public REST error.
+	 */
+	private static function rest_storage_ready() {
+		static $result = null;
+		if ( null !== $result ) {
+			return $result;
+		}
+		$ready = self::runtime_ready();
+		if ( ! is_wp_error( $ready ) ) {
+			$ready = self::verify_schema();
+		}
+		$result = is_wp_error( $ready )
+			? new WP_Error( 'gcu_future_rest_storage_unready', __( 'Future clinic information is temporarily unavailable while its storage is verified.', 'global-clinic-usp-integration' ), array( 'status' => 503 ) )
+			: true;
+		return $result;
+	}
+
 	public static function verify_schema() {
 		global $wpdb;
 		$missing = array();
@@ -199,6 +220,8 @@ final class GCU_Future_Intelligence {
 	}
 
 	public static function rest_change_log() {
+		$ready = self::rest_storage_ready();
+		if ( is_wp_error( $ready ) ) { return $ready; }
 		return self::public_response( array( 'items' => self::public_change_log( 20 ) ) );
 	}
 
@@ -210,6 +233,8 @@ final class GCU_Future_Intelligence {
 	}
 
 	public static function rest_copy_preflight( WP_REST_Request $request ) {
+		$ready = self::rest_storage_ready();
+		if ( is_wp_error( $ready ) ) { return $ready; }
 		$data = $request->get_json_params();
 		$data = is_array( $data ) ? $data : array();
 		$previous = isset( $data['previous'] ) && is_array( $data['previous'] ) ? $data['previous'] : array();
@@ -221,6 +246,8 @@ final class GCU_Future_Intelligence {
 	}
 
 	public static function rest_experiment_preflight( WP_REST_Request $request ) {
+		$ready = self::rest_storage_ready();
+		if ( is_wp_error( $ready ) ) { return $ready; }
 		$data = $request->get_json_params();
 		$data = is_array( $data ) ? $data : array();
 		$result = GCU_Future_Policy::experiment_preflight(
@@ -235,33 +262,50 @@ final class GCU_Future_Intelligence {
 	}
 
 	public static function rest_quality() {
+		$ready = self::rest_storage_ready();
+		if ( is_wp_error( $ready ) ) { return $ready; }
 		return self::no_store_response( self::quality_score() );
 	}
 
 	public static function rest_friction( WP_REST_Request $request ) {
+		$ready = self::rest_storage_ready();
+		if ( is_wp_error( $ready ) ) { return $ready; }
 		$days = max( 1, min( 90, absint( $request->get_param( 'days' ) ? $request->get_param( 'days' ) : 30 ) ) );
 		return self::no_store_response( self::friction_summary( $days ) );
 	}
 
 	public static function rest_scenarios() {
+		$ready = self::rest_storage_ready();
+		if ( is_wp_error( $ready ) ) { return $ready; }
 		return self::no_store_response( self::scenario_lab() );
 	}
 
 	public static function rest_faq_gaps() {
+		$ready = self::rest_storage_ready();
+		if ( is_wp_error( $ready ) ) { return $ready; }
 		return self::no_store_response( array( 'items' => self::faq_gap_candidates(), 'source' => 'approved aggregate question adapters only' ) );
 	}
 
 	public static function rest_consistency() {
+		$ready = self::rest_storage_ready();
+		if ( is_wp_error( $ready ) ) { return $ready; }
 		return self::no_store_response( self::consistency_graph() );
 	}
 
 	public static function rest_ai_copy( WP_REST_Request $request ) {
+		$ready = self::rest_storage_ready();
+		if ( is_wp_error( $ready ) ) { return $ready; }
+		// Provider-backed drafts are potentially costly even for authorized editors.
+		$rate = GCU_Plugin::instance()->repository()->consume_rate_limit( 'future-ai-copy', 12 );
+		if ( is_wp_error( $rate ) ) { return $rate; }
 		$data = $request->get_json_params();
 		$data = is_array( $data ) ? $data : array();
 		return self::no_store_response( self::ai_copy_assist( $data ) );
 	}
 
-	public static function rest_records( WP_REST_Request $request ) { $type=sanitize_key((string)$request->get_param('type'));$limit=max(1,min(100,absint($request->get_param('limit')?:50)));$cursor=absint($request->get_param('cursor'));return self::no_store_response(self::records_page($type,$cursor,$limit)); }
+	public static function rest_records( WP_REST_Request $request ) {
+		$ready = self::rest_storage_ready();
+		if ( is_wp_error( $ready ) ) { return $ready; } $type=sanitize_key((string)$request->get_param('type'));$limit=max(1,min(100,absint($request->get_param('limit')?:50)));$cursor=absint($request->get_param('cursor'));return self::no_store_response(self::records_page($type,$cursor,$limit)); }
 
 	public static function rest_record_write( WP_REST_Request $request ) {
 		$rate = GCU_Plugin::instance()->repository()->consume_rate_limit( 'future-record-write', 120 );
@@ -286,7 +330,9 @@ final class GCU_Future_Intelligence {
 		return is_wp_error( $result ) ? $result : self::no_store_response( $result, 201 );
 	}
 
-	public static function rest_reports( WP_REST_Request $request ) { $status=sanitize_key((string)$request->get_param('status'));if(!in_array($status,array('open','reviewing','resolved','rejected'),true)){$status='open';}$limit=max(1,min(100,absint($request->get_param('limit')?:50)));$cursor=absint($request->get_param('cursor'));return self::no_store_response(self::reports_page($status,$cursor,$limit)); }
+	public static function rest_reports( WP_REST_Request $request ) {
+		$ready = self::rest_storage_ready();
+		if ( is_wp_error( $ready ) ) { return $ready; } $status=sanitize_key((string)$request->get_param('status'));if(!in_array($status,array('open','reviewing','resolved','rejected'),true)){$status='open';}$limit=max(1,min(100,absint($request->get_param('limit')?:50)));$cursor=absint($request->get_param('cursor'));return self::no_store_response(self::reports_page($status,$cursor,$limit)); }
 
 	public static function rest_revalidate_claim( WP_REST_Request $request ) {
 		$rate = GCU_Plugin::instance()->repository()->consume_rate_limit( 'future-claim-revalidate', 60 );
@@ -910,6 +956,8 @@ final class GCU_Future_Intelligence {
 		if ( ! is_string( $html ) || ! in_array( $route, array( 'global_clinic', 'how_it_works' ), true ) || get_option( self::SAFE_MODE_OPTION, 0 ) ) {
 			return $html;
 		}
+		// Degraded Future storage may not break the canonical base landing page.
+		if ( is_wp_error( self::rest_storage_ready() ) ) { return $html; }
 		$locale = GCU_Plugin::instance()->frontend()->current_locale();
 		$future = self::render_future_sections( $route, $locale );
 		$pos = strrpos( $html, '</div>' );
