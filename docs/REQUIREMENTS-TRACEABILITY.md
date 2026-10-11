@@ -1,4 +1,4 @@
-# File 14 — Fresh Central + File Plan + Future CTI Requirements Traceability — v1.4.20
+# File 14 — Fresh Central + File Plan + Future CTI Requirements Traceability — v1.4.21
 
 ## Governing freeze
 
@@ -101,7 +101,7 @@ File 14 owns approved Worldwide Clinic value-proposition copy, reusable semantic
 
 ## Truth-status rule
 
-`Specified`, `Coded`, `Packaged`, `Automated-QA Green`, `Staging-Accepted`, `Live-Deployed`, and `Operational` are separate statuses. File 14 v1.4.20 may only claim a status for which current exact-head evidence exists. The Future CTI implementation and sixth-review corrections do not alter that rule.
+`Specified`, `Coded`, `Packaged`, `Automated-QA Green`, `Staging-Accepted`, `Live-Deployed`, and `Operational` are separate statuses. File 14 v1.4.21 may only claim a status for which current exact-head evidence exists. The Future CTI implementation and sixth-review corrections do not alter that rule.
 
 ## R5 registry-truth continuation
 
@@ -199,3 +199,10 @@ Latest reviewed File 25 repository source HEAD: `347a4ff4d4c233c5ea6cd82c7786ee5
 - **F14-FUT-11:** `quality_evidence_status` only counts measured numeric accessibility/performance within 0..100, while requiring native owner attestation and cohort size. Do not report unverified click/owner events as confirmed quality.
 - **F14-FR-011** signed owner-outcome Issue #19 and **F14-FUT-17** approved experiment baseline restore Issue #22 are still incomplete.
 - Detailed independent 20-pass source ledger: `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.20-R16.md`; deployed code and live database separate.
+
+
+## R17 2026-10-11 plan-to-code source evidence
+- **F14-FUT-21**: `GCU_Future_Policy::valid_ai_copy_inputs` and `normalize_ai_candidate_text` protect against non-string base/objective and malformed provider candidate types. Existing source-grounding and no auto-publication controls remain mandatory.
+- **F14-FUT-11**: `valid_quality_percentage` is required for privacy, accessibility and performance measured fields and verified flags; invalid measurements imply provisional/insufficient verified evidence.
+- **F14-FUT-18/15**: `valid_faq_aggregate_signal` requires nonnegative integral count, textual question and minimum sample; never promote a negative count via `absint`; FAQ suggestions remain non-publishing and aggregate-only.
+- Owner-native conversion Issue #19 and approved experiment baseline restoration Issue #22 still incomplete. Twenty source lenses in `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.21-R17.md`; deployed state not implied.
