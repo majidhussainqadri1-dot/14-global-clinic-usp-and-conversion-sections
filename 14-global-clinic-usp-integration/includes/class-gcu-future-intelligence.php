@@ -80,9 +80,14 @@ final class GCU_Future_Intelligence {
 				GCU_Observability::log( 'error', 'future_schema_verification_failed', array( 'code' => $verified->get_error_code() ) );
 				return $verified;
 			}
+			$seeded = self::seed_defaults();
+			if ( is_wp_error( $seeded ) ) {
+				update_option( self::SAFE_MODE_OPTION, 1, false );
+				GCU_Observability::log( 'error', 'future_seed_verification_failed', array( 'code' => $seeded->get_error_code() ) );
+				return $seeded;
+			}
 			update_option( self::SCHEMA_OPTION, self::SCHEMA_VERSION, false );
 			delete_option( self::SAFE_MODE_OPTION );
-			self::seed_defaults();
 			return true;
 		} finally {
 			GCU_Hardening::release_db_lock( $lock );
@@ -143,11 +148,28 @@ final class GCU_Future_Intelligence {
 		return ( $missing || $non_innodb || $missing_columns ) ? new WP_Error( 'gcu_future_schema_unverified', __( 'Future Conversion and Trust Intelligence storage is not safely verified.', 'global-clinic-usp-integration' ), array( 'missing' => $missing, 'non_innodb' => $non_innodb, 'missing_columns' => $missing_columns ) ) : true;
 	}
 
+	/** Schema repairs may add missing defaults, but must not overwrite approved records. */
+	private static function seed_record_if_absent( $type, $key, array $payload, $public ) {
+		global $wpdb;
+		$t = self::tables();
+		$existing = $wpdb->get_var( $wpdb->prepare(
+			"SELECT id FROM {$t['records']} WHERE record_type=%s AND record_key=%s AND locale='en-US' AND region='ZZ' LIMIT 1",
+			$type, $key
+		) );
+		if ( ! empty( $wpdb->last_error ) ) {
+			return new WP_Error( 'gcu_future_seed_read_failed', __( 'Governed default record state could not be verified.', 'global-clinic-usp-integration' ), array( 'status' => 503 ) );
+		}
+		if ( null !== $existing ) { return true; }
+		$created = self::upsert_record( $type, $key, 'en-US', 'ZZ', $payload, 'active', $public, 0, true );
+		return is_wp_error( $created ) ? $created : true;
+	}
+
 	private static function seed_defaults() {
 		$glossary = array( 'terms' => GCU_Future_Policy::terminology_lock(), 'source' => GCU_Future_Policy::PLAN_ID, 'reviewer' => 'Founder-approved plan', 'provenance' => 'approved amendment' );
-		self::upsert_record( 'terminology_lock', 'protected_terms', 'en-US', 'ZZ', $glossary, 'active', false, 0, true );
+		$seeded = self::seed_record_if_absent( 'terminology_lock', 'protected_terms', $glossary, false );
+		if ( is_wp_error( $seeded ) ) { return $seeded; }
 		$change = array( 'title' => 'Future Conversion & Trust Intelligence v2.0', 'summary' => 'Twenty-four Founder-approved ethical conversion, trust, privacy, experiment and transparency enhancements were added to File 14.', 'effective_date' => '2026-08-10', 'material' => true, 'source' => GCU_Future_Policy::PLAN_ID, 'reviewer' => 'Founder-approved plan', 'provenance' => 'approved amendment' );
-		self::upsert_record( 'change_log', 'future_cti_v2_0', 'en-US', 'ZZ', $change, 'active', true, 0, true );
+		return self::seed_record_if_absent( 'change_log', 'future_cti_v2_0', $change, true );
 	}
 
 	private static function schedule() {
@@ -841,6 +863,22 @@ final class GCU_Future_Intelligence {
 		$reports=0;$records=0;for($i=0;$i<10;$i++){$n=$wpdb->query($wpdb->prepare("DELETE FROM {$t['reports']} WHERE status IN ('resolved','rejected') AND updated_at<DATE_SUB(UTC_TIMESTAMP(),INTERVAL %d DAY) LIMIT 200",self::REPORT_RETENTION_DAYS));if(false===$n){$reports=false;break;}$reports+=$n;if($n<200){break;}}for($i=0;$i<10;$i++){$n=$wpdb->query("DELETE FROM {$t['records']} WHERE status IN ('superseded','rejected') AND updated_at<DATE_SUB(UTC_TIMESTAMP(),INTERVAL 730 DAY) LIMIT 200");if(false===$n){$records=false;break;}$records+=$n;if($n<200){break;}}if(2000===$reports||2000===$records){GCU_Observability::log('warning','future_lifecycle_cleanup_backlog',array('reports'=>$reports,'records'=>$records));}return array('reports'=>$reports,'records'=>$records);
 	}
 
+	/**
+	 * An idempotent public report UUID may be reused only for an identical,
+	 * normalized submission. Review status may advance between retries.
+	 */
+	public static function report_replay_matches( array $stored, array $submitted ) {
+		foreach ( array( 'report_type', 'route_key', 'block_key', 'locale', 'reason_code', 'message', 'actor_hash' ) as $field ) {
+			if ( ! array_key_exists( $field, $stored ) || ! array_key_exists( $field, $submitted ) ) {
+				return false;
+			}
+			if ( (string) $stored[ $field ] !== (string) $submitted[ $field ] ) {
+				return false;
+			}
+		}
+		return true;
+	}
+
 	public static function create_report( array $data ) {
 		$ready = self::runtime_ready();
 		if ( is_wp_error( $ready ) ) { return $ready; }
@@ -862,9 +900,26 @@ final class GCU_Future_Intelligence {
 		if(!$repo->begin_owned_transaction()){return new WP_Error('gcu_future_report_transaction_failed',__('The report transaction could not start.','global-clinic-usp-integration'),array('status'=>503));}
 		$insert = $wpdb->query( $wpdb->prepare( "INSERT IGNORE INTO {$t['reports']} (public_id,report_type,route_key,block_key,locale,reason_code,message,actor_hash,status,created_at,updated_at) VALUES (%s,'copy_quality',%s,%s,%s,%s,%s,%s,'open',%s,%s)", $id, $route, $block ? $block : null, $locale, $reason, $message, $actor_hash, $now, $now ) );
 		if(false===$insert){$repo->rollback_owned_transaction();return new WP_Error('gcu_future_report_write_failed',__('The report could not be recorded safely.','global-clinic-usp-integration'),array('status'=>500));}
+		$existing_report = null;
+		if ( 0 === $insert ) {
+			$existing_report = $wpdb->get_row( $wpdb->prepare(
+				"SELECT report_type,route_key,block_key,locale,reason_code,message,actor_hash,status FROM {$t['reports']} WHERE public_id=%s",
+				$id
+			), ARRAY_A );
+			$submitted = array(
+				'report_type' => 'copy_quality', 'route_key' => $route,
+				'block_key' => $block ? $block : null, 'locale' => $locale,
+				'reason_code' => $reason, 'message' => $message,
+				'actor_hash' => $actor_hash,
+			);
+			if ( ! is_array( $existing_report ) || ! self::report_replay_matches( $existing_report, $submitted ) ) {
+				$repo->rollback_owned_transaction();
+				return new WP_Error( 'gcu_future_report_identity_conflict', __( 'This report identifier is already associated with a different submission.', 'global-clinic-usp-integration' ), array( 'status' => 409 ) );
+			}
+		}
 		if(1===$insert){$audit=$repo->audit('copy_quality_reported','future_report',$id,'public_feedback',$reason,array(),array('route'=>$route,'block'=>$block,'locale'=>$locale));$event=$audit!==false?$repo->publish_event('ClinicUSPCopyQualityReported.v1',array('report_id'=>$id,'reason_code'=>$reason,'route_key'=>$route,'block_key'=>$block)):false;if(false===$audit||false===$event){$repo->rollback_owned_transaction();return new WP_Error('gcu_future_report_governance_failed',__('The report was not committed because its audit or event record could not be persisted.','global-clinic-usp-integration'),array('status'=>503));}}
 		if(!$repo->commit_owned_transaction()){$repo->rollback_owned_transaction();return new WP_Error('gcu_future_report_commit_failed',__('The report could not be committed safely.','global-clinic-usp-integration'),array('status'=>503));}
-		return array('report_id'=>$id,'status'=>'open','deduplicated'=>0===$insert);
+		return array('report_id'=>$id,'status'=>is_array($existing_report)?sanitize_key($existing_report['status']):'open','deduplicated'=>0===$insert);
 	}
 
 	private static function report_contains_sensitive_data( $message ) {

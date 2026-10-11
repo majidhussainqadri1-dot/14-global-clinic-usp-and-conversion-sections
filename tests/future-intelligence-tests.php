@@ -15,6 +15,7 @@ function absint( $value ) { return abs( (int) $value ); }
 require __DIR__ . '/../14-global-clinic-usp-integration/includes/class-gcu-policy.php';
 require __DIR__ . '/../14-global-clinic-usp-integration/includes/class-gcu-future-policy.php';
 require __DIR__ . '/../14-global-clinic-usp-integration/includes/class-gcu-future-i18n.php';
+require __DIR__ . '/../14-global-clinic-usp-integration/includes/class-gcu-future-intelligence.php';
 
 $failures = array();
 function assert_future( $condition, $message ) {
@@ -189,6 +190,35 @@ $r10_js_source = file_get_contents( __DIR__ . '/../14-global-clinic-usp-integrat
 $r10_css_source = file_get_contents( __DIR__ . '/../14-global-clinic-usp-integration/assets/css/gcu-future-intelligence.css' );
 assert_future( false !== strpos( $r10_js_source, 'button.hidden=false' ) && false !== strpos( $r10_js_source, 'fallback.hidden=true' ), 'R10 button is exposed only after working event-listener initialization.' );
 assert_future( false !== strpos( $r10_css_source, '[hidden] { display: none !important; }' ), 'R10 hidden controls cannot be overridden by authored CTA display CSS.' );
+
+
+// R11: report UUID replay is idempotent only when original normalized fields,
+// including actor provenance, agree; a reviewed report does not revert to open.
+$r11_report = array(
+    'report_type' => 'copy_quality', 'route_key' => 'global_clinic',
+    'block_key' => null, 'locale' => 'en-US', 'reason_code' => 'misleading',
+    'message' => 'The page copy needs clarification.', 'actor_hash' => null,
+    'status' => 'resolved',
+);
+$r11_same = $r11_report;
+unset( $r11_same['status'] );
+assert_future( GCU_Future_Intelligence::report_replay_matches( $r11_report, $r11_same ), 'R11 identical normalized report retry must remain idempotent after moderation.' );
+$r11_changed = $r11_same;
+$r11_changed['message'] = 'A different report was submitted.';
+assert_future( ! GCU_Future_Intelligence::report_replay_matches( $r11_report, $r11_changed ), 'R11 reused UUID with different report copy must not return success.' );
+$r11_changed = $r11_same;
+$r11_changed['actor_hash'] = 'different-actor';
+assert_future( ! GCU_Future_Intelligence::report_replay_matches( $r11_report, $r11_changed ), 'R11 reused UUID must not cross actor-provenance boundary.' );
+$r11_changed = $r11_same;
+$r11_changed['route_key'] = 'how_it_works';
+assert_future( ! GCU_Future_Intelligence::report_replay_matches( $r11_report, $r11_changed ), 'R11 reused UUID must not cross canonical route identity.' );
+unset( $r11_same['reason_code'] );
+assert_future( ! GCU_Future_Intelligence::report_replay_matches( $r11_report, $r11_same ), 'R11 missing retry identity field must fail closed.' );
+$r11_source = file_get_contents( __DIR__ . '/../14-global-clinic-usp-integration/includes/class-gcu-future-intelligence.php' );
+assert_future( false !== strpos( $r11_source, 'gcu_future_report_identity_conflict' ), 'R11 duplicate mismatch must return a controlled conflict, not a false successful report.' );
+assert_future( false !== strpos( $r11_source, "'status'=>is_array(\$existing_report)?sanitize_key(\$existing_report['status']):'open'" ), 'R11 true duplicate must return currently governed report state.' );
+assert_future( false !== strpos( $r11_source, 'function seed_record_if_absent' ) && false !== strpos( $r11_source, 'if ( null !== $existing ) { return true; }' ), 'R11 migration must not overwrite Founder-approved existing governed records.' );
+assert_future( false !== strpos( $r11_source, 'future_seed_verification_failed' ) && false !== strpos( $r11_source, '$seeded = self::seed_defaults();' ), 'R11 migration must not mark schema ready after a failed safe seed.' );
 
 $terms = GCU_Future_Policy::terminology_lock();
 assert_future( isset( $terms['verified_doctor']['en-US'], $terms['verified_doctor']['ur-PK'], $terms['verified_doctor']['ar-SA'] ), 'Terminology lock must cover English, Urdu and Arabic.' );

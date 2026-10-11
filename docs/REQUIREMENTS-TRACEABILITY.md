@@ -1,4 +1,4 @@
-# File 14 — Fresh Central + File Plan + Future CTI Requirements Traceability — v1.4.14
+# File 14 — Fresh Central + File Plan + Future CTI Requirements Traceability — v1.4.15
 
 ## Governing freeze
 
@@ -101,7 +101,7 @@ File 14 owns approved Worldwide Clinic value-proposition copy, reusable semantic
 
 ## Truth-status rule
 
-`Specified`, `Coded`, `Packaged`, `Automated-QA Green`, `Staging-Accepted`, `Live-Deployed`, and `Operational` are separate statuses. File 14 v1.4.14 may only claim a status for which current exact-head evidence exists. The Future CTI implementation and sixth-review corrections do not alter that rule.
+`Specified`, `Coded`, `Packaged`, `Automated-QA Green`, `Staging-Accepted`, `Live-Deployed`, and `Operational` are separate statuses. File 14 v1.4.15 may only claim a status for which current exact-head evidence exists. The Future CTI implementation and sixth-review corrections do not alter that rule.
 
 ## R5 registry-truth continuation
 
@@ -151,3 +151,12 @@ Latest reviewed File 25 repository source HEAD: `347a4ff4d4c233c5ea6cd82c7786ee5
 - F14-FUT-17 safe baseline restore is not proven by a stopped status: Issue #22 requires approved snapshot/placement state and rollback design before operational acceptance.
 - F14-FR-011 and F14-FUT-11/13/14 owner outcome proofs remain Issue #19; self-reported File14 clicks are not appointment/application success.
 - Twenty source audit checks and limitations: docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.14-R10.md.
+
+
+## R11 requirement-to-code and governance safety (2026-10-11)
+
+- F14-FUT-12 — Misleading-Copy Report/Correction Loop: `GCU_Future_Intelligence::report_replay_matches` binds public report UUID idempotency to stored normalized content/actor/route/reason; conflicting UUID returns 409, no false complaint-success or disclosure, current review status preserved; `tests/future-intelligence-tests.php`.
+- F14-FUT-20/22 — Founder-controlled terminology/change-log records: `seed_record_if_absent` preserves existing reviewed record content, version, visibility and lifecycle during repair; `ensure_schema` fails closed if seeding failed. No silent overwrite or invented restored schema.
+- F14-FR-011 and Future CTI11/13/14 real File07/08/09 owner-attested conversion outcomes remain incomplete under Issue #19; File01 registration and staging are mandatory.
+- F14-FUT-17 safe approved experiment baseline restore remains incomplete under Issue #22; do not substitute 'stopped' status for rollback proof.
+- R11 per-round evidence `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.15-R11.md`; versioned source QA does not establish deployed artifact parity.
