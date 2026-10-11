@@ -214,7 +214,7 @@ final class GCU_Future_Intelligence {
 		$data = $request->get_json_params();
 		$data = is_array( $data ) ? $data : array();
 		// Explicit journey choice must be scalar text; nested JSON has no intent.
-		$intent = isset( $data['intent'] ) && is_string( $data['intent'] ) ? sanitize_key( $data['intent'] ) : '';
+		$intent = GCU_Future_Policy::sanitize_explicit_intent( isset( $data['intent'] ) ? $data['intent'] : null );
 		$intents = GCU_Future_Policy::supported_intents();
 		if ( ! isset( $intents[ $intent ] ) ) {
 			return new WP_Error( 'gcu_future_invalid_intent', __( 'Choose one of the approved Global Clinic intents.', 'global-clinic-usp-integration' ), array( 'status' => 400 ) );
