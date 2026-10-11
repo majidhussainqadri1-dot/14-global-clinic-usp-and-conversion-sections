@@ -1,4 +1,4 @@
-# File 14 — Fresh Central + File Plan + Future CTI Requirements Traceability — v1.4.21
+# File 14 — Fresh Central + File Plan + Future CTI Requirements Traceability — v1.4.22
 
 ## Governing freeze
 
@@ -101,7 +101,7 @@ File 14 owns approved Worldwide Clinic value-proposition copy, reusable semantic
 
 ## Truth-status rule
 
-`Specified`, `Coded`, `Packaged`, `Automated-QA Green`, `Staging-Accepted`, `Live-Deployed`, and `Operational` are separate statuses. File 14 v1.4.21 may only claim a status for which current exact-head evidence exists. The Future CTI implementation and sixth-review corrections do not alter that rule.
+`Specified`, `Coded`, `Packaged`, `Automated-QA Green`, `Staging-Accepted`, `Live-Deployed`, and `Operational` are separate statuses. File 14 v1.4.22 may only claim a status for which current exact-head evidence exists. The Future CTI implementation and sixth-review corrections do not alter that rule.
 
 ## R5 registry-truth continuation
 
@@ -206,3 +206,10 @@ Latest reviewed File 25 repository source HEAD: `347a4ff4d4c233c5ea6cd82c7786ee5
 - **F14-FUT-11**: `valid_quality_percentage` is required for privacy, accessibility and performance measured fields and verified flags; invalid measurements imply provisional/insufficient verified evidence.
 - **F14-FUT-18/15**: `valid_faq_aggregate_signal` requires nonnegative integral count, textual question and minimum sample; never promote a negative count via `absint`; FAQ suggestions remain non-publishing and aggregate-only.
 - Owner-native conversion Issue #19 and approved experiment baseline restoration Issue #22 still incomplete. Twenty source lenses in `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.21-R17.md`; deployed state not implied.
+
+
+## R18 plan-to-code typed REST GET query boundary (2026-10-11)
+- **F14-FUT-03/04:** public trust lookup `safe_public_claim_key` validates route/query precedence shapes before claim query; malformed nested/uppercase/unknown-shape value returns controlled 400, not PHP string coercion. Actual public approved/fresh claim eligibility remains repository owner truth.
+- **F14-FUT-22:** `validate_future_read_query` verifies admin `records` and `reports` list filters/status, cursor and positive bounded limit before SQL. Negative/array/object/unsupported values cannot map silently to other content. Existing capability and DTO constraints remain.
+- **F14-FUT-13/15:** `bounded_query_integer` enforces privacy-safe analytics friction day-window parsing (default 30, bounded 1..90), while minimum cohort and owner-event evidence suppression remain unchanged.
+- Native File07/08/09 owner-event Issue #19 and approved experiment safe restore Issue #22 remain incomplete. Full ledger `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.22-R18.md`. GitHub `main`/CI never establishes deployed parity.
