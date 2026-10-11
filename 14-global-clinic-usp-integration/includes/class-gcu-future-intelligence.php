@@ -213,7 +213,8 @@ final class GCU_Future_Intelligence {
 		}
 		$data = $request->get_json_params();
 		$data = is_array( $data ) ? $data : array();
-		$intent = sanitize_key( isset( $data['intent'] ) ? $data['intent'] : '' );
+		// Explicit journey choice must be scalar text; nested JSON has no intent.
+		$intent = isset( $data['intent'] ) && is_string( $data['intent'] ) ? sanitize_key( $data['intent'] ) : '';
 		$intents = GCU_Future_Policy::supported_intents();
 		if ( ! isset( $intents[ $intent ] ) ) {
 			return new WP_Error( 'gcu_future_invalid_intent', __( 'Choose one of the approved Global Clinic intents.', 'global-clinic-usp-integration' ), array( 'status' => 400 ) );
@@ -962,10 +963,11 @@ final class GCU_Future_Intelligence {
 		if(!$repo->commit_owned_transaction()){$repo->rollback_owned_transaction();return new WP_Error('gcu_future_record_commit_failed',__('The Future Intelligence record could not be committed safely.','global-clinic-usp-integration'),array('status'=>503));}return$result;
 	}
 
-	public static function records( $type = '', $public_only = false, $limit = 100 ) {
+	public static function records( $type = '', $public_only = false, $limit = 100, $offset = 0 ) {
 		global $wpdb;
 		$t = self::tables();
 		$limit = max( 1, min( 200, (int) $limit ) );
+		$offset = max( 0, min( 1000, (int) $offset ) );
 		$where = '1=1';
 		$args = array();
 		if ( $type ) {
@@ -975,7 +977,7 @@ final class GCU_Future_Intelligence {
 		if ( $public_only ) {
 			$where .= " AND status='active' AND is_public=1 AND (review_due_at IS NULL OR review_due_at>UTC_TIMESTAMP())";
 		}
-		$sql = "SELECT record_type,record_key,locale,region,status,is_public,payload,row_version,review_due_at,updated_at FROM {$t['records']} WHERE $where ORDER BY updated_at DESC LIMIT $limit";
+		$sql = "SELECT record_type,record_key,locale,region,status,is_public,payload,row_version,review_due_at,updated_at FROM {$t['records']} WHERE $where ORDER BY updated_at DESC, id DESC LIMIT $limit OFFSET $offset";
 		$rows = $args ? $wpdb->get_results( $wpdb->prepare( $sql, $args ), ARRAY_A ) : $wpdb->get_results( $sql, ARRAY_A );
 		foreach ( is_array( $rows ) ? $rows : array() as &$row ) {
 			$row['payload'] = self::json_array( $row['payload'] );
@@ -985,12 +987,22 @@ final class GCU_Future_Intelligence {
 	}
 
 	public static function public_change_log( $limit = 20 ) {
-		$rows = self::records( 'change_log', true, $limit );
+		$limit = max( 1, min( 200, (int) $limit ) );
 		$out = array();
-		foreach ( $rows as $row ) {
-			$proof = GCU_Future_Policy::validate_public_record_payload( 'change_log', $row['payload'] );
-			if ( empty( $proof['safe'] ) ) { continue; }
-			$out[] = array( 'key' => $row['record_key'], 'locale' => $row['locale'], 'payload' => $row['payload'], 'updated_at' => $row['updated_at'] );
+		// Validate reviewed/provenanced content before limiting the visible log.
+		// Page at a stable secondary ID order to avoid newest legacy-invalid rows
+		// crowding out a valid, older public policy history entry.
+		$page_size = 100;
+		$max_scanned = 1000;
+		for ( $offset = 0; $offset < $max_scanned && count( $out ) < $limit; $offset += $page_size ) {
+			$rows = self::records( 'change_log', true, $page_size, $offset );
+			foreach ( $rows as $row ) {
+				$proof = GCU_Future_Policy::validate_public_record_payload( 'change_log', $row['payload'] );
+				if ( empty( $proof['safe'] ) ) { continue; }
+				$out[] = array( 'key' => $row['record_key'], 'locale' => $row['locale'], 'payload' => $row['payload'], 'updated_at' => $row['updated_at'] );
+				if ( count( $out ) >= $limit ) { break; }
+			}
+			if ( count( $rows ) < $page_size ) { break; }
 		}
 		return $out;
 	}
