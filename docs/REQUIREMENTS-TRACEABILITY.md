@@ -1,4 +1,4 @@
-# File 14 — Fresh Central + File Plan + Future CTI Requirements Traceability — v1.4.16
+# File 14 — Fresh Central + File Plan + Future CTI Requirements Traceability — v1.4.17
 
 ## Governing freeze
 
@@ -101,7 +101,7 @@ File 14 owns approved Worldwide Clinic value-proposition copy, reusable semantic
 
 ## Truth-status rule
 
-`Specified`, `Coded`, `Packaged`, `Automated-QA Green`, `Staging-Accepted`, `Live-Deployed`, and `Operational` are separate statuses. File 14 v1.4.16 may only claim a status for which current exact-head evidence exists. The Future CTI implementation and sixth-review corrections do not alter that rule.
+`Specified`, `Coded`, `Packaged`, `Automated-QA Green`, `Staging-Accepted`, `Live-Deployed`, and `Operational` are separate statuses. File 14 v1.4.17 may only claim a status for which current exact-head evidence exists. The Future CTI implementation and sixth-review corrections do not alter that rule.
 
 ## R5 registry-truth continuation
 
@@ -168,3 +168,10 @@ Latest reviewed File 25 repository source HEAD: `347a4ff4d4c233c5ea6cd82c7786ee5
 - **F14-FUT-20**: `validate_public_record_payload('terminology_lock')` requires every canonical protected `terminology_lock()` concept key and en-US/ur-PK/ar-SA values. Founder publication approval and actual word-choice review remain distinct. A three-language **subset** can no longer become authoritative.
 - **F14-FR-011/F14-FUT-11/13/14**: Issue #19 owner-origin verified conversion events still pending. **F14-FUT-17**: Issue #22 safe experiment baseline restoration pending.
 - Source audit ledger: `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.16-R12.md`. GitHub QA is not deployed parity.
+
+
+## R13 handoff input and jurisdiction fallback requirements (2026-10-11)
+- **F14-FUT-02**: `GCU_Future_Policy::sanitize_handoff_context` only accepts string values for country/language/mode; untrusted nested JSON/array/object context is discarded, never cast into a guessed canonical journey. `GCU_Future_Intelligence::sanitize_region` handles non-scalar GET parameters fail-closed.
+- **F14-FUT-06**: `GCU_Future_Intelligence::jurisdiction_disclosure` tries only ordered active/public unexpired region+generic `ZZ` records, each requiring source/reviewer/provenance/valid effective date. Invalid legacy regional record does not hide an otherwise valid generic. No new legal eligibility decision.
+- Native File07/08/09 owner event attestation still unimplemented under Issue #19; approved experiment baseline restoration still unimplemented under Issue #22.
+- Per-pass source evidence: `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.17-R13.md`. Installed/lived code parity separate.
