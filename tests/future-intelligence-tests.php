@@ -7,6 +7,8 @@ function __( $text ) { return $text; }
 function sanitize_text_field( $value ) { return trim( strip_tags( (string) $value ) ); }
 function sanitize_key( $value ) { return preg_replace( '/[^a-z0-9_\-]/', '', strtolower( (string) $value ) ); }
 function wp_strip_all_tags( $value ) { return strip_tags( (string) $value ); }
+function esc_html( $value ) { return htmlspecialchars( (string) $value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8' ); }
+function esc_attr( $value ) { return htmlspecialchars( (string) $value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8' ); }
 function wp_json_encode( $value ) { return json_encode( $value, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES ); }
 function absint( $value ) { return abs( (int) $value ); }
 
@@ -166,6 +168,28 @@ foreach ( array( 'rest_change_log', 'rest_copy_preflight', 'rest_experiment_pref
 }
 assert_future( false !== strpos( $r9_future_source, "consume_rate_limit( 'future-ai-copy', 12 )" ), 'R9 provider-backed AI copy endpoint requires a bounded per-actor rate limit.' );
 assert_future( false !== strpos( $r9_future_source, 'if ( is_wp_error( self::rest_storage_ready() ) ) { return $html; }' ), 'R9 degraded future schema must not break canonical public landing HTML.' );
+
+// R10: only exact Future chrome labels are translated; no canonical base or
+// founder-approved dynamic claim text may undergo blanket string replacement.
+$r10_markup = '<section><h2>Choose your next step</h2><p>Choose your next step yesterday</p><p data-label="Choose your next step">Trust evidence for doctors</p><form data-gcu-readiness-form></form></section>';
+$r10_translated = GCU_Future_I18n::localize_fragment( $r10_markup, 'ur-PK' );
+assert_future( false !== strpos( $r10_translated, '<h2>اپنا اگلا مرحلہ منتخب کریں</h2>' ), 'R10 known standalone Future heading translates into Urdu.' );
+assert_future( false !== strpos( $r10_translated, 'Choose your next step yesterday' ), 'R10 partial words inside source-derived paragraphs cannot be rewritten.' );
+assert_future( false !== strpos( $r10_translated, 'data-label="Choose your next step"' ), 'R10 approved markup attributes are not translated.' );
+assert_future( false !== strpos( $r10_translated, 'Trust evidence for doctors' ), 'R10 text with an unmatched meaning does not receive substring translations.' );
+assert_future( false !== strpos( $r10_translated, 'data-gcu-readiness-prefix=' ), 'R10 progressive readiness gets localized live-status labels only inside its own fragment.' );
+$r10_arabic = GCU_Future_I18n::localize_fragment( '<h2>Choose your next step</h2>', 'ar-SA' );
+assert_future( false !== strpos( $r10_arabic, '<h2>اختر خطوتك التالية</h2>' ), 'R10 Arabic Future heading translation is preserved.' );
+$r10_future_source = file_get_contents( __DIR__ . '/../14-global-clinic-usp-integration/includes/class-gcu-future-intelligence.php' );
+$r10_i18n_source = file_get_contents( __DIR__ . '/../14-global-clinic-usp-integration/includes/class-gcu-future-i18n.php' );
+assert_future( false !== strpos( $r10_future_source, '<!--gcu-future-start-->' ) && false !== strpos( $r10_future_source, '<!--gcu-future-end-->' ), 'R10 only generated Future fragment may enter localization.' );
+assert_future( false === strpos( $r10_i18n_source, 'strtr( $html, $replacements )' ), 'R10 no global whole-page string substitutions.' );
+assert_future( false !== strpos( $r10_future_source, 'data-gcu-readiness-calculate hidden' ) && false !== strpos( $r10_future_source, 'data-gcu-readiness-fallback' ), 'R10 no-script readers see an honest static checklist, not an inert button.' );
+$r10_js_source = file_get_contents( __DIR__ . '/../14-global-clinic-usp-integration/assets/js/gcu-future-intelligence.js' );
+$r10_css_source = file_get_contents( __DIR__ . '/../14-global-clinic-usp-integration/assets/css/gcu-future-intelligence.css' );
+assert_future( false !== strpos( $r10_js_source, 'button.hidden=false' ) && false !== strpos( $r10_js_source, 'fallback.hidden=true' ), 'R10 button is exposed only after working event-listener initialization.' );
+assert_future( false !== strpos( $r10_css_source, '[hidden] { display: none !important; }' ), 'R10 hidden controls cannot be overridden by authored CTA display CSS.' );
+
 $terms = GCU_Future_Policy::terminology_lock();
 assert_future( isset( $terms['verified_doctor']['en-US'], $terms['verified_doctor']['ur-PK'], $terms['verified_doctor']['ar-SA'] ), 'Terminology lock must cover English, Urdu and Arabic.' );
 $ur = GCU_Future_I18n::strings( 'ur-PK' );
