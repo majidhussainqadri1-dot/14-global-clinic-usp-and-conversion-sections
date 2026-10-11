@@ -62,6 +62,12 @@ fifth_assert( false !== strpos( $rest, 'gcu_workflow_route_invalid' ) && false !
 fifth_assert( false !== strpos( $future_policy, 'function strict_mutation_version' ), 'Strict pure mutation validator must ship.' );
 fifth_assert( false !== strpos( $hardening, 'gcu_fifth_ai_input_type_invalid' ) && false !== strpos( $hardening, 'candidate_text_invalid' ), 'AI input/output guards must reject non-text values.' );
 
+// R20 regression: public filters/events and pre-callback governance are type-gated.
+fifth_assert( false !== strpos( $rest, 'gcu_public_blocks_query_invalid' ) && false !== strpos( $rest, 'public_blocks_query_is_typed' ), 'Public block filters must be validated.' );
+fifth_assert( false !== strpos( $rest, 'gcu_public_event_input_invalid' ) && false !== strpos( $rest, 'acquisition_event_input_is_typed' ), 'Public acquisition fields must be validated.' );
+fifth_assert( false !== strpos( $hardening, 'gcu_fifth_governance_input_type_invalid' ) && false !== strpos( $hardening, 'validate_future_record_input_types' ), 'Founder pre-callback guard must validate types first.' );
+fifth_assert( false !== strpos( $future_policy, 'function public_blocks_query_is_typed' ) && false !== strpos( $future_policy, 'function acquisition_event_input_is_typed' ), 'Pure typed public input helpers must be present.' );
+
 if ( $failures ) {
 	fwrite( STDERR, "Fifth review regression tests failed:\n- " . implode( "\n- ", $failures ) . "\n" );
 	exit( 1 );
