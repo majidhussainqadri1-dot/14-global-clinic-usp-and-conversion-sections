@@ -9,11 +9,15 @@ Twenty separate source/plan/companion lenses were reviewed at frozen main `962be
 ## R20 twenty-source public-input integrity — 2026-10-11
 Frozen exact main `3b9a926613f9d9f1b5c22c2e44174df00ef0519f` audited before changes. Fifteen source-present checks, three File14 input-shape defects corrected, two external/design gaps still open. New typed REST blocks/events/public governance guards; v1.4.24, no schema migration. Full ledger: `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.24-R20.md`. Live deployed parity not verified.
 
+## R21 twenty-lens event deduplication / precise locale hardening — 2026-10-11
+
+Frozen main `faf6be5f7860a6517b380b894b2d3fe6a1e15733` compared with File14 amended CTI24 plan, consolidated central plan and relevant File07/09/25 owner documents. The in-transaction event UUID equality check, strict explicit UUID validity and approved locale selection address three File14 local defects; remaining signed owner outcomes (Issue #19) and approved experiment baseline restore (Issue #22) still require contracts and staged proof. See `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.25-R21.md`. Production state is not established by source QA.
+
 ## Governing identity
 - Fresh central governing baseline: 2026-08-10
 - Base File plan: `SSH-F14-PLAN-2026-v1.0`
 - Founder-approved additive amendment: `SSH-F14-FUTURE-CTI-2026-v2.0`
-- Software candidate: `1.4.24`
+- Software candidate: `1.4.25`
 - Base schema candidate: `10005`
 - Future CTI additive schema: `1`
 - Current canonical source repository: `14-global-clinic-usp-and-conversion-sections`
