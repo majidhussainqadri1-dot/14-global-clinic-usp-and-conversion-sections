@@ -471,7 +471,7 @@ assert_future( ! GCU_Future_Policy::valid_faq_aggregate_signal( array( 'question
 assert_future( ! GCU_Future_Policy::valid_faq_aggregate_signal( array( 'question' => array( 'patient text' ), 'count' => 25 ) ), 'R17 nested or private question cannot be coerced into aggregate FAQ suggestion.' );
 assert_future( ! GCU_Future_Policy::valid_faq_aggregate_signal( array( 'question' => 'A rare question', 'count' => 2 ) ), 'R17 low-frequency question must remain privacy-suppressed.' );
 assert_future( ! GCU_Future_Policy::valid_faq_aggregate_signal( array( 'question' => 'Unsupported floating sample', 'count' => 25.7 ) ), 'R17 fabricated/fractional question count rejected.' );
-assert_future( false === strpos( $r17_source, "absint( $signal['count'] )" ), 'R17 source no longer transforms negative question frequency to a positive public cohort.' );
+assert_future( false === strpos( $r17_source, 'absint( $signal[' . "'count'" . '] )' ), 'R17 source no longer transforms negative question frequency to a positive public cohort.' );
 assert_future( false !== strpos( $r17_source, 'gcu_future_ai_input_type_invalid' ), 'R17 REST AI draft handler returns controlled bad-input error.' );
 
 $terms = GCU_Future_Policy::terminology_lock();
