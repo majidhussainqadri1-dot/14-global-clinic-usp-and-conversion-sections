@@ -88,7 +88,10 @@ final class GCU_Fifth_Review_Hardening {
 		if ( '/gcu/v1/future/ai-copy' === $route && self::is_mutating_request( $request ) ) {
 			$data = $request->get_json_params();
 			$data = is_array( $data ) ? $data : array();
-			$base = isset( $data['base_text'] ) ? (string) $data['base_text'] : '';
+			if ( isset( $data['base_text'] ) && ! is_string( $data['base_text'] ) ) {
+				return new WP_Error( 'gcu_fifth_ai_input_type_invalid', __( 'AI copy text must be a plain string.', 'global-clinic-usp-integration' ), array( 'status' => 400 ) );
+			}
+			$base = isset( $data['base_text'] ) ? $data['base_text'] : '';
 			if ( self::contains_sensitive_copy_data( $base ) ) {
 				return new WP_Error(
 					'gcu_fifth_ai_sensitive_input_blocked',
@@ -123,7 +126,11 @@ final class GCU_Fifth_Review_Hardening {
 		$safe = array();
 		$rejected = isset( $data['rejected'] ) && is_array( $data['rejected'] ) ? $data['rejected'] : array();
 		foreach ( array_slice( $data['candidates'], 0, 5 ) as $candidate ) {
-			$text = is_array( $candidate ) && isset( $candidate['text'] ) ? (string) $candidate['text'] : '';
+			if ( ! is_array( $candidate ) || ! isset( $candidate['text'] ) || ! is_string( $candidate['text'] ) ) {
+				$rejected[] = array( 'text_hash' => null, 'guard' => array( 'safe' => false, 'flags' => array( 'candidate_text_invalid' ) ) );
+				continue;
+			}
+			$text = $candidate['text'];
 			$scan = GCU_Review80_Hardening::multilingual_dark_pattern_scan( $text );
 			if ( ! empty( $scan['safe'] ) ) {
 				$safe[] = $candidate;
@@ -144,7 +151,7 @@ final class GCU_Fifth_Review_Hardening {
 	private static function conversion_event_identity_conflict( WP_REST_Request $request ) {
 		$data = $request->get_json_params();
 		$data = is_array( $data ) ? $data : array();
-		$event_id = isset( $data['event_id'] ) ? sanitize_text_field( (string) $data['event_id'] ) : '';
+		$event_id = isset( $data['event_id'] ) && is_string( $data['event_id'] ) ? sanitize_text_field( $data['event_id'] ) : '';
 		if ( '' === $event_id || ! wp_is_uuid( $event_id ) ) {
 			return true;
 		}

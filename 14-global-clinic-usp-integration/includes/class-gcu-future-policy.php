@@ -147,6 +147,24 @@ final class GCU_Future_Policy {
 		return array( 'safe' => empty( $invalid ), 'invalid_fields' => $invalid, 'type' => $type, 'status' => $status, 'limit' => $limit, 'cursor' => $cursor );
 	}
 
+	/** Strict optimistic-concurrency version: never transform -2, booleans, nested
+	 * JSON or overlong integers into a different legitimate record version. */
+	public static function strict_mutation_version( $value ) {
+		if ( is_int( $value ) ) {
+			return $value > 0 && $value <= 2147483647 ? $value : null;
+		}
+		if ( ! is_string( $value ) || '' === $value || strlen( $value ) > 10 || ! ctype_digit( $value ) ) {
+			return null;
+		}
+		$version = (int) $value;
+		return $version > 0 && $version <= 2147483647 ? $version : null;
+	}
+
+	/** Workflow transitions must name an exact canonical state, not a coerced value. */
+	public static function safe_workflow_target( $value ) {
+		return is_string( $value ) && preg_match( '/^[a-z][a-z0-9_]{0,63}$/D', $value ) ? $value : '';
+	}
+
 	public static function sanitize_handoff_context( array $input ) {
 		$country = isset( $input['country'] ) && is_string( $input['country'] ) ? strtoupper( sanitize_text_field( $input['country'] ) ) : '';
 		if ( ! preg_match( '/^[A-Z]{2}$/', $country ) ) {

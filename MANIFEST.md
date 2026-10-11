@@ -1,8 +1,9 @@
-# File 14 v1.4.22 Manifest
+# File 14 v1.4.23 Manifest
 
 Canonical plugin folder: `14-global-clinic-usp-integration`
 
 Contents:
+- R19 strict legacy REST reporting-window and mutation validation, and non-text AI/UUID guard hardening
 - bootstrap and GCU classes
 - native schema/migration/rollback
 - governed policy, claims, blocks, placements and experiments

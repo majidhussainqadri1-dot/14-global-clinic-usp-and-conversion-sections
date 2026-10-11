@@ -25,6 +25,24 @@ function assert_future( $condition, $message ) {
 	}
 }
 
+// R19: Legacy funnel and administrative mutation inputs must never be absint-coerced.
+assert_future( 7 === GCU_Future_Policy::strict_mutation_version( 7 ), 'Positive integer row versions remain valid.' );
+assert_future( 7 === GCU_Future_Policy::strict_mutation_version( '7' ), 'Positive decimal string row versions remain valid.' );
+foreach ( array( -7, '-7', 0, '0', 1.2, false, true, array( 7 ), (object) array( 'version' => 7 ), '999999999999999999999' ) as $invalid_version ) {
+	assert_future( null === GCU_Future_Policy::strict_mutation_version( $invalid_version ), 'Malformed optimistic-concurrency version must be rejected.' );
+}
+assert_future( 2147483647 === GCU_Future_Policy::strict_mutation_version( '2147483647' ), 'Maximum supported row version must be valid.' );
+assert_future( null === GCU_Future_Policy::strict_mutation_version( '2147483648' ), 'Overflow row version must be rejected.' );
+assert_future( 'running' === GCU_Future_Policy::safe_workflow_target( 'running' ), 'Canonical workflow status must remain valid.' );
+foreach ( array( 'RUNNING', 'running now', '  active', '', array( 'running' ), true, 1 ) as $invalid_target ) {
+	assert_future( '' === GCU_Future_Policy::safe_workflow_target( $invalid_target ), 'Malformed target cannot become a valid workflow state.' );
+}
+assert_future( 30 === GCU_Future_Policy::bounded_query_integer( null, 30, 90 ), 'Unspecified funnel window defaults to 30 days.' );
+assert_future( 90 === GCU_Future_Policy::bounded_query_integer( '999', 30, 90 ), 'Valid long windows are safely capped to 90 days.' );
+foreach ( array( -30, '-30', 0, array( 'days' => 30 ), false, '1.5', 'abc' ) as $invalid_days ) {
+	assert_future( null === GCU_Future_Policy::bounded_query_integer( $invalid_days, 30, 90 ), 'Malformed funnel window must not be converted to a positive period.' );
+}
+
 $catalog = GCU_Future_Policy::feature_catalog();
 assert_future( 24 === count( $catalog ), 'Exactly 24 Founder-approved Future Intelligence features are required.' );
 for ( $i = 1; $i <= 24; $i++ ) {
