@@ -1,4 +1,4 @@
-# File 14 Status — v1.4.18 Fourteenth Twenty-Pass Intent and Change Log Repository Candidate
+# File 14 Status — v1.4.18 Fourteenth Twenty-Pass Explicit Intent and Public Change Log Repository Candidate
 
 ## R14 20-source-review summary — 2026-10-11
 
