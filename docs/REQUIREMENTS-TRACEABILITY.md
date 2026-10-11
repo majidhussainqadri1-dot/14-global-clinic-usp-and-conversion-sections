@@ -1,4 +1,4 @@
-# File 14 — Fresh Central + File Plan + Future CTI Requirements Traceability — v1.4.15
+# File 14 — Fresh Central + File Plan + Future CTI Requirements Traceability — v1.4.16
 
 ## Governing freeze
 
@@ -101,7 +101,7 @@ File 14 owns approved Worldwide Clinic value-proposition copy, reusable semantic
 
 ## Truth-status rule
 
-`Specified`, `Coded`, `Packaged`, `Automated-QA Green`, `Staging-Accepted`, `Live-Deployed`, and `Operational` are separate statuses. File 14 v1.4.15 may only claim a status for which current exact-head evidence exists. The Future CTI implementation and sixth-review corrections do not alter that rule.
+`Specified`, `Coded`, `Packaged`, `Automated-QA Green`, `Staging-Accepted`, `Live-Deployed`, and `Operational` are separate statuses. File 14 v1.4.16 may only claim a status for which current exact-head evidence exists. The Future CTI implementation and sixth-review corrections do not alter that rule.
 
 ## R5 registry-truth continuation
 
@@ -160,3 +160,11 @@ Latest reviewed File 25 repository source HEAD: `347a4ff4d4c233c5ea6cd82c7786ee5
 - F14-FR-011 and Future CTI11/13/14 real File07/08/09 owner-attested conversion outcomes remain incomplete under Issue #19; File01 registration and staging are mandatory.
 - F14-FUT-17 safe approved experiment baseline restore remains incomplete under Issue #22; do not substitute 'stopped' status for rollback proof.
 - R11 per-round evidence `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.15-R11.md`; versioned source QA does not establish deployed artifact parity.
+
+
+## R12 plan-to-code safety trace (2026-10-11)
+
+- **F14-FUT-24**: `GCU_Future_Policy::doctor_readiness_check` counts only strict boolean/checkbox-confirmed state (true/1/"1"); public JSON "false", "no", arbitrary arrays and text must not inflate a self-assessed score. File09/File00 remain the only verified doctor identity/activation owners; `tests/future-intelligence-tests.php`.
+- **F14-FUT-20**: `validate_public_record_payload('terminology_lock')` requires every canonical protected `terminology_lock()` concept key and en-US/ur-PK/ar-SA values. Founder publication approval and actual word-choice review remain distinct. A three-language **subset** can no longer become authoritative.
+- **F14-FR-011/F14-FUT-11/13/14**: Issue #19 owner-origin verified conversion events still pending. **F14-FUT-17**: Issue #22 safe experiment baseline restoration pending.
+- Source audit ledger: `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.16-R12.md`. GitHub QA is not deployed parity.
