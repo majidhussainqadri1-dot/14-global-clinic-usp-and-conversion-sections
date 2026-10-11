@@ -6,6 +6,8 @@ $main = file_get_contents( $plugin . '/global-clinic-usp-integration.php' );
 $hardening = file_get_contents( $plugin . '/includes/class-gcu-fifth-review-hardening.php' );
 $readme = file_get_contents( $plugin . '/readme.txt' );
 $status = file_get_contents( $root . '/STATUS.md' );
+$rest = file_get_contents( $plugin . '/includes/class-gcu-rest.php' );
+$future_policy = file_get_contents( $plugin . '/includes/class-gcu-future-policy.php' );
 $failures = array();
 
 function fifth_assert( $condition, $message ) {
@@ -51,6 +53,14 @@ fifth_assert( false !== strpos( $readme, 'File 20 remains the sole owner of the 
 fifth_assert( false === strpos( $readme, 'future record/report updates' ), 'Readme must not falsely claim generic future record/report transactionality.' );
 fifth_assert( false !== strpos( $status, 'Historical eighty-pass ledgers:' ) && substr_count( $status, 'docs/REVIEW-80-' ) >= 6, 'Status must retain all six historical review ledgers accurately.' );
 fifth_assert( false !== strpos( $status, 'REVIEW-80-FIFTH-LEDGER-v1.4.3.md' ), 'Fifth ledger must remain part of release truth with its historical release identity.' );
+
+// R19: ensure legacy REST paths invoke the exact typed validator before DB/state operations.
+fifth_assert( false !== strpos( $rest, "GCU_Future_Policy::bounded_query_integer(\$r->get_param('days'),30,90)" ), 'Base funnel must use bounded days rather than absint.' );
+fifth_assert( false !== strpos( $rest, "GCU_Future_Policy::strict_mutation_version(\$r->get_param('expected_version'))" ), 'Base workflows and claim withdrawal must validate optimistic versions.' );
+fifth_assert( false !== strpos( $rest, "GCU_Future_Policy::safe_workflow_target(\$r->get_param('target'))" ), 'Workflow target must be exact valid text.' );
+fifth_assert( false !== strpos( $rest, 'gcu_workflow_route_invalid' ) && false !== strpos( $rest, 'gcu_claim_route_invalid' ), 'Owner route authorization must reject invalid route identity.' );
+fifth_assert( false !== strpos( $future_policy, 'function strict_mutation_version' ), 'Strict pure mutation validator must ship.' );
+fifth_assert( false !== strpos( $hardening, 'gcu_fifth_ai_input_type_invalid' ) && false !== strpos( $hardening, 'candidate_text_invalid' ), 'AI input/output guards must reject non-text values.' );
 
 if ( $failures ) {
 	fwrite( STDERR, "Fifth review regression tests failed:\n- " . implode( "\n- ", $failures ) . "\n" );
