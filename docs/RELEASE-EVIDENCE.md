@@ -1,6 +1,6 @@
 # Release Evidence — File14 v1.4.23 R19 Candidate (2026-10-11)
 
-Source audit baseline: `962bee58bc9100c8ce084fafa152ce23d97acb11`. All twenty R19 static source/plan lenses completed before unified correction (15 source guards present, three File14 local issues corrected, Issues #19/#22 unresolved); see `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.23-R19.md`. Pending independent candidate exact-head PHP 7.4/8.3 QA, fresh review1/2, reproducible package/SBOM, PR CI, new exact-main CI and all staging/Founder/live gates. This line is not evidence of a pass. Runtime version candidate 1.4.23; source schema targets 10005/Future1; installed DB unknown.
+Source audit baseline: `962bee58bc9100c8ce084fafa152ce23d97acb11`. All twenty R19 static source/plan lenses completed before unified correction (15 source guards present, three File14 local issues corrected, Issues #19/#22 unresolved); see `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.23-R19.md`. An **exact review/main SHA** must be frozen and verified, with an independently successful **fresh post-merge** check before any repository acceptance. Pending independent candidate exact-head PHP 7.4/8.3 QA, fresh review1/2, reproducible package/SBOM, PR CI, new exact-main CI and all staging/Founder/live gates. This line is not evidence of a pass. Runtime version candidate 1.4.23; source schema targets 10005/Future1; installed DB unknown.
 
 ---
 
