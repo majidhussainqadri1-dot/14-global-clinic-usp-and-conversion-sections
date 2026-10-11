@@ -43,6 +43,17 @@ foreach ( array( -30, '-30', 0, array( 'days' => 30 ), false, '1.5', 'abc' ) as 
 	assert_future( null === GCU_Future_Policy::bounded_query_integer( $invalid_days, 30, 90 ), 'Malformed funnel window must not be converted to a positive period.' );
 }
 
+// R20 typed inputs: valid public queries and adversarial nested/malformed payloads.
+assert_future( true === GCU_Future_Policy::public_blocks_query_is_typed( null, null, null ), 'Default public blocks filters valid.' );
+assert_future( true === GCU_Future_Policy::public_blocks_query_is_typed( 'global_clinic_primary', 'doctor', 'ur-PK' ), 'Typed public block filters valid.' );
+foreach ( array( array( array('x'), null, null ), array( 'bad-slot', null, null ), array( null, array('patient'), null ), array( null, 'patient', (object) array('locale'=>'en-US') ), array( null, null, 'ur-PK?x=1' ) ) as $bad_filters ) {
+    assert_future( false === GCU_Future_Policy::public_blocks_query_is_typed( $bad_filters[0], $bad_filters[1], $bad_filters[2] ), 'Invalid public block input must fail closed.' );
+}
+assert_future( true === GCU_Future_Policy::acquisition_event_input_is_typed( array( 'stage'=>'cta_selected', 'destination'=>'doctor_directory', 'event_id'=>'123e4567-e89b-42d3-a456-426614174000' ) ), 'Valid acquisition event allowed.' );
+foreach ( array( array('stage'=>array('impression')), array('stage'=>'cta_selected','destination'=>array('clinic')), array('stage'=>'impression','event_id'=>array('id')), array('stage'=>'impression','event_id'=>'bogus'), array('stage'=>'CTA_SELECTED') ) as $bad_event ) {
+    assert_future( false === GCU_Future_Policy::acquisition_event_input_is_typed( $bad_event ), 'Nested/malformed acquisition events denied.' );
+}
+
 $catalog = GCU_Future_Policy::feature_catalog();
 assert_future( 24 === count( $catalog ), 'Exactly 24 Founder-approved Future Intelligence features are required.' );
 for ( $i = 1; $i <= 24; $i++ ) {

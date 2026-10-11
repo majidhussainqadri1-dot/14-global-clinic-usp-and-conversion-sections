@@ -17,8 +17,8 @@ function fifth_assert( $condition, $message ) {
 	}
 }
 
-fifth_assert( false !== strpos( $main, 'Version: 1.4.23' ), 'Plugin header must be v1.4.23.' );
-fifth_assert( false !== strpos( $main, "define( 'GCU_VERSION', '1.4.23' )" ), 'GCU_VERSION must be v1.4.23.' );
+fifth_assert( false !== strpos( $main, 'Version: 1.4.24' ), 'Plugin header must be v1.4.24.' );
+fifth_assert( false !== strpos( $main, "define( 'GCU_VERSION', '1.4.24' )" ), 'GCU_VERSION must be v1.4.24.' );
 fifth_assert( false !== strpos( $main, 'class-gcu-fifth-review-hardening.php' ), 'Fifth-review hardening class must ship.' );
 fifth_assert( false !== strpos( $main, "GCU_Fifth_Review_Hardening', 'bootstrap" ), 'Fifth-review hardening must bootstrap.' );
 
@@ -48,7 +48,7 @@ fifth_assert( false !== strpos( $hardening, 'experiment_early_stopped' ), 'Early
 fifth_assert( false !== strpos( $hardening, 'if ( false === $audit )' ), 'Audit failure must trigger rollback.' );
 fifth_assert( false !== strpos( $hardening, 'rollback_owned_transaction()' ) && false !== strpos( $hardening, 'commit_owned_transaction()' ), 'Early-stop must have explicit rollback/commit paths.' );
 
-fifth_assert( false !== strpos( $readme, 'Stable tag: 1.4.23' ), 'Readme stable tag must match v1.4.23.' );
+fifth_assert( false !== strpos( $readme, 'Stable tag: 1.4.24' ), 'Readme stable tag must match v1.4.24.' );
 fifth_assert( false !== strpos( $readme, 'File 20 remains the sole owner of the global shell/navigation' ) && false !== strpos( $readme, 'only when File 20 is absent' ), 'File 20 sole global shell ownership and bounded recovery behavior must be stated accurately.' );
 fifth_assert( false === strpos( $readme, 'future record/report updates' ), 'Readme must not falsely claim generic future record/report transactionality.' );
 fifth_assert( false !== strpos( $status, 'Historical eighty-pass ledgers:' ) && substr_count( $status, 'docs/REVIEW-80-' ) >= 6, 'Status must retain all six historical review ledgers accurately.' );
@@ -61,6 +61,12 @@ fifth_assert( false !== strpos( $rest, "GCU_Future_Policy::safe_workflow_target(
 fifth_assert( false !== strpos( $rest, 'gcu_workflow_route_invalid' ) && false !== strpos( $rest, 'gcu_claim_route_invalid' ), 'Owner route authorization must reject invalid route identity.' );
 fifth_assert( false !== strpos( $future_policy, 'function strict_mutation_version' ), 'Strict pure mutation validator must ship.' );
 fifth_assert( false !== strpos( $hardening, 'gcu_fifth_ai_input_type_invalid' ) && false !== strpos( $hardening, 'candidate_text_invalid' ), 'AI input/output guards must reject non-text values.' );
+
+// R20 regression: public filters/events and pre-callback governance are type-gated.
+fifth_assert( false !== strpos( $rest, 'gcu_public_blocks_query_invalid' ) && false !== strpos( $rest, 'public_blocks_query_is_typed' ), 'Public block filters must be validated.' );
+fifth_assert( false !== strpos( $rest, 'gcu_public_event_input_invalid' ) && false !== strpos( $rest, 'acquisition_event_input_is_typed' ), 'Public acquisition fields must be validated.' );
+fifth_assert( false !== strpos( $hardening, 'gcu_fifth_governance_input_type_invalid' ) && false !== strpos( $hardening, 'validate_future_record_input_types' ), 'Founder pre-callback guard must validate types first.' );
+fifth_assert( false !== strpos( $future_policy, 'function public_blocks_query_is_typed' ) && false !== strpos( $future_policy, 'function acquisition_event_input_is_typed' ), 'Pure typed public input helpers must be present.' );
 
 if ( $failures ) {
 	fwrite( STDERR, "Fifth review regression tests failed:\n- " . implode( "\n- ", $failures ) . "\n" );

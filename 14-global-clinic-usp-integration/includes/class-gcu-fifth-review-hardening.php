@@ -69,8 +69,12 @@ final class GCU_Fifth_Review_Hardening {
 		if ( '/gcu/v1/future/records' === $route && self::is_mutating_request( $request ) ) {
 			$data = $request->get_json_params();
 			$data = is_array( $data ) ? $data : array();
+			$types = GCU_Future_Policy::validate_future_record_input_types( $data );
+			if ( ! $types['safe'] ) {
+				return new WP_Error( 'gcu_fifth_governance_input_type_invalid', __( 'Governance fields have invalid types.', 'global-clinic-usp-integration' ), array( 'status' => 400, 'fields' => $types['invalid_fields'] ) );
+			}
 			$status = sanitize_key( isset( $data['status'] ) ? $data['status'] : 'draft' );
-			$is_public = ! empty( $data['is_public'] );
+			$is_public = isset( $data['is_public'] ) && in_array( $data['is_public'], array( true, 1, '1' ), true );
 			if ( 'active' === $status || $is_public ) {
 				$approved = GCU_Capabilities::require_capability(
 					GCU_Capabilities::APPROVE_CLAIMS,
@@ -169,8 +173,8 @@ final class GCU_Fifth_Review_Hardening {
 			return true;
 		}
 
-		$stage = sanitize_key( isset( $data['stage'] ) ? $data['stage'] : '' );
-		$destination = sanitize_key( isset( $data['destination'] ) ? $data['destination'] : '' );
+		$stage = isset( $data['stage'] ) && is_string( $data['stage'] ) ? sanitize_key( $data['stage'] ) : '';
+		$destination = isset( $data['destination'] ) && is_string( $data['destination'] ) ? sanitize_key( $data['destination'] ) : '';
 		$campaign = GCU_Plugin::instance()->privacy()->current_campaign();
 		$campaign = is_array( $campaign ) ? GCU_Policy::sanitize_campaign( $campaign ) : array( 'source' => '', 'medium' => '', 'campaign' => '', 'ref' => '' );
 		$subject = GCU_Plugin::instance()->privacy()->event_subject_hash();
