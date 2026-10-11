@@ -2,7 +2,7 @@
 
 ## R14 20-source-review summary — 2026-10-11
 
-- Frozen audited main `cfe8d9c51932014702967acc27c10d4382c4de0e`. 20 distinct static source/contract checks completed before edits: 16 limited clean, two File14 defects fixed (untrusted explicit-intent arrays/objects; invalid legacy change-log entries hiding approved older history), two unresolved owner/design agreements Issue #19/22.
+- Frozen audited main `cfe8d9c51932014702967acc27c10d4382c4de0e`. 20 distinct static source/contract checks completed before edits: 16 limited clean, two File14 defects found in the twenty frozen source lenses plus a third real record-payload decoding defect detected by PHP regression and corrected (untrusted explicit-intent arrays/objects; invalid legacy change-log entries hiding approved older history; improper JSON decoding over a temporary foreach copy), two unresolved owner/design agreements Issue #19/22.
 - Software candidate 1.4.18; schema targets base 10005/Future 1, NOT observed real DB. Public change-log verification is capped at 1,000 candidates to prevent unbounded database load.
 - Full per-pass source report: `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.18-R14.md`. Candidate branch CI, PR and post-merge exact-main quality/SBOM must be observed separately. Deployed/runtime/DB/migrations and staging/live acceptance unverified.
 
