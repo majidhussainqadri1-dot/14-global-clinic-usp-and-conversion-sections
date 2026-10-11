@@ -220,6 +220,36 @@ assert_future( false !== strpos( $r11_source, "'status'=>is_array(\$existing_rep
 assert_future( false !== strpos( $r11_source, 'function seed_record_if_absent' ) && false !== strpos( $r11_source, 'if ( null !== $existing ) { return true; }' ), 'R11 migration must not overwrite Founder-approved existing governed records.' );
 assert_future( false !== strpos( $r11_source, 'future_seed_verification_failed' ) && false !== strpos( $r11_source, '$seeded = self::seed_defaults();' ), 'R11 migration must not mark schema ready after a failed safe seed.' );
 
+
+// R12 — public self-check readiness must not accept truthy strings/objects as
+// checked input; it is non-binding and never a File09/File00 verification.
+$r12_answers = array(
+    'identity_ready' => 'false', 'professional_evidence_ready' => 'no',
+    'profile_ready' => array( 'checked' ), 'clinic_information_ready' => 'yes',
+    'languages_ready' => false, 'consultation_modes_ready' => '0',
+    'privacy_ready' => 0, 'rules_accepted' => '',
+);
+$r12_false = GCU_Future_Policy::doctor_readiness_check( $r12_answers );
+assert_future( 0 === $r12_false['score'] && 8 === count( $r12_false['missing'] ) && false === $r12_false['binding'], 'R12: false/no/array strings must not count as a completed doctor readiness item.' );
+$r12_answers['identity_ready'] = true;
+$r12_answers['professional_evidence_ready'] = 1;
+$r12_answers['profile_ready'] = '1';
+$r12_checked = GCU_Future_Policy::doctor_readiness_check( $r12_answers );
+assert_future( 38 === $r12_checked['score'] && 5 === count( $r12_checked['missing'] ) && 'File 09 / File 00' === $r12_checked['verification_owner'], 'R12: explicit boolean/integer/checkbox-string checked values are counted without claiming approval.' );
+$r12_terms = GCU_Future_Policy::terminology_lock();
+$r12_complete = array( 'terms' => $r12_terms, 'source' => 'Approved File14 plan', 'reviewer' => 'Founder', 'provenance' => 'Approved review' );
+assert_future( true === GCU_Future_Policy::validate_public_record_payload( 'terminology_lock', $r12_complete )['safe'], 'R12: complete protected terminology passes.' );
+$r12_partial = $r12_complete;
+unset( $r12_partial['terms']['zero_commission'] );
+$r12_check = GCU_Future_Policy::validate_public_record_payload( 'terminology_lock', $r12_partial );
+assert_future( false === $r12_check['safe'] && in_array( 'protected_term_zero_commission', $r12_check['missing'], true ), 'R12: a three-language but incomplete terminology lock cannot be active or public.' );
+$r12_partial = $r12_complete;
+unset( $r12_partial['terms']['verified_doctor'] );
+assert_future( false === GCU_Future_Policy::validate_public_record_payload( 'terminology_lock', $r12_partial )['safe'], 'R12: verified doctor terminology must not be deleted from the approved concept set.' );
+$r12_partial = $r12_complete;
+$r12_partial['terms']['global_clinic']['ur-PK'] = '';
+assert_future( false === GCU_Future_Policy::validate_public_record_payload( 'terminology_lock', $r12_partial )['safe'], 'R12: an empty Urdu protected concept cannot pass review.' );
+
 $terms = GCU_Future_Policy::terminology_lock();
 assert_future( isset( $terms['verified_doctor']['en-US'], $terms['verified_doctor']['ur-PK'], $terms['verified_doctor']['ar-SA'] ), 'Terminology lock must cover English, Urdu and Arabic.' );
 $ur = GCU_Future_I18n::strings( 'ur-PK' );
