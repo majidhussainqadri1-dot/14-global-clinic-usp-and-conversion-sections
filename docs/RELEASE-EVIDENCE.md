@@ -1,4 +1,16 @@
-# Release Evidence — v1.4.14 Tenth Twenty-Pass Safe Localization and Readiness Repository Candidate
+# Release Evidence — v1.4.15 Eleventh Twenty-Pass Report and Seed Integrity Repository Candidate
+
+## R11 corrective evidence / release gates
+
+Frozen main before work: `90eaada3db46e63afd445ff1d7aa5ba6faeb0abf`. Twenty distinct source/plan/contract checks completed before code modification: 16 narrowly clean, 2 File14 source defects corrected and two incomplete approved owner/design requirements, Issues #19 and #22. `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.15-R11.md` is the source ledger.
+
+R11-D01: caller-supplied duplicate report UUID must match stored full normalized identity (actor, route, reason and text included) or return safe 409. A genuine replay returns actual governed status. R11-D02: Future schema repair inserts missing defaults without overwriting Founder-approved records; missing/failed defaults hold safe mode and block schema-ready declaration. New regression tests require identical and conflicting replay classifications and source-level seed safeguards.
+
+Candidate 1.4.15; unchanged planned schema base 10005 / Future 1. Exact branch PHP 7.4/8.3, two fresh reviews, reproducible ZIP/SBOM and **fresh post-merge** main QA required. No package deployed, runtime/DB/migration truth frozen, or staging/live acceptance proven by this repository activity.
+
+## Historical R10 release evidence (preserved)
+
+Historical identity: v1.4.14 Tenth Twenty-Pass Safe Localization and Readiness Repository Candidate
 
 ## R10 exact-source evidence and constraints
 
@@ -57,7 +69,7 @@ Historical identity: v1.4.9 Fifth Twenty-Pass Exact-Companion Repository Candida
 - Base plan: `SSH-F14-PLAN-2026-v1.0`.
 - Additive Founder-approved amendment: `SSH-F14-FUTURE-CTI-2026-v2.0`.
 - Fifth twenty-pass baseline: exact starting `main` `080e2198d84dfb7491bb0b75946e14a5fe118b91` (v1.4.8 fourth twenty-pass merge).
-- Software candidate: `1.4.14`.
+- Software candidate: `1.4.15`.
 - Base schema: `10005`; Future CTI additive schema: `1`.
 - Requirements retained: original File 14 FR/NFR plus `F14-FUT-01`–`F14-FUT-24`.
 - Ownership remains bounded: no doctor/clinic/application/appointment/payment/verification/shell source of truth is created here.
