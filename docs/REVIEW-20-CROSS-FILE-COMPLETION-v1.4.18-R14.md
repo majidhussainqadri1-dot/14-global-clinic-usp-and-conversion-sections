@@ -31,7 +31,7 @@ Compared supplied File14 original/master amendment v2.0 with Future CTI 01–24,
 | 19 | F14-FUT-17 baseline restore | OPEN R14-G02 | Issue #22: experiment stop/audit does not prove approved baseline variant restoration |
 | 20 | Exact CI and physical schema guards | SOURCE-CLEAN (limited) | PHP 7.4/8.3, verified-table read gate and packaging exist; no live DB proof |
 
-**Before fixes:** 16 narrow source-clean rounds; **two File14 local defects** in passes 11/16; **two contract gaps** in passes 18/19.
+**Before fixes:** 16 narrow source-clean rounds; **two File14 local defects** in passes 11/16; **two contract gaps** in passes 18/19. **Additional R14-D03 detected during PHP CI regression testing** after the review batch; initial source counts remain unchanged, but three File14 coding defects were ultimately corrected.
 
 ## Consolidated correction batch (after all twenty rounds)
 
@@ -54,3 +54,6 @@ Exact new candidate branch PHP7.4/8.3 and fresh reviews 1/2, deterministic packa
 Repository HEAD (frozen baseline): `cfe8d9c51932014702967acc27c10d4382c4de0e`. Deployed Version: **unverified**. DB Version: **unverified**. Migration State: **unverified**. Live Verification Status: **not performed**.
 
 **Exact deployed code ابھی unverified ہے؛ repository-based diagnosis provisional ہے۔**
+
+
+**R14-D03 / regression-discovered storage decoding defect:** Initial candidate PHP CI failed with an actual `TypeError`: `GCU_Future_Intelligence::records()` looped by reference over `is_array( $rows ) ? $rows : array()`, which is a temporary expression. Decoding changed only the temporary rows, leaving the real returned record `payload` as a JSON string. `public_change_log()` passed that string into the type-hinted public record validator, resulting in a PHP fatal. Corrected `records()` to normalize the actual `$rows` variable first, then decode each payload **inside the returned array**. Added explicit record-decode regression beyond the public change-log pagination fixture. Failed candidate run is retained as history; fresh CI must succeed at the exact new SHA before merge.
