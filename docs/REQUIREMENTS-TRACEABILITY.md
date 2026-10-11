@@ -1,4 +1,4 @@
-# File 14 — Fresh Central + File Plan + Future CTI Requirements Traceability — v1.4.17
+# File 14 — Fresh Central + File Plan + Future CTI Requirements Traceability — v1.4.18
 
 ## Governing freeze
 
@@ -101,7 +101,7 @@ File 14 owns approved Worldwide Clinic value-proposition copy, reusable semantic
 
 ## Truth-status rule
 
-`Specified`, `Coded`, `Packaged`, `Automated-QA Green`, `Staging-Accepted`, `Live-Deployed`, and `Operational` are separate statuses. File 14 v1.4.17 may only claim a status for which current exact-head evidence exists. The Future CTI implementation and sixth-review corrections do not alter that rule.
+`Specified`, `Coded`, `Packaged`, `Automated-QA Green`, `Staging-Accepted`, `Live-Deployed`, and `Operational` are separate statuses. File 14 v1.4.18 may only claim a status for which current exact-head evidence exists. The Future CTI implementation and sixth-review corrections do not alter that rule.
 
 ## R5 registry-truth continuation
 
@@ -175,3 +175,11 @@ Latest reviewed File 25 repository source HEAD: `347a4ff4d4c233c5ea6cd82c7786ee5
 - **F14-FUT-06**: `GCU_Future_Intelligence::jurisdiction_disclosure` tries only ordered active/public unexpired region+generic `ZZ` records, each requiring source/reviewer/provenance/valid effective date. Invalid legacy regional record does not hide an otherwise valid generic. No new legal eligibility decision.
 - Native File07/08/09 owner event attestation still unimplemented under Issue #19; approved experiment baseline restoration still unimplemented under Issue #22.
 - Per-pass source evidence: `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.17-R13.md`. Installed/lived code parity separate.
+
+
+## R14 — exact-source requirement/code evidence (2026-10-11)
+
+- **F14-FUT-01**: `sanitize_explicit_intent` accepts only explicit patient/doctor/learn string choices; rejects arrays/objects/boolean/non-approved names before use as journey selection. Called by REST `rest_handoff`. No inferred medical intent.
+- **F14-FUT-22**: Public trust & policy change-log selection validates effective date, source, reviewer and provenance for records **before** applying requested display limit. `records` supports sanitized offset, stable order and bounded batches; 1,000-candidate scan is not an exhaustive historical-archive guarantee. No unapproved text is made public.
+- **F14-FR-011**: File07/08/09 native owner stage events still awaiting File01-vetted contracts (Issue #19). **F14-FUT-17**: approved safe baseline restore pending (Issue #22).
+- R14 twenty-round source evidence: `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.18-R14.md`. Repository main is not deployed runtime truth.
