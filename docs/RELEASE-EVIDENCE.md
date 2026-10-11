@@ -1,4 +1,4 @@
-# Release Evidence — v1.4.18 Fourteenth Twenty-Pass Intent and Change Log Repository Candidate
+# Release Evidence — v1.4.18 Fourteenth Twenty-Pass Explicit Intent and Public Change Log Repository Candidate
 
 ## R14 source evidence and operational distinction
 
