@@ -6,7 +6,7 @@ Canonical File 14 implementation for the **Sabri Social Homeopathy Platform**.
 - Fresh central governing baseline: 2026-08-10
 - Base File plan: `SSH-F14-PLAN-2026-v1.0`
 - Founder-approved additive amendment: `SSH-F14-FUTURE-CTI-2026-v2.0`
-- Software candidate: `1.4.14`
+- Software candidate: `1.4.15`
 - Base schema candidate: `10005`
 - Future CTI additive schema: `1`
 - Current canonical source repository: `14-global-clinic-usp-and-conversion-sections`
@@ -49,3 +49,8 @@ Twenty independent plan/source checks: 17 source-clean, 2 File14-owned faults fi
 ### 2026-10-11 R10 v1.4.14
 
 20 independent source/plan checks found two File14 local source defects: broad Future HTML language replacements could alter canonical source text; readiness CTA was nonfunctional in no-JS/reduced-data mode. Both source changes are tested. Native owner-outcome events (Issue #19) and governed experiment baseline restore (Issue #22) still need contracts/staging acceptance. See docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.14-R10.md. Do not infer installed/live state from this repository.
+
+
+### 2026-10-11 R11 / v1.4.15 — audited report replay and seed preservation
+
+Twenty independent source/plan lenses: two File14 defects corrected (report UUID replay identity; preservation of Founder-reviewed public Future records through schema repair), sixteen limited source checks clean, and two formally pending integrations (Issue #19 owner events, Issue #22 experiment baseline rollback). Full ledger: `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.15-R11.md`. No staging/live resolution claim.
