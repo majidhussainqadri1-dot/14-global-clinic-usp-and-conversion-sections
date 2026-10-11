@@ -1,4 +1,4 @@
-# File 14 — Fresh Central + File Plan + Future CTI Requirements Traceability — v1.4.13
+# File 14 — Fresh Central + File Plan + Future CTI Requirements Traceability — v1.4.14
 
 ## Governing freeze
 
@@ -101,7 +101,7 @@ File 14 owns approved Worldwide Clinic value-proposition copy, reusable semantic
 
 ## Truth-status rule
 
-`Specified`, `Coded`, `Packaged`, `Automated-QA Green`, `Staging-Accepted`, `Live-Deployed`, and `Operational` are separate statuses. File 14 v1.4.13 may only claim a status for which current exact-head evidence exists. The Future CTI implementation and sixth-review corrections do not alter that rule.
+`Specified`, `Coded`, `Packaged`, `Automated-QA Green`, `Staging-Accepted`, `Live-Deployed`, and `Operational` are separate statuses. File 14 v1.4.14 may only claim a status for which current exact-head evidence exists. The Future CTI implementation and sixth-review corrections do not alter that rule.
 
 ## R5 registry-truth continuation
 
@@ -142,3 +142,12 @@ Latest reviewed File 25 repository source HEAD: `347a4ff4d4c233c5ea6cd82c7786ee5
 - F14-FUT-21 and REST abuse/cost controls → `rest_ai_copy()` + `GCU_Repository::consume_rate_limit('future-ai-copy',12)` → provider calls limited per actor per minute and fail closed on DB/rate issue; draft-only/semantic review unchanged.
 - F14-FR-011, F14-FUT-11/13/14 → R9-G01, native owner-authenticated File07/08/09 lifecycle confirmations and File01 registration still unimplemented; Issue #19 is open. Do not equate File14 CTA with booking/application success.
 - Twenty independent code/plan source reviews recorded in `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.13-R9.md`; verified deployed artifact/runtime is a separate truth.
+
+
+## R10 plan-to-code provenance (2026-10-11)
+
+- F14-FUT-20 and central Founder-approved source meaning: GCU_Future_Intelligence::filter_public_route_html scopes the generated Future markup, GCU_Future_I18n::localize_fragment applies exact visible en-US/ur-PK/ar-SA text-node translations only; R10 fixture protects canonical owner copy/attributes.
+- F14-FUT-24 / low-data/accessibility: readiness controls start hidden and JS reveals only after listeners registered; static translated fallback stays visible if JS is absent. Script intentionally suppressed in reduced-data mode; no bogus readiness calculation.
+- F14-FUT-17 safe baseline restore is not proven by a stopped status: Issue #22 requires approved snapshot/placement state and rollback design before operational acceptance.
+- F14-FR-011 and F14-FUT-11/13/14 owner outcome proofs remain Issue #19; self-reported File14 clicks are not appointment/application success.
+- Twenty source audit checks and limitations: docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.14-R10.md.
