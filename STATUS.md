@@ -1,4 +1,10 @@
-# File 14 Status — v1.4.22 Eighteenth Twenty-Pass Typed REST Query Integrity Repository Candidate
+# File 14 Status — v1.4.23 R19 Legacy REST Typed-Input Repository Candidate
+
+Frozen source-reviewed `main` HEAD: `962bee58bc9100c8ce084fafa152ce23d97acb11` (v1.4.22). Exactly twenty source/plan/companion lenses were completed before changes: 15 source guard present, R19-D01/D02/D03 corrected, Issues #19 and #22 still open. Candidate branch and CI, independent fresh review, final main CI, and deployed staging/live are separate evidence gates. Source DB targets base `10005` and Future `1`; no migration change. Exact deployed package/checksum, WordPress DB/options/migrations/logs and production parity **unverified**. Ledger: `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.23-R19.md`.
+
+---
+
+# Historical R18 — v1.4.22 (before R19)
 
 ## R18 20-source-review summary — 2026-10-11
 
