@@ -80,9 +80,14 @@ final class GCU_Future_Intelligence {
 				GCU_Observability::log( 'error', 'future_schema_verification_failed', array( 'code' => $verified->get_error_code() ) );
 				return $verified;
 			}
+			$seeded = self::seed_defaults();
+			if ( is_wp_error( $seeded ) ) {
+				update_option( self::SAFE_MODE_OPTION, 1, false );
+				GCU_Observability::log( 'error', 'future_seed_verification_failed', array( 'code' => $seeded->get_error_code() ) );
+				return $seeded;
+			}
 			update_option( self::SCHEMA_OPTION, self::SCHEMA_VERSION, false );
 			delete_option( self::SAFE_MODE_OPTION );
-			self::seed_defaults();
 			return true;
 		} finally {
 			GCU_Hardening::release_db_lock( $lock );
@@ -143,11 +148,28 @@ final class GCU_Future_Intelligence {
 		return ( $missing || $non_innodb || $missing_columns ) ? new WP_Error( 'gcu_future_schema_unverified', __( 'Future Conversion and Trust Intelligence storage is not safely verified.', 'global-clinic-usp-integration' ), array( 'missing' => $missing, 'non_innodb' => $non_innodb, 'missing_columns' => $missing_columns ) ) : true;
 	}
 
+	/** Schema repairs may add missing defaults, but must not overwrite approved records. */
+	private static function seed_record_if_absent( $type, $key, array $payload, $public ) {
+		global $wpdb;
+		$t = self::tables();
+		$existing = $wpdb->get_var( $wpdb->prepare(
+			"SELECT id FROM {$t['records']} WHERE record_type=%s AND record_key=%s AND locale='en-US' AND region='ZZ' LIMIT 1",
+			$type, $key
+		) );
+		if ( ! empty( $wpdb->last_error ) ) {
+			return new WP_Error( 'gcu_future_seed_read_failed', __( 'Governed default record state could not be verified.', 'global-clinic-usp-integration' ), array( 'status' => 503 ) );
+		}
+		if ( null !== $existing ) { return true; }
+		$created = self::upsert_record( $type, $key, 'en-US', 'ZZ', $payload, 'active', $public, 0, true );
+		return is_wp_error( $created ) ? $created : true;
+	}
+
 	private static function seed_defaults() {
 		$glossary = array( 'terms' => GCU_Future_Policy::terminology_lock(), 'source' => GCU_Future_Policy::PLAN_ID, 'reviewer' => 'Founder-approved plan', 'provenance' => 'approved amendment' );
-		self::upsert_record( 'terminology_lock', 'protected_terms', 'en-US', 'ZZ', $glossary, 'active', false, 0, true );
+		$seeded = self::seed_record_if_absent( 'terminology_lock', 'protected_terms', $glossary, false );
+		if ( is_wp_error( $seeded ) ) { return $seeded; }
 		$change = array( 'title' => 'Future Conversion & Trust Intelligence v2.0', 'summary' => 'Twenty-four Founder-approved ethical conversion, trust, privacy, experiment and transparency enhancements were added to File 14.', 'effective_date' => '2026-08-10', 'material' => true, 'source' => GCU_Future_Policy::PLAN_ID, 'reviewer' => 'Founder-approved plan', 'provenance' => 'approved amendment' );
-		self::upsert_record( 'change_log', 'future_cti_v2_0', 'en-US', 'ZZ', $change, 'active', true, 0, true );
+		return self::seed_record_if_absent( 'change_log', 'future_cti_v2_0', $change, true );
 	}
 
 	private static function schedule() {
