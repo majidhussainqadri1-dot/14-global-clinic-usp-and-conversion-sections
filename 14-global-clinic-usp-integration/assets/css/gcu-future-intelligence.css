@@ -32,3 +32,6 @@
 @media (prefers-reduced-motion:reduce){.gcu-future *{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
 @media (forced-colors:active){.gcu-future,.gcu-future__intent,.gcu-future-readiness label{border:1px solid CanvasText;box-shadow:none}.gcu-future__intent{background:Canvas;color:CanvasText}.gcu-future__intent strong{color:CanvasText}}
 @media print{.gcu-future-report{display:none}.gcu-future{box-shadow:none;break-inside:avoid}}
+
+/* R10: no script, reduced-data mode or failed initialization must not expose inert controls. */
+.gcu-future-readiness [hidden] { display: none !important; }
