@@ -1,4 +1,10 @@
-# Release Evidence — File14 v1.4.23 R19 Candidate (2026-10-11)
+# Release Evidence — v1.4.24 R20 Candidate
+
+Software candidate: `1.4.24`. Frozen previous main `3b9a926613f9d9f1b5c22c2e44174df00ef0519f`. Twenty source/plan checks completed before changes; 15 source-present, 3 local defects corrected, 2 external/design issues open. Report: `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.24-R20.md`. Verify **exact review/main SHA**, PHP 7.4/8.3 QA, Fresh Reviews, package/SBOM and **fresh post-merge** checks independently before repository release acceptance. Source DB targets 10005/Future1; deployed artifact, actual DB/option/migration, staging and live **unverified**. GitHub green is not production verification.
+
+---
+
+# Historical Release Evidence — File14 v1.4.23 R19
 
 Software candidate: `1.4.23` — source only; no deployed-state assertion.
 
