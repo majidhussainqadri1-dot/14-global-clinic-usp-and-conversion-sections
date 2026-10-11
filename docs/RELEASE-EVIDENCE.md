@@ -1,4 +1,4 @@
-# Release Evidence — v1.4.25 R21 Event Replay Identity Repository Candidate
+# Release Evidence — v1.4.25 R21 Candidate (Event Replay Identity)
 
 Software candidate: `1.4.25`. Reviewed frozen prior `main` `faf6be5f7860a6517b380b894b2d3fe6a1e15733`. Exactly twenty current-source/companion-plan lenses performed before one correction batch (15 source-present, three local defects, Issues #19/#22 external/design open). Review/changes: `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.25-R21.md`. Require exact review/main SHA PHP7.4/8.3 quality, behavioral regressions, deterministic ZIP + SHA-256/SBOM, PR CI and fresh post-merge CI; do not claim these checks passed until verified. Actual installed plugin, DB/options/migrations, staging, backup restore and live acceptance **unknown**. Source schema targets base10005/Future1; no schema change.
 
