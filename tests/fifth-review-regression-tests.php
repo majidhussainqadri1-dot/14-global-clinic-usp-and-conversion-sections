@@ -68,6 +68,13 @@ fifth_assert( false !== strpos( $rest, 'gcu_public_event_input_invalid' ) && fal
 fifth_assert( false !== strpos( $hardening, 'gcu_fifth_governance_input_type_invalid' ) && false !== strpos( $hardening, 'validate_future_record_input_types' ), 'Founder pre-callback guard must validate types first.' );
 fifth_assert( false !== strpos( $future_policy, 'function public_blocks_query_is_typed' ) && false !== strpos( $future_policy, 'function acquisition_event_input_is_typed' ), 'Pure typed public input helpers must be present.' );
 
+// R21: suppressed duplicate INSERT cannot be reported as success without same-identity SELECT FOR UPDATE.
+$repository = file_get_contents( $plugin . '/includes/class-gcu-repository.php' );
+fifth_assert( false !== strpos( $repository, 'if(0===$ins)' ) && false !== strpos( $repository, 'FOR UPDATE' ) && false !== strpos( $repository, 'same_acquisition_event_identity' ), 'Zero-row duplicate event requires locked exact-identity proof.' );
+fifth_assert( false !== strpos( $repository, 'gcu_conversion_event_identity_conflict' ) && false !== strpos( $repository, 'gcu_event_dedup_unverified' ), 'Conflicting or unprovable duplicate event must fail closed.' );
+fifth_assert( false !== strpos( $repository, 'gcu_public_event_uuid_invalid' ) && false !== strpos( $repository, 'strtolower($d[\'event_id\'])' ), 'Invalid explicit UUID must reject; accepted UUIDs must be canonicalized.' );
+fifth_assert( false !== strpos( $future_policy, 'same_acquisition_event_identity' ) && false !== strpos( $future_policy, "'ur-PK', 'ur_PK', 'ar', 'ar-SA'" ), 'Identity helper and exact approved locale guard must ship.' );
+
 if ( $failures ) {
 	fwrite( STDERR, "Fifth review regression tests failed:\n- " . implode( "\n- ", $failures ) . "\n" );
 	exit( 1 );
