@@ -90,6 +90,63 @@ final class GCU_Future_Policy {
 			&& ( ( is_int( $version ) && $version > 0 ) || ( is_string( $version ) && ctype_digit( $version ) && (int) $version > 0 ) );
 	}
 
+	/**
+	 * Query parameters can be replaced by JSON/form values in WP_REST_Request.
+	 * Never stringify arrays or promote negative pagination/window values.
+	 */
+	public static function bounded_query_integer( $value, $default, $maximum, $allow_zero = false ) {
+		if ( null === $value ) { return $default; }
+		if ( is_int( $value ) ) {
+			if ( $value < ( $allow_zero ? 0 : 1 ) ) { return null; }
+			return min( $maximum, $value );
+		}
+		if ( ! is_string( $value ) || '' === $value || strlen( $value ) > 9 || ! ctype_digit( $value ) ) {
+			return null;
+		}
+		$parsed = (int) $value;
+		if ( $parsed < ( $allow_zero ? 0 : 1 ) ) { return null; }
+		return min( $maximum, $parsed );
+	}
+
+	/** A requested public trust claim must be an exact canonical-shaped key. */
+	public static function safe_public_claim_key( $value ) {
+		return is_string( $value ) && preg_match( '/^[a-z0-9_-]{1,100}$/D', $value ) ? $value : '';
+	}
+
+	/**
+	 * Read-only editor pagination cannot misinterpret a malformed filter as the
+	 * default list or silently convert a negative cursor into a positive one.
+	 */
+	public static function validate_future_read_query( array $params, $kind ) {
+		$invalid = array();
+		$type = '';
+		$status = 'open';
+		if ( 'records' === $kind ) {
+			if ( isset( $params['type'] ) ) {
+				if ( ! is_string( $params['type'] ) || ( '' !== $params['type'] && ! preg_match( '/^[a-z0-9_-]{1,80}$/D', $params['type'] ) ) ) {
+					$invalid[] = 'type';
+				} else {
+					$type = $params['type'];
+				}
+			}
+		} elseif ( 'reports' === $kind ) {
+			if ( isset( $params['status'] ) ) {
+				if ( ! is_string( $params['status'] ) || ! in_array( $params['status'], array( 'open', 'reviewing', 'resolved', 'rejected' ), true ) ) {
+					$invalid[] = 'status';
+				} else {
+					$status = $params['status'];
+				}
+			}
+		} else {
+			$invalid[] = 'kind';
+		}
+		$limit = self::bounded_query_integer( isset( $params['limit'] ) ? $params['limit'] : null, 50, 100 );
+		$cursor = self::bounded_query_integer( isset( $params['cursor'] ) ? $params['cursor'] : null, 0, 2147483647, true );
+		if ( null === $limit ) { $invalid[] = 'limit'; }
+		if ( null === $cursor ) { $invalid[] = 'cursor'; }
+		return array( 'safe' => empty( $invalid ), 'invalid_fields' => $invalid, 'type' => $type, 'status' => $status, 'limit' => $limit, 'cursor' => $cursor );
+	}
+
 	public static function sanitize_handoff_context( array $input ) {
 		$country = isset( $input['country'] ) && is_string( $input['country'] ) ? strtoupper( sanitize_text_field( $input['country'] ) ) : '';
 		if ( ! preg_match( '/^[A-Z]{2}$/', $country ) ) {

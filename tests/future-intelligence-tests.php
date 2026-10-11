@@ -474,6 +474,46 @@ assert_future( ! GCU_Future_Policy::valid_faq_aggregate_signal( array( 'question
 assert_future( false === strpos( $r17_source, 'absint( $signal[' . "'count'" . '] )' ), 'R17 source no longer transforms negative question frequency to a positive public cohort.' );
 assert_future( false !== strpos( $r17_source, 'gcu_future_ai_input_type_invalid' ), 'R17 REST AI draft handler returns controlled bad-input error.' );
 
+
+// R18 / FUT03: even a public REST request may inject arrays in preference
+// to route path parameters. Claim lookup accepts only shaped scalar claim IDs.
+assert_future( 'zero_commission' === GCU_Future_Policy::safe_public_claim_key( 'zero_commission' ), 'R18 genuine public trust lookup retains canonical key.' );
+foreach ( array( array( 'zero_commission' ), (object) array( 'claim_key' => 'zero_commission' ), -5, true, '', 'CLAIM', 'zero commission' ) as $wrong_claim ) {
+    assert_future( '' === GCU_Future_Policy::safe_public_claim_key( $wrong_claim ), 'R18 malformed public claim key must fail closed.' );
+}
+
+// R18 / FUT22: editor record/report list params are exact typed identifiers,
+// never cast nested JSON or negative pagination to valid positive cursors.
+$r18_default_records = GCU_Future_Policy::validate_future_read_query( array(), 'records' );
+assert_future( $r18_default_records['safe'] && 50 === $r18_default_records['limit'] && 0 === $r18_default_records['cursor'] && '' === $r18_default_records['type'], 'R18 records query still defaults to first page.' );
+$r18_valid_reports = GCU_Future_Policy::validate_future_read_query( array( 'status'=>'reviewing', 'limit'=>'25', 'cursor'=>'9' ), 'reports' );
+assert_future( $r18_valid_reports['safe'] && 25 === $r18_valid_reports['limit'] && 9 === $r18_valid_reports['cursor'] && 'reviewing' === $r18_valid_reports['status'], 'R18 approved versioned complaint list remains accessible.' );
+foreach ( array( 'limit', 'cursor' ) as $field ) {
+    foreach ( array( -5, array( 5 ), (object) array( 'x' => 5 ), '1.5' ) as $bad_value ) {
+        $r18_bad = GCU_Future_Policy::validate_future_read_query( array( $field => $bad_value ), 'records' );
+        assert_future( ! $r18_bad['safe'] && in_array( $field, $r18_bad['invalid_fields'], true ), 'R18 malformed pagination cannot silently become a different cursor/page.' );
+    }
+}
+$r18_bad = GCU_Future_Policy::validate_future_read_query( array( 'type' => array( 'ai_draft' ) ), 'records' );
+assert_future( ! $r18_bad['safe'] && in_array( 'type', $r18_bad['invalid_fields'], true ), 'R18 nested record type must not leak an unfiltered listing.' );
+$r18_bad = GCU_Future_Policy::validate_future_read_query( array( 'status' => 'unknown' ), 'reports' );
+assert_future( ! $r18_bad['safe'] && in_array( 'status', $r18_bad['invalid_fields'], true ), 'R18 unsupported report state cannot silently list open complaints.' );
+$r18_bad = GCU_Future_Policy::validate_future_read_query( array( 'status' => array( 'open' ) ), 'reports' );
+assert_future( ! $r18_bad['safe'] && in_array( 'status', $r18_bad['invalid_fields'], true ), 'R18 nested report status is invalid.' );
+assert_future( 100 === GCU_Future_Policy::bounded_query_integer( '180', 50, 100 ), 'R18 positive large limit remains bounded to safe max.' );
+
+// R18 / FUT13: privacy analytics reporting days must be a positive scalar,
+// not abs(-n) or accidentally substituted nested JSON.
+assert_future( 30 === GCU_Future_Policy::bounded_query_integer( null, 30, 90 ), 'R18 friction reports retain documented default range.' );
+assert_future( 90 === GCU_Future_Policy::bounded_query_integer( '250', 30, 90 ), 'R18 long but valid window is bounded safely.' );
+foreach ( array( -30, ' -30', '-30', 0, array( 30 ), true, '1e2', '' ) as $invalid_days ) {
+    assert_future( null === GCU_Future_Policy::bounded_query_integer( $invalid_days, 30, 90 ), 'R18 malformed/negative days cannot become a real aggregation period.' );
+}
+$r18_source = file_get_contents( __DIR__ . '/../14-global-clinic-usp-integration/includes/class-gcu-future-intelligence.php' );
+foreach ( array( 'gcu_future_claim_query_invalid', 'gcu_future_records_query_invalid', 'gcu_future_reports_query_invalid', 'gcu_future_friction_window_invalid' ) as $error_code ) {
+    assert_future( false !== strpos( $r18_source, $error_code ), 'R18 REST endpoint must enforce typed query before owner read: ' . $error_code );
+}
+
 $terms = GCU_Future_Policy::terminology_lock();
 assert_future( isset( $terms['verified_doctor']['en-US'], $terms['verified_doctor']['ur-PK'], $terms['verified_doctor']['ar-SA'] ), 'Terminology lock must cover English, Urdu and Arabic.' );
 $ur = GCU_Future_I18n::strings( 'ur-PK' );

@@ -6,7 +6,7 @@ Canonical File 14 implementation for the **Sabri Social Homeopathy Platform**.
 - Fresh central governing baseline: 2026-08-10
 - Base File plan: `SSH-F14-PLAN-2026-v1.0`
 - Founder-approved additive amendment: `SSH-F14-FUTURE-CTI-2026-v2.0`
-- Software candidate: `1.4.21`
+- Software candidate: `1.4.22`
 - Base schema candidate: `10005`
 - Future CTI additive schema: `1`
 - Current canonical source repository: `14-global-clinic-usp-and-conversion-sections`
@@ -83,3 +83,8 @@ Twenty distinct source/plan/companion reviews: 15 narrow source-clean, three Fil
 ### 2026-10-11 R17 / v1.4.21 — source-grounded AI, measured privacy and FAQ aggregate integrity
 
 Twenty source/companion review lenses: 15 narrow checks clean, three File14 defects corrected (nested AI text/objective/provider candidate, invalid privacy quality verified state, negative/nested FAQ aggregate signals), two design/owner obligations remain Issues #19 and #22. See `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.21-R17.md`. Candidate repo QA does not mean installed/live completion.
+
+
+### 2026-10-11 R18 / v1.4.22 — typed REST claim, pagination and privacy time windows
+
+Twenty independent static source/plan/companion reviews: fifteen narrowly source-clean, three File14 defects corrected (public claim query malformed input, editor record/report pagination status and cursor, aggregate friction reporting days), two native owner/design contracts pending Issues #19 and #22. New regression suite validates positive/default and malformed REST shapes before owner DB reads. Full evidence `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.22-R18.md`. No staging/live version parity claimed.
