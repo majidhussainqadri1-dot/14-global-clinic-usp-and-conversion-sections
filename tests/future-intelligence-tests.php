@@ -351,6 +351,9 @@ $r14_db->rows[] = array(
     'updated_at' => '2026-10-10 06:00:00', 'payload' => json_encode( $r14_valid_payload ),
 );
 $GLOBALS['wpdb'] = $r14_db;
+$r14_decoded = GCU_Future_Intelligence::records( 'change_log', true, 1, 100 );
+assert_future( 1 === count( $r14_decoded ) && is_array( $r14_decoded[0]['payload'] ) && 'Founder-reviewed transparency change' === $r14_decoded[0]['payload']['title'], 'R14 regression-discovered: records() must decode JSON payload into returned array, not a temporary foreach copy.' );
+$r14_db->pages = 0;
 $r14_visible = GCU_Future_Intelligence::public_change_log( 1 );
 assert_future( 1 === count( $r14_visible ) && 'governed_change' === $r14_visible[0]['key'], 'R14: approved older governance entry must not be hidden by 100 newer malformed legacy rows.' );
 assert_future( 2 === $r14_db->pages, 'R14: bounded stable pagination must search beyond first invalid public batch.' );
