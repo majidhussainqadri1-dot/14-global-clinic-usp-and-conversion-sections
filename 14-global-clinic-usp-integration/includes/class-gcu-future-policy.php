@@ -72,11 +72,8 @@ final class GCU_Future_Policy {
 		if ( array_key_exists( 'payload', $input ) && ! is_array( $input['payload'] ) ) {
 			$invalid[] = 'payload';
 		}
-		if ( array_key_exists( 'expected_version', $input ) ) {
-			$v = $input['expected_version'];
-			if ( ! ( ( is_int( $v ) && $v >= 0 ) || ( is_string( $v ) && ctype_digit( $v ) ) ) ) {
-				$invalid[] = 'expected_version';
-			}
+		if ( array_key_exists( 'expected_version', $input ) && null === self::strict_record_expected_version( $input['expected_version'] ) ) {
+			$invalid[] = 'expected_version';
 		}
 		if ( array_key_exists( 'is_public', $input ) && ! in_array( $input['is_public'], array( true, false, 0, 1, '0', '1' ), true ) ) {
 			$invalid[] = 'is_public';
@@ -86,8 +83,8 @@ final class GCU_Future_Policy {
 
 	/** Claim revalidation changes public trust state. Never coerce nested inputs. */
 	public static function validate_revalidation_input_types( $claim_key, $reason, $version ) {
-		return is_string( $claim_key ) && is_string( $reason )
-			&& ( ( is_int( $version ) && $version > 0 ) || ( is_string( $version ) && ctype_digit( $version ) && (int) $version > 0 ) );
+		return is_string( $claim_key ) && is_string( $reason ) && strlen( $reason ) <= 4096
+			&& null !== self::strict_mutation_version( $version );
 	}
 
 	/**
@@ -158,6 +155,18 @@ final class GCU_Future_Policy {
 		}
 		$version = (int) $value;
 		return $version > 0 && $version <= 2147483647 ? $version : null;
+	}
+
+	/** Future record creation starts at 0; updates use bounded positive row versions. */
+	public static function strict_record_expected_version( $value ) {
+		if ( is_int( $value ) ) {
+			return $value >= 0 && $value <= 2147483647 ? $value : null;
+		}
+		if ( ! is_string( $value ) || '' === $value || strlen( $value ) > 10 || ! ctype_digit( $value ) ) {
+			return null;
+		}
+		$version = (int) $value;
+		return $version >= 0 && $version <= 2147483647 ? $version : null;
 	}
 
 	/** Workflow transitions must name an exact canonical state, not a coerced value. */
