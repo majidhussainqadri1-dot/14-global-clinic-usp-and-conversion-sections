@@ -225,7 +225,10 @@ final class GCU_Future_Intelligence {
 	}
 
 	public static function rest_trust( WP_REST_Request $request ) {
-		$key = sanitize_key( $request['claim_key'] );
+		$key = GCU_Future_Policy::safe_public_claim_key( $request['claim_key'] );
+		if ( '' === $key ) {
+			return new WP_Error( 'gcu_future_claim_query_invalid', __( 'A valid public trust claim key is required.', 'global-clinic-usp-integration' ), array( 'status' => 400 ) );
+		}
 		$claims = GCU_Plugin::instance()->repository()->public_claims( array( $key ) );
 		if ( empty( $claims[ $key ] ) ) {
 			return new WP_Error( 'gcu_future_claim_unavailable', __( 'This public trust claim is unavailable or requires review.', 'global-clinic-usp-integration' ), array( 'status' => 404 ) );
@@ -293,7 +296,10 @@ final class GCU_Future_Intelligence {
 	public static function rest_friction( WP_REST_Request $request ) {
 		$ready = self::rest_storage_ready();
 		if ( is_wp_error( $ready ) ) { return $ready; }
-		$days = max( 1, min( 90, absint( $request->get_param( 'days' ) ? $request->get_param( 'days' ) : 30 ) ) );
+		$days = GCU_Future_Policy::bounded_query_integer( $request->get_param( 'days' ), 30, 90 );
+		if ( null === $days ) {
+			return new WP_Error( 'gcu_future_friction_window_invalid', __( 'A positive reporting window is required.', 'global-clinic-usp-integration' ), array( 'status' => 400 ) );
+		}
 		return self::no_store_response( self::friction_summary( $days ) );
 	}
 
@@ -328,7 +334,13 @@ final class GCU_Future_Intelligence {
 
 	public static function rest_records( WP_REST_Request $request ) {
 		$ready = self::rest_storage_ready();
-		if ( is_wp_error( $ready ) ) { return $ready; } $type=sanitize_key((string)$request->get_param('type'));$limit=max(1,min(100,absint($request->get_param('limit')?:50)));$cursor=absint($request->get_param('cursor'));return self::no_store_response(self::records_page($type,$cursor,$limit)); }
+		if ( is_wp_error( $ready ) ) { return $ready; }
+		$query = GCU_Future_Policy::validate_future_read_query( array( 'type' => $request->get_param( 'type' ), 'limit' => $request->get_param( 'limit' ), 'cursor' => $request->get_param( 'cursor' ) ), 'records' );
+		if ( ! $query['safe'] ) {
+			return new WP_Error( 'gcu_future_records_query_invalid', __( 'Record query parameters are invalid.', 'global-clinic-usp-integration' ), array( 'status' => 400, 'fields' => $query['invalid_fields'] ) );
+		}
+		return self::no_store_response( self::records_page( $query['type'], $query['cursor'], $query['limit'] ) );
+	}
 
 	public static function rest_record_write( WP_REST_Request $request ) {
 		$rate = GCU_Plugin::instance()->repository()->consume_rate_limit( 'future-record-write', 120 );
@@ -359,7 +371,13 @@ final class GCU_Future_Intelligence {
 
 	public static function rest_reports( WP_REST_Request $request ) {
 		$ready = self::rest_storage_ready();
-		if ( is_wp_error( $ready ) ) { return $ready; } $status=sanitize_key((string)$request->get_param('status'));if(!in_array($status,array('open','reviewing','resolved','rejected'),true)){$status='open';}$limit=max(1,min(100,absint($request->get_param('limit')?:50)));$cursor=absint($request->get_param('cursor'));return self::no_store_response(self::reports_page($status,$cursor,$limit)); }
+		if ( is_wp_error( $ready ) ) { return $ready; }
+		$query = GCU_Future_Policy::validate_future_read_query( array( 'status' => $request->get_param( 'status' ), 'limit' => $request->get_param( 'limit' ), 'cursor' => $request->get_param( 'cursor' ) ), 'reports' );
+		if ( ! $query['safe'] ) {
+			return new WP_Error( 'gcu_future_reports_query_invalid', __( 'Report query parameters are invalid.', 'global-clinic-usp-integration' ), array( 'status' => 400, 'fields' => $query['invalid_fields'] ) );
+		}
+		return self::no_store_response( self::reports_page( $query['status'], $query['cursor'], $query['limit'] ) );
+	}
 
 	public static function rest_revalidate_claim( WP_REST_Request $request ) {
 		$rate = GCU_Plugin::instance()->repository()->consume_rate_limit( 'future-claim-revalidate', 60 );
