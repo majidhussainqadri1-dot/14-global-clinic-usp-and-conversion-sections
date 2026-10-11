@@ -376,7 +376,7 @@ $r15_guard = GCU_Future_Policy::validate_future_record_input_types( $r15_valid_r
 assert_future( true === $r15_guard['safe'], 'R15 ordinary approved governance write fields remain accepted.' );
 foreach ( array( 'record_type', 'record_key', 'locale', 'region', 'status', 'expected_version', 'is_public', 'payload' ) as $field ) {
     $r15_bad = $r15_valid_record;
-    $r15_bad[ $field ] = array( 'nested' );
+    $r15_bad[ $field ] = 'payload' === $field ? (object) array( 'nested' => true ) : array( 'nested' );
     $r15_result = GCU_Future_Policy::validate_future_record_input_types( $r15_bad );
     assert_future( false === $r15_result['safe'] && in_array( $field, $r15_result['invalid_fields'], true ), 'R15 nested governed field must fail closed: ' . $field );
 }
