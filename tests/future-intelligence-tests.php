@@ -304,6 +304,65 @@ assert_future( array() === GCU_Future_Intelligence::jurisdiction_disclosure( 'en
 assert_future( array() === GCU_Future_Intelligence::jurisdiction_disclosure( 'en-US', array( 'PK' ) ), 'R13 non-scalar country in disclosure does not gain privileged regional scope.' );
 $GLOBALS['wpdb'] = $r13_prior_wpdb;
 
+
+// R14 / FUT-01: nested JSON values cannot infer a patient/doctor/learn intent.
+foreach ( array( array('doctor'), (object) array('intent'=>'patient'), true, 1, null, 'unknown' ) as $bad_intent ) {
+    assert_future( '' === GCU_Future_Policy::sanitize_explicit_intent( $bad_intent ), 'R14: non-scalar or unknown journey must be rejected.' );
+}
+foreach ( array( 'patient', 'doctor', 'learn' ) as $allowed_intent ) {
+    assert_future( $allowed_intent === GCU_Future_Policy::sanitize_explicit_intent( $allowed_intent ), 'R14: approved explicit user journey remains available.' );
+}
+$r14_rest_source = file_get_contents( __DIR__ . '/../14-global-clinic-usp-integration/includes/class-gcu-future-intelligence.php' );
+assert_future( false !== strpos( $r14_rest_source, "GCU_Future_Policy::sanitize_explicit_intent( isset( \$data['intent'] )" ), 'R14: REST handoff must call tested typed, approved explicit-intent guard.' );
+
+// R14 / FUT-22: invalid newest historical public governance rows cannot crowd
+// an older, separately reviewed and properly sourced change out of a small log.
+if ( ! defined( 'ARRAY_A' ) ) { define( 'ARRAY_A', 'ARRAY_A' ); }
+class R14_Change_Log_Fixture {
+    public $prefix = 'wp_';
+    public $rows = array();
+    public $pages = 0;
+    public function prepare( $sql, $arguments ) { return $sql; }
+    public function get_results( $sql, $mode = null ) {
+        $this->pages++;
+        if ( ! preg_match( '/LIMIT ([0-9]+) OFFSET ([0-9]+)/', $sql, $m ) ) { return array(); }
+        return array_slice( $this->rows, (int) $m[2], (int) $m[1] );
+    }
+}
+$r14_previous_wpdb = isset( $GLOBALS['wpdb'] ) ? $GLOBALS['wpdb'] : null;
+$r14_db = new R14_Change_Log_Fixture();
+$r14_valid_payload = array(
+    'title' => 'Founder-reviewed transparency change',
+    'summary' => 'Policy wording was reviewed and documented.',
+    'source' => 'Approved F14 amendment',
+    'reviewer' => 'Founder',
+    'provenance' => 'Governance review',
+    'effective_date' => '2026-10-11',
+);
+for ( $r14_i = 0; $r14_i < 100; $r14_i++ ) {
+    $r14_db->rows[] = array(
+        'record_key' => 'legacy_incomplete_' . $r14_i, 'locale' => 'en-US',
+        'updated_at' => '2026-10-11 07:00:00',
+        'payload' => json_encode( array( 'title' => 'No evidence supplied', 'summary' => 'Historical invalid row' ) ),
+    );
+}
+$r14_db->rows[] = array(
+    'record_key' => 'governed_change', 'locale' => 'en-US',
+    'updated_at' => '2026-10-10 06:00:00', 'payload' => json_encode( $r14_valid_payload ),
+);
+$GLOBALS['wpdb'] = $r14_db;
+$r14_decoded = GCU_Future_Intelligence::records( 'change_log', true, 1, 100 );
+assert_future( 1 === count( $r14_decoded ) && is_array( $r14_decoded[0]['payload'] ) && 'Founder-reviewed transparency change' === $r14_decoded[0]['payload']['title'], 'R14 regression-discovered: records() must decode JSON payload into returned array, not a temporary foreach copy.' );
+$r14_db->pages = 0;
+$r14_visible = GCU_Future_Intelligence::public_change_log( 1 );
+assert_future( 1 === count( $r14_visible ) && 'governed_change' === $r14_visible[0]['key'], 'R14: approved older governance entry must not be hidden by 100 newer malformed legacy rows.' );
+assert_future( 2 === $r14_db->pages, 'R14: bounded stable pagination must search beyond first invalid public batch.' );
+$r14_db->rows = array_slice( $r14_db->rows, 0, 100 );
+$r14_db->pages = 0;
+assert_future( array() === GCU_Future_Intelligence::public_change_log( 1 ), 'R14: invalid change records must never be published even without valid fallback.' );
+assert_future( 2 === $r14_db->pages, 'R14: search terminates upon an empty next page.' );
+$GLOBALS['wpdb'] = $r14_previous_wpdb;
+
 $terms = GCU_Future_Policy::terminology_lock();
 assert_future( isset( $terms['verified_doctor']['en-US'], $terms['verified_doctor']['ur-PK'], $terms['verified_doctor']['ar-SA'] ), 'Terminology lock must cover English, Urdu and Arabic.' );
 $ur = GCU_Future_I18n::strings( 'ur-PK' );

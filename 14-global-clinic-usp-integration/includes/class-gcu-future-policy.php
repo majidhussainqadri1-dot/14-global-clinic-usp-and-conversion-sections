@@ -51,6 +51,15 @@ final class GCU_Future_Policy {
 		);
 	}
 
+	/** Explicit journeys are selected by the visitor; nested JSON cannot imply intent. */
+	public static function sanitize_explicit_intent( $value ) {
+		if ( ! is_string( $value ) ) {
+			return '';
+		}
+		$intent = sanitize_key( $value );
+		return array_key_exists( $intent, self::supported_intents() ) ? $intent : '';
+	}
+
 	public static function sanitize_handoff_context( array $input ) {
 		$country = isset( $input['country'] ) && is_string( $input['country'] ) ? strtoupper( sanitize_text_field( $input['country'] ) ) : '';
 		if ( ! preg_match( '/^[A-Z]{2}$/', $country ) ) {

@@ -1,4 +1,16 @@
-# Release Evidence — v1.4.17 Thirteenth Twenty-Pass Handoff and Jurisdiction Safety Repository Candidate
+# Release Evidence — v1.4.18 Fourteenth Twenty-Pass Explicit Intent and Public Change Log Repository Candidate
+
+## R14 source evidence and operational distinction
+
+Frozen prior File14 main `cfe8d9c51932014702967acc27c10d4382c4de0e`; 20 independent code/plan/source lenses: 16 narrow source-clean, two source-review defects corrected, one additional PHP CI regression-discovered record-decoding fatal corrected (R14-D03), and two incomplete owner/design requirements Issue #19/#22. Details in `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.18-R14.md`.
+
+F14-FUT-01: REST explicit patient/doctor/learn intent now passes through `GCU_Future_Policy::sanitize_explicit_intent`, requiring a text input and the exact approved vocabulary. F14-FUT-22: source-reviewed public change-log records are selected *before* applying the output limit; stable paged scan bounds work to 1,000 candidates; legacy invalid records remain unmodified and cannot publish. Tests include invalid intent types and 100 invalid newest rows preceding approved public evidence.
+
+Candidate plugin 1.4.18; base schema target 10005 / Future target 1 (neither actual DB evidence). Exact branch PHP7.4/PHP8.3, fresh rounds 1/2, deterministic package SHA/SBOM, PR and independently observed post-merge-main CI are required. No live deployed parity, DB/migration/options/WordPress logs, staging or Founder acceptance proof.
+
+## Historical R13 (preserved)
+
+Historical identity: v1.4.17 Thirteenth Twenty-Pass Handoff and Jurisdiction Safety Repository Candidate
 
 ## R13 source correction and operational boundary
 - Exact audited main `b0524faaa60c5324de4da43e6c813370c4f75084`. Twenty source checks completed before change: 16 narrowly clean, two local defects corrected (R13-D01 input type safety, R13-D02 approved regional-to-generic fallback), two unchanged external design requirements.
@@ -89,7 +101,7 @@ Historical identity: v1.4.9 Fifth Twenty-Pass Exact-Companion Repository Candida
 - Base plan: `SSH-F14-PLAN-2026-v1.0`.
 - Additive Founder-approved amendment: `SSH-F14-FUTURE-CTI-2026-v2.0`.
 - Fifth twenty-pass baseline: exact starting `main` `080e2198d84dfb7491bb0b75946e14a5fe118b91` (v1.4.8 fourth twenty-pass merge).
-- Software candidate: `1.4.17`.
+- Software candidate: `1.4.18`.
 - Base schema: `10005`; Future CTI additive schema: `1`.
 - Requirements retained: original File 14 FR/NFR plus `F14-FUT-01`–`F14-FUT-24`.
 - Ownership remains bounded: no doctor/clinic/application/appointment/payment/verification/shell source of truth is created here.
