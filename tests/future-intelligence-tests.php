@@ -441,6 +441,39 @@ assert_future( ! $r16_high_perf['complete'] && in_array( 'performance_measuremen
 $r16_unknown_perf = GCU_Future_Policy::quality_evidence_status( 30, 4, 93, array(100), true );
 assert_future( ! $r16_unknown_perf['complete'], 'R16 structured data cannot become performance evidence.' );
 
+
+// R17 / FUT-21: an editor's base/objective or provider candidate must be real
+// text, not coerced PHP "Array" or arbitrary object-generated claims.
+assert_future( GCU_Future_Policy::valid_ai_copy_inputs( array( 'base_text' => 'Read our actual policy.', 'objective' => 'clarity' ) ), 'R17 valid reviewed AI editor inputs remain accepted.' );
+assert_future( ! GCU_Future_Policy::valid_ai_copy_inputs( array( 'base_text' => array( 'invented claim' ), 'objective' => 'trust' ) ), 'R17 nested base_text cannot become a provider drafting instruction.' );
+assert_future( ! GCU_Future_Policy::valid_ai_copy_inputs( array( 'base_text' => 'Safe source text', 'objective' => array( 'trust' ) ) ), 'R17 nested objective cannot become approved editing intent.' );
+assert_future( ! GCU_Future_Policy::valid_ai_copy_inputs( array( 'base_text' => 'Safe source text', 'objective' => 'automatic_publish' ) ), 'R17 unapproved AI objective cannot bypass constrained drafting mode.' );
+assert_future( 'Verified profile only.' === GCU_Future_Policy::normalize_ai_candidate_text( array( 'text' => '<b>Verified profile only.</b>' ) ), 'R17 typed provider suggestions retain safe plain text.' );
+assert_future( null === GCU_Future_Policy::normalize_ai_candidate_text( array( 'text' => array( 'unverified' ) ) ), 'R17 nested provider candidate cannot become a textual medical or financial claim.' );
+assert_future( null === GCU_Future_Policy::normalize_ai_candidate_text( (object) array( 'text' => 'unsupported' ) ), 'R17 object provider suggestions rejected.' );
+
+// R17 / FUT-11: percentages are measured only in [0..100]; a stray
+// plugin/filter cannot report negative/overflow privacy as verified.
+foreach ( array( 0, 100, 95.5, '75' ) as $metric ) {
+    assert_future( GCU_Future_Policy::valid_quality_percentage( $metric ), 'R17 ordinary bounded percentage remains valid.' );
+}
+foreach ( array( -1, 101, '1e309', false, true, array( 95 ), 'n/a', null ) as $metric ) {
+    assert_future( ! GCU_Future_Policy::valid_quality_percentage( $metric ), 'R17 nonfinite, invalid, out-of-range or nested quality metric must not prove evidence.' );
+}
+assert_future( ! GCU_Future_Policy::quality_evidence_status( 30, 4, 101, 95, true )['complete'], 'R17 range validation applies to accessibility quality completeness.' );
+$r17_source = file_get_contents( __DIR__ . '/../14-global-clinic-usp-integration/includes/class-gcu-future-intelligence.php' );
+assert_future( false !== strpos( $r17_source, 'valid_quality_percentage( $privacy_effectiveness )' ) && false !== strpos( $r17_source, "'privacy_verified' => GCU_Future_Policy::valid_quality_percentage" ), 'R17 public quality/verified privacy status must use strict measured scale.' );
+
+// R17 / FUT-18 and Small-Cohort Privacy Guard: no absolute-value promotion of
+// negative counts; question must be text, actual positive aggregate >= floor.
+assert_future( GCU_Future_Policy::valid_faq_aggregate_signal( array( 'question' => 'How do I choose a qualified doctor?', 'count' => 25 ) ), 'R17 genuine sufficient approved aggregate remains eligible.' );
+assert_future( ! GCU_Future_Policy::valid_faq_aggregate_signal( array( 'question' => 'Sensitive question', 'count' => -25 ) ), 'R17 negative cohort count cannot turn into 25 through absint().' );
+assert_future( ! GCU_Future_Policy::valid_faq_aggregate_signal( array( 'question' => array( 'patient text' ), 'count' => 25 ) ), 'R17 nested or private question cannot be coerced into aggregate FAQ suggestion.' );
+assert_future( ! GCU_Future_Policy::valid_faq_aggregate_signal( array( 'question' => 'A rare question', 'count' => 2 ) ), 'R17 low-frequency question must remain privacy-suppressed.' );
+assert_future( ! GCU_Future_Policy::valid_faq_aggregate_signal( array( 'question' => 'Unsupported floating sample', 'count' => 25.7 ) ), 'R17 fabricated/fractional question count rejected.' );
+assert_future( false === strpos( $r17_source, "absint( $signal['count'] )" ), 'R17 source no longer transforms negative question frequency to a positive public cohort.' );
+assert_future( false !== strpos( $r17_source, 'gcu_future_ai_input_type_invalid' ), 'R17 REST AI draft handler returns controlled bad-input error.' );
+
 $terms = GCU_Future_Policy::terminology_lock();
 assert_future( isset( $terms['verified_doctor']['en-US'], $terms['verified_doctor']['ur-PK'], $terms['verified_doctor']['ar-SA'] ), 'Terminology lock must cover English, Urdu and Arabic.' );
 $ur = GCU_Future_I18n::strings( 'ur-PK' );
