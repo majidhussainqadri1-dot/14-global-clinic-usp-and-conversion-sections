@@ -363,6 +363,48 @@ assert_future( array() === GCU_Future_Intelligence::public_change_log( 1 ), 'R14
 assert_future( 2 === $r14_db->pages, 'R14: search terminates upon an empty next page.' );
 $GLOBALS['wpdb'] = $r14_previous_wpdb;
 
+
+// R15 — Future REST governance must never coerce JSON arrays/objects into
+// controlled record types, keys, locale, version, publication or claim reasons.
+$r15_valid_record = array(
+    'record_type' => 'change_log', 'record_key' => 'founder_change',
+    'locale' => 'en-US', 'region' => 'ZZ', 'status' => 'draft',
+    'payload' => array( 'title' => 'A reviewed policy note' ),
+    'expected_version' => '2', 'is_public' => false,
+);
+$r15_guard = GCU_Future_Policy::validate_future_record_input_types( $r15_valid_record );
+assert_future( true === $r15_guard['safe'], 'R15 ordinary approved governance write fields remain accepted.' );
+foreach ( array( 'record_type', 'record_key', 'locale', 'region', 'status', 'expected_version', 'is_public', 'payload' ) as $field ) {
+    $r15_bad = $r15_valid_record;
+    $r15_bad[ $field ] = array( 'nested' );
+    $r15_result = GCU_Future_Policy::validate_future_record_input_types( $r15_bad );
+    assert_future( false === $r15_result['safe'] && in_array( $field, $r15_result['invalid_fields'], true ), 'R15 nested governed field must fail closed: ' . $field );
+}
+$r15_bad = $r15_valid_record;
+$r15_bad['expected_version'] = -3;
+assert_future( false === GCU_Future_Policy::validate_future_record_input_types( $r15_bad )['safe'], 'R15 negative row version must be rejected, not passed through absint.' );
+$r15_bad = $r15_valid_record;
+$r15_bad['is_public'] = 'yes';
+assert_future( false === GCU_Future_Policy::validate_future_record_input_types( $r15_bad )['safe'], 'R15 arbitrary nonempty text cannot mark record publicly visible.' );
+assert_future( GCU_Future_Policy::validate_revalidation_input_types( 'zero_commission', 'Review authoritative claim evidence.', '2' ), 'R15 valid claim revalidation remains allowed.' );
+assert_future( ! GCU_Future_Policy::validate_revalidation_input_types( array( 'zero_commission' ), 'Review reason', 1 ), 'R15 arrays cannot identify an approved claim.' );
+assert_future( ! GCU_Future_Policy::validate_revalidation_input_types( 'zero_commission', array( 'review reason' ), 1 ), 'R15 nested reason cannot enter audited claim revalidation.' );
+assert_future( ! GCU_Future_Policy::validate_revalidation_input_types( 'zero_commission', 'Review reason', -2 ), 'R15 invalid negative row version cannot be coerced to a positive expected version.' );
+assert_future( ! GCU_Future_Policy::validate_revalidation_input_types( 'zero_commission', 'Review reason', array( 2 ) ), 'R15 nested row version must fail closed.' );
+$r15_future_source = file_get_contents( __DIR__ . '/../14-global-clinic-usp-integration/includes/class-gcu-future-intelligence.php' );
+assert_future( false !== strpos( $r15_future_source, 'gcu_future_record_input_type_invalid' ), 'R15 REST governed record writer must return explicit bad-input response.' );
+assert_future( false !== strpos( $r15_future_source, 'gcu_future_revalidation_input_type_invalid' ), 'R15 REST claim revalidation must reject nested types before side effects.' );
+
+// F14-FUT-16/F14-FUT-17 experiment safety must reject unstructured
+// sampling/privacy policy rather than converting a JSON array into "Array".
+$r15_guardrails = array( 'claim_integrity' => true, 'privacy' => true, 'accessibility' => true, 'error_rate' => true, 'complaints' => true );
+$r15_invalid_experiment = GCU_Future_Policy::experiment_preflight( array( 'Neutral CTA', 'Approved title' ), $r15_guardrails, array( 'health profiling' ), array( 'minor profiling' ) );
+assert_future( false === $r15_invalid_experiment['safe'] && in_array( 'invalid_sampling_policy_type', $r15_invalid_experiment['flags'], true ), 'R15 nested sample/privacy policies may never pass ethical experiment preflight.' );
+$r15_invalid_variant = GCU_Future_Policy::experiment_preflight( array( (object) array( 'title' => 'Unsafe' ), 'Safe title' ), $r15_guardrails, 'consented aggregate', 'no profiling' );
+assert_future( false === $r15_invalid_variant['safe'] && in_array( 'invalid_variant_type', $r15_invalid_variant['flags'], true ), 'R15 unsupported experiment variant object must be rejected, not cast into warnings.' );
+$r15_good_experiment = GCU_Future_Policy::experiment_preflight( array( 'Neutral CTA', 'Approved title' ), $r15_guardrails, 'consented aggregate', 'no profiling' );
+assert_future( true === $r15_good_experiment['safe'], 'R15 normal approved text experiments remain eligible for preflight only (not activation).' );
+
 $terms = GCU_Future_Policy::terminology_lock();
 assert_future( isset( $terms['verified_doctor']['en-US'], $terms['verified_doctor']['ur-PK'], $terms['verified_doctor']['ar-SA'] ), 'Terminology lock must cover English, Urdu and Arabic.' );
 $ur = GCU_Future_I18n::strings( 'ur-PK' );
