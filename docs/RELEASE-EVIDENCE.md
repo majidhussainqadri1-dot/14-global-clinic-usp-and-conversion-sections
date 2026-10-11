@@ -1,4 +1,4 @@
-# Release Evidence — v1.4.14 Tenth Twenty-Pass Scoped-Language and Readiness Repository Candidate
+# Release Evidence — v1.4.14 Tenth Twenty-Pass Safe Localization and Readiness Repository Candidate
 
 ## R10 exact-source evidence and constraints
 
