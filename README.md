@@ -2,11 +2,15 @@
 
 Canonical File 14 implementation for the **Sabri Social Homeopathy Platform**.
 
+## Current R19 exact-source correction (2026-10-11)
+
+Twenty separate source/plan/companion lenses were reviewed at frozen main `962bee58bc9100c8ce084fafa152ce23d97acb11` before any edits: fifteen limited source guards present, three local input defects corrected, two external/design gates still open. Version 1.4.23 strengthens legacy funnel window, workflow/claim version and route input validation and non-text AI guards. See `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.23-R19.md`. Issue #19 (owner-origin conversion events), Issue #22 (approved experiment baseline restore), deployed parity/staging/live acceptance remain incomplete. 
+
 ## Governing identity
 - Fresh central governing baseline: 2026-08-10
 - Base File plan: `SSH-F14-PLAN-2026-v1.0`
 - Founder-approved additive amendment: `SSH-F14-FUTURE-CTI-2026-v2.0`
-- Software candidate: `1.4.22`
+- Software candidate: `1.4.23`
 - Base schema candidate: `10005`
 - Future CTI additive schema: `1`
 - Current canonical source repository: `14-global-clinic-usp-and-conversion-sections`
