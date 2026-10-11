@@ -6,7 +6,7 @@ Canonical File 14 implementation for the **Sabri Social Homeopathy Platform**.
 - Fresh central governing baseline: 2026-08-10
 - Base File plan: `SSH-F14-PLAN-2026-v1.0`
 - Founder-approved additive amendment: `SSH-F14-FUTURE-CTI-2026-v2.0`
-- Software candidate: `1.4.17`
+- Software candidate: `1.4.18`
 - Base schema candidate: `10005`
 - Future CTI additive schema: `1`
 - Current canonical source repository: `14-global-clinic-usp-and-conversion-sections`
@@ -63,3 +63,8 @@ Twenty source/contract review lenses found two File14-local defects, both correc
 
 ### R13 2026-10-11: public handoff type safety and approved regional fallback
 Twenty independent plan/source checks found two File14-local defects now corrected: array/object input into handoff contexts could produce scalar cast warnings; legacy incomplete regional copy masked separately approved generic disclosure. Regression cases cover both plus safe unverified records. Canonical owner events Issue #19 and experiment baseline restore Issue #22 still pending. See `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.17-R13.md`.
+
+
+### 2026-10-11 R14 / v1.4.18: explicit intent and validated public change-log
+
+20 distinct source/plan/companion contract checks: 16 narrow clean, two File14 defects fixed (REST explicit intent nested JSON handling; invalid newest legacy change-log rows obscuring older approved content), two contracts pending Issues #19/#22. New regression tests and bounded pagination. Per-round evidence `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.18-R14.md`. No staging/live deployment claim.
