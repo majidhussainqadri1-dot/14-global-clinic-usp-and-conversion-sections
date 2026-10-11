@@ -52,15 +52,15 @@ final class GCU_Future_Policy {
 	}
 
 	public static function sanitize_handoff_context( array $input ) {
-		$country = isset( $input['country'] ) ? strtoupper( sanitize_text_field( (string) $input['country'] ) ) : '';
+		$country = isset( $input['country'] ) && is_string( $input['country'] ) ? strtoupper( sanitize_text_field( $input['country'] ) ) : '';
 		if ( ! preg_match( '/^[A-Z]{2}$/', $country ) ) {
 			$country = '';
 		}
-		$language = isset( $input['language'] ) ? strtolower( sanitize_text_field( (string) $input['language'] ) ) : '';
+		$language = isset( $input['language'] ) && is_string( $input['language'] ) ? strtolower( sanitize_text_field( $input['language'] ) ) : '';
 		if ( ! in_array( $language, array( 'en', 'ur', 'ar' ), true ) ) {
 			$language = '';
 		}
-		$mode = isset( $input['mode'] ) ? sanitize_key( (string) $input['mode'] ) : '';
+		$mode = isset( $input['mode'] ) && is_string( $input['mode'] ) ? sanitize_key( $input['mode'] ) : '';
 		if ( ! in_array( $mode, array( 'online', 'in_person', 'hybrid' ), true ) ) {
 			$mode = '';
 		}
