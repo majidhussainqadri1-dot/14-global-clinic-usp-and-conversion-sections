@@ -1,4 +1,16 @@
-# Release Evidence — v1.4.13 Ninth Twenty-Pass Future REST and Provider Safety Repository Candidate
+# Release Evidence — v1.4.14 Tenth Twenty-Pass Safe Localization and Readiness Repository Candidate
+
+## R10 exact-source evidence and constraints
+
+Frozen prior main ba6e162c8a23b890b1aef86844dc314074162b39; 20 independent source/contract probes (16 limited clean, 2 locally corrected, 2 governing gaps). File14 approved copy and canonical render HTML are now protected from broad Future translations: i18n applies only approved entire visible static nodes within File14's own fragment. Doctor readiness now degrades to an honest, untranslated-content-safe informational checklist without JS/reduced-data mode. Pure-logic regression tests and versioned release gates updated.
+
+External, NOT resolved: GitHub Issue #19 owner-stage File07/08/09 attestations, and Issue #22 Future experiment baseline restoration after auto-stop. Explicit source report: docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.14-R10.md.
+
+Candidate software 1.4.14; code schema targets base 10005 and Future 1 (NOT deployed DB facts). Exact branch quality, fresh review 1/2, reproducible ZIP/SBOM, PR and post-merge new MAIN head required. No staging/deployed-version/checksum/migration/browser/live verification.
+
+## Historical R9 evidence retained
+
+Historical identity: v1.4.13 Ninth Twenty-Pass Future REST and Provider Safety Repository Candidate
 
 ## R9 source and release evidence
 
@@ -45,7 +57,7 @@ Historical identity: v1.4.9 Fifth Twenty-Pass Exact-Companion Repository Candida
 - Base plan: `SSH-F14-PLAN-2026-v1.0`.
 - Additive Founder-approved amendment: `SSH-F14-FUTURE-CTI-2026-v2.0`.
 - Fifth twenty-pass baseline: exact starting `main` `080e2198d84dfb7491bb0b75946e14a5fe118b91` (v1.4.8 fourth twenty-pass merge).
-- Software candidate: `1.4.13`.
+- Software candidate: `1.4.14`.
 - Base schema: `10005`; Future CTI additive schema: `1`.
 - Requirements retained: original File 14 FR/NFR plus `F14-FUT-01`–`F14-FUT-24`.
 - Ownership remains bounded: no doctor/clinic/application/appointment/payment/verification/shell source of truth is created here.

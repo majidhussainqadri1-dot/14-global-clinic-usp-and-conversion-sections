@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Sixth-lineage independent 80-pass exact-source review gate for File 14 v1.4.13.
+"""Sixth-lineage independent 80-pass exact-source review gate for File 14 v1.4.14.
 
 This gate is repository evidence only. It does not prove staging, deployed-code,
 live database, migration or operational state.
@@ -44,7 +44,7 @@ build=r('scripts/build.py')
 checks=[]
 def add(label, ok): checks.append((label,bool(ok)))
 
-add('01 current release retains sixth-review schema lineage', 'Version: 1.4.13' in loader and "GCU_VERSION', '1.4.13" in loader and "GCU_SCHEMA_VERSION', 10005" in loader)
+add('01 current release retains sixth-review schema lineage', 'Version: 1.4.14' in loader and "GCU_VERSION', '1.4.14" in loader and "GCU_SCHEMA_VERSION', 10005" in loader)
 add('02 governing File14 and Future plan identities', 'SSH-F14-PLAN-2026-v1.0' in loader and 'SSH-F14-FUTURE-CTI-2026-v2.0' in loader)
 add('03 active public blocks re-check File14 placement semantics at request time', 'placement_ready($row)' in repo and 'gcu_file14_placement_ready_v1' in contracts)
 add('04 File07 remains doctor-directory destination owner', "'doctor_directory'=>array('owner'=>'File 07'" in contracts)
@@ -114,7 +114,7 @@ add('67 FAQ intelligence can never auto-publish', 'gcu_future_faq_suggestion_can
 add('68 public trust/change log is governed owner data', 'public_change_log' in future and 'change_log' in future)
 add('69 Choose Safely guide remains educational', 'Choose Safely' in future_policy or 'choose safely' in future_policy.lower())
 add('70 doctor readiness remains non-binding and verification-owned by File09/File00', 'binding' in future_policy and 'File 09 / File 00' in future_policy)
-add('71 American English source plus complete Urdu/Arabic Future locale coverage remains', "'ur-PK'" in future_i18n and "'ar-SA'" in future_i18n and 'if ( ! $strings )' in future_i18n and 'Preparation estimate:' in future_i18n and 'American English canonical File 14 chrome' in trace)
+add('71 American English source plus complete Urdu/Arabic Future locale coverage remains', "'ur-PK'" in future_i18n and "'ar-SA'" in future_i18n and 'if ( $strings )' in future_i18n and 'localize_fragment(' in future_i18n and 'preg_replace_callback(' in future_i18n and '<!--gcu-future-start-->' in future and 'Preparation estimate:' in future_i18n and 'American English canonical File 14 chrome' in trace)
 add('72 RTL/LTR direction support remains', 'rtl' in css.lower() and ('rtl' in front.lower() or 'dir=' in front))
 add('73 protected terminology/provenance remains', 'terminology_lock' in future_policy and 'provenance' in future_policy.lower())
 add('74 Sabri Green remains exact primary token', '#087A4E' in loader and '#087A4E' in css and '#087A4E' in future_css)

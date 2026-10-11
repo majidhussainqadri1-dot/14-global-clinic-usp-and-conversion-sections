@@ -47,6 +47,7 @@ final class GCU_Future_I18n {
 				'I am ready to accept the platform rules and verification process.' => 'میں پلیٹ فارم کے قواعد اور تصدیقی طریقۂ کار قبول کرنے کے لیے تیار ہوں۔',
 				'Check readiness' => 'تیاری جانچیں',
 				'Complete the checklist to estimate preparation only.' => 'صرف تیاری کا اندازہ لگانے کے لیے فہرست مکمل کریں۔',
+				'The checklist is informational; automatic scoring requires optional scripting and does not verify a doctor.' => 'یہ فہرست صرف معلومات کے لیے ہے؛ خودکار اندازے کے لیے اختیاری اسکرپٹ درکار ہے اور اس سے ڈاکٹر کی تصدیق نہیں ہوتی۔',
 				'Clinic trust and policy change log' => 'کلینک اعتماد اور پالیسی تبدیلیوں کا ریکارڈ',
 				'Future Conversion & Trust Intelligence v2.0' => 'مستقبل تبدیلی و اعتماد ذہانت v2.0',
 				'Twenty-four Founder-approved ethical conversion, trust, privacy, experiment and transparency enhancements were added to File 14.' => 'بانی کی منظور کردہ اخلاقی تبدیلی، اعتماد، رازداری، تجربات اور شفافیت کی 24 جدید سہولیات فائل 14 میں شامل کی گئیں۔',
@@ -93,6 +94,7 @@ final class GCU_Future_I18n {
 				'I am ready to accept the platform rules and verification process.' => 'أنا مستعد لقبول قواعد المنصة ومسار التحقق.',
 				'Check readiness' => 'تحقق من الاستعداد',
 				'Complete the checklist to estimate preparation only.' => 'أكمل القائمة لتقدير الاستعداد فقط.',
+				'The checklist is informational; automatic scoring requires optional scripting and does not verify a doctor.' => 'هذه القائمة للمعلومات فقط؛ يحتاج حساب الاستعداد آلياً إلى البرنامج الاختياري ولا يعني التحقق من الطبيب.',
 				'Clinic trust and policy change log' => 'سجل الثقة وتغييرات سياسة العيادة',
 				'Future Conversion & Trust Intelligence v2.0' => 'ذكاء التحويل والثقة المستقبلي v2.0',
 				'Twenty-four Founder-approved ethical conversion, trust, privacy, experiment and transparency enhancements were added to File 14.' => 'أضيفت إلى File 14 أربع وعشرون ميزة معتمدة من المؤسس للتحويل الأخلاقي والثقة والخصوصية والتجارب والشفافية.',
@@ -107,23 +109,62 @@ final class GCU_Future_I18n {
 		return isset( $sets[ $locale ] ) ? $sets[ $locale ] : array();
 	}
 
+
+	/**
+	 * Translate only File14-owned static Future chrome, never an entire canonical
+	 * page, source-backed trust claim or arbitrary user content. Only complete
+	 * visible text nodes matching known language keys are translated.
+	 */
+	public static function localize_fragment( $fragment, $locale ) {
+		$strings = self::strings( $locale );
+		if ( $strings ) {
+			$map = array();
+			foreach ( $strings as $english => $translated ) {
+				$map[ esc_html( $english ) ] = esc_html( $translated );
+			}
+			$fragment = preg_replace_callback(
+				'/(?<=>)([^<>]+)(?=<)/u',
+				static function ( $match ) use ( $map ) {
+					if ( ! preg_match( '/^(\\s*)(.*?)(\\s*)$/us', $match[1], $parts ) ) {
+						return $match[1];
+					}
+					return isset( $map[ $parts[2] ] )
+						? $parts[1] . $map[ $parts[2] ] . $parts[3]
+						: $match[1];
+				},
+				$fragment
+			);
+		}
+		$prefix = isset( $strings['Preparation estimate:'] ) ? $strings['Preparation estimate:'] : 'Preparation estimate:';
+		$disclaimer = isset( $strings['This is not verification or approval; File 09 / File 00 remain the authoritative owners.'] )
+			? $strings['This is not verification or approval; File 09 / File 00 remain the authoritative owners.']
+			: 'This is not verification or approval; File 09 / File 00 remain the authoritative owners.';
+		return str_replace(
+			'data-gcu-readiness-form',
+			'data-gcu-readiness-form data-gcu-readiness-prefix="' . esc_attr( $prefix ) . '" data-gcu-readiness-disclaimer="' . esc_attr( $disclaimer ) . '"',
+			$fragment
+		);
+	}
+
 	public static function localize_html( $html, $route ) {
-		if ( ! is_string( $html ) || false === strpos( $html, 'gcu-future' ) ) {
+		if ( ! is_string( $html ) ) {
 			return $html;
 		}
+		$begin = '<!--gcu-future-start-->';
+		$end_marker = '<!--gcu-future-end-->';
+		$start = strrpos( $html, $begin );
+		if ( false === $start ) {
+			return $html;
+		}
+		$fragment_start = $start + strlen( $begin );
+		$end = strpos( $html, $end_marker, $fragment_start );
+		if ( false === $end ) {
+			return $html;
+		}
+		$fragment = substr( $html, $fragment_start, $end - $fragment_start );
 		$locale = GCU_Plugin::instance()->frontend()->current_locale();
-		$strings = self::strings( $locale );
-		if ( ! $strings ) {
-			return str_replace( 'data-gcu-readiness-form', 'data-gcu-readiness-form data-gcu-readiness-prefix="Preparation estimate:" data-gcu-readiness-disclaimer="This is not verification or approval; File 09 / File 00 remain the authoritative owners."', $html );
-		}
-		$replacements = array();
-		foreach ( $strings as $english => $translated ) {
-			$replacements[ esc_html( $english ) ] = esc_html( $translated );
-			$replacements[ esc_attr( $english ) ] = esc_attr( $translated );
-		}
-		$html = strtr( $html, $replacements );
-		$prefix = isset( $strings['Preparation estimate:'] ) ? $strings['Preparation estimate:'] : 'Preparation estimate:';
-		$disclaimer = isset( $strings['This is not verification or approval; File 09 / File 00 remain the authoritative owners.'] ) ? $strings['This is not verification or approval; File 09 / File 00 remain the authoritative owners.'] : 'This is not verification or approval; File 09 / File 00 remain the authoritative owners.';
-		return str_replace( 'data-gcu-readiness-form', 'data-gcu-readiness-form data-gcu-readiness-prefix="' . esc_attr( $prefix ) . '" data-gcu-readiness-disclaimer="' . esc_attr( $disclaimer ) . '"', $html );
+		return substr( $html, 0, $start )
+			. self::localize_fragment( $fragment, $locale )
+			. substr( $html, $end + strlen( $end_marker ) );
 	}
 }
