@@ -1,4 +1,4 @@
-# File 14 Status — v1.4.14 Tenth Twenty-Pass Scoped-Language and Readiness Repository Candidate
+# File 14 Status — v1.4.14 Tenth Twenty-Pass Safe Localization and Readiness Repository Candidate
 
 ## R10 exact-source audit — 2026-10-11
 
