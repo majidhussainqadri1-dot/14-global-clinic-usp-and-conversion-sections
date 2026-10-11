@@ -365,7 +365,7 @@ final class GCU_Future_Intelligence {
 		$result = GCU_Plugin::instance()->repository()->run_idempotent_command( 'future_record_write', $idempotency, static function() use ( $type, $key, $data ) { return self::upsert_record(
 			$type, $key, GCU_Policy::sanitize_locale( isset( $data['locale'] ) ? $data['locale'] : 'en-US' ),
 			self::sanitize_region( isset( $data['region'] ) ? $data['region'] : 'ZZ' ), isset( $data['payload'] ) && is_array( $data['payload'] ) ? $data['payload'] : array(),
-			isset( $data['status'] ) ? sanitize_key( $data['status'] ) : 'draft', ! empty( $data['is_public'] ), isset( $data['expected_version'] ) ? absint( $data['expected_version'] ) : 0, false ); }, GCU_Hardening::request_fingerprint( array( 'record_type'=>$type, 'record_key'=>$key, 'data'=>$data ) ) );
+			isset( $data['status'] ) ? sanitize_key( $data['status'] ) : 'draft', ! empty( $data['is_public'] ), isset( $data['expected_version'] ) ? GCU_Future_Policy::strict_record_expected_version( $data['expected_version'] ) : 0, false ); }, GCU_Hardening::request_fingerprint( array( 'record_type'=>$type, 'record_key'=>$key, 'data'=>$data ) ) );
 		return is_wp_error( $result ) ? $result : self::no_store_response( $result, 201 );
 	}
 
@@ -391,7 +391,7 @@ final class GCU_Future_Intelligence {
 			return new WP_Error( 'gcu_future_revalidation_input_type_invalid', __( 'Claim revalidation fields must be valid, scalar text and a positive version.', 'global-clinic-usp-integration' ), array( 'status' => 400 ) );
 		}
 		$key = sanitize_key( $raw_claim );
-		$expected = absint( $raw_version );
+		$expected = GCU_Future_Policy::strict_mutation_version( $raw_version );
 		$reason = sanitize_textarea_field( $raw_reason );
 		$result = GCU_Plugin::instance()->repository()->run_idempotent_command( 'future_claim_revalidate', $idempotency, static function() use ( $key, $expected, $reason ) { return self::revalidate_claim( $key, $expected, $reason ); }, GCU_Hardening::request_fingerprint( array( 'claim_key'=>$key, 'expected_version'=>$expected, 'reason'=>$reason ) ) );
 		return is_wp_error( $result ) ? $result : self::no_store_response( $result );
@@ -405,7 +405,7 @@ final class GCU_Future_Intelligence {
 		if ( ! preg_match( '#^/gcu/v1/workflow/(copy|experiment)/([a-f0-9\-]{36})$#', $route, $m ) ) {
 			return $response;
 		}
-		$target = sanitize_key( (string) $request->get_param( 'target' ) );
+		$target = GCU_Future_Policy::safe_workflow_target( $request->get_param( 'target' ) );
 		if ( 'copy' === $m[1] && in_array( $target, array( 'founder_approved', 'active' ), true ) ) {
 			$row = GCU_Plugin::instance()->repository()->record_by_public_id( 'blocks', $m[2] );
 			if ( ! $row ) {

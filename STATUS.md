@@ -1,4 +1,12 @@
-# File 14 Status — v1.4.25 R21 Conversion Event Replay Repository Candidate
+# File 14 Status — v1.4.26 R22 Future Governance Version Repository Candidate
+
+Exact-current-head rule: the current source/PR and fresh merged main must each pass independent QA before repository acceptance; none asserts website deployment.
+
+Software candidate: `1.4.26`. Twenty exact-source/central/cross-file lenses closed *before* edits: 15 source-present, 3 local version/input defects corrected, 2 external/design open Issues #19/#22. Frozen pre-change main `1563ad3c9c9ac352902293174a2a209661ffb1fe`. Full ledger `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.26-R22.md`. Base schema target 10005/Future 1 unchanged; installed WordPress database/options/migration/runtime/deployed code and staging/live acceptance **unverified**. The candidate QA/PR/post-merge gates require independent CI results.
+
+---
+
+# Historical R21 — v1.4.25 (before R22)
 
 Exact-current-head rule: the exact reviewed branch SHA and exact merged-main SHA must each pass their own QA; neither confirms installed production parity.
 

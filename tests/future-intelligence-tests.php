@@ -64,6 +64,23 @@ $incomplete=$stored;unset($incomplete['subject_hash']);assert_future(false===GCU
 assert_future(true===GCU_Future_Policy::public_blocks_query_is_typed(null,'patient','ur-PK'),'Approved locale remains available.');
 foreach(array('fr-FR','de-DE','ru','ar-EG','unknown') as $unsupported){assert_future(false===GCU_Future_Policy::public_blocks_query_is_typed(null,null,$unsupported),'Explicit unsupported locale must reject rather than silently fallback.');}
 
+// R22: enforce exact Future governance optimistic-concurrency versions.
+assert_future( 0 === GCU_Future_Policy::strict_record_expected_version( 0 ), 'New Future record must allow integer zero expected version.' );
+assert_future( 0 === GCU_Future_Policy::strict_record_expected_version( '0' ), 'New Future record must allow string zero expected version.' );
+assert_future( 2147483647 === GCU_Future_Policy::strict_record_expected_version( '2147483647' ), 'Maximum Future record version remains valid.' );
+assert_future( 5 === GCU_Future_Policy::strict_record_expected_version( 5 ), 'Positive Future record row version remains valid.' );
+foreach ( array( -5, '-5', '2147483648', '999999999999999999999999', array( 4 ), false, true, 2.2, '1.5', '' ) as $bad_future_version ) {
+    assert_future( null === GCU_Future_Policy::strict_record_expected_version( $bad_future_version ), 'Malformed/overflow Future record expected version must fail.' );
+    assert_future( false === GCU_Future_Policy::validate_future_record_input_types( array( 'expected_version' => $bad_future_version ) )['safe'], 'Future record input validator must reject malformed optimistic version.' );
+}
+assert_future( true === GCU_Future_Policy::validate_future_record_input_types( array( 'expected_version' => '0' ) )['safe'], 'Future record initial version passes typed validator.' );
+assert_future( true === GCU_Future_Policy::validate_revalidation_input_types( 'zero_platform_commission', 'Relevant evidence', '2147483647' ), 'Maximum claim optimistic version passes.' );
+foreach ( array( '2147483648', '9999999999999', '-2', array( 2 ), false, '0', 0 ) as $bad_revalidation_version ) {
+    assert_future( false === GCU_Future_Policy::validate_revalidation_input_types( 'zero_platform_commission', 'Relevant evidence', $bad_revalidation_version ), 'Claim revalidation must reject invalid/overflow versions.' );
+}
+assert_future( false === GCU_Future_Policy::validate_revalidation_input_types( 'zero_platform_commission', str_repeat( 'z', 4097 ), 1 ), 'Unbounded revalidation reason must reject.' );
+assert_future( '' === GCU_Future_Policy::safe_workflow_target( array( 'active' ) ), 'Nested workflow target cannot preflight as active.' );
+
 $catalog = GCU_Future_Policy::feature_catalog();
 assert_future( 24 === count( $catalog ), 'Exactly 24 Founder-approved Future Intelligence features are required.' );
 for ( $i = 1; $i <= 24; $i++ ) {

@@ -17,8 +17,8 @@ function fifth_assert( $condition, $message ) {
 	}
 }
 
-fifth_assert( false !== strpos( $main, 'Version: 1.4.25' ), 'Plugin header must be v1.4.25.' );
-fifth_assert( false !== strpos( $main, "define( 'GCU_VERSION', '1.4.25' )" ), 'GCU_VERSION must be v1.4.25.' );
+fifth_assert( false !== strpos( $main, 'Version: 1.4.26' ), 'Plugin header must be v1.4.26.' );
+fifth_assert( false !== strpos( $main, "define( 'GCU_VERSION', '1.4.26' )" ), 'GCU_VERSION must be v1.4.26.' );
 fifth_assert( false !== strpos( $main, 'class-gcu-fifth-review-hardening.php' ), 'Fifth-review hardening class must ship.' );
 fifth_assert( false !== strpos( $main, "GCU_Fifth_Review_Hardening', 'bootstrap" ), 'Fifth-review hardening must bootstrap.' );
 
@@ -48,7 +48,7 @@ fifth_assert( false !== strpos( $hardening, 'experiment_early_stopped' ), 'Early
 fifth_assert( false !== strpos( $hardening, 'if ( false === $audit )' ), 'Audit failure must trigger rollback.' );
 fifth_assert( false !== strpos( $hardening, 'rollback_owned_transaction()' ) && false !== strpos( $hardening, 'commit_owned_transaction()' ), 'Early-stop must have explicit rollback/commit paths.' );
 
-fifth_assert( false !== strpos( $readme, 'Stable tag: 1.4.25' ), 'Readme stable tag must match v1.4.25.' );
+fifth_assert( false !== strpos( $readme, 'Stable tag: 1.4.26' ), 'Readme stable tag must match v1.4.26.' );
 fifth_assert( false !== strpos( $readme, 'File 20 remains the sole owner of the global shell/navigation' ) && false !== strpos( $readme, 'only when File 20 is absent' ), 'File 20 sole global shell ownership and bounded recovery behavior must be stated accurately.' );
 fifth_assert( false === strpos( $readme, 'future record/report updates' ), 'Readme must not falsely claim generic future record/report transactionality.' );
 fifth_assert( false !== strpos( $status, 'Historical eighty-pass ledgers:' ) && substr_count( $status, 'docs/REVIEW-80-' ) >= 6, 'Status must retain all six historical review ledgers accurately.' );
@@ -74,6 +74,13 @@ fifth_assert( false !== strpos( $repository, 'if(0===$ins)' ) && false !== strpo
 fifth_assert( false !== strpos( $repository, 'gcu_conversion_event_identity_conflict' ) && false !== strpos( $repository, 'gcu_event_dedup_unverified' ), 'Conflicting or unprovable duplicate event must fail closed.' );
 fifth_assert( false !== strpos( $repository, 'gcu_public_event_uuid_invalid' ) && false !== strpos( $repository, 'strtolower($d[\'event_id\'])' ), 'Invalid explicit UUID must reject; accepted UUIDs must be canonicalized.' );
 fifth_assert( false !== strpos( $future_policy, 'same_acquisition_event_identity' ) && false !== strpos( $future_policy, "'ur-PK', 'ur_PK', 'ar', 'ar-SA'" ), 'Identity helper and exact approved locale guard must ship.' );
+
+// R22: Future governance REST must not turn malformed versions into legitimate concurrency checks.
+$future_source = file_get_contents( $plugin . '/includes/class-gcu-future-intelligence.php' );
+fifth_assert( false !== strpos( $future_policy, 'function strict_record_expected_version' ) && false !== strpos( $future_policy, 'null === self::strict_record_expected_version' ), 'R22 Future expected-version typed validation is required.' );
+fifth_assert( false !== strpos( $future_source, 'GCU_Future_Policy::strict_record_expected_version( $data[\'expected_version\'] )' ), 'Future record mutation must use strict expected version, never absint.' );
+fifth_assert( false !== strpos( $future_source, 'GCU_Future_Policy::strict_mutation_version( $raw_version )' ), 'Future claim revalidation must use bounded exact version.' );
+fifth_assert( false !== strpos( $future_source, 'GCU_Future_Policy::safe_workflow_target( $request->get_param( \'target\' ) )' ), 'Workflow early preflight cannot cast nested input to string.' );
 
 if ( $failures ) {
 	fwrite( STDERR, "Fifth review regression tests failed:\n- " . implode( "\n- ", $failures ) . "\n" );

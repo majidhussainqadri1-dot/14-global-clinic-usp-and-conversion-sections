@@ -1,4 +1,10 @@
-# Release Evidence — v1.4.25 R21 Candidate (Event Replay Identity)
+# Release Evidence — v1.4.26 R22 Candidate
+
+Software candidate: `1.4.26`. Frozen prior source `1563ad3c9c9ac352902293174a2a209661ffb1fe`; twenty separate static File14/central/File07/09/25 source checks before one correction phase: 15 source-present, 3 local defects corrected, two external issues #19/#22 open. Full ledger: `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.26-R22.md`. Require independent CI against **exact review/main SHA**, PHP 7.4/8.3, regression suite, deterministic package and SBOM, and a **fresh post-merge** main run; do not claim passing checks until confirmed. Deployed WordPress code, DB version/schema, options, migration, staging and live re-test **not verified**.
+
+---
+
+# Historical Release Evidence — v1.4.25 R21
 
 Software candidate: `1.4.25`. Reviewed frozen prior `main` `faf6be5f7860a6517b380b894b2d3fe6a1e15733`. Exactly twenty current-source/companion-plan lenses performed before one correction batch (15 source-present, three local defects, Issues #19/#22 external/design open). Review/changes: `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.25-R21.md`. Require exact review/main SHA PHP7.4/8.3 quality, behavioral regressions, deterministic ZIP + SHA-256/SBOM, PR CI and fresh post-merge CI; do not claim these checks passed until verified. Actual installed plugin, DB/options/migrations, staging, backup restore and live acceptance **unknown**. Source schema targets base10005/Future1; no schema change.
 
