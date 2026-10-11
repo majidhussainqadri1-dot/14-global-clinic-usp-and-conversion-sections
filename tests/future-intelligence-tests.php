@@ -405,6 +405,42 @@ assert_future( false === $r15_invalid_variant['safe'] && in_array( 'invalid_vari
 $r15_good_experiment = GCU_Future_Policy::experiment_preflight( array( 'Neutral CTA', 'Approved title' ), $r15_guardrails, 'consented aggregate', 'no profiling' );
 assert_future( true === $r15_good_experiment['safe'], 'R15 normal approved text experiments remain eligible for preflight only (not activation).' );
 
+
+// R16-D01 (FUT16 / approved-copy safety): no nested JSON field may be
+// silently coerced into ethical title, CTA, body or prior reviewed copy.
+$r16_good_copy = array( 'title' => 'Review doctors', 'body' => 'Read public profiles carefully.', 'cta_label' => 'Continue' );
+assert_future( GCU_Future_Policy::copy_preflight( $r16_good_copy, $r16_good_copy )['safe'], 'R16 unchanged textual source-backed copy remains eligible for review.' );
+foreach ( array( 'title', 'body', 'cta_label' ) as $field ) {
+    $r16_bad_copy = $r16_good_copy;
+    $r16_bad_copy[ $field ] = array( 'nested' => 'deceptive copy' );
+    $r16_check = GCU_Future_Policy::copy_preflight( $r16_bad_copy );
+    assert_future( ! $r16_check['safe'] && in_array( 'invalid_copy_field_type:current:' . $field, $r16_check['flags'], true ), 'R16 current malformed copy field must fail before sanitization: ' . $field );
+    $r16_old = $r16_good_copy;
+    $r16_old[ $field ] = (object) array( 'nested' => 'prior copy' );
+    $r16_check = GCU_Future_Policy::copy_preflight( $r16_good_copy, $r16_old );
+    assert_future( ! $r16_check['safe'] && in_array( 'invalid_copy_field_type:previous:' . $field, $r16_check['flags'], true ), 'R16 prior nested copy cannot bypass meaning-change review: ' . $field );
+}
+
+// R16-D02 (FUT16): guardrail presence is not evidence of an active control.
+$r16_guards = array( 'claim_integrity' => true, 'privacy' => true, 'accessibility' => true, 'error_rate' => 0, 'complaints' => 'review queue monitored' );
+assert_future( GCU_Future_Policy::experiment_preflight( array( 'A', 'B' ), $r16_guards, 'aggregate adult cohort', 'consented aggregate' )['safe'], 'R16 enabled controls and a zero-error numeric threshold remain valid.' );
+foreach ( array( false, null, '', 'false', 'disabled', array( 'ignored' ), (object) array( 'enabled' => true ) ) as $bad_guard ) {
+    $r16_invalid = $r16_guards;
+    $r16_invalid['privacy'] = $bad_guard;
+    $r16_check = GCU_Future_Policy::experiment_preflight( array( 'A', 'B' ), $r16_invalid, 'aggregate adult cohort', 'consented aggregate' );
+    assert_future( ! $r16_check['safe'] && in_array( 'invalid_guardrail:privacy', $r16_check['flags'], true ), 'R16 missing/disabled privacy safeguards cannot be treated as approved.');
+}
+
+// R16-D03 (FUT11): percentage inputs must be evidence on the 0–100 scale.
+$r16_valid_measurement = GCU_Future_Policy::quality_evidence_status( 30, 4, 0, 100, true );
+assert_future( $r16_valid_measurement['complete'], 'R16 valid measured boundary values remain eligible if genuine owner evidence is attested.' );
+$r16_low_access = GCU_Future_Policy::quality_evidence_status( 30, 4, -2, 95, true );
+assert_future( ! $r16_low_access['complete'] && in_array( 'accessibility_measurement_unavailable', $r16_low_access['missing'], true ), 'R16 negative accessibility is not valid scoring evidence.' );
+$r16_high_perf = GCU_Future_Policy::quality_evidence_status( 30, 4, 95, 120, true );
+assert_future( ! $r16_high_perf['complete'] && in_array( 'performance_measurement_unavailable', $r16_high_perf['missing'], true ), 'R16 performance above 100 is not valid measured evidence.' );
+$r16_unknown_perf = GCU_Future_Policy::quality_evidence_status( 30, 4, 93, array(100), true );
+assert_future( ! $r16_unknown_perf['complete'], 'R16 structured data cannot become performance evidence.' );
+
 $terms = GCU_Future_Policy::terminology_lock();
 assert_future( isset( $terms['verified_doctor']['en-US'], $terms['verified_doctor']['ur-PK'], $terms['verified_doctor']['ar-SA'] ), 'Terminology lock must cover English, Urdu and Arabic.' );
 $ur = GCU_Future_I18n::strings( 'ur-PK' );
