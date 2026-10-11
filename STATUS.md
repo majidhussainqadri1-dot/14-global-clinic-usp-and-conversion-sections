@@ -1,4 +1,14 @@
-# File 14 Status — v1.4.19 Fifteenth Twenty-Pass Governed Input and Experiment Safety Repository Candidate
+# File 14 Status — v1.4.20 Sixteenth Twenty-Pass Copy Guardrails and Quality Evidence Repository Candidate
+
+## R16 20-source-review summary — 2026-10-11
+
+- Frozen audited main `695dea3c727f7faf0dfb196edecb5a06e283e3c3` (1.4.19). Twenty distinct source/plan/contract review lenses before R16 edits: 15 narrowly clean, three File14 defects corrected (disabled experiment guardrails, nested copy text, invalid 0–100 quality evidence), two remaining owner/design contracts Issue #19 and #22.
+- Candidate 1.4.20; no new database migration. Code schema targets base 10005 and Future 1, NOT deployed DB evidence.
+- Source ledger: `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.20-R16.md`. New branch quality, both fresh reviews, deterministic package and post-merge exact-main CI require separate evidence. Staging, deployed/plugin checksum, live DB/options/migration and live retest unverified.
+
+## Historical R15 (preserved)
+
+Historical identity: v1.4.19 Fifteenth Twenty-Pass Governed Input and Experiment Safety Repository Candidate
 
 ## R15 static code/contract audit — 2026-10-11
 - Frozen main before corrections: `191e09ddbf41936619f85fcfd76456cc33c09630` (1.4.18). Twenty independent source/plan lenses: 15 narrowly clean, three File14 input-boundary defects corrected, two outstanding cross-file owner/design contracts unchanged under Issues #19 and #22.
@@ -113,7 +123,7 @@ Historical identity: v1.4.9 Fifth Twenty-Pass Exact-Companion Repository Candida
 
 - Governing freeze: consolidated central governing plan + `SSH-F14-PLAN-2026-v1.0` + Founder-approved additive amendment `SSH-F14-FUTURE-CTI-2026-v2.0`.
 - Fifth twenty-pass review baseline: exact starting `main` `080e2198d84dfb7491bb0b75946e14a5fe118b91` (v1.4.8 R4 merge).
-- Software candidate: `1.4.19`.
+- Software candidate: `1.4.20`.
 - Base File 14 database schema: `10005`.
 - Future CTI additive schema: `1`.
 - Canonical ownership remains bounded: File 14 owns approved Worldwide Clinic USP/copy, semantic placement metadata, claim governance, experiments and privacy-minimized conversion measurement only.
@@ -122,7 +132,7 @@ Historical identity: v1.4.9 Fifth Twenty-Pass Exact-Companion Repository Candida
 - v1.4.9 additionally enforces the *whole current File 01 module manifest* and canonical route key/layout/destination/redirect semantics. Includes 19 executable fixture cases, and refreshes exact File 25 repository evidence.
 - Current companion source baselines: File 00 `2fa7c022ee9cd1b65432e900579512f304532442`; File 01 `adf6dbb9980a85f25f7cf4c2ee679b52703c2e71`; File 07 `2f4a89707724fd2b9946600afe10ddab27ec3c2d`; File 08 `70541974ce0ffb16aebef557c3016eb7447662f4`; File 09 `cfc5f781a766330314dc98c42abeca0eb7786eba`; File 19 `04078025b643ab7696e4cb4e37826bf152defa18`; File 20 `8a4dbcaf4fef8e926b9b834ecfde16c21a0f00ca`; File 24 `a5b8d49968a7a5a7d6f3f4655bea541bf38a9acb`; File 25 `347a4ff4d4c233c5ea6cd82c7786ee5398ea9d1e`. Repository source only.
 - Exact-current companion CI observed: File 00 exact-head/review gates green; File 07 #315/#284 green; File 08 #1651 green; File 09 #958 green; File 19 #561 green; File 20 #385/#424 green; File 24 #413 green; File 25 #1689 green on its historical baseline; fresh File 25 source HEAD is `347a4ff4d4c233c5ea6cd82c7786ee5398ea9d1e` and the prior #1689 is not proof of its latest head. No current-head File 01 Actions run was returned, so its source contract was inspected directly and no CI claim is made.
-- Deterministic package target: `14-global-clinic-usp-integration-1.4.19.zip` + SHA-256 + file-level SBOM, generated only from the exact head under acceptance.
+- Deterministic package target: `14-global-clinic-usp-integration-1.4.20.zip` + SHA-256 + file-level SBOM, generated only from the exact head under acceptance.
 
 ## R4 retained and R5 newly corrected cross-file truth boundaries
 

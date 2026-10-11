@@ -1,4 +1,4 @@
-# File 14 — Fresh Central + File Plan + Future CTI Requirements Traceability — v1.4.19
+# File 14 — Fresh Central + File Plan + Future CTI Requirements Traceability — v1.4.20
 
 ## Governing freeze
 
@@ -101,7 +101,7 @@ File 14 owns approved Worldwide Clinic value-proposition copy, reusable semantic
 
 ## Truth-status rule
 
-`Specified`, `Coded`, `Packaged`, `Automated-QA Green`, `Staging-Accepted`, `Live-Deployed`, and `Operational` are separate statuses. File 14 v1.4.19 may only claim a status for which current exact-head evidence exists. The Future CTI implementation and sixth-review corrections do not alter that rule.
+`Specified`, `Coded`, `Packaged`, `Automated-QA Green`, `Staging-Accepted`, `Live-Deployed`, and `Operational` are separate statuses. File 14 v1.4.20 may only claim a status for which current exact-head evidence exists. The Future CTI implementation and sixth-review corrections do not alter that rule.
 
 ## R5 registry-truth continuation
 
@@ -191,3 +191,11 @@ Latest reviewed File 25 repository source HEAD: `347a4ff4d4c233c5ea6cd82c7786ee5
 - Ethical experiment preflight: `GCU_Future_Policy::experiment_preflight` marks unsupported variant shapes and nested sampling/privacy text as unsafe, not as a falsely approved experiment.
 - **F14-FR-011** owner-outcome confirmation remains Issue #19 pending; **F14-FUT-17** safe baseline placement/variant restore remains Issue #22 pending.
 - R15 twenty-source-pass record: `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.19-R15.md`. Source QA ≠ actual deployed runtime.
+
+
+## R16 plan-to-code safety evidence (2026-10-11)
+- **F14-FUT-16:** `GCU_Future_Policy::experiment_preflight` verifies guardrail values, not just keys. Explicit disabled/malformed privacy, accessibility, error, claim-integrity and complaints controls fail closed. Founder-approved quantitative thresholds and experiment activation remain separate gates.
+- **F14-FUT-16:** `copy_preflight` requires scalar string title/body/CTA in both candidate and comparison record; nested JSON cannot become semantic approval copy.
+- **F14-FUT-11:** `quality_evidence_status` only counts measured numeric accessibility/performance within 0..100, while requiring native owner attestation and cohort size. Do not report unverified click/owner events as confirmed quality.
+- **F14-FR-011** signed owner-outcome Issue #19 and **F14-FUT-17** approved experiment baseline restore Issue #22 are still incomplete.
+- Detailed independent 20-pass source ledger: `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.20-R16.md`; deployed code and live database separate.

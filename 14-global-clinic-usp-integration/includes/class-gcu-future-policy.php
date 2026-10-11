@@ -156,20 +156,28 @@ final class GCU_Future_Policy {
 		return array( 'safe' => empty( $flags ), 'flags' => $flags );
 	}
 
+	/**
+	 * Inspect only textual copy. User-provided nested JSON must never be cast
+	 * into a plausible Founder-approved title, body or CTA.
+	 */
 	public static function copy_preflight( array $record, array $previous = array() ) {
-		$current = implode( ' ', array_filter( array(
-			isset( $record['title'] ) ? $record['title'] : '',
-			isset( $record['body'] ) ? wp_strip_all_tags( $record['body'] ) : '',
-			isset( $record['cta_label'] ) ? $record['cta_label'] : '',
-		) ) );
-		$prior = implode( ' ', array_filter( array(
-			isset( $previous['title'] ) ? $previous['title'] : '',
-			isset( $previous['body'] ) ? wp_strip_all_tags( $previous['body'] ) : '',
-			isset( $previous['cta_label'] ) ? $previous['cta_label'] : '',
-		) ) );
+		$flags = array();
+		$parts = array( 'current' => array(), 'previous' => array() );
+		foreach ( array( 'current' => $record, 'previous' => $previous ) as $phase => $copy ) {
+			foreach ( array( 'title', 'body', 'cta_label' ) as $field ) {
+				$value = isset( $copy[ $field ] ) ? $copy[ $field ] : '';
+				if ( ! is_string( $value ) ) {
+					$flags[] = 'invalid_copy_field_type:' . $phase . ':' . $field;
+					continue;
+				}
+				$parts[ $phase ][] = 'body' === $field ? wp_strip_all_tags( $value ) : $value;
+			}
+		}
+		$current = implode( ' ', array_filter( $parts['current'] ) );
+		$prior = implode( ' ', array_filter( $parts['previous'] ) );
 		$dark = self::dark_pattern_scan( $current );
 		$semantic = $prior ? self::semantic_risk_scan( $prior, $current ) : array( 'safe' => true, 'risk' => 'low', 'flags' => array() );
-		$flags = array_merge( $dark['flags'], $semantic['flags'] );
+		$flags = array_merge( $flags, $dark['flags'], $semantic['flags'] );
 		return array( 'safe' => empty( $flags ), 'flags' => array_values( array_unique( $flags ) ), 'dark_pattern' => $dark, 'semantic' => $semantic );
 	}
 
@@ -197,6 +205,16 @@ final class GCU_Future_Policy {
 		foreach ( $required as $key ) {
 			if ( ! array_key_exists( $key, $guardrails ) ) {
 				$flags[] = 'missing_guardrail:' . $key;
+				continue;
+			}
+			// Presence alone cannot prove a safety control is enabled. False,
+			// blank, non-scalar or explicitly disabled settings fail closed.
+			$value = $guardrails[ $key ];
+			$valid = true === $value
+				|| ( is_numeric( $value ) && ! is_bool( $value ) && (float) $value >= 0 && is_finite( (float) $value ) )
+				|| ( is_string( $value ) && '' !== trim( $value ) && ! in_array( strtolower( trim( $value ) ), array( 'false', 'off', 'no', 'none', 'disabled', 'null' ), true ) );
+			if ( ! $valid ) {
+				$flags[] = 'invalid_guardrail:' . $key;
 			}
 		}
 		if ( ! is_string( $sample_policy ) || ! is_string( $privacy_policy ) ) {
@@ -243,10 +261,11 @@ final class GCU_Future_Policy {
 		if ( (int) $owner_loaded < 1 || true !== $owner_attested ) {
 			$missing[] = 'owner_handoff_confirmation_unavailable';
 		}
-		if ( ! is_numeric( $accessibility ) ) {
+		// Scores outside the defined 0–100 measurement scale are not evidence.
+		if ( ! is_numeric( $accessibility ) || (float) $accessibility < 0 || (float) $accessibility > 100 ) {
 			$missing[] = 'accessibility_measurement_unavailable';
 		}
-		if ( ! is_numeric( $performance ) ) {
+		if ( ! is_numeric( $performance ) || (float) $performance < 0 || (float) $performance > 100 ) {
 			$missing[] = 'performance_measurement_unavailable';
 		}
 		return array( 'complete' => empty( $missing ), 'missing' => $missing );

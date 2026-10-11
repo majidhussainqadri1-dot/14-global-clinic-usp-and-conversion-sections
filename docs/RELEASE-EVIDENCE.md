@@ -1,4 +1,14 @@
-# Release Evidence — v1.4.19 Fifteenth Twenty-Pass Governed Input and Experiment Safety Repository Candidate
+# Release Evidence — v1.4.20 Sixteenth Twenty-Pass Copy Guardrails and Quality Evidence Repository Candidate
+
+## R16 frozen source review and corrective evidence
+
+Audited exact previous main `695dea3c727f7faf0dfb196edecb5a06e283e3c3` using approved File14 amended plan, consolidated central master and File01/07/08/09/20 ownership. Completed twenty source-focused reviews before edits: 15 narrow-source clean, three File14 defects corrected (R16-D01 disabled experiment guardrail accepted; R16-D02 nested copy source field unsafe; R16-D03 out-of-range quality evidence accepted), two external/design requirements not complete (Issues #19/#22). Full ledger: `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.20-R16.md`.
+
+Version 1.4.20; code schema targets base 10005/Future 1 (no claim of DB parity). PHP7.4/8.3, two fresh reviews, deterministic package/SBOM, PR and fresh post-merge-main SHA CI must be observed before repo release gate is complete. Actual deployed source/artifact checksum, DB/options/migration state, logs, staging/browser/accessibility and live retest are unverified.
+
+## Historical R15 (preserved)
+
+Historical identity: v1.4.19 Fifteenth Twenty-Pass Governed Input and Experiment Safety Repository Candidate
 
 ## R15 frozen-source fixes and independent release gates
 
@@ -113,7 +123,7 @@ Historical identity: v1.4.9 Fifth Twenty-Pass Exact-Companion Repository Candida
 - Base plan: `SSH-F14-PLAN-2026-v1.0`.
 - Additive Founder-approved amendment: `SSH-F14-FUTURE-CTI-2026-v2.0`.
 - Fifth twenty-pass baseline: exact starting `main` `080e2198d84dfb7491bb0b75946e14a5fe118b91` (v1.4.8 fourth twenty-pass merge).
-- Software candidate: `1.4.19`.
+- Software candidate: `1.4.20`.
 - Base schema: `10005`; Future CTI additive schema: `1`.
 - Requirements retained: original File 14 FR/NFR plus `F14-FUT-01`–`F14-FUT-24`.
 - Ownership remains bounded: no doctor/clinic/application/appointment/payment/verification/shell source of truth is created here.
