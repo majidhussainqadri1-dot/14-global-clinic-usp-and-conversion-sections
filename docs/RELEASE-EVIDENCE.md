@@ -1,4 +1,14 @@
-# Release Evidence — v1.4.15 Eleventh Twenty-Pass Report and Seed Integrity Repository Candidate
+# Release Evidence — v1.4.16 Twelfth Twenty-Pass Readiness and Terminology Repository Candidate
+
+## R12 independent audit and correction trace
+
+Frozen main before changes: `82acee7a1c0ae159c67cebf0b9748dc4dfd4c531`. 20 source/contract passes; 16 narrowly check-clean; R12-D01 public doctor-readiness false positive for unchecked truthy strings/arrays corrected; R12-D02 accepted incomplete canonical terminology key set corrected. Regression assertions for both are in `tests/future-intelligence-tests.php`; full ledger `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.16-R12.md`.
+
+Software candidate 1.4.16, code schema targets base 10005 and Future 1 (not live observation). Existing Issue #19 owner event contract and Issue #22 experiment baseline restoration are not coded or staging-verified. Exact branch quality and two fresh reviews, deterministic ZIP/checksum/SBOM, PR and **post-merge exact-main** QA required. Deployed files, wp_options, real DB, migration state, rollback rehearsal and live re-test unverified.
+
+## Historical R11 (preserved)
+
+Historical identity: v1.4.15 Eleventh Twenty-Pass Report and Seed Integrity Repository Candidate
 
 ## R11 corrective evidence / release gates
 
@@ -69,7 +79,7 @@ Historical identity: v1.4.9 Fifth Twenty-Pass Exact-Companion Repository Candida
 - Base plan: `SSH-F14-PLAN-2026-v1.0`.
 - Additive Founder-approved amendment: `SSH-F14-FUTURE-CTI-2026-v2.0`.
 - Fifth twenty-pass baseline: exact starting `main` `080e2198d84dfb7491bb0b75946e14a5fe118b91` (v1.4.8 fourth twenty-pass merge).
-- Software candidate: `1.4.15`.
+- Software candidate: `1.4.16`.
 - Base schema: `10005`; Future CTI additive schema: `1`.
 - Requirements retained: original File 14 FR/NFR plus `F14-FUT-01`–`F14-FUT-24`.
 - Ownership remains bounded: no doctor/clinic/application/appointment/payment/verification/shell source of truth is created here.

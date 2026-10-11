@@ -244,7 +244,10 @@ final class GCU_Future_Policy {
 		$complete = 0;
 		$missing = array();
 		foreach ( $items as $item ) {
-			if ( ! empty( $answers[ $item ] ) ) {
+			// Only checked boolean/checkbox values indicate readiness. The JSON
+			// strings "false", "no", arbitrary text or arrays must not inflate it.
+			$value = isset( $answers[ $item ] ) ? $answers[ $item ] : null;
+			if ( true === $value || 1 === $value || '1' === $value ) {
 				$complete++;
 			} else {
 				$missing[] = $item;
@@ -285,6 +288,14 @@ final class GCU_Future_Policy {
 			if ( empty( $payload['terms'] ) || ! is_array( $payload['terms'] ) ) {
 				$missing[] = 'terms';
 			} else {
+				// The approved protected concept set is a minimum. A partial payload
+				// cannot silently erase verified doctor, zero commission, emergency,
+				// voluntary support or other canonical multilingual terminology.
+				foreach ( array_keys( self::terminology_lock() ) as $protected_term ) {
+					if ( ! array_key_exists( $protected_term, $payload['terms'] ) ) {
+						$missing[] = 'protected_term_' . $protected_term;
+					}
+				}
 				foreach ( $payload['terms'] as $term => $locales ) {
 					if ( ! is_array( $locales ) ) {
 						$missing[] = 'term_locales';
