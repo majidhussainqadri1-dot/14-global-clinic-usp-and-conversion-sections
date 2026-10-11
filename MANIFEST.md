@@ -1,4 +1,4 @@
-# File 14 v1.4.19 Manifest
+# File 14 v1.4.20 Manifest
 
 Canonical plugin folder: `14-global-clinic-usp-integration`
 
