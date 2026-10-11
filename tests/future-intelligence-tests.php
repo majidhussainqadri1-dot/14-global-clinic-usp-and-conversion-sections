@@ -54,6 +54,16 @@ foreach ( array( array('stage'=>array('impression')), array('stage'=>'cta_select
     assert_future( false === GCU_Future_Policy::acquisition_event_input_is_typed( $bad_event ), 'Nested/malformed acquisition events denied.' );
 }
 
+// R21: SQL unique-key collision must be proved equal *inside* owner transaction.
+$identity = array('funnel_stage'=>'cta_selected','destination_key'=>'doctor_directory','subject_hash'=>'user_hash','source_value'=>'organic','medium_value'=>'web','campaign_value'=>'','ref_value'=>'');
+$stored = array_merge( array('event_type'=>'ClinicUSPFunnelEvent','event_version'=>'1','consent_state'=>'granted'), $identity );
+assert_future( true === GCU_Future_Policy::same_acquisition_event_identity($stored,$identity), 'Same UUID and same exact event identity is idempotent.' );
+foreach(array('funnel_stage','destination_key','subject_hash','source_value','medium_value','campaign_value','ref_value') as $field){$conflict=$stored;$conflict[$field]='different';assert_future(false===GCU_Future_Policy::same_acquisition_event_identity($conflict,$identity),'Duplicate UUID with different '.$field.' must reject.');}
+foreach(array('event_type'=>'AnotherEvent','event_version'=>'2','consent_state'=>'denied') as $field=>$value){$conflict=$stored;$conflict[$field]=$value;assert_future(false===GCU_Future_Policy::same_acquisition_event_identity($conflict,$identity),'Duplicate UUID metadata '.$field.' mismatch must reject.');}
+$incomplete=$stored;unset($incomplete['subject_hash']);assert_future(false===GCU_Future_Policy::same_acquisition_event_identity($incomplete,$identity),'Missing identity data must reject.');
+assert_future(true===GCU_Future_Policy::public_blocks_query_is_typed(null,'patient','ur-PK'),'Approved locale remains available.');
+foreach(array('fr-FR','de-DE','ru','ar-EG','unknown') as $unsupported){assert_future(false===GCU_Future_Policy::public_blocks_query_is_typed(null,null,$unsupported),'Explicit unsupported locale must reject rather than silently fallback.');}
+
 $catalog = GCU_Future_Policy::feature_catalog();
 assert_future( 24 === count( $catalog ), 'Exactly 24 Founder-approved Future Intelligence features are required.' );
 for ( $i = 1; $i <= 24; $i++ ) {
