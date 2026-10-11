@@ -75,6 +75,13 @@ fifth_assert( false !== strpos( $repository, 'gcu_conversion_event_identity_conf
 fifth_assert( false !== strpos( $repository, 'gcu_public_event_uuid_invalid' ) && false !== strpos( $repository, 'strtolower($d[\'event_id\'])' ), 'Invalid explicit UUID must reject; accepted UUIDs must be canonicalized.' );
 fifth_assert( false !== strpos( $future_policy, 'same_acquisition_event_identity' ) && false !== strpos( $future_policy, "'ur-PK', 'ur_PK', 'ar', 'ar-SA'" ), 'Identity helper and exact approved locale guard must ship.' );
 
+// R22: Future governance REST must not turn malformed versions into legitimate concurrency checks.
+$future_source = file_get_contents( $plugin . '/includes/class-gcu-future-intelligence.php' );
+fifth_assert( false !== strpos( $future_policy, 'function strict_record_expected_version' ) && false !== strpos( $future_policy, 'null === self::strict_record_expected_version' ), 'R22 Future expected-version typed validation is required.' );
+fifth_assert( false !== strpos( $future_source, 'GCU_Future_Policy::strict_record_expected_version( $data[\'expected_version\'] )' ), 'Future record mutation must use strict expected version, never absint.' );
+fifth_assert( false !== strpos( $future_source, 'GCU_Future_Policy::strict_mutation_version( $raw_version )' ), 'Future claim revalidation must use bounded exact version.' );
+fifth_assert( false !== strpos( $future_source, 'GCU_Future_Policy::safe_workflow_target( $request->get_param( \'target\' ) )' ), 'Workflow early preflight cannot cast nested input to string.' );
+
 if ( $failures ) {
 	fwrite( STDERR, "Fifth review regression tests failed:\n- " . implode( "\n- ", $failures ) . "\n" );
 	exit( 1 );
