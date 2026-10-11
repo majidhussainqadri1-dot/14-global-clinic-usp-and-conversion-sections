@@ -2,7 +2,7 @@
 
 ## R14 source evidence and operational distinction
 
-Frozen prior File14 main `cfe8d9c51932014702967acc27c10d4382c4de0e`; 20 independent code/plan/source lenses: 16 narrow source-clean, two local defects corrected, and two incomplete owner/design requirements Issue #19/#22. Details in `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.18-R14.md`.
+Frozen prior File14 main `cfe8d9c51932014702967acc27c10d4382c4de0e`; 20 independent code/plan/source lenses: 16 narrow source-clean, two source-review defects corrected, one additional PHP CI regression-discovered record-decoding fatal corrected (R14-D03), and two incomplete owner/design requirements Issue #19/#22. Details in `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.18-R14.md`.
 
 F14-FUT-01: REST explicit patient/doctor/learn intent now passes through `GCU_Future_Policy::sanitize_explicit_intent`, requiring a text input and the exact approved vocabulary. F14-FUT-22: source-reviewed public change-log records are selected *before* applying the output limit; stable paged scan bounds work to 1,000 candidates; legacy invalid records remain unmodified and cannot publish. Tests include invalid intent types and 100 invalid newest rows preceding approved public evidence.
 
