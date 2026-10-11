@@ -67,4 +67,4 @@ Twenty independent plan/source checks found two File14-local defects now correct
 
 ### 2026-10-11 R14 / v1.4.18: explicit intent and validated public change-log
 
-20 distinct source/plan/companion contract checks: 16 narrow clean, two File14 defects fixed (REST explicit intent nested JSON handling; invalid newest legacy change-log rows obscuring older approved content), two contracts pending Issues #19/#22. New regression tests and bounded pagination. Per-round evidence `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.18-R14.md`. No staging/live deployment claim.
+20 distinct source/plan/companion contract checks: 16 narrow clean, two File14 source-review defects plus one CI-discovered record JSON decoding fatal fixed (REST explicit intent nested JSON handling; invalid newest legacy change-log rows obscuring older approved content; returned-row JSON payload decoding), two contracts pending Issues #19/#22. New regression tests and bounded pagination. Per-round evidence `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.18-R14.md`. No staging/live deployment claim.
