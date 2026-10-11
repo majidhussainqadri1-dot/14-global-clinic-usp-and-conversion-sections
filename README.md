@@ -6,7 +6,7 @@ Canonical File 14 implementation for the **Sabri Social Homeopathy Platform**.
 - Fresh central governing baseline: 2026-08-10
 - Base File plan: `SSH-F14-PLAN-2026-v1.0`
 - Founder-approved additive amendment: `SSH-F14-FUTURE-CTI-2026-v2.0`
-- Software candidate: `1.4.18`
+- Software candidate: `1.4.19`
 - Base schema candidate: `10005`
 - Future CTI additive schema: `1`
 - Current canonical source repository: `14-global-clinic-usp-and-conversion-sections`
@@ -68,3 +68,8 @@ Twenty independent plan/source checks found two File14-local defects now correct
 ### 2026-10-11 R14 / v1.4.18: explicit intent and validated public change-log
 
 20 distinct source/plan/companion contract checks: 16 narrow clean, two File14 source-review defects plus one CI-discovered record JSON decoding fatal fixed (REST explicit intent nested JSON handling; invalid newest legacy change-log rows obscuring older approved content; returned-row JSON payload decoding), two contracts pending Issues #19/#22. New regression tests and bounded pagination. Per-round evidence `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.18-R14.md`. No staging/live deployment claim.
+
+
+### 2026-10-11 R15 / v1.4.19 — governed input and ethical experiment preflight
+
+Twenty independent static source/plan/companion checks (15 limited source-clean, three File14 defects corrected, two owner/design requirements pending). Governed REST record writing, claim revalidation and sampling/privacy policy preflight now reject nested/invalid typed inputs instead of silently coercing them. Regression tests enforce all cases. See `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.19-R15.md`. Native owner-stage events Issue #19 and experiment baseline restore Issue #22 remain open; no live/staging proof.

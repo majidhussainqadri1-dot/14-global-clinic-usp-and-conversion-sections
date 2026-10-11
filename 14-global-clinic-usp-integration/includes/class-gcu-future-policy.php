@@ -60,6 +60,36 @@ final class GCU_Future_Policy {
 		return array_key_exists( $intent, self::supported_intents() ) ? $intent : '';
 	}
 
+	/** Typed REST governance input prevents PHP array-to-string coercion and
+	 * rejects silently substituted empty evidence or false public flags. */
+	public static function validate_future_record_input_types( array $input ) {
+		$invalid = array();
+		foreach ( array( 'record_type', 'record_key', 'locale', 'region', 'status' ) as $field ) {
+			if ( array_key_exists( $field, $input ) && ! is_string( $input[ $field ] ) ) {
+				$invalid[] = $field;
+			}
+		}
+		if ( array_key_exists( 'payload', $input ) && ! is_array( $input['payload'] ) ) {
+			$invalid[] = 'payload';
+		}
+		if ( array_key_exists( 'expected_version', $input ) ) {
+			$v = $input['expected_version'];
+			if ( ! ( ( is_int( $v ) && $v >= 0 ) || ( is_string( $v ) && ctype_digit( $v ) ) ) ) {
+				$invalid[] = 'expected_version';
+			}
+		}
+		if ( array_key_exists( 'is_public', $input ) && ! in_array( $input['is_public'], array( true, false, 0, 1, '0', '1' ), true ) ) {
+			$invalid[] = 'is_public';
+		}
+		return array( 'safe' => empty( $invalid ), 'invalid_fields' => $invalid );
+	}
+
+	/** Claim revalidation changes public trust state. Never coerce nested inputs. */
+	public static function validate_revalidation_input_types( $claim_key, $reason, $version ) {
+		return is_string( $claim_key ) && is_string( $reason )
+			&& ( ( is_int( $version ) && $version > 0 ) || ( is_string( $version ) && ctype_digit( $version ) && (int) $version > 0 ) );
+	}
+
 	public static function sanitize_handoff_context( array $input ) {
 		$country = isset( $input['country'] ) && is_string( $input['country'] ) ? strtoupper( sanitize_text_field( $input['country'] ) ) : '';
 		if ( ! preg_match( '/^[A-Z]{2}$/', $country ) ) {
@@ -149,7 +179,15 @@ final class GCU_Future_Policy {
 			$flags[] = 'at_least_two_variants_required';
 		}
 		foreach ( $variants as $index => $variant ) {
-			$text = is_array( $variant ) ? wp_json_encode( $variant ) : (string) $variant;
+			if ( ! is_array( $variant ) && ! is_string( $variant ) ) {
+				$flags[] = 'invalid_variant_type';
+				continue;
+			}
+			$text = is_array( $variant ) ? wp_json_encode( $variant ) : $variant;
+			if ( ! is_string( $text ) ) {
+				$flags[] = 'invalid_variant_encoding';
+				continue;
+			}
 			$scan = self::dark_pattern_scan( $text );
 			foreach ( $scan['flags'] as $flag ) {
 				$flags[] = 'variant_' . absint( $index ) . ':' . $flag;
@@ -161,7 +199,10 @@ final class GCU_Future_Policy {
 				$flags[] = 'missing_guardrail:' . $key;
 			}
 		}
-		$sensitive = strtolower( (string) $sample_policy . ' ' . (string) $privacy_policy );
+		if ( ! is_string( $sample_policy ) || ! is_string( $privacy_policy ) ) {
+			$flags[] = 'invalid_sampling_policy_type';
+		}
+		$sensitive = strtolower( ( is_string( $sample_policy ) ? $sample_policy : '' ) . ' ' . ( is_string( $privacy_policy ) ? $privacy_policy : '' ) );
 		foreach ( array( 'minor profiling', 'health profiling', 'patient profiling', 'diagnosis targeting', 'identity evidence targeting' ) as $forbidden ) {
 			if ( false !== strpos( $sensitive, $forbidden ) ) {
 				$flags[] = 'sensitive_sampling:' . sanitize_key( $forbidden );

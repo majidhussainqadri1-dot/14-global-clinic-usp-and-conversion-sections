@@ -337,6 +337,10 @@ final class GCU_Future_Intelligence {
 		if ( is_wp_error( $idempotency ) ) { return $idempotency; }
 		$data = $request->get_json_params();
 		$data = is_array( $data ) ? $data : array();
+		$types = GCU_Future_Policy::validate_future_record_input_types( $data );
+		if ( ! $types['safe'] ) {
+			return new WP_Error( 'gcu_future_record_input_type_invalid', __( 'Governed record fields have invalid types.', 'global-clinic-usp-integration' ), array( 'status' => 400, 'fields' => $types['invalid_fields'] ) );
+		}
 		$type = sanitize_key( isset( $data['record_type'] ) ? $data['record_type'] : '' );
 		$allowed = array( 'jurisdiction_copy', 'terminology_lock', 'change_log', 'faq_gap', 'ai_draft', 'scenario_note' );
 		if ( ! in_array( $type, $allowed, true ) ) {
@@ -362,9 +366,15 @@ final class GCU_Future_Intelligence {
 		if ( is_wp_error( $rate ) ) { return $rate; }
 		$idempotency = self::required_idempotency_key( $request );
 		if ( is_wp_error( $idempotency ) ) { return $idempotency; }
-		$key = sanitize_key( $request['claim_key'] );
-		$expected = absint( $request->get_param( 'expected_version' ) );
-		$reason = sanitize_textarea_field( (string) $request->get_param( 'reason' ) );
+		$raw_claim = $request['claim_key'];
+		$raw_reason = $request->get_param( 'reason' );
+		$raw_version = $request->get_param( 'expected_version' );
+		if ( ! GCU_Future_Policy::validate_revalidation_input_types( $raw_claim, $raw_reason, $raw_version ) ) {
+			return new WP_Error( 'gcu_future_revalidation_input_type_invalid', __( 'Claim revalidation fields must be valid, scalar text and a positive version.', 'global-clinic-usp-integration' ), array( 'status' => 400 ) );
+		}
+		$key = sanitize_key( $raw_claim );
+		$expected = absint( $raw_version );
+		$reason = sanitize_textarea_field( $raw_reason );
 		$result = GCU_Plugin::instance()->repository()->run_idempotent_command( 'future_claim_revalidate', $idempotency, static function() use ( $key, $expected, $reason ) { return self::revalidate_claim( $key, $expected, $reason ); }, GCU_Hardening::request_fingerprint( array( 'claim_key'=>$key, 'expected_version'=>$expected, 'reason'=>$reason ) ) );
 		return is_wp_error( $result ) ? $result : self::no_store_response( $result );
 	}

@@ -1,4 +1,4 @@
-# File 14 — Fresh Central + File Plan + Future CTI Requirements Traceability — v1.4.18
+# File 14 — Fresh Central + File Plan + Future CTI Requirements Traceability — v1.4.19
 
 ## Governing freeze
 
@@ -101,7 +101,7 @@ File 14 owns approved Worldwide Clinic value-proposition copy, reusable semantic
 
 ## Truth-status rule
 
-`Specified`, `Coded`, `Packaged`, `Automated-QA Green`, `Staging-Accepted`, `Live-Deployed`, and `Operational` are separate statuses. File 14 v1.4.18 may only claim a status for which current exact-head evidence exists. The Future CTI implementation and sixth-review corrections do not alter that rule.
+`Specified`, `Coded`, `Packaged`, `Automated-QA Green`, `Staging-Accepted`, `Live-Deployed`, and `Operational` are separate statuses. File 14 v1.4.19 may only claim a status for which current exact-head evidence exists. The Future CTI implementation and sixth-review corrections do not alter that rule.
 
 ## R5 registry-truth continuation
 
@@ -183,3 +183,11 @@ Latest reviewed File 25 repository source HEAD: `347a4ff4d4c233c5ea6cd82c7786ee5
 - **F14-FUT-22**: Returned `records()` rows decode JSON payloads in the actual returned row array (R14-D03, discovered by PHP regression), not in a discarded temporary expression. Public trust & policy change-log selection validates effective date, source, reviewer and provenance for records **before** applying requested display limit. `records` supports sanitized offset, stable order and bounded batches; 1,000-candidate scan is not an exhaustive historical-archive guarantee. No unapproved text is made public.
 - **F14-FR-011**: File07/08/09 native owner stage events still awaiting File01-vetted contracts (Issue #19). **F14-FUT-17**: approved safe baseline restore pending (Issue #22).
 - R14 twenty-round source evidence: `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.18-R14.md`. Repository main is not deployed runtime truth.
+
+
+## R15 plan-to-code input-boundary safety (2026-10-11)
+- Future governance record REST: `GCU_Future_Policy::validate_future_record_input_types` enforces named string fields, an array payload, a nonnegative integer expected version and explicit boolean public visibility before `rest_record_write` mutation, including Founder/editor capability checks and idempotent command.
+- Canonical claim revalidation: `validate_revalidation_input_types` requires string claim/reason and a positive row version before `rest_revalidate_claim` queues a governed mutation. Nested JSON cannot be coerced into string provenance.
+- Ethical experiment preflight: `GCU_Future_Policy::experiment_preflight` marks unsupported variant shapes and nested sampling/privacy text as unsafe, not as a falsely approved experiment.
+- **F14-FR-011** owner-outcome confirmation remains Issue #19 pending; **F14-FUT-17** safe baseline placement/variant restore remains Issue #22 pending.
+- R15 twenty-source-pass record: `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.19-R15.md`. Source QA ≠ actual deployed runtime.

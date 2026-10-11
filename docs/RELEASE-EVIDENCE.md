@@ -1,4 +1,16 @@
-# Release Evidence — v1.4.18 Fourteenth Twenty-Pass Explicit Intent and Public Change Log Repository Candidate
+# Release Evidence — v1.4.19 Fifteenth Twenty-Pass Governed Input and Experiment Safety Repository Candidate
+
+## R15 frozen-source fixes and independent release gates
+
+Exact audited File14 main `191e09ddbf41936619f85fcfd76456cc33c09630`, compared against supplied File14 amended 24-feature plan, consolidated central plan and current File01/07/08/09/20 owner source. All 20 static checks were completed before R15 edits: 15 narrow-clean, 3 File14 defects fixed, 2 external/design requirements remain incomplete. Full ledger `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.19-R15.md`.
+
+R15-D01: governed REST record type/key/locale/region/status/row-version/public-visibility/payload types validated before sanitization/persistence; malformed typed input yields sanitized 400. R15-D02: claim revalidation requires string key/reason and positive expected version before mutation; no array-to-string coercion. R15-D03: experiment preflight refuses nested sampling/privacy policies or unsupported variant types; ordinary checked cases remain eligible for review only.
+
+Version target 1.4.19; code schema targets base 10005 / Future 1. No installed schema, active plugin, migration history, wp_options, staging or live verification retrieved. Exact candidate PHP 7.4/8.3, two fresh reviews, deterministic ZIP/checksum/SBOM and **fresh post-merge exact-main** validation mandatory. PR/CI source proof must not be presented as deployed proof.
+
+## Historical R14 (preserved)
+
+Historical identity: v1.4.18 Fourteenth Twenty-Pass Explicit Intent and Public Change Log Repository Candidate
 
 ## R14 source evidence and operational distinction
 
@@ -101,7 +113,7 @@ Historical identity: v1.4.9 Fifth Twenty-Pass Exact-Companion Repository Candida
 - Base plan: `SSH-F14-PLAN-2026-v1.0`.
 - Additive Founder-approved amendment: `SSH-F14-FUTURE-CTI-2026-v2.0`.
 - Fifth twenty-pass baseline: exact starting `main` `080e2198d84dfb7491bb0b75946e14a5fe118b91` (v1.4.8 fourth twenty-pass merge).
-- Software candidate: `1.4.18`.
+- Software candidate: `1.4.19`.
 - Base schema: `10005`; Future CTI additive schema: `1`.
 - Requirements retained: original File 14 FR/NFR plus `F14-FUT-01`–`F14-FUT-24`.
 - Ownership remains bounded: no doctor/clinic/application/appointment/payment/verification/shell source of truth is created here.
