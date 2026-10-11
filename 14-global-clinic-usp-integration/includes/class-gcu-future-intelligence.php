@@ -601,7 +601,7 @@ final class GCU_Future_Intelligence {
 		$performance = apply_filters( 'gcu_future_performance_score', null );
 		$privacy_effectiveness = apply_filters( 'gcu_future_privacy_effectiveness_score', null );
 		$evidence = GCU_Future_Policy::quality_evidence_status( $selected, $loaded, $accessibility, $performance, GCU_Future_Policy::owner_confirmation_contract_ready() );
-		if ( ! is_numeric( $privacy_effectiveness ) ) {
+		if ( ! GCU_Future_Policy::valid_quality_percentage( $privacy_effectiveness ) ) {
 			$evidence['complete'] = false;
 			$evidence['missing'][] = 'privacy_effectiveness_measurement_unavailable';
 		}
@@ -616,12 +616,12 @@ final class GCU_Future_Intelligence {
 		$destination_score = $destinations ? round( 100 * $healthy / count( $destinations ), 1 ) : 0;
 		$metrics = array(
 			'handoff_success' => $loaded > 0 && GCU_Future_Policy::cohort_allowed( $selected ) ? min( 100, round( 100 * $loaded / max( 1, $selected ), 1 ) ) : null,
-			'accessibility' => is_numeric( $accessibility ) ? (float) $accessibility : null,
+			'accessibility' => GCU_Future_Policy::valid_quality_percentage( $accessibility ) ? (float) $accessibility : null,
 			'claim_freshness' => $stale ? max( 0, 100 - 20 * $stale ) : 100,
-			'privacy' => is_numeric( $privacy_effectiveness ) ? max( 0.0, min( 100.0, (float) $privacy_effectiveness ) ) : null,
+			'privacy' => GCU_Future_Policy::valid_quality_percentage( $privacy_effectiveness ) ? (float) $privacy_effectiveness : null,
 			'complaint_health' => max( 0, 100 - min( 100, $open_reports * 10 ) ),
 			'destination_health' => $destination_score,
-			'performance' => is_numeric( $performance ) ? (float) $performance : null,
+			'performance' => GCU_Future_Policy::valid_quality_percentage( $performance ) ? (float) $performance : null,
 		);
 		// A provisional score would misleadingly turn missing evidence into zero or
 		// perfect marks. Publish no composite score until mandatory data exists.
@@ -635,9 +635,9 @@ final class GCU_Future_Intelligence {
 			'small_cohort_suppressed' => ! GCU_Future_Policy::cohort_allowed( $selected ),
 			'cohort_threshold' => GCU_Future_Policy::MIN_COHORT,
 			'parity' => $parity,
-			'performance_verified' => is_numeric( $performance ),
-			'accessibility_verified' => is_numeric( $accessibility ),
-			'privacy_verified' => is_numeric( $privacy_effectiveness ),
+			'performance_verified' => GCU_Future_Policy::valid_quality_percentage( $performance ),
+			'accessibility_verified' => GCU_Future_Policy::valid_quality_percentage( $accessibility ),
+			'privacy_verified' => GCU_Future_Policy::valid_quality_percentage( $privacy_effectiveness ),
 		);
 	}
 
@@ -720,9 +720,12 @@ final class GCU_Future_Intelligence {
 			if ( ! is_array( $signal ) ) {
 				continue;
 			}
-			$count = isset( $signal['count'] ) ? absint( $signal['count'] ) : 0;
-			$question = trim( sanitize_text_field( isset( $signal['question'] ) ? $signal['question'] : '' ) );
-			if ( ! $question || ! GCU_Future_Policy::cohort_allowed( $count ) ) {
+			if ( ! GCU_Future_Policy::valid_faq_aggregate_signal( $signal ) ) {
+				continue;
+			}
+			$count = (int) $signal['count'];
+			$question = trim( sanitize_text_field( $signal['question'] ) );
+			if ( ! $question ) {
 				continue;
 			}
 			$norm = strtolower( $question );
@@ -775,7 +778,10 @@ final class GCU_Future_Intelligence {
 	}
 
 	public static function ai_copy_assist( array $data ) {
-		$base = trim( wp_strip_all_tags( isset( $data['base_text'] ) ? $data['base_text'] : '' ) );
+		if ( ! GCU_Future_Policy::valid_ai_copy_inputs( $data ) ) {
+			return new WP_Error( 'gcu_future_ai_input_type_invalid', __( 'AI draft instructions must contain approved text fields.', 'global-clinic-usp-integration' ), array( 'status' => 400 ) );
+		}
+		$base = trim( wp_strip_all_tags( $data['base_text'] ) );
 		$objective = sanitize_key( isset( $data['objective'] ) ? $data['objective'] : 'clarity' );
 		if ( ! $base || strlen( $base ) > 5000 ) {
 			return new WP_Error( 'gcu_future_ai_base_invalid', __( 'A bounded base text is required.', 'global-clinic-usp-integration' ), array( 'status' => 400 ) );
@@ -798,7 +804,11 @@ final class GCU_Future_Intelligence {
 		$safe = array();
 		$rejected = array();
 		foreach ( array_slice( $candidates, 0, 5 ) as $candidate ) {
-			$text = trim( wp_strip_all_tags( is_array( $candidate ) && isset( $candidate['text'] ) ? $candidate['text'] : $candidate ) );
+			$text = GCU_Future_Policy::normalize_ai_candidate_text( $candidate );
+			if ( null === $text ) {
+				$rejected[] = array( 'text_hash' => hash( 'sha256', 'invalid_candidate_type' ), 'guard' => array( 'safe' => false, 'reason' => 'invalid_candidate_type' ) );
+				continue;
+			}
 			$guard = GCU_Future_Policy::ai_copy_guard( $text, $claim_texts );
 			if ( is_array( $provider ) && ! empty( $provider ) ) {
 				$grounding = GCU_Future_Policy::approved_vocabulary_guard( $text, $base, $claim_texts );

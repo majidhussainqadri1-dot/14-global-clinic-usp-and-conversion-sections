@@ -4,7 +4,7 @@ Tags: clinic, doctors, conversion, accessibility, privacy, governance, trust, ex
 Requires at least: 6.6
 Tested up to: 7.0.1
 Requires PHP: 7.4
-Stable tag: 1.4.20
+Stable tag: 1.4.21
 License: GPLv2 or later
 
 Canonical File 14 implementation for approved Worldwide Clinic value-proposition content, ethical conversion journeys, claim governance, destination contracts, Future Conversion & Trust Intelligence and privacy-minimized measurement.
@@ -82,6 +82,9 @@ The File 14 surface includes complete File 14-owned American English, Urdu and A
 8. Obtain explicit Founder acceptance before production deployment.
 
 == Changelog ==
+= 1.4.21 =
+* R17 twenty source/plan reviews: reject malformed AI editor/provider copy, verify privacy quality measurements within 0–100, and block invalid negative/private FAQ question aggregates. Native owner conversion events and safe experiment baseline restore still require approved companion contracts.
+
 = 1.4.20 =
 * R16 twenty separate source/plan reviews: prevent nested copy text from passing preflight, reject disabled experiment safety guardrails, and require quality evidence within the measured 0–100 range. File07/08/09 owner event attestation and approved experiment baseline restore remain pending native contracts.
 

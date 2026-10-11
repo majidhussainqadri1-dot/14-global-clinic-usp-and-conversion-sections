@@ -6,7 +6,7 @@ Canonical File 14 implementation for the **Sabri Social Homeopathy Platform**.
 - Fresh central governing baseline: 2026-08-10
 - Base File plan: `SSH-F14-PLAN-2026-v1.0`
 - Founder-approved additive amendment: `SSH-F14-FUTURE-CTI-2026-v2.0`
-- Software candidate: `1.4.20`
+- Software candidate: `1.4.21`
 - Base schema candidate: `10005`
 - Future CTI additive schema: `1`
 - Current canonical source repository: `14-global-clinic-usp-and-conversion-sections`
@@ -78,3 +78,8 @@ Twenty independent static source/plan/companion checks (15 limited source-clean,
 ### 2026-10-11 R16 / v1.4.20 — guardrail effectiveness and measured evidence
 
 Twenty distinct source/plan/companion reviews: 15 narrow source-clean, three File14-local defects corrected, two external/design contracts remain open. Copy preflight refuses nested text fields, experiment preflight rejects disabled/empty safety controls, and quality evidence cannot treat percentages outside 0..100 as completed. Tests: `tests/future-intelligence-tests.php`; evidence: `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.20-R16.md`. Owner confirmations Issue #19, experiment baseline Issue #22, staging/live parity are not yet proven.
+
+
+### 2026-10-11 R17 / v1.4.21 — source-grounded AI, measured privacy and FAQ aggregate integrity
+
+Twenty source/companion review lenses: 15 narrow checks clean, three File14 defects corrected (nested AI text/objective/provider candidate, invalid privacy quality verified state, negative/nested FAQ aggregate signals), two design/owner obligations remain Issues #19 and #22. See `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.21-R17.md`. Candidate repo QA does not mean installed/live completion.

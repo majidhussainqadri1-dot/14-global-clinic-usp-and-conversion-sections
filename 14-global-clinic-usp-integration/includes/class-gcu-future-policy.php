@@ -253,6 +253,41 @@ final class GCU_Future_Policy {
 		return false;
 	}
 
+	/** Only actual 0..100 measured proportions are evidence; never use
+	 * booleans, arrays, nonfinite or out-of-range values as verified signals. */
+	public static function valid_quality_percentage( $value ) {
+		if ( is_bool( $value ) || ! is_numeric( $value ) ) { return false; }
+		$number = (float) $value;
+		return is_finite( $number ) && $number >= 0.0 && $number <= 100.0;
+	}
+
+	/** Accepted question volume is an actual aggregate, never abs(-n). */
+	public static function valid_faq_aggregate_signal( $signal ) {
+		if ( ! is_array( $signal ) || ! isset( $signal['question'], $signal['count'] ) || ! is_string( $signal['question'] ) ) {
+			return false;
+		}
+		$count = $signal['count'];
+		$nonnegative = ( is_int( $count ) && $count >= 0 )
+			|| ( is_string( $count ) && ctype_digit( $count ) && strlen( $count ) <= 12 );
+		return $nonnegative && '' !== trim( $signal['question'] ) && self::cohort_allowed( (int) $count );
+	}
+
+	/** No cast from nested JSON to an AI editor instruction or to safe copy. */
+	public static function valid_ai_copy_inputs( array $input ) {
+		return isset( $input['base_text'] ) && is_string( $input['base_text'] )
+			&& ( ! array_key_exists( 'objective', $input ) ||
+				( is_string( $input['objective'] ) && in_array( sanitize_key( $input['objective'] ), array( 'clarity', 'concise', 'trust' ), true ) ) );
+	}
+
+	public static function normalize_ai_candidate_text( $candidate ) {
+		if ( is_array( $candidate ) ) {
+			if ( ! isset( $candidate['text'] ) || ! is_string( $candidate['text'] ) ) { return null; }
+			$candidate = $candidate['text'];
+		}
+		if ( ! is_string( $candidate ) ) { return null; }
+		return trim( wp_strip_all_tags( $candidate ) );
+	}
+
 	public static function quality_evidence_status( $selected, $owner_loaded, $accessibility, $performance, $owner_attested = false ) {
 		$missing = array();
 		if ( ! self::cohort_allowed( $selected ) ) {
@@ -262,10 +297,10 @@ final class GCU_Future_Policy {
 			$missing[] = 'owner_handoff_confirmation_unavailable';
 		}
 		// Scores outside the defined 0–100 measurement scale are not evidence.
-		if ( ! is_numeric( $accessibility ) || (float) $accessibility < 0 || (float) $accessibility > 100 ) {
+		if ( ! self::valid_quality_percentage( $accessibility ) ) {
 			$missing[] = 'accessibility_measurement_unavailable';
 		}
-		if ( ! is_numeric( $performance ) || (float) $performance < 0 || (float) $performance > 100 ) {
+		if ( ! self::valid_quality_percentage( $performance ) ) {
 			$missing[] = 'performance_measurement_unavailable';
 		}
 		return array( 'complete' => empty( $missing ), 'missing' => $missing );
