@@ -959,7 +959,7 @@ final class GCU_Future_Intelligence {
 		// Degraded Future storage may not break the canonical base landing page.
 		if ( is_wp_error( self::rest_storage_ready() ) ) { return $html; }
 		$locale = GCU_Plugin::instance()->frontend()->current_locale();
-		$future = self::render_future_sections( $route, $locale );
+		$future = '<!--gcu-future-start-->' . self::render_future_sections( $route, $locale ) . '<!--gcu-future-end-->';
 		$pos = strrpos( $html, '</div>' );
 		if ( false === $pos ) {
 			return $html . $future;
@@ -1045,7 +1045,7 @@ final class GCU_Future_Intelligence {
 		foreach ( $items as $key => $label ) {
 			$html .= '<label><input type="checkbox" name="' . esc_attr( $key ) . '" value="1"> <span>' . esc_html( $label ) . '</span></label>';
 		}
-		$html .= '<button type="button" class="gcu-button" data-gcu-readiness-calculate>Check readiness</button><p class="gcu-future-readiness__result" role="status" aria-live="polite">Complete the checklist to estimate preparation only.</p></form></section>';
+		$html .= '<button type="button" class="gcu-button" data-gcu-readiness-calculate hidden>Check readiness</button><p class="gcu-future-readiness__result" role="status" aria-live="polite" hidden>Complete the checklist to estimate preparation only.</p><p class="gcu-future-readiness__fallback" data-gcu-readiness-fallback>The checklist is informational; automatic scoring requires optional scripting and does not verify a doctor.</p></form></section>';
 		return $html;
 	}
 
