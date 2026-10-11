@@ -1,4 +1,14 @@
-# Release Evidence — v1.4.16 Twelfth Twenty-Pass Readiness and Terminology Repository Candidate
+# Release Evidence — v1.4.17 Thirteenth Twenty-Pass Handoff and Jurisdiction Safety Repository Candidate
+
+## R13 source correction and operational boundary
+- Exact audited main `b0524faaa60c5324de4da43e6c813370c4f75084`. Twenty source checks completed before change: 16 narrowly clean, two local defects corrected (R13-D01 input type safety, R13-D02 approved regional-to-generic fallback), two unchanged external design requirements.
+- F14-FUT-02 context accepts allowlisted scalar text only; F14-FUT-06 jurisdiction display validates both region-specific and generic approved records, and fails closed if neither is valid.
+- Source regressions `tests/future-intelligence-tests.php`; review ledger `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.17-R13.md`.
+- Version 1.4.17; targets base schema 10005/Future 1 (not real DB observations). Exact PHP7.4/8.3 quality, two fresh reviews, deterministic package/SBOM, PR checks and **fresh post-merge exact-main CI** are necessary. Live plugin/database/migration/staging/Founder acceptance and actual browser checks remain unverified.
+
+## Historical R12 (preserved)
+
+Historical identity: v1.4.16 Twelfth Twenty-Pass Readiness and Terminology Repository Candidate
 
 ## R12 independent audit and correction trace
 
@@ -79,7 +89,7 @@ Historical identity: v1.4.9 Fifth Twenty-Pass Exact-Companion Repository Candida
 - Base plan: `SSH-F14-PLAN-2026-v1.0`.
 - Additive Founder-approved amendment: `SSH-F14-FUTURE-CTI-2026-v2.0`.
 - Fifth twenty-pass baseline: exact starting `main` `080e2198d84dfb7491bb0b75946e14a5fe118b91` (v1.4.8 fourth twenty-pass merge).
-- Software candidate: `1.4.16`.
+- Software candidate: `1.4.17`.
 - Base schema: `10005`; Future CTI additive schema: `1`.
 - Requirements retained: original File 14 FR/NFR plus `F14-FUT-01`–`F14-FUT-24`.
 - Ownership remains bounded: no doctor/clinic/application/appointment/payment/verification/shell source of truth is created here.

@@ -1000,11 +1000,18 @@ final class GCU_Future_Intelligence {
 		$t = self::tables();
 		$locale = GCU_Policy::sanitize_locale( $locale );
 		$region = self::sanitize_region( $region );
-		$row = $wpdb->get_row( $wpdb->prepare( "SELECT payload FROM {$t['records']} WHERE record_type='jurisdiction_copy' AND record_key='global_clinic_disclosure' AND locale=%s AND region IN (%s,'ZZ') AND status='active' AND is_public=1 AND (review_due_at IS NULL OR review_due_at>UTC_TIMESTAMP()) ORDER BY (region=%s) DESC LIMIT 1", $locale, $region, $region ), ARRAY_A );
-		if ( ! $row ) { return array(); }
-		$payload = self::json_array( $row['payload'] );
-		$proof = GCU_Future_Policy::validate_public_record_payload( 'jurisdiction_copy', $payload );
-		return ! empty( $proof['safe'] ) ? $payload : array();
+		// An active regional record may predate the enforced evidence schema.
+		// Never publish that malformed record, but still consider a separately
+		// approved generic ZZ disclosure before hiding all regional guidance.
+		$rows = $wpdb->get_results( $wpdb->prepare( "SELECT region,payload FROM {$t['records']} WHERE record_type='jurisdiction_copy' AND record_key='global_clinic_disclosure' AND locale=%s AND region IN (%s,'ZZ') AND status='active' AND is_public=1 AND (review_due_at IS NULL OR review_due_at>UTC_TIMESTAMP()) ORDER BY (region=%s) DESC LIMIT 2", $locale, $region, $region ), ARRAY_A );
+		foreach ( is_array( $rows ) ? $rows : array() as $row ) {
+			$payload = self::json_array( isset( $row['payload'] ) ? $row['payload'] : '' );
+			$proof = GCU_Future_Policy::validate_public_record_payload( 'jurisdiction_copy', $payload );
+			if ( ! empty( $proof['safe'] ) ) {
+				return $payload;
+			}
+		}
+		return array();
 	}
 
 	public static function filter_public_route_html( $html, $route ) {
@@ -1206,7 +1213,7 @@ final class GCU_Future_Intelligence {
 	}
 
 	private static function sanitize_region( $region ) {
-		$region = strtoupper( sanitize_text_field( (string) $region ) );
+		$region = is_string( $region ) ? strtoupper( sanitize_text_field( $region ) ) : '';
 		return preg_match( '/^[A-Z]{2}$/', $region ) ? $region : 'ZZ';
 	}
 

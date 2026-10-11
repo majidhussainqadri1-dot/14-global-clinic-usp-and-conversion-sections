@@ -250,6 +250,60 @@ $r12_partial = $r12_complete;
 $r12_partial['terms']['global_clinic']['ur-PK'] = '';
 assert_future( false === GCU_Future_Policy::validate_public_record_payload( 'terminology_lock', $r12_partial )['safe'], 'R12: an empty Urdu protected concept cannot pass review.' );
 
+
+// R13: Public handoff and URL country/language/mode fields must reject
+// non-scalar JSON/GET values without PHP warnings or accidental routing.
+$r13_bad_context = GCU_Future_Policy::sanitize_handoff_context( array(
+    'country' => array( 'PK' ), 'language' => array( 'ur' ),
+    'mode' => array( 'online' ),
+) );
+assert_future( array( 'country' => '', 'language' => '', 'mode' => '' ) === $r13_bad_context, 'R13 array-valued public handoff context must safely fail closed.' );
+$r13_bad_context = GCU_Future_Policy::sanitize_handoff_context( array(
+    'country' => new stdClass(), 'language' => true, 'mode' => 7,
+) );
+assert_future( array( 'country' => '', 'language' => '', 'mode' => '' ) === $r13_bad_context, 'R13 object/bool/numeric context cannot be interpreted as a canonical destination filter.' );
+$r13_good_context = GCU_Future_Policy::sanitize_handoff_context( array(
+    'country' => 'PK', 'language' => 'ur', 'mode' => 'online',
+) );
+assert_future( 'PK' === $r13_good_context['country'] && 'ur' === $r13_good_context['language'] && 'online' === $r13_good_context['mode'], 'R13 valid canonical handoff remains available.' );
+
+// R13: malformed region-specific legacy disclosures must not mask separately
+// approved generic text; malformed generic disclosures must never publish.
+if ( ! defined( 'ARRAY_A' ) ) { define( 'ARRAY_A', 'ARRAY_A' ); }
+class R13_Jurisdiction_Fixture {
+    public $prefix = 'wp_';
+    public $rows = array();
+    public $query = '';
+    public function prepare( $query ) { $this->query = $query; return $query; }
+    public function get_results( $query, $output = null ) { return $this->rows; }
+}
+$r13_prior_wpdb = isset( $GLOBALS['wpdb'] ) ? $GLOBALS['wpdb'] : null;
+$GLOBALS['wpdb'] = new R13_Jurisdiction_Fixture();
+$r13_generic = array(
+    'body' => 'Review canonical doctor information and local professional rules.',
+    'source' => 'Approved regional policy', 'reviewer' => 'Founder',
+    'provenance' => 'Approved public disclosure', 'effective_date' => '2026-10-11',
+);
+$GLOBALS['wpdb']->rows = array(
+    array( 'region' => 'PK', 'payload' => '{"body":"Unverified regional legacy text"}' ),
+    array( 'region' => 'ZZ', 'payload' => json_encode( $r13_generic ) ),
+);
+$r13_fallback = GCU_Future_Intelligence::jurisdiction_disclosure( 'en-US', 'PK' );
+assert_future( $r13_generic === $r13_fallback, 'R13 invalid regional record cannot conceal a validated general disclosure.' );
+assert_future( false !== strpos( $GLOBALS['wpdb']->query, 'LIMIT 2' ), 'R13 candidate order must inspect both region-specific and approved general records.' );
+$GLOBALS['wpdb']->rows = array(
+    array( 'region' => 'PK', 'payload' => json_encode( $r13_generic ) ),
+    array( 'region' => 'ZZ', 'payload' => '{"body":"Unsigned generic text"}' ),
+);
+assert_future( $r13_generic === GCU_Future_Intelligence::jurisdiction_disclosure( 'en-US', 'PK' ), 'R13 valid approved regional text retains precedence.' );
+$GLOBALS['wpdb']->rows = array(
+    array( 'region' => 'PK', 'payload' => '{"body":"Unverified region"}' ),
+    array( 'region' => 'ZZ', 'payload' => '{"body":"Unverified generic"}' ),
+);
+assert_future( array() === GCU_Future_Intelligence::jurisdiction_disclosure( 'en-US', 'PK' ), 'R13 no unverified regional or generic disclosure may publish.' );
+assert_future( array() === GCU_Future_Intelligence::jurisdiction_disclosure( 'en-US', array( 'PK' ) ), 'R13 non-scalar country in disclosure does not gain privileged regional scope.' );
+$GLOBALS['wpdb'] = $r13_prior_wpdb;
+
 $terms = GCU_Future_Policy::terminology_lock();
 assert_future( isset( $terms['verified_doctor']['en-US'], $terms['verified_doctor']['ur-PK'], $terms['verified_doctor']['ar-SA'] ), 'Terminology lock must cover English, Urdu and Arabic.' );
 $ur = GCU_Future_I18n::strings( 'ur-PK' );
