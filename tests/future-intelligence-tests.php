@@ -183,7 +183,12 @@ class R26_Queue_DB_Spy {
     public $prefix = 'wp_';
     public $last_sql = '';
     public $last_format = '';
-    public function prepare( $sql, $limit ) { return sprintf( $sql, $limit ); }
+    public function prepare( $sql, ...$args ) {
+        $safe = array_map( static function ( $value ) {
+            return is_string( $value ) ? "'" . str_replace( "'", "''", $value ) . "'" : $value;
+        }, $args );
+        return vsprintf( $sql, $safe );
+    }
     public function get_results( $sql, $format ) {
         $this->last_sql = $sql;
         $this->last_format = $format;
