@@ -131,6 +131,22 @@ fifth_assert( false !== strpos( $r26_dashboard, '$can_resolve_reports ? count( $
 fifth_assert( false !== strpos( $r26_dashboard, '<?php if ( $can_resolve_reports ) : ?><form' ) && false !== strpos( $r26_dashboard, 'Content-moderation authorization is required to view reports.' ), 'R26 only File00-authorized editors can see report moderation controls and sensitive text.' );
 fifth_assert( false !== strpos( $r26_dashboard, "esc_html( \$report['status'] )" ), 'R26 reviewer must see whether a case is open or reviewing.' );
 
+// R27: the File00 delegated report read gate must be enforced at every native entry point.
+$r27_source = file_get_contents( $plugin . '/includes/class-gcu-future-intelligence.php' );
+$r27_rest_start = strpos( $r27_source, 'public static function rest_reports(' );
+$r27_rest_end = strpos( $r27_source, 'public static function rest_revalidate_claim(', $r27_rest_start );
+$r27_native_start = strpos( $r27_source, 'public static function reports( $status' );
+$r27_queue_start = strpos( $r27_source, 'public static function review_queue_reports(' );
+$r27_mutate_start = strpos( $r27_source, 'public static function resolve_report_record(', $r27_queue_start );
+$r27_rest = substr( $r27_source, $r27_rest_start, $r27_rest_end - $r27_rest_start );
+$r27_native = substr( $r27_source, $r27_native_start, $r27_queue_start - $r27_native_start );
+$r27_queue = substr( $r27_source, $r27_queue_start, $r27_mutate_start - $r27_queue_start );
+fifth_assert( false !== strpos( $r27_source, 'private static function require_report_read()' ) && false !== strpos( $r27_source, "'future_intelligence_content'" ) && false !== strpos( $r27_source, 'GCU_Capabilities::require_capability( GCU_Capabilities::MANAGE_CONTENT' ), 'R27 report reader uses current File00 delegated content purpose, not a new unapproved permission.' );
+foreach ( array( 'REST' => $r27_rest, 'native' => $r27_native, 'queue' => $r27_queue ) as $surface => $body ) {
+    fifth_assert( false !== strpos( $body, 'self::require_report_read()' ) && false !== strpos( $body, 'is_wp_error( $read_permission )' ), 'R27 ' . $surface . ' report surface must fail closed before returning PII-bearing report rows.' );
+}
+fifth_assert( false !== strpos( $r27_queue, "status IN ('open','reviewing')" ), 'R27 must preserve R26 pending report queue status coverage.' );
+
 if ( $failures ) {
 	fwrite( STDERR, "Fifth review regression tests failed:\n- " . implode( "\n- ", $failures ) . "\n" );
 	exit( 1 );
