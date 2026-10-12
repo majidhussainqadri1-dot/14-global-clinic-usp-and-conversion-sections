@@ -111,6 +111,32 @@ foreach ( array( 'EN_us', 'ur_PK', 'ar', 'en', 'ar-SA' ) as $approved_locale ) {
     assert_future( true === GCU_Future_Policy::validate_copy_quality_report_input_types( $good )['safe'], 'Approved native locale variants remain accepted.' );
 }
 
+// R24: a report must not lose text beyond the 500-character persisted limit.
+$r24_long_report = array( 'reason_code'=>'unclear', 'message'=>str_repeat('a', 501) );
+assert_future( false === GCU_Future_Policy::validate_copy_quality_report_input_types( $r24_long_report )['safe'], '501-character report must reject without silent truncation.' );
+$r24_urdu_report = array( 'reason_code'=>'unclear', 'message'=>str_repeat('ا', 500) );
+assert_future( true === GCU_Future_Policy::validate_copy_quality_report_input_types( $r24_urdu_report )['safe'], '500 Unicode Urdu characters remain supported.' );
+$r24_emoji_report = array( 'reason_code'=>'unclear', 'message'=>str_repeat('🩺', 500) );
+assert_future( true === GCU_Future_Policy::validate_copy_quality_report_input_types( $r24_emoji_report )['safe'], '500 four-byte Unicode characters remain valid.' );
+foreach ( array( str_repeat('ا', 501), str_repeat('🩺', 501), "\xC3\x28" ) as $bad_report_message ) {
+    assert_future( false === GCU_Future_Policy::validate_copy_quality_report_input_types( array( 'reason_code'=>'unclear', 'message'=>$bad_report_message ) )['safe'], 'Malformed/overlong Unicode report must reject.' );
+}
+// FUT-02 explicit country, language or mode must never be quietly omitted.
+foreach ( array( array('country'=>'USA'), array('language'=>'de'), array('mode'=>'teleport'), array('country'=>array('PK')), array('mode'=>true) ) as $bad_context ) {
+    assert_future( false === GCU_Future_Policy::validate_handoff_context_input( $bad_context )['safe'], 'Invalid explicit handoff context must return 400.' );
+}
+assert_future( true === GCU_Future_Policy::validate_handoff_context_input( array('country'=>'pk','language'=>'UR','mode'=>'online') )['safe'], 'Approved native context must pass.' );
+assert_future( true === GCU_Future_Policy::validate_handoff_context_input( array() )['safe'], 'Optional handoff context may be omitted.' );
+// FUT-10/FUT-16: malformed supplied simulator objects are not unspecified defaults.
+foreach ( array( array('current'=>'bad'), array('previous'=>false) ) as $bad_copy ) {
+    assert_future( false === GCU_Future_Policy::validate_preflight_request_input( $bad_copy, 'copy' )['safe'], 'Wrong-shape copy preflight must reject.' );
+}
+foreach ( array( array('variants'=>'bad'), array('guardrails'=>'bad'), array('sample_policy'=>array('no')), array('privacy_policy'=>null) ) as $bad_experiment ) {
+    assert_future( false === GCU_Future_Policy::validate_preflight_request_input( $bad_experiment, 'experiment' )['safe'], 'Wrong-shape experiment preflight must reject.' );
+}
+assert_future( true === GCU_Future_Policy::validate_preflight_request_input( array('current'=>array('body'=>'plain'), 'previous'=>array()), 'copy' )['safe'], 'Valid copy preflight remains usable.' );
+assert_future( true === GCU_Future_Policy::validate_preflight_request_input( array('variants'=>array('one','two'), 'guardrails'=>array(), 'sample_policy'=>'minimum cohort', 'privacy_policy'=>'no profiling'), 'experiment' )['safe'], 'Valid experiment shape remains usable.' );
+
 $catalog = GCU_Future_Policy::feature_catalog();
 assert_future( 24 === count( $catalog ), 'Exactly 24 Founder-approved Future Intelligence features are required.' );
 for ( $i = 1; $i <= 24; $i++ ) {

@@ -212,7 +212,13 @@ final class GCU_Future_Intelligence {
 			return $rate;
 		}
 		$data = $request->get_json_params();
-		$data = is_array( $data ) ? $data : array();
+		if ( ! is_array( $data ) ) {
+			return new WP_Error( 'gcu_future_handoff_body_invalid', __( 'Choose an approved journey using a JSON object.', 'global-clinic-usp-integration' ), array( 'status' => 400 ) );
+		}
+		$context_types = GCU_Future_Policy::validate_handoff_context_input( $data );
+		if ( ! $context_types['safe'] ) {
+			return new WP_Error( 'gcu_future_handoff_context_invalid', __( 'Country, language or consultation mode is invalid.', 'global-clinic-usp-integration' ), array( 'status' => 400, 'fields' => $context_types['invalid_fields'] ) );
+		}
 		// Explicit journey choice must be scalar text; nested JSON has no intent.
 		$intent = GCU_Future_Policy::sanitize_explicit_intent( isset( $data['intent'] ) ? $data['intent'] : null );
 		$intents = GCU_Future_Policy::supported_intents();
@@ -262,7 +268,9 @@ final class GCU_Future_Intelligence {
 		$ready = self::rest_storage_ready();
 		if ( is_wp_error( $ready ) ) { return $ready; }
 		$data = $request->get_json_params();
-		$data = is_array( $data ) ? $data : array();
+		if ( ! is_array( $data ) ) { return new WP_Error( 'gcu_future_copy_preflight_body_invalid', __( 'Copy preflight requires a JSON object.', 'global-clinic-usp-integration' ), array( 'status' => 400 ) ); }
+		$typed = GCU_Future_Policy::validate_preflight_request_input( $data, 'copy' );
+		if ( ! $typed['safe'] ) { return new WP_Error( 'gcu_future_copy_preflight_input_invalid', __( 'Current and previous copy must have the approved object shape.', 'global-clinic-usp-integration' ), array( 'status' => 400, 'fields' => $typed['invalid_fields'] ) ); }
 		$previous = isset( $data['previous'] ) && is_array( $data['previous'] ) ? $data['previous'] : array();
 		$current = isset( $data['current'] ) && is_array( $data['current'] ) ? $data['current'] : $data;
 		$result = GCU_Future_Policy::copy_preflight( $current, $previous );
@@ -275,7 +283,9 @@ final class GCU_Future_Intelligence {
 		$ready = self::rest_storage_ready();
 		if ( is_wp_error( $ready ) ) { return $ready; }
 		$data = $request->get_json_params();
-		$data = is_array( $data ) ? $data : array();
+		if ( ! is_array( $data ) ) { return new WP_Error( 'gcu_future_experiment_preflight_body_invalid', __( 'Experiment preflight requires a JSON object.', 'global-clinic-usp-integration' ), array( 'status' => 400 ) ); }
+		$typed = GCU_Future_Policy::validate_preflight_request_input( $data, 'experiment' );
+		if ( ! $typed['safe'] ) { return new WP_Error( 'gcu_future_experiment_preflight_input_invalid', __( 'Experiment preflight fields have invalid shapes.', 'global-clinic-usp-integration' ), array( 'status' => 400, 'fields' => $typed['invalid_fields'] ) ); }
 		$result = GCU_Future_Policy::experiment_preflight(
 			isset( $data['variants'] ) && is_array( $data['variants'] ) ? $data['variants'] : array(),
 			isset( $data['guardrails'] ) && is_array( $data['guardrails'] ) ? $data['guardrails'] : array(),
@@ -934,7 +944,7 @@ final class GCU_Future_Intelligence {
 		$reason = sanitize_key( isset( $data['reason_code'] ) ? $data['reason_code'] : '' );
 		if ( ! in_array( $reason, $reasons, true ) ) { return new WP_Error( 'gcu_future_report_reason_invalid', __( 'Choose an approved report reason.', 'global-clinic-usp-integration' ), array( 'status' => 400 ) ); }
 		$message = trim( sanitize_textarea_field( isset( $data['message'] ) ? $data['message'] : '' ) );
-		$message = function_exists( 'mb_substr' ) ? mb_substr( $message, 0, 500 ) : substr( $message, 0, 500 );
+		// The typed entry guard rejects messages over 500 Unicode characters: never drop evidence silently.
 		if ( self::report_contains_sensitive_data( $message ) ) { return new WP_Error( 'gcu_future_report_sensitive_data', __( 'Do not include personal, contact, identity or clinical details in a copy-quality report.', 'global-clinic-usp-integration' ), array( 'status' => 400 ) ); }
 		$route = isset( $data['route_key'] ) ? $data['route_key'] : 'global_clinic';
 		$block = sanitize_key( isset( $data['block_key'] ) ? $data['block_key'] : '' );

@@ -17,8 +17,8 @@ function fifth_assert( $condition, $message ) {
 	}
 }
 
-fifth_assert( false !== strpos( $main, 'Version: 1.4.27' ), 'Plugin header must be v1.4.27.' );
-fifth_assert( false !== strpos( $main, "define( 'GCU_VERSION', '1.4.27' )" ), 'GCU_VERSION must be v1.4.27.' );
+fifth_assert( false !== strpos( $main, 'Version: 1.4.28' ), 'Plugin header must be v1.4.28.' );
+fifth_assert( false !== strpos( $main, "define( 'GCU_VERSION', '1.4.28' )" ), 'GCU_VERSION must be v1.4.28.' );
 fifth_assert( false !== strpos( $main, 'class-gcu-fifth-review-hardening.php' ), 'Fifth-review hardening class must ship.' );
 fifth_assert( false !== strpos( $main, "GCU_Fifth_Review_Hardening', 'bootstrap" ), 'Fifth-review hardening must bootstrap.' );
 
@@ -48,7 +48,7 @@ fifth_assert( false !== strpos( $hardening, 'experiment_early_stopped' ), 'Early
 fifth_assert( false !== strpos( $hardening, 'if ( false === $audit )' ), 'Audit failure must trigger rollback.' );
 fifth_assert( false !== strpos( $hardening, 'rollback_owned_transaction()' ) && false !== strpos( $hardening, 'commit_owned_transaction()' ), 'Early-stop must have explicit rollback/commit paths.' );
 
-fifth_assert( false !== strpos( $readme, 'Stable tag: 1.4.27' ), 'Readme stable tag must match v1.4.27.' );
+fifth_assert( false !== strpos( $readme, 'Stable tag: 1.4.28' ), 'Readme stable tag must match v1.4.28.' );
 fifth_assert( false !== strpos( $readme, 'File 20 remains the sole owner of the global shell/navigation' ) && false !== strpos( $readme, 'only when File 20 is absent' ), 'File 20 sole global shell ownership and bounded recovery behavior must be stated accurately.' );
 fifth_assert( false === strpos( $readme, 'future record/report updates' ), 'Readme must not falsely claim generic future record/report transactionality.' );
 fifth_assert( false !== strpos( $status, 'Historical eighty-pass ledgers:' ) && substr_count( $status, 'docs/REVIEW-80-' ) >= 6, 'Status must retain all six historical review ledgers accurately.' );
@@ -98,6 +98,13 @@ foreach ( $r23_cv_ids as $r23_cv ) {
 preg_match_all( '/^\\| CV-[0-9]{3} \\|/m', $r23_cv_trace, $r23_cv_occurrences );
 fifth_assert( 71 === count( $r23_cv_occurrences[0] ), 'The central CV map must contain exactly 71 individual source IDs.' );
 fifth_assert( false !== strpos( $r23_cv_trace, 'not a proven deployed owner assignment' ), 'Central CV map must not claim speculative owner mapping as live fact.' );
+
+// R24 source-level checks: endpoints reject wrong shapes; public feedback cannot silently discard evidence.
+$r24_future = file_get_contents( $plugin . '/includes/class-gcu-future-intelligence.php' );
+fifth_assert( false !== strpos( $future_policy, 'function validate_handoff_context_input' ) && false !== strpos( $r24_future, 'gcu_future_handoff_context_invalid' ), 'FUT-02 must reject malformed explicit handoff context.' );
+fifth_assert( false !== strpos( $future_policy, 'function validate_preflight_request_input' ) && false !== strpos( $r24_future, 'gcu_future_copy_preflight_input_invalid' ) && false !== strpos( $r24_future, 'gcu_future_experiment_preflight_input_invalid' ), 'FUT-10/16 must reject malformed preflight shapes.' );
+fifth_assert( false !== strpos( $r24_future, 'gcu_future_copy_preflight_body_invalid' ) && false !== strpos( $r24_future, 'gcu_future_experiment_preflight_body_invalid' ), 'Preflight endpoints must reject non-object JSON bodies.' );
+fifth_assert( false === strpos( $r24_future, "mb_substr( \$message, 0, 500 ) : substr( \$message, 0, 500 )" ) && false !== strpos( $future_policy, 'preg_match_all' ), 'FUT-12 cannot silently truncate feedback and must preserve UTF-8 character budget.' );
 
 if ( $failures ) {
 	fwrite( STDERR, "Fifth review regression tests failed:\n- " . implode( "\n- ", $failures ) . "\n" );

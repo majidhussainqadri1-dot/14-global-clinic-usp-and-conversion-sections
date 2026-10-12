@@ -21,11 +21,15 @@ Frozen prior exact main `1563ad3c9c9ac352902293174a2a209661ffb1fe` audited again
 
 Frozen prior main `6d68daddc5faee8dc71bfc51a6673c590a43e90a`, File14 amended v2 Future CTI24 DOCX, consolidated governing master plan and File07/09/25 plans reviewed before changes. Four local code/trace gaps corrected: all 71 transferred CV IDs now indexed without ownership takeover; FUT-12 typed copy-report input, supplied UUID validation, approved route/locale integrity. Two cross-file/design gates remain open (#19 and #22). Full R23 ledger: `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.27-R23.md`, CV mapping: `docs/CENTRAL-CV-71-OWNER-CONSUMER-TRACE-v1.4.27-R23.md`. No source schema migration or installed website parity claim.
 
+## R24 2026-10-12 — evidence-preserving public feedback, handoff and simulator input guards
+
+Frozen prior exact main `a5e6fa9eb298d98e00850af16a284ce65d54b71d` compared with user-supplied File14 amended Future CTI24, consolidated Three Central Governing Master Plan and related File07/09/25 plans. All twenty independent source/owner lenses **before** edits: 15 narrowly source-present, three local proven source defects corrected, Issues #19/#22 outside this source implementation. Local corrections: reject rather than truncate reports beyond 500 Unicode codepoints, reject invalid explicit handoff context, reject malformed preflight JSON rather than silently replacing it. Ledger: `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.28-R24.md`. No schema change; deployed state not verified.
+
 ## Governing identity
 - Fresh central governing baseline: 2026-08-10
 - Base File plan: `SSH-F14-PLAN-2026-v1.0`
 - Founder-approved additive amendment: `SSH-F14-FUTURE-CTI-2026-v2.0`
-- Software candidate: `1.4.27`
+- Software candidate: `1.4.28`
 - Base schema candidate: `10005`
 - Future CTI additive schema: `1`
 - Current canonical source repository: `14-global-clinic-usp-and-conversion-sections`

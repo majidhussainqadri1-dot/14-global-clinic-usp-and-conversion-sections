@@ -1,4 +1,10 @@
-# Release Evidence — v1.4.27 R23 Candidate
+# Release Evidence — v1.4.28 R24 Candidate
+
+Software candidate: `1.4.28`. Exact reviewed baseline `a5e6fa9eb298d98e00850af16a284ce65d54b71d` on GitHub main. Twenty distinct File14/central/companion source lenses before coding: 15 source-guard-present, three bounded corrections to FUT-12 report message evidence, FUT-02 explicit handoff context, FUT-10/16 preview request shapes, and two unresolved external gates #19/#22. Full ledger `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.28-R24.md`. Must verify **exact review/main SHA** with PHP 7.4/8.3, regressions, two independent fresh reviews, deterministic package/SBOM and **fresh post-merge** exact-main CI before release status. This entry does not preclaim CI outcome. Source DB targets Base10005/Future1 unchanged. Deployed build/DB/opts/migration, staging/browser acceptance, Founder approval and live re-test unknown.
+
+---
+
+# Historical Release Evidence — v1.4.27 R23
 
 Software candidate: `1.4.27`, frozen original main `6d68daddc5faee8dc71bfc51a6673c590a43e90a`. Independent exact-source reviews of amended File14 Future CTI24, Three Central Governing Plans, companion File07/09/25, and 20 requirement/owner lenses before coding: 14 source-present, four local corrections, two open (#19/#22). Ledgers: `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.27-R23.md` and `docs/CENTRAL-CV-71-OWNER-CONSUMER-TRACE-v1.4.27-R23.md`. Before release, require **exact review/main SHA** independently on PHP7.4/8.3, regressions, two fresh reviews, deterministic package/SBOM, and **fresh post-merge** successful main CI. Source DB targets 10005/Future1 unchanged; deployed plugin version/checksum, installed DB/columns/options/migrations, staging, backup, Founder acceptance and live re-test remain unverified.
 
