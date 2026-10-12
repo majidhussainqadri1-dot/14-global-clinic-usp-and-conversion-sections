@@ -33,11 +33,15 @@ Frozen previous exact `main` `53fa9071373afe1f338bdf1f1d8c0540e07caf54` independ
 
 Frozen previous GitHub main `d28c4ef76667f75e3269201da6f935c2816568ee` compared with amended File14 plan, three central governing plans and File07/09/25 owner boundaries. All 20 lenses before edits: 16 scoped source guards, two File14 report-moderation lifecycle/privacy defects corrected, two unresolved owner/designed integrations (#19, #22). The Future P0 report queue now includes open and reviewing records, and File00-authorized content editors alone may view message details or act. `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.30-R26.md`. No schema migration or claimed live parity.
 
+## R27 2026-10-12 — Native report-read zero-trust across REST and direct services
+
+Frozen pre-change `main` `3952dd6857106bfafa0ae67fb7b36f2a1566a650`, user-uploaded File14 Future CTI24 amendment, three governing central plans, and File07/09/25 documents audited in twenty distinct source/owner lenses *before* edits. Sixteen limited source guards, two File14 local report-read entry gaps corrected through existing File00 `future_intelligence_content` authorization, two external/design gates Issues #19/#22 open. Evidence ledger `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.31-R27.md`; no source schema migration and no deployed-site parity assertion.
+
 ## Governing identity
 - Fresh central governing baseline: 2026-08-10
 - Base File plan: `SSH-F14-PLAN-2026-v1.0`
 - Founder-approved additive amendment: `SSH-F14-FUTURE-CTI-2026-v2.0`
-- Software candidate: `1.4.30`
+- Software candidate: `1.4.31`
 - Base schema candidate: `10005`
 - Future CTI additive schema: `1`
 - Current canonical source repository: `14-global-clinic-usp-and-conversion-sections`

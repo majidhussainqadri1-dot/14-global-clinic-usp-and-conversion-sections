@@ -12,6 +12,26 @@ function esc_attr( $value ) { return htmlspecialchars( (string) $value, ENT_QUOT
 function wp_json_encode( $value ) { return json_encode( $value, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES ); }
 function absint( $value ) { return abs( (int) $value ); }
 
+/** R27: minimal isolated stand-ins for native File00 delegated report-read checks. */
+class WP_Error {
+    private $code;
+    public function __construct( $code, $message = '', $data = array() ) { $this->code = $code; }
+    public function get_error_code() { return $this->code; }
+}
+function is_wp_error( $value ) { return $value instanceof WP_Error; }
+class WP_REST_Request {}
+class GCU_Capabilities {
+    const MANAGE_CONTENT = 'gcu_manage_content';
+    public static $report_read_allowed = true;
+    public static function require_capability( $capability, $object = null, $purpose = '' ) {
+        if ( self::MANAGE_CONTENT !== $capability || 'future_intelligence_content' !== $purpose || ! self::$report_read_allowed ) {
+            return new WP_Error( 'gcu_forbidden' );
+        }
+        return true;
+    }
+}
+
+
 require __DIR__ . '/../14-global-clinic-usp-integration/includes/class-gcu-policy.php';
 require __DIR__ . '/../14-global-clinic-usp-integration/includes/class-gcu-future-policy.php';
 require __DIR__ . '/../14-global-clinic-usp-integration/includes/class-gcu-future-i18n.php';
@@ -163,7 +183,12 @@ class R26_Queue_DB_Spy {
     public $prefix = 'wp_';
     public $last_sql = '';
     public $last_format = '';
-    public function prepare( $sql, $limit ) { return sprintf( $sql, $limit ); }
+    public function prepare( $sql, ...$args ) {
+        $safe = array_map( static function ( $value ) {
+            return is_string( $value ) ? "'" . str_replace( "'", "''", $value ) . "'" : $value;
+        }, $args );
+        return vsprintf( $sql, $safe );
+    }
     public function get_results( $sql, $format ) {
         $this->last_sql = $sql;
         $this->last_format = $format;
@@ -182,6 +207,23 @@ assert_future( 'ARRAY_A' === $wpdb->last_format, 'Report queue should return exi
 GCU_Future_Intelligence::review_queue_reports( 99999 );
 assert_future( false !== strpos( $wpdb->last_sql, 'LIMIT 200' ), 'Review queue must not permit unlimited moderator-list requests.' );
 $wpdb = $r26_previous_wpdb;
+
+// R27: native PHP readers and directly invoked REST handler are not protected only by UI/route checks.
+global $wpdb;
+$r27_saved_wpdb = isset( $wpdb ) ? $wpdb : null;
+$wpdb = new R26_Queue_DB_Spy();
+GCU_Capabilities::$report_read_allowed = false;
+$r27_queue_denied = GCU_Future_Intelligence::review_queue_reports( 50 );
+assert_future( is_wp_error( $r27_queue_denied ) && 'gcu_forbidden' === $r27_queue_denied->get_error_code(), 'Native pending queue must require current File00 content permission.' );
+assert_future( '' === $wpdb->last_sql, 'Forbidden native queue reader may not touch reporter database.' );
+$r27_reports_denied = GCU_Future_Intelligence::reports( 'open', 50 );
+assert_future( is_wp_error( $r27_reports_denied ) && '' === $wpdb->last_sql, 'Filtered native report list must reject and avoid DB read.' );
+$r27_rest_denied = GCU_Future_Intelligence::rest_reports( new WP_REST_Request() );
+assert_future( is_wp_error( $r27_rest_denied ) && '' === $wpdb->last_sql, 'Direct REST callback cannot bypass File00 delegated permission.' );
+GCU_Capabilities::$report_read_allowed = true;
+$r27_native_allowed = GCU_Future_Intelligence::reports( 'open', 50 );
+assert_future( is_array( $r27_native_allowed ) && false !== strpos( $wpdb->last_sql, "WHERE status='open'" ), 'Permitted content moderator still reads typed reports.' );
+$wpdb = $r27_saved_wpdb;
 
 $catalog = GCU_Future_Policy::feature_catalog();
 assert_future( 24 === count( $catalog ), 'Exactly 24 Founder-approved Future Intelligence features are required.' );
@@ -323,7 +365,7 @@ assert_future( false !== strpos( $r9_future_source, '$ready = self::runtime_read
 assert_future( false !== strpos( $r9_future_source, 'gcu_future_rest_storage_unready' ) && false !== strpos( $r9_future_source, "'status' => 503" ), 'R9 unsafe schema must return sanitized 503 rather than SQL/table details.' );
 foreach ( array( 'rest_change_log', 'rest_copy_preflight', 'rest_experiment_preflight', 'rest_quality', 'rest_friction', 'rest_scenarios', 'rest_faq_gaps', 'rest_consistency', 'rest_ai_copy', 'rest_records', 'rest_reports' ) as $handler ) {
     $r9_handler_at = strpos( $r9_future_source, 'function ' . $handler . '(' );
-    assert_future( false !== $r9_handler_at && false !== strpos( substr( $r9_future_source, $r9_handler_at, 240 ), 'self::rest_storage_ready()' ), 'R9 storage gate missing on ' . $handler );
+    assert_future( false !== $r9_handler_at && false !== strpos( substr( $r9_future_source, $r9_handler_at, 650 ), 'self::rest_storage_ready()' ), 'R9 storage gate missing on ' . $handler );
 }
 assert_future( false !== strpos( $r9_future_source, "consume_rate_limit( 'future-ai-copy', 12 )" ), 'R9 provider-backed AI copy endpoint requires a bounded per-actor rate limit.' );
 assert_future( false !== strpos( $r9_future_source, 'if ( is_wp_error( self::rest_storage_ready() ) ) { return $html; }' ), 'R9 degraded future schema must not break canonical public landing HTML.' );
