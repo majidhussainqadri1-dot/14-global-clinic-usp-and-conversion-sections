@@ -993,7 +993,7 @@ final class GCU_Future_Intelligence {
 
 	public static function resolve_report_record( $id, $expected, $status, $resolution ) {
 		// File00 is canonical: this service must authorize even when called outside admin-post.
-		$auth = GCU_Capabilities::require_capability( GCU_Capabilities::MANAGE_CONTENT, null, 'future_report_resolution' );
+		$auth = GCU_Capabilities::require_capability( GCU_Capabilities::MANAGE_CONTENT, null, 'future_intelligence_content' );
 		if ( is_wp_error( $auth ) ) { return $auth; }
 		$typed = GCU_Future_Policy::validate_report_resolution_input( $id, $expected, $status, $resolution );
 		if ( ! $typed['safe'] || ! wp_is_uuid( $id ) ) {
