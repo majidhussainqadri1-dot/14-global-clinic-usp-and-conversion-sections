@@ -155,6 +155,8 @@ foreach ( array( array( 'private'=>'note' ), false, str_repeat( 'x', 4097 ) ) as
     assert_future( false === GCU_Future_Policy::validate_report_resolution_input( $r25_report_id, 1, 'resolved', $r25_bad_resolution )['safe'], 'Invalid report moderation explanation must fail closed.' );
 }
 
+// WordPress defines this in production; the standalone PHP 7.4/8.3 harness must define it before the DB spy.
+if ( ! defined( 'ARRAY_A' ) ) { define( 'ARRAY_A', 'ARRAY_A' ); }
 // R26/FUT-12: reviewing reports must remain in the authorized unresolved queue.
 // A bounded database spy tests the generated canonical SQL without needing live WP.
 class R26_Queue_DB_Spy {
