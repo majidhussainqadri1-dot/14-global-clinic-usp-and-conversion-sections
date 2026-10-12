@@ -137,6 +137,24 @@ foreach ( array( array('variants'=>'bad'), array('guardrails'=>'bad'), array('sa
 assert_future( true === GCU_Future_Policy::validate_preflight_request_input( array('current'=>array('body'=>'plain'), 'previous'=>array()), 'copy' )['safe'], 'Valid copy preflight remains usable.' );
 assert_future( true === GCU_Future_Policy::validate_preflight_request_input( array('variants'=>array('one','two'), 'guardrails'=>array(), 'sample_policy'=>'minimum cohort', 'privacy_policy'=>'no profiling'), 'experiment' )['safe'], 'Valid experiment shape remains usable.' );
 
+// R25 — FUT-12 / CV-262: typed, bounded, versioned report moderation commands.
+$r25_report_id = '123e4567-e89b-42d3-a456-426614174000';
+$r25_valid = GCU_Future_Policy::validate_report_resolution_input( $r25_report_id, '7', 'resolved', 'Reviewed with evidence.' );
+assert_future( true === $r25_valid['safe'] && 7 === $r25_valid['expected_version'], 'Valid report moderation retains its exact positive optimistic version.' );
+assert_future( true === GCU_Future_Policy::validate_report_resolution_input( $r25_report_id, 1, 'reviewing', '' )['safe'], 'Reviewing an open report can use an empty optional explanation.' );
+foreach ( array( 0, -7, '-7', '2147483648', '999999999999999999999', false, true, 1.5, array( 'version'=>7 ), null ) as $r25_bad_version ) {
+    assert_future( false === GCU_Future_Policy::validate_report_resolution_input( $r25_report_id, $r25_bad_version, 'resolved', 'Reviewed.' )['safe'], 'Invalid report moderation version cannot be coerced into a different row.' );
+}
+foreach ( array( array( 'id'=>$r25_report_id ), 4, '', 'malformed', '123e4567-e89b-42d3-a456-4266141740ZZ' ) as $r25_bad_id ) {
+    assert_future( false === GCU_Future_Policy::validate_report_resolution_input( $r25_bad_id, 1, 'resolved', 'Reviewed.' )['safe'], 'Invalid report identifier rejected before database read.' );
+}
+foreach ( array( 'RESOLVED', 'unknown', 'resolved ', array( 'resolved' ), true ) as $r25_bad_status ) {
+    assert_future( false === GCU_Future_Policy::validate_report_resolution_input( $r25_report_id, 1, $r25_bad_status, 'Reviewed.' )['safe'], 'Noncanonical report status must not be sanitized into an authorized transition.' );
+}
+foreach ( array( array( 'private'=>'note' ), false, str_repeat( 'x', 4097 ) ) as $r25_bad_resolution ) {
+    assert_future( false === GCU_Future_Policy::validate_report_resolution_input( $r25_report_id, 1, 'resolved', $r25_bad_resolution )['safe'], 'Invalid report moderation explanation must fail closed.' );
+}
+
 $catalog = GCU_Future_Policy::feature_catalog();
 assert_future( 24 === count( $catalog ), 'Exactly 24 Founder-approved Future Intelligence features are required.' );
 for ( $i = 1; $i <= 24; $i++ ) {

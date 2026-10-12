@@ -122,6 +122,23 @@ final class GCU_Future_Policy {
 		return array( 'safe' => empty( $invalid ), 'invalid_fields' => $invalid );
 	}
 
+	/** FUT-12 / CV-262: reject malformed moderation commands before state mutation. */
+	public static function validate_report_resolution_input( $report_id, $expected_version, $status, $resolution ) {
+		$invalid = array();
+		if ( ! is_string( $report_id ) || ! preg_match( '/^[a-f0-9]{8}-(?:[a-f0-9]{4}-){3}[a-f0-9]{12}$/Di', $report_id ) ) {
+			$invalid[] = 'report_id';
+		}
+		$version = self::strict_mutation_version( $expected_version );
+		if ( null === $version ) { $invalid[] = 'expected_version'; }
+		if ( ! is_string( $status ) || ! in_array( $status, array( 'reviewing', 'resolved', 'rejected' ), true ) ) {
+			$invalid[] = 'status';
+		}
+		if ( ! is_string( $resolution ) || strlen( $resolution ) > 4096 ) {
+			$invalid[] = 'resolution';
+		}
+		return array( 'safe' => empty( $invalid ), 'invalid_fields' => $invalid, 'expected_version' => $version );
+	}
+
 	/** Claim revalidation changes public trust state. Never coerce nested inputs. */
 	public static function validate_revalidation_input_types( $claim_key, $reason, $version ) {
 		return is_string( $claim_key ) && is_string( $reason ) && strlen( $reason ) <= 4096

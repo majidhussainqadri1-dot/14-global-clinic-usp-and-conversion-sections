@@ -1,4 +1,12 @@
-# File 14 Status — v1.4.28 R24 Journey and Preflight Integrity Repository Candidate
+# File 14 Status — v1.4.29 R25 Report Moderation Repository Candidate
+
+Exact-current-head rule: Candidate push/PR and a separate fresh merged-main SHA must each pass PHP7.4/8.3, regressions, fresh reviews and deterministic package/SBOM. GitHub repository state never equals deployed WordPress truth.
+
+Software candidate: `1.4.29`. Frozen reviewed old main `53fa9071373afe1f338bdf1f1d8c0540e07caf54`. Twenty pre-edit source/plan/companion lenses: 15 narrowly source-present; three File14 local moderator authorization/version/feedback defects fixed; two unresolved external/design issues #19 (owner-signed booking/application outcome contract), #22 (approved experiment baseline restoration). R25 report: `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.29-R25.md`. Source base target `10005`, Future `1`, no source DB migration. **Deployed plugin/checksum, actual DB/schema/options/migration, runtime logs, staging/Live tests and Founder approval unverified.**
+
+---
+
+# Historical R24 — v1.4.28 (before R25)
 
 Exact-current-head rule: Candidate branch QA, PR QA, and fresh merged-main SHA quality/package/review evidence are distinct. Source evidence is never installed WordPress proof.
 

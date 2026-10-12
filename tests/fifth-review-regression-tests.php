@@ -17,8 +17,8 @@ function fifth_assert( $condition, $message ) {
 	}
 }
 
-fifth_assert( false !== strpos( $main, 'Version: 1.4.28' ), 'Plugin header must be v1.4.28.' );
-fifth_assert( false !== strpos( $main, "define( 'GCU_VERSION', '1.4.28' )" ), 'GCU_VERSION must be v1.4.28.' );
+fifth_assert( false !== strpos( $main, 'Version: 1.4.29' ), 'Plugin header must be v1.4.29.' );
+fifth_assert( false !== strpos( $main, "define( 'GCU_VERSION', '1.4.29' )" ), 'GCU_VERSION must be v1.4.29.' );
 fifth_assert( false !== strpos( $main, 'class-gcu-fifth-review-hardening.php' ), 'Fifth-review hardening class must ship.' );
 fifth_assert( false !== strpos( $main, "GCU_Fifth_Review_Hardening', 'bootstrap" ), 'Fifth-review hardening must bootstrap.' );
 
@@ -48,7 +48,7 @@ fifth_assert( false !== strpos( $hardening, 'experiment_early_stopped' ), 'Early
 fifth_assert( false !== strpos( $hardening, 'if ( false === $audit )' ), 'Audit failure must trigger rollback.' );
 fifth_assert( false !== strpos( $hardening, 'rollback_owned_transaction()' ) && false !== strpos( $hardening, 'commit_owned_transaction()' ), 'Early-stop must have explicit rollback/commit paths.' );
 
-fifth_assert( false !== strpos( $readme, 'Stable tag: 1.4.28' ), 'Readme stable tag must match v1.4.28.' );
+fifth_assert( false !== strpos( $readme, 'Stable tag: 1.4.29' ), 'Readme stable tag must match v1.4.29.' );
 fifth_assert( false !== strpos( $readme, 'File 20 remains the sole owner of the global shell/navigation' ) && false !== strpos( $readme, 'only when File 20 is absent' ), 'File 20 sole global shell ownership and bounded recovery behavior must be stated accurately.' );
 fifth_assert( false === strpos( $readme, 'future record/report updates' ), 'Readme must not falsely claim generic future record/report transactionality.' );
 fifth_assert( false !== strpos( $status, 'Historical eighty-pass ledgers:' ) && substr_count( $status, 'docs/REVIEW-80-' ) >= 6, 'Status must retain all six historical review ledgers accurately.' );
@@ -105,6 +105,15 @@ fifth_assert( false !== strpos( $future_policy, 'function validate_handoff_conte
 fifth_assert( false !== strpos( $future_policy, 'function validate_preflight_request_input' ) && false !== strpos( $r24_future, 'gcu_future_copy_preflight_input_invalid' ) && false !== strpos( $r24_future, 'gcu_future_experiment_preflight_input_invalid' ), 'FUT-10/16 must reject malformed preflight shapes.' );
 fifth_assert( false !== strpos( $r24_future, 'gcu_future_copy_preflight_body_invalid' ) && false !== strpos( $r24_future, 'gcu_future_experiment_preflight_body_invalid' ), 'Preflight endpoints must reject non-object JSON bodies.' );
 fifth_assert( false === strpos( $r24_future, "mb_substr( \$message, 0, 500 ) : substr( \$message, 0, 500 )" ) && false !== strpos( $future_policy, 'preg_match_all' ), 'FUT-12 cannot silently truncate feedback and must preserve UTF-8 character budget.' );
+
+// R25: moderator resolution must be protected at the repository-facing mutation, not only the admin-post route.
+$r25_source = file_get_contents( $plugin . '/includes/class-gcu-future-intelligence.php' );
+$r25_mutate = substr( $r25_source, strpos( $r25_source, 'public static function resolve_report_record(' ), strpos( $r25_source, 'private static function reports_page(' ) - strpos( $r25_source, 'public static function resolve_report_record(' ) );
+$r25_admin = substr( $r25_source, strpos( $r25_source, 'public static function resolve_report()' ), strpos( $r25_source, 'public static function admin_menu()' ) - strpos( $r25_source, 'public static function resolve_report()' ) );
+fifth_assert( false !== strpos( $r25_mutate, 'GCU_Capabilities::require_capability(' ) && false !== strpos( $r25_mutate, "'future_intelligence_content'" ), 'R25 native report mutation requires File00 delegated editor authorization using approved purpose.' );
+fifth_assert( false !== strpos( $future_policy, 'function validate_report_resolution_input' ) && false !== strpos( $r25_mutate, 'GCU_Future_Policy::validate_report_resolution_input(' ), 'R25 repository-facing report mutation requires exact typed version/identity/status.' );
+fifth_assert( false === strpos( $r25_admin, 'absint( $_POST' ) && false !== strpos( $r25_admin, 'is_wp_error( $result )' ), 'R25 admin POST may not normalize negative report versions or silently swallow failed moderation.' );
+fifth_assert( false !== strpos( $r25_source, "'gcu_report_review'" ) && false !== strpos( $r25_source, 'notice notice-error' ), 'R25 admin dashboard must show failed report moderation rather than implying success.' );
 
 if ( $failures ) {
 	fwrite( STDERR, "Fifth review regression tests failed:\n- " . implode( "\n- ", $failures ) . "\n" );
