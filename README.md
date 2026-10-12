@@ -45,11 +45,15 @@ Frozen exact previous GitHub `main` `2665bd57fc8d076ed10dccff33e699706472f959` c
 
 Frozen old main `ad58309dc5d5c0f5c5a23ec481dde6650496880f`, amended File14 Future CTI24, Three Central Governing Plans, companion File07/08/09/25 plans and current File00/01/07/08/09/19/20/24/25 adapters examined through 20 distinct source/owner lenses **before edits**. Sixteen limited code/trace locations, two local CV-262 security defects corrected (11 native protected REST callbacks, private record reads, direct claim approval and private system mutation), two external Issues #19/#22 remain. Detailed audit `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.33-R29.md`. No schema migration or live deployment/parity claim.
 
+## R30 — 2026-10-12 — truthful governed record identity and nonbinding readiness input
+
+Frozen previous exact `main` `605fcaa5b96d1a46efee65a309c0df8efd3e9fbe` reviewed against File14 amended Future CTI24, Three Central Consolidated Governing Plans and File07/08/09/25 original DOCX contracts. All 20 distinct static source/specification/owner lenses completed before edits: 16 narrowly source-located, two File14 local input-semantics defects fixed, Issues #19/#22 owner and restore contracts open. Public record editor now rejects malformed explicit identity/status/region/locale instead of silently changing their meanings; Doctor Readiness accepts only typed JSON checkbox decisions and cannot verify a doctor. Full ledger: `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.34-R30.md`. Source schema unchanged, installed site not verified.
+
 ## Governing identity
 - Fresh central governing baseline: 2026-08-10
 - Base File plan: `SSH-F14-PLAN-2026-v1.0`
 - Founder-approved additive amendment: `SSH-F14-FUTURE-CTI-2026-v2.0`
-- Software candidate: `1.4.33`
+- Software candidate: `1.4.34`
 - Base schema candidate: `10005`
 - Future CTI additive schema: `1`
 - Current canonical source repository: `14-global-clinic-usp-and-conversion-sections`
