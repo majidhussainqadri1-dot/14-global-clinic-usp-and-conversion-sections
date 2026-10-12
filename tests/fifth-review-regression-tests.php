@@ -200,6 +200,21 @@ fifth_assert( false !== strpos( $r29_claim, 'GCU_Capabilities::APPROVE_CLAIMS' )
     && false !== strpos( $r29_claim, "'future_intelligence_claims'" ),
     'R29 direct claim revalidation must require the File00 claim approver, not a generic content editor.' );
 
+// R30 — source gates must reject unsupported explicit Future governance identity and malformed readiness JSON.
+$r30_policy = file_get_contents( $plugin . '/includes/class-gcu-future-policy.php' );
+$r30_code = file_get_contents( $plugin . '/includes/class-gcu-future-intelligence.php' );
+$r30_write_from = strpos( $r30_code, 'public static function rest_record_write(' );
+$r30_write_to = strpos( $r30_code, 'public static function rest_reports(', $r30_write_from );
+$r30_write = substr( $r30_code, $r30_write_from, $r30_write_to - $r30_write_from );
+$r30_readiness_from = strpos( $r30_code, 'public static function rest_readiness(' );
+$r30_readiness_to = strpos( $r30_code, 'public static function rest_copy_preflight(', $r30_readiness_from );
+$r30_readiness = substr( $r30_code, $r30_readiness_from, $r30_readiness_to - $r30_readiness_from );
+fifth_assert( false !== strpos( $r30_policy, 'function validate_future_record_command_values' ) && false !== strpos( $r30_write, 'GCU_Future_Policy::validate_future_record_command_values( $data )' ), 'R30 REST record write validates explicit canonical identity/state before sanitizer/idempotent command.' );
+fifth_assert( false !== strpos( $r30_write, 'gcu_future_record_values_invalid' ), 'R30 invalid governed record key/status/locale/region is rejected with controlled 400.' );
+fifth_assert( false !== strpos( $r30_policy, 'function validate_readiness_check_inputs' ) && false !== strpos( $r30_readiness, 'GCU_Future_Policy::validate_readiness_check_inputs( $data )' ), 'R30 FUT-24 readiness answers are explicitly checked before producing score.' );
+fifth_assert( false !== strpos( $r30_readiness, 'json_decode( (string) $request->get_body() ) instanceof stdClass' ) && false !== strpos( $r30_readiness, 'gcu_future_readiness_body_invalid' ), 'R30 non-object JSON body must not be mislabeled as successful doctor readiness assessment.' );
+fifth_assert( false !== strpos( $r30_readiness, 'gcu_future_readiness_answers_invalid' ), 'R30 unsupported self-check values must fail as a controlled input error.' );
+
 if ( $failures ) {
 	fwrite( STDERR, "Fifth review regression tests failed:\n- " . implode( "\n- ", $failures ) . "\n" );
 	exit( 1 );
