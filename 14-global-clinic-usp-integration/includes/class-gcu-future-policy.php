@@ -122,6 +122,13 @@ final class GCU_Future_Policy {
 		return array( 'safe' => empty( $invalid ), 'invalid_fields' => $invalid );
 	}
 
+	/** FUT-12: an audited final decision cannot be silently reopened by direct callers. */
+	public static function report_resolution_transition_allowed( $current, $target ) {
+		return is_string( $current ) && is_string( $target )
+			&& in_array( $current, array( 'open', 'reviewing' ), true )
+			&& in_array( $target, array( 'reviewing', 'resolved', 'rejected' ), true );
+	}
+
 	/** FUT-12 / CV-262: reject malformed moderation commands before state mutation. */
 	public static function validate_report_resolution_input( $report_id, $expected_version, $status, $resolution ) {
 		$invalid = array();
