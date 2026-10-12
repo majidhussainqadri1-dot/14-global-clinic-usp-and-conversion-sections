@@ -37,11 +37,15 @@ Frozen previous GitHub main `d28c4ef76667f75e3269201da6f935c2816568ee` compared 
 
 Frozen pre-change `main` `3952dd6857106bfafa0ae67fb7b36f2a1566a650`, user-uploaded File14 Future CTI24 amendment, three governing central plans, and File07/09/25 documents audited in twenty distinct source/owner lenses *before* edits. Sixteen limited source guards, two File14 local report-read entry gaps corrected through existing File00 `future_intelligence_content` authorization, two external/design gates Issues #19/#22 open. Evidence ledger `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.31-R27.md`; no source schema migration and no deployed-site parity assertion.
 
+## R28 2026-10-12 — copy-quality moderation terminality and safe report-read failure
+
+Frozen exact previous GitHub `main` `2665bd57fc8d076ed10dccff33e699706472f959` compared with user-uploaded File14 amended Future CTI24, consolidated Three Central Plans, File07/08/09/25 master plans and cross-module File00/01/07/08/09/19/20/24/25 source adapters in 20 independently scoped source/owner lenses **before edits**: 16 narrowly source-located, two File14-local faults corrected, two external owner/design dependencies #19/#22 remain. FUT-12 report resolution now rejects finalized-to-active transitions both by precheck and SQL CAS; dashboard safely handles permission or storage failures rather than a PHP TypeError. Evidence `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.32-R28.md`. No source schema migration or installed-state claim.
+
 ## Governing identity
 - Fresh central governing baseline: 2026-08-10
 - Base File plan: `SSH-F14-PLAN-2026-v1.0`
 - Founder-approved additive amendment: `SSH-F14-FUTURE-CTI-2026-v2.0`
-- Software candidate: `1.4.31`
+- Software candidate: `1.4.32`
 - Base schema candidate: `10005`
 - Future CTI additive schema: `1`
 - Current canonical source repository: `14-global-clinic-usp-and-conversion-sections`

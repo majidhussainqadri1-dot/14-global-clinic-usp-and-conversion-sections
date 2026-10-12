@@ -1,4 +1,12 @@
-# File 14 Status — v1.4.31 R27 Native Report Read Authorization Repository Candidate
+# File 14 Status — v1.4.32 R28 Terminal Report Lifecycle and Read Failure Repository Candidate
+
+Exact-current-head rule: candidate push/PR and **fresh post-merge current main SHA** each require independent PHP 7.4/8.3, adverse tests, fresh reviews and deterministic package/SBOM. GitHub is source truth, not WordPress deployed artifact parity.
+
+Software candidate: `1.4.32`. Frozen exact prior main `2665bd57fc8d076ed10dccff33e699706472f959`. Twenty distinct File14/Three Central/companion source reviews all completed before patch: 16 scoped source-guard locations, two local moderation defects corrected (final-status reopening/concurrency; safe revoked-permission/DB report read handling), two external owner/design issues #19/#22 still open. Full ledger `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.32-R28.md`. Source schema targets Base 10005/Future 1 unchanged; actual deployed plugin/version/hash, real DB/tables/columns/wp_options/migration, errors, staged/live testing and Founder approval **unverified**.
+
+---
+
+# Historical R27 — v1.4.31 (before R28)
 
 Exact-current-head rule: exact branch, PR and *fresh merged main* must pass independent PHP 7.4/8.3, source/behavioral/owner tests, two fresh reviews and deterministic package/SBOM. GitHub tests are not production runtime proof.
 
