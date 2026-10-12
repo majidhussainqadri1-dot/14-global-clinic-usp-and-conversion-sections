@@ -273,6 +273,39 @@ $r29_mutator = new ReflectionMethod( 'GCU_Future_Intelligence', 'upsert_record' 
 assert_future( $r29_mutator->isPrivate(), 'R29 system-bypass record writer cannot be invoked by untrusted sibling plugins.' );
 GCU_Capabilities::$deny_all_protected = false;
 
+// R30 — exact governed record identity/status and FUT-24 nonbinding self-check.
+$r30_valid_record = array( 'record_type'=>'jurisdiction_copy', 'record_key'=>'country_pk', 'status'=>'review', 'locale'=>'ur-PK', 'region'=>'PK' );
+assert_future( true === GCU_Future_Policy::validate_future_record_command_values( $r30_valid_record )['safe'], 'Canonical governed record command must remain accepted.' );
+assert_future( true === GCU_Future_Policy::validate_future_record_command_values( array() )['safe'], 'Omitted optional governance context retains explicit defaults.' );
+foreach ( array( 'en', 'en-US', 'en_US', 'ur', 'ur-PK', 'ur_PK', 'ar', 'ar-SA', 'ar_SA' ) as $r30_locale ) {
+    $good = $r30_valid_record; $good['locale'] = $r30_locale;
+    assert_future( true === GCU_Future_Policy::validate_future_record_command_values( $good )['safe'], 'Approved canonical locale or module alias must remain usable.' );
+}
+foreach ( array( 'draft','suggested','review','active','superseded','rejected' ) as $r30_status ) {
+    $good = $r30_valid_record; $good['status'] = $r30_status;
+    assert_future( true === GCU_Future_Policy::validate_future_record_command_values( $good )['safe'], 'Existing governed record status remains usable.' );
+}
+foreach ( array( 'status'=>array('ACTIVE!','ACTIVE','published','', 'active ', 'active/'), 'locale'=>array('fr-FR','de','', 'zh-CN'), 'region'=>array('USA','P!','ZZZ','', '12'), 'record_key'=>array('My Key','private/user','',str_repeat('x',192)), 'record_type'=>array('admin','Doctor_Profile','claim-revalidate') ) as $r30_field=>$r30_bad_values ) {
+    foreach ( $r30_bad_values as $r30_bad_value ) {
+        $bad=$r30_valid_record; $bad[$r30_field]=$r30_bad_value;
+        assert_future( false === GCU_Future_Policy::validate_future_record_command_values( $bad )['safe'], 'Explicit invalid '.$r30_field.' must not silently map to a different governed record.' );
+    }
+}
+$r30_all_checks = array( 'identity_ready', 'professional_evidence_ready', 'profile_ready', 'clinic_information_ready', 'languages_ready', 'consultation_modes_ready', 'privacy_ready', 'rules_accepted' );
+assert_future( true === GCU_Future_Policy::validate_readiness_check_inputs( array() )['safe'], 'Readiness optional selections can be omitted and remain incomplete.' );
+foreach ( $r30_all_checks as $r30_check ) {
+    foreach ( array( true,false,0,1,'0','1' ) as $r30_checked ) {
+        assert_future( true === GCU_Future_Policy::validate_readiness_check_inputs( array( $r30_check => $r30_checked ) )['safe'], 'Supported explicit readiness checkbox semantics are valid.' );
+    }
+    foreach ( array( 'true','false','yes','no',2,null,array('1'),new stdClass() ) as $r30_bad_check ) {
+        assert_future( false === GCU_Future_Policy::validate_readiness_check_inputs( array( $r30_check => $r30_bad_check ) )['safe'], 'Non-checkbox readiness values must return controlled invalid state.' );
+    }
+}
+$r30_unknown = GCU_Future_Policy::validate_readiness_check_inputs( array( 'patient_phone_03000000000' => 'private value' ) );
+assert_future( false === $r30_unknown['safe'] && array( 'unknown_field' ) === $r30_unknown['invalid_fields'], 'Unknown readiness keys are rejected without reflecting sensitive field names.' );
+$r30_score = GCU_Future_Policy::doctor_readiness_check( array_fill_keys( $r30_all_checks, true ) );
+assert_future( false === $r30_score['binding'] && 100 === $r30_score['score'] && 'File 09 / File 00' === $r30_score['verification_owner'], 'Doctor self-check remains nonbinding and never grants doctor verification.' );
+
 $catalog = GCU_Future_Policy::feature_catalog();
 assert_future( 24 === count( $catalog ), 'Exactly 24 Founder-approved Future Intelligence features are required.' );
 for ( $i = 1; $i <= 24; $i++ ) {
