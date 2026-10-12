@@ -95,8 +95,14 @@ final class GCU_Future_Policy {
 		if ( array_key_exists( 'reason_code', $input ) && ! in_array( $input['reason_code'], array( 'outdated', 'misleading', 'unclear', 'translation', 'broken_destination', 'faq_gap', 'other' ), true ) ) {
 			$invalid[] = 'reason_code';
 		}
-		if ( array_key_exists( 'message', $input ) && strlen( $input['message'] ) > 4096 ) {
-			$invalid[] = 'message';
+		if ( array_key_exists( 'message', $input ) ) {
+			// FUT-12: never truncate a user report; 500 Unicode characters are the persisted limit.
+			// At most 500 code points occupy 2000 UTF-8 bytes; reject invalid UTF-8 too.
+			$message = $input['message'];
+			$characters = strlen( $message ) <= 2000 ? preg_match_all( '/./us', $message, $matches ) : false;
+			if ( false === $characters || $characters > 500 ) {
+				$invalid[] = 'message';
+			}
 		}
 		if ( array_key_exists( 'route_key', $input ) && ! in_array( $input['route_key'], array( 'global_clinic', 'how_it_works' ), true ) ) {
 			$invalid[] = 'route_key';
@@ -236,6 +242,39 @@ final class GCU_Future_Policy {
 				|| ! hash_equals( (string) $stored[ $field ], (string) $expected[ $field ] ) ) { return false; }
 		}
 		return true;
+	}
+
+	/** FUT-02: a consciously selected country/language/mode must not disappear silently. */
+	public static function validate_handoff_context_input( array $input ) {
+		$invalid = array();
+		foreach ( array( 'country', 'language', 'mode' ) as $field ) {
+			if ( ! array_key_exists( $field, $input ) ) { continue; }
+			$value = $input[ $field ];
+			if ( ! is_string( $value ) || strlen( $value ) > 24 ) {
+				$invalid[] = $field;
+				continue;
+			}
+			if ( 'country' === $field && '' !== $value && ! preg_match( '/^[A-Za-z]{2}$/D', $value ) ) { $invalid[] = $field; }
+			if ( 'language' === $field && ! in_array( strtolower( $value ), array( '', 'en', 'ur', 'ar' ), true ) ) { $invalid[] = $field; }
+			if ( 'mode' === $field && ! in_array( strtolower( $value ), array( '', 'online', 'in_person', 'hybrid' ), true ) ) { $invalid[] = $field; }
+		}
+		return array( 'safe' => empty( $invalid ), 'invalid_fields' => $invalid );
+	}
+
+	/** FUT-10/16: simulator inputs supplied with the wrong shape must fail closed. */
+	public static function validate_preflight_request_input( array $input, $kind ) {
+		$invalid = array();
+		$fields = 'copy' === $kind ? array( 'current', 'previous' ) : ( 'experiment' === $kind ? array( 'variants', 'guardrails' ) : array() );
+		if ( empty( $fields ) ) { return array( 'safe' => false, 'invalid_fields' => array( 'kind' ) ); }
+		foreach ( $fields as $field ) {
+			if ( array_key_exists( $field, $input ) && ! is_array( $input[ $field ] ) ) { $invalid[] = $field; }
+		}
+		if ( 'experiment' === $kind ) {
+			foreach ( array( 'sample_policy', 'privacy_policy' ) as $field ) {
+				if ( array_key_exists( $field, $input ) && ! is_string( $input[ $field ] ) ) { $invalid[] = $field; }
+			}
+		}
+		return array( 'safe' => empty( $invalid ), 'invalid_fields' => $invalid );
 	}
 
 	public static function sanitize_handoff_context( array $input ) {
