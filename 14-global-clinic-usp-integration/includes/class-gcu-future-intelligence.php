@@ -992,6 +992,14 @@ final class GCU_Future_Intelligence {
 	}
 
 	public static function resolve_report_record( $id, $expected, $status, $resolution ) {
+		// File00 is canonical: this service must authorize even when called outside admin-post.
+		$auth = GCU_Capabilities::require_capability( GCU_Capabilities::MANAGE_CONTENT, null, 'future_report_resolution' );
+		if ( is_wp_error( $auth ) ) { return $auth; }
+		$typed = GCU_Future_Policy::validate_report_resolution_input( $id, $expected, $status, $resolution );
+		if ( ! $typed['safe'] || ! wp_is_uuid( $id ) ) {
+			return new WP_Error( 'gcu_future_report_resolution_input_invalid', __( 'Report identifier, version, state or resolution is invalid.', 'global-clinic-usp-integration' ), array( 'status' => 400, 'fields' => $typed['invalid_fields'] ) );
+		}
+		$expected = $typed['expected_version'];
 		$ready=self::runtime_ready();if(is_wp_error($ready)){return$ready;}
 		if(!in_array($status,array('reviewing','resolved','rejected'),true)){return new WP_Error('gcu_future_report_status_invalid',__('Invalid report status.','global-clinic-usp-integration'));}
 		$resolution=trim(sanitize_textarea_field($resolution));if(in_array($status,array('resolved','rejected'),true)&&strlen($resolution)<8){return new WP_Error('gcu_future_report_resolution_required',__('A meaningful resolution is required.','global-clinic-usp-integration'));}
@@ -1238,12 +1246,14 @@ final class GCU_Future_Intelligence {
 		if ( ! self::can_manage_content() ) {
 			wp_die( esc_html__( 'You are not authorized to review File 14 reports.', 'global-clinic-usp-integration' ) );
 		}
-		$id = isset( $_POST['report_id'] ) ? sanitize_text_field( wp_unslash( $_POST['report_id'] ) ) : '';
-		$expected = isset( $_POST['expected_version'] ) ? absint( $_POST['expected_version'] ) : 0;
-		$status = isset( $_POST['status'] ) ? sanitize_key( wp_unslash( $_POST['status'] ) ) : '';
-		$resolution = isset( $_POST['resolution'] ) ? sanitize_textarea_field( wp_unslash( $_POST['resolution'] ) ) : '';
-		self::resolve_report_record( $id, $expected, $status, $resolution );
-		wp_safe_redirect( admin_url( 'options-general.php?page=global-clinic-usp-future' ) );
+		$id = isset( $_POST['report_id'] ) ? wp_unslash( $_POST['report_id'] ) : '';
+		$expected = isset( $_POST['expected_version'] ) ? wp_unslash( $_POST['expected_version'] ) : null;
+		$status = isset( $_POST['status'] ) ? wp_unslash( $_POST['status'] ) : '';
+		$resolution = isset( $_POST['resolution'] ) ? wp_unslash( $_POST['resolution'] ) : '';
+		// A failed optimistic update or audit must not be presented as successful moderation.
+		$result = self::resolve_report_record( $id, $expected, $status, $resolution );
+		$url = add_query_arg( 'gcu_report_review', is_wp_error( $result ) ? 'failed' : 'success', admin_url( 'options-general.php?page=global-clinic-usp-future' ) );
+		wp_safe_redirect( $url );
 		exit;
 	}
 
@@ -1255,6 +1265,9 @@ final class GCU_Future_Intelligence {
 		if ( ! self::can_system_check() ) {
 			wp_die( esc_html__( 'You are not authorized to view this page.', 'global-clinic-usp-integration' ) );
 		}
+		$review_notice = isset( $_GET['gcu_report_review'] ) && is_string( $_GET['gcu_report_review'] ) ? sanitize_key( wp_unslash( $_GET['gcu_report_review'] ) ) : '';
+		if ( 'success' === $review_notice ) { echo '<div class="notice notice-success"><p>' . esc_html__( 'Copy-quality report review saved and audited.', 'global-clinic-usp-integration' ) . '</p></div>'; }
+		if ( 'failed' === $review_notice ) { echo '<div class="notice notice-error"><p>' . esc_html__( 'Copy-quality report review was not saved. Reload the report and try again.', 'global-clinic-usp-integration' ) . '</p></div>'; }
 		$ready = self::runtime_ready();
 		if ( is_wp_error( $ready ) ) { echo '<div class="notice notice-error"><p>' . esc_html( $ready->get_error_message() ) . '</p></div>'; return; }
 		$catalog = GCU_Future_Policy::feature_catalog();
