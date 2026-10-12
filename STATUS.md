@@ -1,4 +1,12 @@
-# File 14 Status — v1.4.33 R29 Protected REST and Record Authority Repository Candidate
+# File 14 Status — v1.4.34 R30 Canonical Record and Doctor Readiness Repository Candidate
+
+Exact-current-head rule: exact review/PR and separately fresh merged-main SHA require PHP7.4/8.3, regressions, fresh independent reviewers and deterministic artifact/SBOM. GitHub source CI never means WordPress deployed parity.
+
+Software candidate: `1.4.34`. Frozen old main `605fcaa5b96d1a46efee65a309c0df8efd3e9fbe`. All 20 distinct File14, Three Central and File07/08/09/25 source lenses finished before coding: 16 scoped source-guard/trace locations, two local canonical record/readiness input defects fixed, two open owner/design dependencies #19/#22. Full ledger: `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.34-R30.md`. Source DB targets Base10005/Future1 unchanged. Actual installed plugin/checksum, DB/schema/wp_options, migration status, runtime logs, staging/browser acceptance and Founder deployment approval unverified.
+
+---
+
+# Historical R29 — v1.4.33 (before R30)
 
 Exact-current-head rule: candidate branch/PR and distinct freshly merged main SHA require PHP7.4/8.3, adverse regressions, separate fresh reviews, deterministic package/SBOM. Source CI is not deployed WordPress truth.
 
