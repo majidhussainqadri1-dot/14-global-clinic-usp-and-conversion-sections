@@ -17,8 +17,8 @@ function fifth_assert( $condition, $message ) {
 	}
 }
 
-fifth_assert( false !== strpos( $main, 'Version: 1.4.31' ), 'Plugin header must be v1.4.31.' );
-fifth_assert( false !== strpos( $main, "define( 'GCU_VERSION', '1.4.31' )" ), 'GCU_VERSION must be v1.4.31.' );
+fifth_assert( false !== strpos( $main, 'Version: 1.4.32' ), 'Plugin header must be v1.4.32.' );
+fifth_assert( false !== strpos( $main, "define( 'GCU_VERSION', '1.4.32' )" ), 'GCU_VERSION must be v1.4.32.' );
 fifth_assert( false !== strpos( $main, 'class-gcu-fifth-review-hardening.php' ), 'Fifth-review hardening class must ship.' );
 fifth_assert( false !== strpos( $main, "GCU_Fifth_Review_Hardening', 'bootstrap" ), 'Fifth-review hardening must bootstrap.' );
 
@@ -48,7 +48,7 @@ fifth_assert( false !== strpos( $hardening, 'experiment_early_stopped' ), 'Early
 fifth_assert( false !== strpos( $hardening, 'if ( false === $audit )' ), 'Audit failure must trigger rollback.' );
 fifth_assert( false !== strpos( $hardening, 'rollback_owned_transaction()' ) && false !== strpos( $hardening, 'commit_owned_transaction()' ), 'Early-stop must have explicit rollback/commit paths.' );
 
-fifth_assert( false !== strpos( $readme, 'Stable tag: 1.4.31' ), 'Readme stable tag must match v1.4.31.' );
+fifth_assert( false !== strpos( $readme, 'Stable tag: 1.4.32' ), 'Readme stable tag must match v1.4.32.' );
 fifth_assert( false !== strpos( $readme, 'File 20 remains the sole owner of the global shell/navigation' ) && false !== strpos( $readme, 'only when File 20 is absent' ), 'File 20 sole global shell ownership and bounded recovery behavior must be stated accurately.' );
 fifth_assert( false === strpos( $readme, 'future record/report updates' ), 'Readme must not falsely claim generic future record/report transactionality.' );
 fifth_assert( false !== strpos( $status, 'Historical eighty-pass ledgers:' ) && substr_count( $status, 'docs/REVIEW-80-' ) >= 6, 'Status must retain all six historical review ledgers accurately.' );
@@ -146,6 +146,22 @@ foreach ( array( 'REST' => $r27_rest, 'native' => $r27_native, 'queue' => $r27_q
     fifth_assert( false !== strpos( $body, 'self::require_report_read()' ) && false !== strpos( $body, 'is_wp_error( $read_permission )' ), 'R27 ' . $surface . ' report surface must fail closed before returning PII-bearing report rows.' );
 }
 fifth_assert( false !== strpos( $r27_queue, "status IN ('open','reviewing')" ), 'R27 must preserve R26 pending report queue status coverage.' );
+
+// R28 (source + static SQL guard): terminal report statuses are not allowed to reenter the active workflow.
+$r28_source = file_get_contents( $plugin . '/includes/class-gcu-future-intelligence.php' );
+$r28_start = strpos( $r28_source, 'public static function resolve_report_record(' );
+$r28_end = strpos( $r28_source, 'public static function upsert_record(', $r28_start );
+$r28_mutation = substr( $r28_source, $r28_start, $r28_end - $r28_start );
+$r28_dashboard_at = strpos( $r28_source, 'public static function admin_page()' );
+$r28_dashboard_to = strpos( $r28_source, 'public static function can_manage_content()', $r28_dashboard_at );
+$r28_dashboard = substr( $r28_source, $r28_dashboard_at, $r28_dashboard_to - $r28_dashboard_at );
+fifth_assert( false !== strpos( $future_policy, 'function report_resolution_transition_allowed(' ) && false !== strpos( $r28_mutation, 'GCU_Future_Policy::report_resolution_transition_allowed(' ), 'R28 rejected final-status report transitions are checked before transactional mutation.' );
+fifth_assert( false !== strpos( $r28_mutation, "AND status IN ('open','reviewing')" ), 'R28 database CAS rejects a simultaneous terminal transition, not just a stale pre-read.' );
+fifth_assert( false !== strpos( $r28_mutation, 'gcu_future_report_transition_invalid' ), 'R28 invalid final-to-active moderation transition has a safe explicit conflict code.' );
+fifth_assert( false !== strpos( $r28_dashboard, 'is_wp_error( $reports )' ) && false !== strpos( $r28_dashboard, '! is_array( $reports )' ), 'R28 dashboard handles revoked permission and failed DB return without a PHP count TypeError.' );
+fifth_assert( false !== strpos( $r28_dashboard, 'if ( $reports_read_error ) { $reports = array(); }' ), 'R28 unexpected failure response is removed from the sensitive report render path.' );
+fifth_assert( false !== strpos( $r28_dashboard, "'unavailable'" ) && false !== strpos( $r28_dashboard, 'Report review is temporarily unavailable.' ), 'R28 missing reporter rows are reported as unavailable rather than falsely empty or exposed.' );
+fifth_assert( false !== strpos( $r28_dashboard, 'if ( $reports_read_error )' ), 'R28 diagnostic failure UX must be available before action controls.' );
 
 if ( $failures ) {
 	fwrite( STDERR, "Fifth review regression tests failed:\n- " . implode( "\n- ", $failures ) . "\n" );

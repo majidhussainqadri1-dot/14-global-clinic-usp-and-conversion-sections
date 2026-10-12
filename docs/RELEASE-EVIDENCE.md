@@ -1,4 +1,10 @@
-# Release Evidence — v1.4.31 R27 Candidate
+# Release Evidence — v1.4.32 R28 Candidate
+
+Software candidate: `1.4.32`, frozen audited exact former main `2665bd57fc8d076ed10dccff33e699706472f959`. Twenty source/plan/companion reviews **before changes** (16 narrow code-trace locations, two File14 P0 FUT-12 moderation defects corrected, two external #19/#22 unverified). Full ledger `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.32-R28.md`. Require exact review/PR/main SHA PHP7.4/8.3, negative lifecycle + SQL CAS and privacy-safe failure regressions, cross-file contract tests, two fresh reviews, deterministic package/SBOM and **fresh post-merge** exact main CI; no test is predeclared green. Source schema Base10005/Future1 unchanged. Exact deployed plugin/checksum, real DB/tables/wp_options/migration/logs, staging rollback/live re-test/Founder approval remain unverified.
+
+---
+
+# Historical Release Evidence — v1.4.31 R27
 
 Software candidate: `1.4.31`. Frozen prior repository `main` `3952dd6857106bfafa0ae67fb7b36f2a1566a650`. Twenty distinct exact-source/central/companion reviews completed **before** fixing two native F14-FUT-12/CV-262 report-read authorization gaps; sixteen limited source locations, two external/design Issues #19/#22 remain open. Full ledger `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.31-R27.md`. Require independent exact review/main SHA PHP7.4/8.3, negative/report-db tests, cross-owner regressions, two fresh reviews, deterministic package/SBOM and **fresh post-merge** main CI; do not preclaim success. Source targets Base10005/Future1 unchanged; actual deployed plugin/hash, DB/tables/wp_options/migration, staging/live tests and Founder release acceptance unknown.
 
