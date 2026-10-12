@@ -1,4 +1,12 @@
-# File 14 Status — v1.4.30 R26 Report Queue and Privacy Repository Candidate
+# File 14 Status — v1.4.31 R27 Native Report Read Authorization Repository Candidate
+
+Exact-current-head rule: exact branch, PR and *fresh merged main* must pass independent PHP 7.4/8.3, source/behavioral/owner tests, two fresh reviews and deterministic package/SBOM. GitHub tests are not production runtime proof.
+
+Software candidate: `1.4.31`. Frozen audited prechange main `3952dd6857106bfafa0ae67fb7b36f2a1566a650`. Twenty static source/plan/companion lenses before correction: 16 narrowly source-located, 2 File14 native report-read authorization gaps fixed, 2 external/design Issues #19 and #22 still open. Ledger `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.31-R27.md`. Source schema targets Base 10005/Future 1 unchanged. Deployed version, artifact checksum, WordPress DB/schema/options/migrations, logs and Staging/Live verification **unverified**.
+
+---
+
+# Historical R26 — v1.4.30 (before R27)
 
 Exact-current-head rule: candidate and fresh merged-main SHA each require independent PHP 7.4/8.3, regressions, fresh reviews and deterministic package/SBOM; source CI never proves deployed WordPress.
 
