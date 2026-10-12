@@ -22,9 +22,23 @@ function is_wp_error( $value ) { return $value instanceof WP_Error; }
 class WP_REST_Request {}
 class GCU_Capabilities {
     const MANAGE_CONTENT = 'gcu_manage_content';
+    const MANAGE_EXPERIMENTS = 'gcu_manage_experiments';
+    const VIEW_ANALYTICS = 'gcu_view_analytics';
+    const SYSTEM_CHECK = 'gcu_system_check';
+    const APPROVE_CLAIMS = 'gcu_approve_claims';
     public static $report_read_allowed = true;
+    public static $deny_all_protected = false;
     public static function require_capability( $capability, $object = null, $purpose = '' ) {
-        if ( self::MANAGE_CONTENT !== $capability || 'future_intelligence_content' !== $purpose || ! self::$report_read_allowed ) {
+        $native_contract = array(
+            self::MANAGE_CONTENT => 'future_intelligence_content',
+            self::MANAGE_EXPERIMENTS => 'future_intelligence_experiments',
+            self::VIEW_ANALYTICS => 'future_intelligence_analytics',
+            self::SYSTEM_CHECK => 'future_intelligence_system',
+            self::APPROVE_CLAIMS => 'future_intelligence_claims',
+        );
+        if ( self::$deny_all_protected || ! isset( $native_contract[ $capability ] )
+            || $native_contract[ $capability ] !== $purpose
+            || ( self::MANAGE_CONTENT === $capability && ! self::$report_read_allowed ) ) {
             return new WP_Error( 'gcu_forbidden' );
         }
         return true;
@@ -235,6 +249,29 @@ foreach ( array( 'open', 'reviewing', 'resolved', 'rejected', 'archived', '', nu
 assert_future( false === GCU_Future_Policy::report_resolution_transition_allowed('resolved','reviewing'), 'Resolved report must not be silently reopened.' );
 assert_future( false === GCU_Future_Policy::report_resolution_transition_allowed('rejected','resolved'), 'Rejected report must not be silently reclassified without a new governed correction case.' );
 assert_future( true === GCU_Future_Policy::report_resolution_transition_allowed('reviewing','resolved'), 'An actively reviewed report can reach final resolution.' );
+
+// R29: directly invoked privileged REST callbacks must deny before using their dependencies.
+GCU_Capabilities::$deny_all_protected = true;
+$r29_protected_callbacks = array(
+    'rest_copy_preflight', 'rest_experiment_preflight', 'rest_quality',
+    'rest_friction', 'rest_scenarios', 'rest_faq_gaps', 'rest_consistency',
+    'rest_ai_copy', 'rest_records', 'rest_record_write', 'rest_revalidate_claim'
+);
+foreach ( $r29_protected_callbacks as $r29_callback ) {
+    $r29_reflection = new ReflectionMethod( 'GCU_Future_Intelligence', $r29_callback );
+    $r29_result = $r29_reflection->getNumberOfRequiredParameters() > 0
+        ? GCU_Future_Intelligence::$r29_callback( new WP_REST_Request() )
+        : GCU_Future_Intelligence::$r29_callback();
+    assert_future( is_wp_error( $r29_result ) && 'gcu_forbidden' === $r29_result->get_error_code(),
+        'R29 direct ' . $r29_callback . ' must deny through File00 before state, DB, payment or analytics processing.' );
+}
+$r29_records_denied = GCU_Future_Intelligence::records( '', false, 50 );
+$r29_claim_denied = GCU_Future_Intelligence::revalidate_claim( 'clinic', 1, 'Test reason with safe value' );
+assert_future( is_wp_error( $r29_records_denied ) && is_wp_error( $r29_claim_denied ),
+    'R29 native private-record read and claim-revalidation must independently require File00.' );
+$r29_mutator = new ReflectionMethod( 'GCU_Future_Intelligence', 'upsert_record' );
+assert_future( $r29_mutator->isPrivate(), 'R29 system-bypass record writer cannot be invoked by untrusted sibling plugins.' );
+GCU_Capabilities::$deny_all_protected = false;
 
 $catalog = GCU_Future_Policy::feature_catalog();
 assert_future( 24 === count( $catalog ), 'Exactly 24 Founder-approved Future Intelligence features are required.' );
