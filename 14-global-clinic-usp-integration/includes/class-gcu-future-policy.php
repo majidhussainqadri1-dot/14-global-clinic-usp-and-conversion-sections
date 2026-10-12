@@ -107,8 +107,10 @@ final class GCU_Future_Policy {
 		$fields = array( 'identity_ready', 'professional_evidence_ready', 'profile_ready', 'clinic_information_ready', 'languages_ready', 'consultation_modes_ready', 'privacy_ready', 'rules_accepted' );
 		$invalid = array();
 		foreach ( $input as $field => $value ) {
-			if ( ! in_array( $field, $fields, true ) || ! in_array( $value, array( true, false, 0, 1, '0', '1' ), true ) ) {
-				$invalid[] = ( is_string( $field ) && strlen( $field ) <= 80 ) ? $field : 'unknown_field';
+			if ( ! in_array( $field, $fields, true ) ) {
+				$invalid[] = 'unknown_field';
+			} elseif ( ! in_array( $value, array( true, false, 0, 1, '0', '1' ), true ) ) {
+				$invalid[] = $field;
 			}
 		}
 		return array( 'safe' => empty( $invalid ), 'invalid_fields' => $invalid );
