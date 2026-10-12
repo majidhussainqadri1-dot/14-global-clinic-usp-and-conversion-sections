@@ -1,4 +1,10 @@
-# Release Evidence — v1.4.33 R29 Candidate
+# Release Evidence — v1.4.34 R30 Candidate
+
+Software candidate: `1.4.34`. Frozen audited prior exact main `605fcaa5b96d1a46efee65a309c0df8efd3e9fbe`. Twenty independently scoped static File14/master/companion checks completed before correction: 16 narrow source references, two local governed record identity/status/locale/region and nonbinding Doctor Readiness request defects corrected, two external Issues #19/#22 remain open. `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.34-R30.md`. Requires independent exact candidate/PR SHA PHP 7.4 and 8.3, full source and cross-file regressions, two fresh reviews, deterministic package/SBOM and **fresh post-merge exact-main** CI. Do not predeclare CI results. Source schemas Base10005/Future1 unchanged. Real deployed plugin/hash, DB/tables/columns/wp_options, migration, logs, backup/restore, staging and live E2E/Founder acceptance unverified.
+
+---
+
+# Historical Release Evidence — v1.4.33 R29
 
 Software candidate: `1.4.33`; frozen reviewed old main `ad58309dc5d5c0f5c5a23ec481dde6650496880f`. Twenty distinct plan/source/owner lenses completed **before** patch (16 limited source evidence, two local native REST/record authorization gaps corrected, two external Issues #19/#22 still open). Ledger `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.33-R29.md`. Require separately passing exact candidate/PR PHP7.4/8.3, direct File00 denial tests, previous regression/source/cross-file suites, two fresh reviews, deterministic package/SBOM and separate **fresh post-merge exact-main** CI. This entry does not preclaim any CI result. Source schema Base10005/Future1 unchanged. Deployed plugin/hash, real DB/options/migration/logs, staging/backup/rollback/live retest and Founder signoff remain **unverified**.
 
