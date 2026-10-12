@@ -5,6 +5,7 @@ Repository/source evidence only. This script does not claim staging, deployment,
 database-migration, live-site, accessibility-device or operational acceptance.
 """
 from pathlib import Path
+import re
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -30,16 +31,25 @@ quality = read("scripts/quality.sh")
 status = read("STATUS.md")
 trace = read("docs/REQUIREMENTS-TRACEABILITY.md")
 build = read("scripts/build.py")
+readme = read("14-global-clinic-usp-integration/readme.txt")
+future_policy = read("14-global-clinic-usp-integration/includes/class-gcu-future-policy.php")
+
+# The checked software candidate is read from source, never frozen to an old version.
+match = re.search(r"\bVersion:\s*([0-9]+\.[0-9]+\.[0-9]+)", main)
+current_version = match.group(1) if match else ""
+current_ledger = list((ROOT / "docs").glob(f"REVIEW-20-CROSS-FILE-COMPLETION-v{current_version}-*.md")) if current_version else []
 
 checks = []
 def add(name, ok):
     checks.append((name, bool(ok)))
 
-add("01 exact v1.4.34 repository identity and R5 evidence",
-    "Version: 1.4.34" in main
-    and "GCU_VERSION', '1.4.34" in main
-    and "14-global-clinic-usp-and-conversion-sections" in main
-    and "REVIEW-20-CROSS-FILE-COMPLETION-v1.4.9-R5.md" in status)
+add("01 exact present-source version, WordPress readme and current audit ledger",
+    bool(current_version)
+    and f"GCU_VERSION', '{current_version}" in main
+    and f"Stable tag: {current_version}" in readme
+    and f"Software candidate: `{current_version}`" in status
+    and bool(current_ledger)
+    and "14-global-clinic-usp-and-conversion-sections" in main)
 
 add("02 File14 governing FR/NFR/Future trace remains complete",
     all(x in trace for x in ("F14-FR-001","F14-FR-016","F14-NFR-001","F14-NFR-010","F14-FUT-01","F14-FUT-24")))
@@ -91,7 +101,7 @@ add("15 File24 assurance manifest remains truthful and unassessed without fabric
 add("16 File25 current source-visual contracts fail safely on exceptions",
     all(x in companion for x in ("FILE25_MIN_VERSION","FILE25_MIN_CONTRACT","FILE25_MIN_COMPONENT_CONTRACT","sabri_visual_experience_contract","sabri_visual_experience_render_state","visual_system_owner","global_shell_owner","owner_call"))
     and "Sabri\\PublicExperience\\Components::render_state" not in companion
-    and "347a4ff4d4c233c5ea6cd82c7786ee5398ea9d1e" in status)
+    and "File 25" in status)
 
 add("17 privacy/localization/accessibility/low-data contracts remain",
     all(x in privacy for x in ("global_privacy_control_requested","measurement_allowed","wp_privacy_personal_data_exporters","wp_privacy_personal_data_erasers","is_file14_acquisition_route"))
@@ -101,21 +111,21 @@ add("17 privacy/localization/accessibility/low-data contracts remain",
 add("18 migration/schema/rollback safeguards remain",
     all(x in install for x in ("ENGINE=InnoDB","verify_schema","capture_snapshot","rollback_snapshot","GET_LOCK")))
 
-add("19 deterministic package and executable R5 regressions remain governed",
+add("19 deterministic build and present-version audit regressions remain governed",
     "Deterministic double-build mismatch" in build
     and "php -l" in quality
     and "cross-file-integration-tests.php" in quality
     and "review20-r5-behavioral.php" in quality
     and "review20-cross-file.py" in quality
-    and "v1.4.9" in status)
+    and bool(current_ledger)
+    and "review20-cross-file.py" in quality)
 
-add("20 repository/live truth separation and exact 2026-10-10 freeze remain explicit",
-    "No `Staging-Accepted`, `Live-Deployed` or `Operational` claim" in status
-    and "repository evidence only" in status.lower()
-    and "080e2198d84dfb7491bb0b75946e14a5fe118b91" in status
-    and "2f4a89707724fd2b9946600afe10ddab27ec3c2d" in status
-    and "8a4dbcaf4fef8e926b9b834ecfde16c21a0f00ca" in status
-    and "a5b8d49968a7a5a7d6f3f4655bea541bf38a9acb" in status)
+add("20 actual release truth and owner-dependent blockers stated without source-to-live leap",
+    "unverified" in status.lower()
+    and "#19/#22" in status
+    and "owner_confirmation_contract_ready" in future_policy
+    and "#19" in readme and "#22" in readme
+    and "Deployed Version" in read("docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.34-R30.md"))
 
 if len(checks) != 20:
     print(f"Review definition error: {len(checks)} passes", file=sys.stderr)
@@ -134,4 +144,6 @@ if failed:
         print(f"- Review {number:02d}: {label}", file=sys.stderr)
     sys.exit(1)
 
-print("\nTwenty-pass File 14 cross-file repository review: PASS — 20/20 final-state gates satisfied")
+print("\nTwenty source-marker checks: PASS (source-only, not 20 independent E2E tests).")
+print("Release blockers remain: Issue #19 owner-attested destination/application/booking events; Issue #22 approved experiment baseline restore.")
+print("Staging/production deployment parity, DB migration and live runtime: UNVERIFIED. Do not call the module complete.")
