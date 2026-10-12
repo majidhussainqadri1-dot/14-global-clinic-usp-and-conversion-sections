@@ -17,8 +17,8 @@ function fifth_assert( $condition, $message ) {
 	}
 }
 
-fifth_assert( false !== strpos( $main, 'Version: 1.4.32' ), 'Plugin header must be v1.4.32.' );
-fifth_assert( false !== strpos( $main, "define( 'GCU_VERSION', '1.4.32' )" ), 'GCU_VERSION must be v1.4.32.' );
+fifth_assert( false !== strpos( $main, 'Version: 1.4.33' ), 'Plugin header must be v1.4.33.' );
+fifth_assert( false !== strpos( $main, "define( 'GCU_VERSION', '1.4.33' )" ), 'GCU_VERSION must be v1.4.33.' );
 fifth_assert( false !== strpos( $main, 'class-gcu-fifth-review-hardening.php' ), 'Fifth-review hardening class must ship.' );
 fifth_assert( false !== strpos( $main, "GCU_Fifth_Review_Hardening', 'bootstrap" ), 'Fifth-review hardening must bootstrap.' );
 
@@ -48,7 +48,7 @@ fifth_assert( false !== strpos( $hardening, 'experiment_early_stopped' ), 'Early
 fifth_assert( false !== strpos( $hardening, 'if ( false === $audit )' ), 'Audit failure must trigger rollback.' );
 fifth_assert( false !== strpos( $hardening, 'rollback_owned_transaction()' ) && false !== strpos( $hardening, 'commit_owned_transaction()' ), 'Early-stop must have explicit rollback/commit paths.' );
 
-fifth_assert( false !== strpos( $readme, 'Stable tag: 1.4.32' ), 'Readme stable tag must match v1.4.32.' );
+fifth_assert( false !== strpos( $readme, 'Stable tag: 1.4.33' ), 'Readme stable tag must match v1.4.33.' );
 fifth_assert( false !== strpos( $readme, 'File 20 remains the sole owner of the global shell/navigation' ) && false !== strpos( $readme, 'only when File 20 is absent' ), 'File 20 sole global shell ownership and bounded recovery behavior must be stated accurately.' );
 fifth_assert( false === strpos( $readme, 'future record/report updates' ), 'Readme must not falsely claim generic future record/report transactionality.' );
 fifth_assert( false !== strpos( $status, 'Historical eighty-pass ledgers:' ) && substr_count( $status, 'docs/REVIEW-80-' ) >= 6, 'Status must retain all six historical review ledgers accurately.' );
@@ -150,7 +150,7 @@ fifth_assert( false !== strpos( $r27_queue, "status IN ('open','reviewing')" ), 
 // R28 (source + static SQL guard): terminal report statuses are not allowed to reenter the active workflow.
 $r28_source = file_get_contents( $plugin . '/includes/class-gcu-future-intelligence.php' );
 $r28_start = strpos( $r28_source, 'public static function resolve_report_record(' );
-$r28_end = strpos( $r28_source, 'public static function upsert_record(', $r28_start );
+$r28_end = strpos( $r28_source, 'private static function upsert_record(', $r28_start );
 $r28_mutation = substr( $r28_source, $r28_start, $r28_end - $r28_start );
 $r28_dashboard_at = strpos( $r28_source, 'public static function admin_page()' );
 $r28_dashboard_to = strpos( $r28_source, 'public static function can_manage_content()', $r28_dashboard_at );
@@ -162,6 +162,43 @@ fifth_assert( false !== strpos( $r28_dashboard, 'is_wp_error( $reports )' ) && f
 fifth_assert( false !== strpos( $r28_dashboard, 'if ( $reports_read_error ) { $reports = array(); }' ), 'R28 unexpected failure response is removed from the sensitive report render path.' );
 fifth_assert( false !== strpos( $r28_dashboard, "'unavailable'" ) && false !== strpos( $r28_dashboard, 'Report review is temporarily unavailable.' ), 'R28 missing reporter rows are reported as unavailable rather than falsely empty or exposed.' );
 fifth_assert( false !== strpos( $r28_dashboard, 'if ( $reports_read_error )' ), 'R28 diagnostic failure UX must be available before action controls.' );
+
+// R29 — CV-262: every privileged Future REST callback independently checks File00.
+$r29_source = file_get_contents( $plugin . '/includes/class-gcu-future-intelligence.php' );
+$r29_grants = array(
+    'rest_copy_preflight' => array('MANAGE_CONTENT','future_intelligence_content'),
+    'rest_experiment_preflight' => array('MANAGE_EXPERIMENTS','future_intelligence_experiments'),
+    'rest_quality' => array('VIEW_ANALYTICS','future_intelligence_analytics'),
+    'rest_friction' => array('VIEW_ANALYTICS','future_intelligence_analytics'),
+    'rest_scenarios' => array('SYSTEM_CHECK','future_intelligence_system'),
+    'rest_faq_gaps' => array('MANAGE_CONTENT','future_intelligence_content'),
+    'rest_consistency' => array('MANAGE_CONTENT','future_intelligence_content'),
+    'rest_ai_copy' => array('MANAGE_CONTENT','future_intelligence_content'),
+    'rest_records' => array('MANAGE_CONTENT','future_intelligence_content'),
+    'rest_record_write' => array('MANAGE_CONTENT','future_intelligence_content'),
+    'rest_revalidate_claim' => array('APPROVE_CLAIMS','future_intelligence_claims')
+);
+foreach ( $r29_grants as $callback => $contract ) {
+    $anchor = 'public static function ' . $callback . '(';
+    $start = strpos( $r29_source, $anchor );
+    $end = false === $start ? false : strpos( $r29_source, "\n\tpublic static function ", $start + strlen( $anchor ) );
+    $body = false !== $start ? substr( $r29_source, $start, false !== $end ? $end - $start : 1600 ) : '';
+    $guard = 'GCU_Capabilities::require_capability( GCU_Capabilities::' . $contract[0] . ", null, '" . $contract[1] . "' )";
+    fifth_assert( false !== strpos( $body, $guard ) && false !== strpos( $body, 'is_wp_error( $native_permission )' ),
+        'R29 ' . $callback . ' must natively enforce exact current File00 role and purpose before any protected work.' );
+}
+$r29_private = strpos( $r29_source, 'private static function upsert_record(' );
+$r29_public = strpos( $r29_source, 'public static function upsert_record(' );
+fifth_assert( false !== $r29_private && false === $r29_public, 'R29 system-trusted record mutation is no longer a public PHP entry point.' );
+$r29_records_at = strpos( $r29_source, 'public static function records( $type' );
+$r29_records = substr( $r29_source, $r29_records_at, 560 );
+fifth_assert( false !== strpos( $r29_records, 'if ( ! $public_only )' ) && false !== strpos( $r29_records, 'GCU_Capabilities::MANAGE_CONTENT' ),
+    'R29 native nonpublic record list rechecks File00 while keeping the public-safe change log.' );
+$r29_claim_at = strpos( $r29_source, 'public static function revalidate_claim(' );
+$r29_claim = substr( $r29_source, $r29_claim_at, 500 );
+fifth_assert( false !== strpos( $r29_claim, 'GCU_Capabilities::APPROVE_CLAIMS' )
+    && false !== strpos( $r29_claim, "'future_intelligence_claims'" ),
+    'R29 direct claim revalidation must require the File00 claim approver, not a generic content editor.' );
 
 if ( $failures ) {
 	fwrite( STDERR, "Fifth review regression tests failed:\n- " . implode( "\n- ", $failures ) . "\n" );

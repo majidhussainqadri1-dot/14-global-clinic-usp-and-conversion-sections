@@ -41,11 +41,15 @@ Frozen pre-change `main` `3952dd6857106bfafa0ae67fb7b36f2a1566a650`, user-upload
 
 Frozen exact previous GitHub `main` `2665bd57fc8d076ed10dccff33e699706472f959` compared with user-uploaded File14 amended Future CTI24, consolidated Three Central Plans, File07/08/09/25 master plans and cross-module File00/01/07/08/09/19/20/24/25 source adapters in 20 independently scoped source/owner lenses **before edits**: 16 narrowly source-located, two File14-local faults corrected, two external owner/design dependencies #19/#22 remain. FUT-12 report resolution now rejects finalized-to-active transitions both by precheck and SQL CAS; dashboard safely handles permission or storage failures rather than a PHP TypeError. Evidence `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.32-R28.md`. No source schema migration or installed-state claim.
 
+## R29 — 2026-10-12 — native File00 permissions on all protected Future service entry points
+
+Frozen old main `ad58309dc5d5c0f5c5a23ec481dde6650496880f`, amended File14 Future CTI24, Three Central Governing Plans, companion File07/08/09/25 plans and current File00/01/07/08/09/19/20/24/25 adapters examined through 20 distinct source/owner lenses **before edits**. Sixteen limited code/trace locations, two local CV-262 security defects corrected (11 native protected REST callbacks, private record reads, direct claim approval and private system mutation), two external Issues #19/#22 remain. Detailed audit `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.33-R29.md`. No schema migration or live deployment/parity claim.
+
 ## Governing identity
 - Fresh central governing baseline: 2026-08-10
 - Base File plan: `SSH-F14-PLAN-2026-v1.0`
 - Founder-approved additive amendment: `SSH-F14-FUTURE-CTI-2026-v2.0`
-- Software candidate: `1.4.32`
+- Software candidate: `1.4.33`
 - Base schema candidate: `10005`
 - Future CTI additive schema: `1`
 - Current canonical source repository: `14-global-clinic-usp-and-conversion-sections`

@@ -1,4 +1,12 @@
-# File 14 Status — v1.4.32 R28 Terminal Report Lifecycle and Read Failure Repository Candidate
+# File 14 Status — v1.4.33 R29 Protected REST and Record Authority Repository Candidate
+
+Exact-current-head rule: candidate branch/PR and distinct freshly merged main SHA require PHP7.4/8.3, adverse regressions, separate fresh reviews, deterministic package/SBOM. Source CI is not deployed WordPress truth.
+
+Software candidate: `1.4.33`; reviewed frozen prior main `ad58309dc5d5c0f5c5a23ec481dde6650496880f`. All 20 scoped File14/central/companion source reviews finished before edit: 16 narrow source locations, two locally owned File00 delegated native authorization omissions corrected, external Issues #19/#22 unresolved. 11 protected REST callbacks, private record read and claim approval now independently check existing File00 contracts, system-trusted record mutation is private. Ledger: `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.33-R29.md`. Source schema Base10005/Future1 unchanged. Exact installed plugin/build, actual DB/tables/wp_options/migrations/logs, staging and live tests and Founder approval **unverified**.
+
+---
+
+# Historical R28 — v1.4.32 (before R29)
 
 Exact-current-head rule: candidate push/PR and **fresh post-merge current main SHA** each require independent PHP 7.4/8.3, adverse tests, fresh reviews and deterministic package/SBOM. GitHub is source truth, not WordPress deployed artifact parity.
 
