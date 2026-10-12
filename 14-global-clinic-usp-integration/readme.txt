@@ -4,7 +4,7 @@ Tags: clinic, doctors, conversion, accessibility, privacy, governance, trust, ex
 Requires at least: 6.6
 Tested up to: 7.0.1
 Requires PHP: 7.4
-Stable tag: 1.4.32
+Stable tag: 1.4.33
 License: GPLv2 or later
 
 Canonical File 14 implementation for approved Worldwide Clinic value-proposition content, ethical conversion journeys, claim governance, destination contracts, Future Conversion & Trust Intelligence and privacy-minimized measurement.
@@ -82,6 +82,9 @@ The File 14 surface includes complete File 14-owned American English, Urdu and A
 8. Obtain explicit Founder acceptance before production deployment.
 
 == Changelog ==
+= 1.4.33 =
+* R29 twenty frozen File14/central/companion source audits. Apply already-approved File00 delegated capability/purpose checks at all 11 additional protected Future REST callback entry points; protect private record reads and direct claim revalidation, and make system-trusted internal record mutation private. Behavior and exact-contract regressions, no schema changes. File07/08/09 true booking/application owner outcome (#19), Founder-approved experiment baseline restore (#22), deployed DB/live parity remain unverified.
+
 = 1.4.32 =
 * R28 twenty fresh File14/Three Central Plans/File07/08/09/25 source-boundary reviews. Prevent direct or concurrent reopening of terminal copy-quality reports using explicit final-state transition and atomic SQL optimistic state check. Handle File00 permission revocation/database report-read failure without administrator TypeError, private row exposure or false-empty status. Added adversarial transition and error-path regressions; no schema migration. True owner-attested booking/application events (#19), approved experiment baseline restore (#22) and actual WordPress deployment remain unverified.
 
