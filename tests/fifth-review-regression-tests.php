@@ -106,6 +106,15 @@ fifth_assert( false !== strpos( $future_policy, 'function validate_preflight_req
 fifth_assert( false !== strpos( $r24_future, 'gcu_future_copy_preflight_body_invalid' ) && false !== strpos( $r24_future, 'gcu_future_experiment_preflight_body_invalid' ), 'Preflight endpoints must reject non-object JSON bodies.' );
 fifth_assert( false === strpos( $r24_future, "mb_substr( \$message, 0, 500 ) : substr( \$message, 0, 500 )" ) && false !== strpos( $future_policy, 'preg_match_all' ), 'FUT-12 cannot silently truncate feedback and must preserve UTF-8 character budget.' );
 
+// R25: moderator resolution must be protected at the repository-facing mutation, not only the admin-post route.
+$r25_source = file_get_contents( $plugin . '/includes/class-gcu-future-intelligence.php' );
+$r25_mutate = substr( $r25_source, strpos( $r25_source, 'public static function resolve_report_record(' ), strpos( $r25_source, 'private static function reports_page(' ) - strpos( $r25_source, 'public static function resolve_report_record(' ) );
+$r25_admin = substr( $r25_source, strpos( $r25_source, 'public static function resolve_report()' ), strpos( $r25_source, 'public static function admin_menu()' ) - strpos( $r25_source, 'public static function resolve_report()' ) );
+fifth_assert( false !== strpos( $r25_mutate, 'GCU_Capabilities::require_capability(' ) && false !== strpos( $r25_mutate, "'future_intelligence_content'" ), 'R25 native report mutation requires File00 delegated editor authorization using approved purpose.' );
+fifth_assert( false !== strpos( $future_policy, 'function validate_report_resolution_input' ) && false !== strpos( $r25_mutate, 'GCU_Future_Policy::validate_report_resolution_input(' ), 'R25 repository-facing report mutation requires exact typed version/identity/status.' );
+fifth_assert( false === strpos( $r25_admin, 'absint( $_POST' ) && false !== strpos( $r25_admin, 'is_wp_error( $result )' ), 'R25 admin POST may not normalize negative report versions or silently swallow failed moderation.' );
+fifth_assert( false !== strpos( $r25_source, "'gcu_report_review'" ) && false !== strpos( $r25_source, 'notice notice-error' ), 'R25 admin dashboard must show failed report moderation rather than implying success.' );
+
 if ( $failures ) {
 	fwrite( STDERR, "Fifth review regression tests failed:\n- " . implode( "\n- ", $failures ) . "\n" );
 	exit( 1 );
