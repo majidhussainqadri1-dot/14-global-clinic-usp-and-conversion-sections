@@ -919,6 +919,13 @@ final class GCU_Future_Intelligence {
 	}
 
 	public static function create_report( array $data ) {
+		$types = GCU_Future_Policy::validate_copy_quality_report_input_types( $data );
+		if ( ! $types['safe'] ) {
+			return new WP_Error( 'gcu_future_report_input_invalid', __( 'Copy-quality report fields have invalid types or unsupported values.', 'global-clinic-usp-integration' ), array( 'status' => 400, 'fields' => $types['invalid_fields'] ) );
+		}
+		if ( array_key_exists( 'report_id', $data ) && ! wp_is_uuid( $data['report_id'] ) ) {
+			return new WP_Error( 'gcu_future_report_uuid_invalid', __( 'An explicitly supplied report identifier must be a valid UUID.', 'global-clinic-usp-integration' ), array( 'status' => 400 ) );
+		}
 		$ready = self::runtime_ready();
 		if ( is_wp_error( $ready ) ) { return $ready; }
 		$rate = GCU_Plugin::instance()->repository()->consume_rate_limit( 'future-report', 5 );
@@ -929,11 +936,10 @@ final class GCU_Future_Intelligence {
 		$message = trim( sanitize_textarea_field( isset( $data['message'] ) ? $data['message'] : '' ) );
 		$message = function_exists( 'mb_substr' ) ? mb_substr( $message, 0, 500 ) : substr( $message, 0, 500 );
 		if ( self::report_contains_sensitive_data( $message ) ) { return new WP_Error( 'gcu_future_report_sensitive_data', __( 'Do not include personal, contact, identity or clinical details in a copy-quality report.', 'global-clinic-usp-integration' ), array( 'status' => 400 ) ); }
-		$route = sanitize_key( isset( $data['route_key'] ) ? $data['route_key'] : 'global_clinic' );
-		if ( ! in_array( $route, array( 'global_clinic', 'how_it_works' ), true ) ) { $route = 'global_clinic'; }
+		$route = isset( $data['route_key'] ) ? $data['route_key'] : 'global_clinic';
 		$block = sanitize_key( isset( $data['block_key'] ) ? $data['block_key'] : '' );
 		$locale = GCU_Policy::sanitize_locale( isset( $data['locale'] ) ? $data['locale'] : 'en-US' );
-		$id = isset( $data['report_id'] ) && wp_is_uuid( $data['report_id'] ) ? $data['report_id'] : wp_generate_uuid4();
+		$id = isset( $data['report_id'] ) ? strtolower( $data['report_id'] ) : wp_generate_uuid4();
 		$actor_hash = is_user_logged_in() ? GCU_Integrity::future_actor_hash( get_current_user_id() ) : null;
 		global $wpdb; $t = self::tables(); $now = current_time( 'mysql', true ); $repo=GCU_Plugin::instance()->repository();
 		if(!$repo->begin_owned_transaction()){return new WP_Error('gcu_future_report_transaction_failed',__('The report transaction could not start.','global-clinic-usp-integration'),array('status'=>503));}
