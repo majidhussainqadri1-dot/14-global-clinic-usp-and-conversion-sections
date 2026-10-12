@@ -1,4 +1,7 @@
-# File 14 — Fresh Central + File Plan + Future CTI Requirements Traceability — v1.4.30
+# File 14 — Fresh Central + File Plan + Future CTI Requirements Traceability — v1.4.31
+
+**R27 2026-10-12:** Twenty frozen File14/central/companion source checks finished before editing (16 limited source-located, two local CV-262/F14-FUT-12 native report-read fixes, two external Issues #19/#22 unresolved). Using current File00 delegated `MANAGE_CONTENT` purpose, list reports, unresolved queue and direct REST callback now check authorization at each native entry, before reporter DB reads. Ledger `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.31-R27.md`. No schema migration or live/staging parity claim.
+
 
 **R26 — 2026-10-12:** Twenty distinct File14 source/central/owner lenses completed before R26 coding: 16 limited guards present, two File14 FUT-12 P0 correction loop/CV-262 least-privilege issues corrected (reviewing reports remain actionable; reporter message/count/actions accessible only to File00-delegated content moderation) and two owner/design Issues #19/#22 still open. Evidence `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.30-R26.md`. No source schema change or deployed/staging/live proof.
 
@@ -21,7 +24,7 @@
 **R20 2026-10-11:** Twenty static source/central/File07/09/25 contract checks finished before edits. Three local public input typing defects corrected; Issues #19 native owner events and #22 baseline restoration remain separately open. Source target schema unchanged, no live acceptance. Ledger: `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.24-R20.md`.
 
 
-**File 14 v1.4.30 may only claim a status** that is independently evidenced for its exact current source and deployed artifact. 
+**File 14 v1.4.31 may only claim a status** that is independently evidenced for its exact current source and deployed artifact. 
 
 **R19 2026-10-11:** 20 frozen exact-source/cross-file lenses before corrections; legacy REST typed funnel/claim/workflow validations and AI non-text guards corrected in 1.4.23. Requirement IDs remain unchanged. Native owner outcome confirmation (Issue #19) and safe experiment baseline restore (Issue #22) are **not implemented** by this amendment. Full source audit: `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.23-R19.md`. Staging/live status unverified.
 
