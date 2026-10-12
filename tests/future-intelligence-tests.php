@@ -81,6 +81,36 @@ foreach ( array( '2147483648', '9999999999999', '-2', array( 2 ), false, '0', 0 
 assert_future( false === GCU_Future_Policy::validate_revalidation_input_types( 'zero_platform_commission', str_repeat( 'z', 4097 ), 1 ), 'Unbounded revalidation reason must reject.' );
 assert_future( '' === GCU_Future_Policy::safe_workflow_target( array( 'active' ) ), 'Nested workflow target cannot preflight as active.' );
 
+// R23: File14 FUT-12 correction report must reject nested and unsupported input safely.
+$r23_approved = array( 'reason_code'=>'misleading', 'message'=>'Public copy is unclear.', 'route_key'=>'global_clinic', 'block_key'=>'patient_hero', 'locale'=>'ur-PK', 'report_id'=>'123e4567-e89b-42d3-a456-426614174000' );
+assert_future( true === GCU_Future_Policy::validate_copy_quality_report_input_types( $r23_approved )['safe'], 'Normal typed report must remain valid.' );
+assert_future( true === GCU_Future_Policy::validate_copy_quality_report_input_types( array() )['safe'], 'Missing optional report fields use deliberate defaults.' );
+foreach ( array( 'reason_code', 'message', 'route_key', 'block_key', 'locale', 'report_id' ) as $field ) {
+    $bad = $r23_approved;
+    $bad[$field] = array( 'nested' );
+    assert_future( false === GCU_Future_Policy::validate_copy_quality_report_input_types( $bad )['safe'], 'Nested report '.$field.' must reject before string sanitizer.' );
+}
+foreach ( array( 'doctor_profile', 'patient_records', 'global-clinic', 'GLOBAL_CLINIC' ) as $unowned_route ) {
+    $bad = $r23_approved; $bad['route_key'] = $unowned_route;
+    assert_future( false === GCU_Future_Policy::validate_copy_quality_report_input_types( $bad )['safe'], 'Unapproved report route cannot silently become global clinic.' );
+}
+foreach ( array( 'de-DE', 'ru', 'ar-EG', 'zz' ) as $unsupported_locale ) {
+    $bad = $r23_approved; $bad['locale'] = $unsupported_locale;
+    assert_future( false === GCU_Future_Policy::validate_copy_quality_report_input_types( $bad )['safe'], 'Unsupported report language cannot silently become English.' );
+}
+foreach ( array( '', 'not-a-uuid', '123', str_repeat('f',50) ) as $bad_id ) {
+    $bad = $r23_approved; $bad['report_id'] = $bad_id;
+    assert_future( false === GCU_Future_Policy::validate_copy_quality_report_input_types( $bad )['safe'], 'Invalid explicitly supplied report UUID must reject rather than regenerate.' );
+}
+foreach ( array( 'clinical records', 'patient/records', str_repeat('x',192) ) as $bad_block ) {
+    $bad = $r23_approved; $bad['block_key'] = $bad_block;
+    assert_future( false === GCU_Future_Policy::validate_copy_quality_report_input_types( $bad )['safe'], 'Noncanonical or excessive block identity must reject.' );
+}
+foreach ( array( 'EN_us', 'ur_PK', 'ar', 'en', 'ar-SA' ) as $approved_locale ) {
+    $good = $r23_approved; $good['locale'] = $approved_locale;
+    assert_future( true === GCU_Future_Policy::validate_copy_quality_report_input_types( $good )['safe'], 'Approved native locale variants remain accepted.' );
+}
+
 $catalog = GCU_Future_Policy::feature_catalog();
 assert_future( 24 === count( $catalog ), 'Exactly 24 Founder-approved Future Intelligence features are required.' );
 for ( $i = 1; $i <= 24; $i++ ) {

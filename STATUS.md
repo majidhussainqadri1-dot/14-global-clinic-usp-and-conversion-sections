@@ -1,4 +1,12 @@
-# File 14 Status — v1.4.26 R22 Future Governance Version Repository Candidate
+# File 14 Status — v1.4.27 R23 Public Report and CV Trace Repository Candidate
+
+Exact-current-head rule: Current branch and fresh merged-main source SHA require independent quality/review/package evidence. CI green does not prove website deployment.
+
+Software candidate: `1.4.27`. **2026-10-12 R23:** twenty independent source/plan/companion review lenses completed before corrective coding; **14 source-present, four File14 local input/trace gaps fixed, two external/design gates Issues #19/#22 remain**. Frozen prechange exact GitHub main: `6d68daddc5faee8dc71bfc51a6673c590a43e90a`. All 71 central CV IDs mapped without claiming nonowner source code or Stage acceptance. R23 ledger `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.27-R23.md`; CV matrix `docs/CENTRAL-CV-71-OWNER-CONSUMER-TRACE-v1.4.27-R23.md`. Source schema targets Base 10005 and Future 1 unchanged. **Deployed plugin build/checksum, DB schema/options, migrations, logs, Staging and Live verification remain unverified.**
+
+---
+
+# Historical R22 — v1.4.26 (before R23)
 
 Exact-current-head rule: the current source/PR and fresh merged main must each pass independent QA before repository acceptance; none asserts website deployment.
 

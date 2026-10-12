@@ -17,8 +17,8 @@ function fifth_assert( $condition, $message ) {
 	}
 }
 
-fifth_assert( false !== strpos( $main, 'Version: 1.4.26' ), 'Plugin header must be v1.4.26.' );
-fifth_assert( false !== strpos( $main, "define( 'GCU_VERSION', '1.4.26' )" ), 'GCU_VERSION must be v1.4.26.' );
+fifth_assert( false !== strpos( $main, 'Version: 1.4.27' ), 'Plugin header must be v1.4.27.' );
+fifth_assert( false !== strpos( $main, "define( 'GCU_VERSION', '1.4.27' )" ), 'GCU_VERSION must be v1.4.27.' );
 fifth_assert( false !== strpos( $main, 'class-gcu-fifth-review-hardening.php' ), 'Fifth-review hardening class must ship.' );
 fifth_assert( false !== strpos( $main, "GCU_Fifth_Review_Hardening', 'bootstrap" ), 'Fifth-review hardening must bootstrap.' );
 
@@ -48,7 +48,7 @@ fifth_assert( false !== strpos( $hardening, 'experiment_early_stopped' ), 'Early
 fifth_assert( false !== strpos( $hardening, 'if ( false === $audit )' ), 'Audit failure must trigger rollback.' );
 fifth_assert( false !== strpos( $hardening, 'rollback_owned_transaction()' ) && false !== strpos( $hardening, 'commit_owned_transaction()' ), 'Early-stop must have explicit rollback/commit paths.' );
 
-fifth_assert( false !== strpos( $readme, 'Stable tag: 1.4.26' ), 'Readme stable tag must match v1.4.26.' );
+fifth_assert( false !== strpos( $readme, 'Stable tag: 1.4.27' ), 'Readme stable tag must match v1.4.27.' );
 fifth_assert( false !== strpos( $readme, 'File 20 remains the sole owner of the global shell/navigation' ) && false !== strpos( $readme, 'only when File 20 is absent' ), 'File 20 sole global shell ownership and bounded recovery behavior must be stated accurately.' );
 fifth_assert( false === strpos( $readme, 'future record/report updates' ), 'Readme must not falsely claim generic future record/report transactionality.' );
 fifth_assert( false !== strpos( $status, 'Historical eighty-pass ledgers:' ) && substr_count( $status, 'docs/REVIEW-80-' ) >= 6, 'Status must retain all six historical review ledgers accurately.' );
@@ -81,6 +81,23 @@ fifth_assert( false !== strpos( $future_policy, 'function strict_record_expected
 fifth_assert( false !== strpos( $future_source, 'GCU_Future_Policy::strict_record_expected_version( $data[\'expected_version\'] )' ), 'Future record mutation must use strict expected version, never absint.' );
 fifth_assert( false !== strpos( $future_source, 'GCU_Future_Policy::strict_mutation_version( $raw_version )' ), 'Future claim revalidation must use bounded exact version.' );
 fifth_assert( false !== strpos( $future_source, 'GCU_Future_Policy::safe_workflow_target( $request->get_param( \'target\' ) )' ), 'Workflow early preflight cannot cast nested input to string.' );
+
+// R23: FUT-12 public report cannot coerce nested JSON, manufacture unknown route/locale, or silently replace a client UUID.
+$r23_future = file_get_contents( $plugin . '/includes/class-gcu-future-intelligence.php' );
+fifth_assert( false !== strpos( $future_policy, 'function validate_copy_quality_report_input_types' ), 'R23 pure copy-report shape/owner validator must ship.' );
+fifth_assert( false !== strpos( $r23_future, 'GCU_Future_Policy::validate_copy_quality_report_input_types( $data )' ) && false !== strpos( $r23_future, 'gcu_future_report_input_invalid' ), 'FUT-12 public report command must guard typed request before any sanitizer.' );
+fifth_assert( false !== strpos( $r23_future, 'gcu_future_report_uuid_invalid' ), 'Supplied invalid report UUID must return explicit 400.' );
+fifth_assert( false === strpos( $r23_future, "if ( ! in_array( $route, array( 'global_clinic', 'how_it_works' ), true ) ) { $route = 'global_clinic'; }" ), 'Unsupported report route must not silently map into a different public journey.' );
+
+// R23: verify source CV IDs were not confused with 71 locally owned File14 code modules.
+$r23_cv_trace = file_get_contents( $root . '/docs/CENTRAL-CV-71-OWNER-CONSUMER-TRACE-v1.4.27-R23.md' );
+$r23_cv_ids = array_merge( range( 14, 25 ), range( 188, 199 ), range( 239, 285 ) );
+foreach ( $r23_cv_ids as $r23_cv ) {
+    fifth_assert( false !== strpos( $r23_cv_trace, '| CV-' . str_pad( (string) $r23_cv, 3, '0', STR_PAD_LEFT ) . ' |' ), 'Missing source-transferred central CV ID ' . $r23_cv . ' in File14 owner/consumer trace.' );
+}
+preg_match_all( '/^\\| CV-[0-9]{3} \\|/m', $r23_cv_trace, $r23_cv_occurrences );
+fifth_assert( 71 === count( $r23_cv_occurrences[0] ), 'The central CV map must contain exactly 71 individual source IDs.' );
+fifth_assert( false !== strpos( $r23_cv_trace, 'not a proven deployed owner assignment' ), 'Central CV map must not claim speculative owner mapping as live fact.' );
 
 if ( $failures ) {
 	fwrite( STDERR, "Fifth review regression tests failed:\n- " . implode( "\n- ", $failures ) . "\n" );

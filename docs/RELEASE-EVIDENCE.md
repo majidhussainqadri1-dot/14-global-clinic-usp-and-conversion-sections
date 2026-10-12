@@ -1,4 +1,10 @@
-# Release Evidence — v1.4.26 R22 Candidate
+# Release Evidence — v1.4.27 R23 Candidate
+
+Software candidate: `1.4.27`, frozen original main `6d68daddc5faee8dc71bfc51a6673c590a43e90a`. Independent exact-source reviews of amended File14 Future CTI24, Three Central Governing Plans, companion File07/09/25, and 20 requirement/owner lenses before coding: 14 source-present, four local corrections, two open (#19/#22). Ledgers: `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.27-R23.md` and `docs/CENTRAL-CV-71-OWNER-CONSUMER-TRACE-v1.4.27-R23.md`. Before release, require **exact review/main SHA** independently on PHP7.4/8.3, regressions, two fresh reviews, deterministic package/SBOM, and **fresh post-merge** successful main CI. Source DB targets 10005/Future1 unchanged; deployed plugin version/checksum, installed DB/columns/options/migrations, staging, backup, Founder acceptance and live re-test remain unverified.
+
+---
+
+# Historical Release Evidence — v1.4.26 R22
 
 Software candidate: `1.4.26`. Frozen prior source `1563ad3c9c9ac352902293174a2a209661ffb1fe`; twenty separate static File14/central/File07/09/25 source checks before one correction phase: 15 source-present, 3 local defects corrected, two external issues #19/#22 open. Full ledger: `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.26-R22.md`. Require independent CI against **exact review/main SHA**, PHP 7.4/8.3, regression suite, deterministic package and SBOM, and a **fresh post-merge** main run; do not claim passing checks until confirmed. Deployed WordPress code, DB version/schema, options, migration, staging and live re-test **not verified**.
 

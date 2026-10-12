@@ -17,11 +17,15 @@ Frozen main `faf6be5f7860a6517b380b894b2d3fe6a1e15733` compared with File14 amen
 
 Frozen prior exact main `1563ad3c9c9ac352902293174a2a209661ffb1fe` audited against File14 amended Future CTI24, consolidated governing master plan and File07/09/25 companion contracts. Fifteen limited source-present, three File14 version/preflight flaws corrected, and two external contract/design gates (#19/#22) remain open. Report: `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.26-R22.md`. No source schema migration and no live deployment assertion.
 
+## R23 source-exact twenty-lens public correction report and central CV-71 trace — 2026-10-12
+
+Frozen prior main `6d68daddc5faee8dc71bfc51a6673c590a43e90a`, File14 amended v2 Future CTI24 DOCX, consolidated governing master plan and File07/09/25 plans reviewed before changes. Four local code/trace gaps corrected: all 71 transferred CV IDs now indexed without ownership takeover; FUT-12 typed copy-report input, supplied UUID validation, approved route/locale integrity. Two cross-file/design gates remain open (#19 and #22). Full R23 ledger: `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.27-R23.md`, CV mapping: `docs/CENTRAL-CV-71-OWNER-CONSUMER-TRACE-v1.4.27-R23.md`. No source schema migration or installed website parity claim.
+
 ## Governing identity
 - Fresh central governing baseline: 2026-08-10
 - Base File plan: `SSH-F14-PLAN-2026-v1.0`
 - Founder-approved additive amendment: `SSH-F14-FUTURE-CTI-2026-v2.0`
-- Software candidate: `1.4.26`
+- Software candidate: `1.4.27`
 - Base schema candidate: `10005`
 - Future CTI additive schema: `1`
 - Current canonical source repository: `14-global-clinic-usp-and-conversion-sections`

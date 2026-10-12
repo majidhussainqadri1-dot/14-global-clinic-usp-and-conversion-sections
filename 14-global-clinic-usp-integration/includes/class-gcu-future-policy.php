@@ -81,6 +81,41 @@ final class GCU_Future_Policy {
 		return array( 'safe' => empty( $invalid ), 'invalid_fields' => $invalid );
 	}
 
+	/** R23: public correction reports must not coerce nested input or fabricate route/locale. */
+	public static function validate_copy_quality_report_input_types( array $input ) {
+		$invalid = array();
+		foreach ( array( 'reason_code', 'message', 'route_key', 'block_key', 'locale', 'report_id' ) as $field ) {
+			if ( array_key_exists( $field, $input ) && ! is_string( $input[ $field ] ) ) {
+				$invalid[] = $field;
+			}
+		}
+		if ( ! empty( $invalid ) ) {
+			return array( 'safe' => false, 'invalid_fields' => $invalid );
+		}
+		if ( array_key_exists( 'reason_code', $input ) && ! in_array( $input['reason_code'], array( 'outdated', 'misleading', 'unclear', 'translation', 'broken_destination', 'faq_gap', 'other' ), true ) ) {
+			$invalid[] = 'reason_code';
+		}
+		if ( array_key_exists( 'message', $input ) && strlen( $input['message'] ) > 4096 ) {
+			$invalid[] = 'message';
+		}
+		if ( array_key_exists( 'route_key', $input ) && ! in_array( $input['route_key'], array( 'global_clinic', 'how_it_works' ), true ) ) {
+			$invalid[] = 'route_key';
+		}
+		if ( array_key_exists( 'block_key', $input ) && ( strlen( $input['block_key'] ) > 191 || ( '' !== $input['block_key'] && ! preg_match( '/^[a-z0-9_-]+$/D', $input['block_key'] ) ) ) ) {
+			$invalid[] = 'block_key';
+		}
+		if ( array_key_exists( 'locale', $input ) ) {
+			$locale = strtolower( str_replace( '_', '-', $input['locale'] ) );
+			if ( ! in_array( $locale, array( 'en', 'en-us', 'ur', 'ur-pk', 'ar', 'ar-sa' ), true ) ) {
+				$invalid[] = 'locale';
+			}
+		}
+		if ( array_key_exists( 'report_id', $input ) && ( strlen( $input['report_id'] ) !== 36 || ! preg_match( '/^[a-f0-9]{8}-(?:[a-f0-9]{4}-){3}[a-f0-9]{12}$/Di', $input['report_id'] ) ) ) {
+			$invalid[] = 'report_id';
+		}
+		return array( 'safe' => empty( $invalid ), 'invalid_fields' => $invalid );
+	}
+
 	/** Claim revalidation changes public trust state. Never coerce nested inputs. */
 	public static function validate_revalidation_input_types( $claim_key, $reason, $version ) {
 		return is_string( $claim_key ) && is_string( $reason ) && strlen( $reason ) <= 4096
