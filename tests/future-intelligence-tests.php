@@ -102,7 +102,7 @@ foreach ( array( '', 'not-a-uuid', '123', str_repeat('f',50) ) as $bad_id ) {
     $bad = $r23_approved; $bad['report_id'] = $bad_id;
     assert_future( false === GCU_Future_Policy::validate_copy_quality_report_input_types( $bad )['safe'], 'Invalid explicitly supplied report UUID must reject rather than regenerate.' );
 }
-foreach ( array( 'clinical records', 'admin', str_repeat('x',192) ) as $bad_block ) {
+foreach ( array( 'clinical records', 'patient/records', str_repeat('x',192) ) as $bad_block ) {
     $bad = $r23_approved; $bad['block_key'] = $bad_block;
     assert_future( false === GCU_Future_Policy::validate_copy_quality_report_input_types( $bad )['safe'], 'Noncanonical or excessive block identity must reject.' );
 }
