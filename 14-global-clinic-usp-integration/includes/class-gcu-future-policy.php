@@ -81,6 +81,41 @@ final class GCU_Future_Policy {
 		return array( 'safe' => empty( $invalid ), 'invalid_fields' => $invalid );
 	}
 
+	/** R30: explicit governance identity, scope and state must not silently canonicalize into a different record. */
+	public static function validate_future_record_command_values( array $input ) {
+		$invalid = array();
+		if ( array_key_exists( 'record_type', $input ) && ! in_array( $input['record_type'], array( 'jurisdiction_copy', 'terminology_lock', 'change_log', 'faq_gap', 'ai_draft', 'scenario_note' ), true ) ) {
+			$invalid[] = 'record_type';
+		}
+		if ( array_key_exists( 'record_key', $input ) && ( '' === $input['record_key'] || strlen( $input['record_key'] ) > 191 || ! preg_match( '/^[a-z0-9_-]+$/D', $input['record_key'] ) ) ) {
+			$invalid[] = 'record_key';
+		}
+		if ( array_key_exists( 'status', $input ) && ! in_array( $input['status'], array( 'draft', 'suggested', 'review', 'active', 'superseded', 'rejected' ), true ) ) {
+			$invalid[] = 'status';
+		}
+		if ( array_key_exists( 'locale', $input ) && ! in_array( $input['locale'], array( 'en', 'en-US', 'en_US', 'ur', 'ur-PK', 'ur_PK', 'ar', 'ar-SA', 'ar_SA' ), true ) ) {
+			$invalid[] = 'locale';
+		}
+		if ( array_key_exists( 'region', $input ) && ! preg_match( '/^[a-zA-Z]{2}$/D', $input['region'] ) ) {
+			$invalid[] = 'region';
+		}
+		return array( 'safe' => empty( $invalid ), 'invalid_fields' => $invalid );
+	}
+
+	/** F14-FUT-24: self-check is nonbinding, but malformed explicit answers are not an assessment. */
+	public static function validate_readiness_check_inputs( array $input ) {
+		$fields = array( 'identity_ready', 'professional_evidence_ready', 'profile_ready', 'clinic_information_ready', 'languages_ready', 'consultation_modes_ready', 'privacy_ready', 'rules_accepted' );
+		$invalid = array();
+		foreach ( $input as $field => $value ) {
+			if ( ! in_array( $field, $fields, true ) ) {
+				$invalid[] = 'unknown_field';
+			} elseif ( ! in_array( $value, array( true, false, 0, 1, '0', '1' ), true ) ) {
+				$invalid[] = $field;
+			}
+		}
+		return array( 'safe' => empty( $invalid ), 'invalid_fields' => $invalid );
+	}
+
 	/** R23: public correction reports must not coerce nested input or fabricate route/locale. */
 	public static function validate_copy_quality_report_input_types( array $input ) {
 		$invalid = array();

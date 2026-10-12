@@ -258,10 +258,18 @@ final class GCU_Future_Intelligence {
 	}
 
 	public static function rest_readiness( WP_REST_Request $request ) {
+		// FUT-24 accepts a JSON object only; JSON lists and malformed input are not assessments.
+		$data = $request->get_json_params();
+		if ( ! is_array( $data ) || ! ( json_decode( (string) $request->get_body() ) instanceof stdClass ) ) {
+			return new WP_Error( 'gcu_future_readiness_body_invalid', __( 'Readiness self-check requires a JSON object.', 'global-clinic-usp-integration' ), array( 'status' => 400 ) );
+		}
+		$validation = GCU_Future_Policy::validate_readiness_check_inputs( $data );
+		if ( ! $validation['safe'] ) {
+			return new WP_Error( 'gcu_future_readiness_answers_invalid', __( 'Readiness selections must be supported checkbox values.', 'global-clinic-usp-integration' ), array( 'status' => 400, 'fields' => $validation['invalid_fields'] ) );
+		}
 		$rate = GCU_Plugin::instance()->repository()->consume_rate_limit( 'future-readiness', 60 );
 		if ( is_wp_error( $rate ) ) { return $rate; }
-		$data = $request->get_json_params();
-		return self::no_store_response( GCU_Future_Policy::doctor_readiness_check( is_array( $data ) ? $data : array() ) );
+		return self::no_store_response( GCU_Future_Policy::doctor_readiness_check( $data ) );
 	}
 
 	public static function rest_copy_preflight( WP_REST_Request $request ) {
@@ -392,6 +400,11 @@ final class GCU_Future_Intelligence {
 		$types = GCU_Future_Policy::validate_future_record_input_types( $data );
 		if ( ! $types['safe'] ) {
 			return new WP_Error( 'gcu_future_record_input_type_invalid', __( 'Governed record fields have invalid types.', 'global-clinic-usp-integration' ), array( 'status' => 400, 'fields' => $types['invalid_fields'] ) );
+		}
+		// CV-262: an explicit record identity, jurisdiction or status must never be silently altered.
+		$values = GCU_Future_Policy::validate_future_record_command_values( $data );
+		if ( ! $values['safe'] ) {
+			return new WP_Error( 'gcu_future_record_values_invalid', __( 'Governance record identity, locale, region or status is not canonical.', 'global-clinic-usp-integration' ), array( 'status' => 400, 'fields' => $values['invalid_fields'] ) );
 		}
 		$type = sanitize_key( isset( $data['record_type'] ) ? $data['record_type'] : '' );
 		$allowed = array( 'jurisdiction_copy', 'terminology_lock', 'change_log', 'faq_gap', 'ai_draft', 'scenario_note' );

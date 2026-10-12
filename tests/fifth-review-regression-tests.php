@@ -17,8 +17,8 @@ function fifth_assert( $condition, $message ) {
 	}
 }
 
-fifth_assert( false !== strpos( $main, 'Version: 1.4.33' ), 'Plugin header must be v1.4.33.' );
-fifth_assert( false !== strpos( $main, "define( 'GCU_VERSION', '1.4.33' )" ), 'GCU_VERSION must be v1.4.33.' );
+fifth_assert( false !== strpos( $main, 'Version: 1.4.34' ), 'Plugin header must be v1.4.34.' );
+fifth_assert( false !== strpos( $main, "define( 'GCU_VERSION', '1.4.34' )" ), 'GCU_VERSION must be v1.4.34.' );
 fifth_assert( false !== strpos( $main, 'class-gcu-fifth-review-hardening.php' ), 'Fifth-review hardening class must ship.' );
 fifth_assert( false !== strpos( $main, "GCU_Fifth_Review_Hardening', 'bootstrap" ), 'Fifth-review hardening must bootstrap.' );
 
@@ -48,7 +48,7 @@ fifth_assert( false !== strpos( $hardening, 'experiment_early_stopped' ), 'Early
 fifth_assert( false !== strpos( $hardening, 'if ( false === $audit )' ), 'Audit failure must trigger rollback.' );
 fifth_assert( false !== strpos( $hardening, 'rollback_owned_transaction()' ) && false !== strpos( $hardening, 'commit_owned_transaction()' ), 'Early-stop must have explicit rollback/commit paths.' );
 
-fifth_assert( false !== strpos( $readme, 'Stable tag: 1.4.33' ), 'Readme stable tag must match v1.4.33.' );
+fifth_assert( false !== strpos( $readme, 'Stable tag: 1.4.34' ), 'Readme stable tag must match v1.4.34.' );
 fifth_assert( false !== strpos( $readme, 'File 20 remains the sole owner of the global shell/navigation' ) && false !== strpos( $readme, 'only when File 20 is absent' ), 'File 20 sole global shell ownership and bounded recovery behavior must be stated accurately.' );
 fifth_assert( false === strpos( $readme, 'future record/report updates' ), 'Readme must not falsely claim generic future record/report transactionality.' );
 fifth_assert( false !== strpos( $status, 'Historical eighty-pass ledgers:' ) && substr_count( $status, 'docs/REVIEW-80-' ) >= 6, 'Status must retain all six historical review ledgers accurately.' );
@@ -199,6 +199,21 @@ $r29_claim = substr( $r29_source, $r29_claim_at, 500 );
 fifth_assert( false !== strpos( $r29_claim, 'GCU_Capabilities::APPROVE_CLAIMS' )
     && false !== strpos( $r29_claim, "'future_intelligence_claims'" ),
     'R29 direct claim revalidation must require the File00 claim approver, not a generic content editor.' );
+
+// R30 — source gates must reject unsupported explicit Future governance identity and malformed readiness JSON.
+$r30_policy = file_get_contents( $plugin . '/includes/class-gcu-future-policy.php' );
+$r30_code = file_get_contents( $plugin . '/includes/class-gcu-future-intelligence.php' );
+$r30_write_from = strpos( $r30_code, 'public static function rest_record_write(' );
+$r30_write_to = strpos( $r30_code, 'public static function rest_reports(', $r30_write_from );
+$r30_write = substr( $r30_code, $r30_write_from, $r30_write_to - $r30_write_from );
+$r30_readiness_from = strpos( $r30_code, 'public static function rest_readiness(' );
+$r30_readiness_to = strpos( $r30_code, 'public static function rest_copy_preflight(', $r30_readiness_from );
+$r30_readiness = substr( $r30_code, $r30_readiness_from, $r30_readiness_to - $r30_readiness_from );
+fifth_assert( false !== strpos( $r30_policy, 'function validate_future_record_command_values' ) && false !== strpos( $r30_write, 'GCU_Future_Policy::validate_future_record_command_values( $data )' ), 'R30 REST record write validates explicit canonical identity/state before sanitizer/idempotent command.' );
+fifth_assert( false !== strpos( $r30_write, 'gcu_future_record_values_invalid' ), 'R30 invalid governed record key/status/locale/region is rejected with controlled 400.' );
+fifth_assert( false !== strpos( $r30_policy, 'function validate_readiness_check_inputs' ) && false !== strpos( $r30_readiness, 'GCU_Future_Policy::validate_readiness_check_inputs( $data )' ), 'R30 FUT-24 readiness answers are explicitly checked before producing score.' );
+fifth_assert( false !== strpos( $r30_readiness, 'json_decode( (string) $request->get_body() ) instanceof stdClass' ) && false !== strpos( $r30_readiness, 'gcu_future_readiness_body_invalid' ), 'R30 non-object JSON body must not be mislabeled as successful doctor readiness assessment.' );
+fifth_assert( false !== strpos( $r30_readiness, 'gcu_future_readiness_answers_invalid' ), 'R30 unsupported self-check values must fail as a controlled input error.' );
 
 if ( $failures ) {
 	fwrite( STDERR, "Fifth review regression tests failed:\n- " . implode( "\n- ", $failures ) . "\n" );
