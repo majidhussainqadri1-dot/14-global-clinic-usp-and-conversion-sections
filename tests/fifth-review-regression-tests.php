@@ -115,6 +115,22 @@ fifth_assert( false !== strpos( $future_policy, 'function validate_report_resolu
 fifth_assert( false === strpos( $r25_admin, 'absint( $_POST' ) && false !== strpos( $r25_admin, 'is_wp_error( $result )' ), 'R25 admin POST may not normalize negative report versions or silently swallow failed moderation.' );
 fifth_assert( false !== strpos( $r25_source, "'gcu_report_review'" ) && false !== strpos( $r25_source, 'notice notice-error' ), 'R25 admin dashboard must show failed report moderation rather than implying success.' );
 
+// R26 — FUT-12/CV-262: unresolved lifecycle remains actionable and diagnostic users cannot view reporter texts.
+$r26_source = file_get_contents( $plugin . '/includes/class-gcu-future-intelligence.php' );
+$r26_query_start = strpos( $r26_source, 'public static function review_queue_reports(' );
+$r26_native_start = strpos( $r26_source, 'public static function resolve_report_record(' );
+$r26_queue_source = substr( $r26_source, $r26_query_start, $r26_native_start - $r26_query_start );
+$r26_dashboard_start = strpos( $r26_source, 'public static function admin_page()' );
+$r26_dashboard_end = strpos( $r26_source, 'public static function can_manage_content()', $r26_dashboard_start );
+$r26_dashboard = substr( $r26_source, $r26_dashboard_start, $r26_dashboard_end - $r26_dashboard_start );
+fifth_assert( false !== $r26_query_start && false !== strpos( $r26_queue_source, "status IN ('open','reviewing')" ), 'R26 moderator queue must not lose reviewing reports before resolution.' );
+fifth_assert( false !== strpos( $r26_queue_source, 'ORDER BY created_at ASC,id ASC LIMIT %d' ), 'R26 queue ordering and maximum bounded rows are required.' );
+fifth_assert( false !== strpos( $r26_dashboard, '$can_resolve_reports = self::can_manage_content();' ), 'R26 report read and mutation UI must require delegated content-moderation capability.' );
+fifth_assert( false !== strpos( $r26_dashboard, '$reports = $can_resolve_reports ? self::review_queue_reports( 50 ) : array();' ), 'R26 diagnostics-only users must not query reporter text.' );
+fifth_assert( false !== strpos( $r26_dashboard, '$can_resolve_reports ? count( $reports ) : \'restricted\'' ), 'R26 diagnostics-only users must not learn report counts.' );
+fifth_assert( false !== strpos( $r26_dashboard, '<?php if ( $can_resolve_reports ) : ?><form' ) && false !== strpos( $r26_dashboard, 'Content-moderation authorization is required to view reports.' ), 'R26 only File00-authorized editors can see report moderation controls and sensitive text.' );
+fifth_assert( false !== strpos( $r26_dashboard, "esc_html( $report['status'] )" ), 'R26 reviewer must see whether a case is open or reviewing.' );
+
 if ( $failures ) {
 	fwrite( STDERR, "Fifth review regression tests failed:\n- " . implode( "\n- ", $failures ) . "\n" );
 	exit( 1 );
