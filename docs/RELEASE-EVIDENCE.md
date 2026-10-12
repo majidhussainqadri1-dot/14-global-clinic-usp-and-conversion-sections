@@ -1,4 +1,10 @@
-# Release Evidence — v1.4.29 R25 Candidate
+# Release Evidence — v1.4.30 R26 Candidate
+
+Software candidate: `1.4.30`. Frozen audited prior main `d28c4ef76667f75e3269201da6f935c2816568ee`; twenty separate source/plan/companion checks before coding: 16 limited source guards present, two File14 local P0 report queue/privacy corrections, two cross-owner/design gaps (#19/#22) unresolved. Ledger `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.30-R26.md`. Must verify exact review/main SHA PHP 7.4 and 8.3 quality, cross-file and behavioral regressions, both fresh review rounds, deterministic package/SBOM and fresh post-merge main CI. Do not assume any CI passed until read. Source targets Base schema 10005 and Future schema 1; no migration. Deployed plugin, real DB/options/migration, error logs, staging and Live verification not checked.
+
+---
+
+# Historical Release Evidence — v1.4.29 R25
 
 Software candidate: `1.4.29`; frozen reviewed previous main `53fa9071373afe1f338bdf1f1d8c0540e07caf54`. Twenty separate File14/central/companion source review lenses all completed before the correction batch (15 source-present, three local moderation defects fixed, two external/open #19/#22). `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.29-R25.md`. **Require independent exact review/main SHA** PHP7.4/8.3, policy/cross-file/behavioral tests, two fresh reviews, deterministic package/SBOM and **fresh post-merge** main CI. No result is claimed green before independently checked. Source schema Base10005/Future1 unchanged. Deployed actual plugin/checksum, wp_options/tables/rows/migrations, runtime, staging/live retest, backups and Founder approval unknown.
 

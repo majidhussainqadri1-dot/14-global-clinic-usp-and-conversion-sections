@@ -1,4 +1,12 @@
-# File 14 Status — v1.4.29 R25 Report Moderation Repository Candidate
+# File 14 Status — v1.4.30 R26 Report Queue and Privacy Repository Candidate
+
+Exact-current-head rule: candidate and fresh merged-main SHA each require independent PHP 7.4/8.3, regressions, fresh reviews and deterministic package/SBOM; source CI never proves deployed WordPress.
+
+Software candidate: `1.4.30`. Frozen reviewed main `d28c4ef76667f75e3269201da6f935c2816568ee`. All twenty source/plan/companion lenses ended before editing: 16 scoped source guards present; two File14 local moderation defects corrected (reviewing queue continuity, privacy/permission of reporter details); two external/design Issues #19 and #22 remain. Ledger `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.30-R26.md`. Source DB targets Base 10005/Future 1 unchanged; installed plugin, actual DB, wp_options, migration, logs, staging/Live and Founder approval unverified.
+
+---
+
+# Historical R25 — v1.4.29 (before R26)
 
 Exact-current-head rule: Candidate push/PR and a separate fresh merged-main SHA must each pass PHP7.4/8.3, regressions, fresh reviews and deterministic package/SBOM. GitHub repository state never equals deployed WordPress truth.
 

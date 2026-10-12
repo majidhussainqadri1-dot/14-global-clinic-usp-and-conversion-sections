@@ -155,6 +155,34 @@ foreach ( array( array( 'private'=>'note' ), false, str_repeat( 'x', 4097 ) ) as
     assert_future( false === GCU_Future_Policy::validate_report_resolution_input( $r25_report_id, 1, 'resolved', $r25_bad_resolution )['safe'], 'Invalid report moderation explanation must fail closed.' );
 }
 
+// WordPress defines this in production; the standalone PHP 7.4/8.3 harness must define it before the DB spy.
+if ( ! defined( 'ARRAY_A' ) ) { define( 'ARRAY_A', 'ARRAY_A' ); }
+// R26/FUT-12: reviewing reports must remain in the authorized unresolved queue.
+// A bounded database spy tests the generated canonical SQL without needing live WP.
+class R26_Queue_DB_Spy {
+    public $prefix = 'wp_';
+    public $last_sql = '';
+    public $last_format = '';
+    public function prepare( $sql, $limit ) { return sprintf( $sql, $limit ); }
+    public function get_results( $sql, $format ) {
+        $this->last_sql = $sql;
+        $this->last_format = $format;
+        return array( array( 'public_id'=>'id-1', 'status'=>'open' ), array( 'public_id'=>'id-2', 'status'=>'reviewing' ) );
+    }
+}
+global $wpdb;
+$r26_previous_wpdb = isset( $wpdb ) ? $wpdb : null;
+$wpdb = new R26_Queue_DB_Spy();
+$r26_queue = GCU_Future_Intelligence::review_queue_reports( 50 );
+assert_future( 2 === count( $r26_queue ) && 'reviewing' === $r26_queue[1]['status'], 'R26 queue includes an existing reviewing report, not just newly open reports.' );
+assert_future( false !== strpos( $wpdb->last_sql, "status IN ('open','reviewing')" ), 'Unresolved SQL must include both actionable moderation statuses.' );
+assert_future( false === strpos( $wpdb->last_sql, 'resolved' ) && false === strpos( $wpdb->last_sql, 'rejected' ), 'Resolved/rejected reports may not reappear in the pending moderator queue.' );
+assert_future( false !== strpos( $wpdb->last_sql, 'ORDER BY created_at ASC,id ASC LIMIT 50' ), 'Moderator queue must preserve stable chronological order and exact bounded pagination.' );
+assert_future( 'ARRAY_A' === $wpdb->last_format, 'Report queue should return existing safe associative DTOs.' );
+GCU_Future_Intelligence::review_queue_reports( 99999 );
+assert_future( false !== strpos( $wpdb->last_sql, 'LIMIT 200' ), 'Review queue must not permit unlimited moderator-list requests.' );
+$wpdb = $r26_previous_wpdb;
+
 $catalog = GCU_Future_Policy::feature_catalog();
 assert_future( 24 === count( $catalog ), 'Exactly 24 Founder-approved Future Intelligence features are required.' );
 for ( $i = 1; $i <= 24; $i++ ) {
