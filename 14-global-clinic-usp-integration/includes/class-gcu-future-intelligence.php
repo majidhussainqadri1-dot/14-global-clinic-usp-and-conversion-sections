@@ -265,6 +265,9 @@ final class GCU_Future_Intelligence {
 	}
 
 	public static function rest_copy_preflight( WP_REST_Request $request ) {
+		// CV-262: direct PHP invocation is not authorized by the REST route callback.
+		$native_permission = GCU_Capabilities::require_capability( GCU_Capabilities::MANAGE_CONTENT, null, 'future_intelligence_content' );
+		if ( is_wp_error( $native_permission ) ) { return $native_permission; }
 		$ready = self::rest_storage_ready();
 		if ( is_wp_error( $ready ) ) { return $ready; }
 		$data = $request->get_json_params();
@@ -280,6 +283,9 @@ final class GCU_Future_Intelligence {
 	}
 
 	public static function rest_experiment_preflight( WP_REST_Request $request ) {
+		// CV-262: direct PHP invocation is not authorized by the REST route callback.
+		$native_permission = GCU_Capabilities::require_capability( GCU_Capabilities::MANAGE_EXPERIMENTS, null, 'future_intelligence_experiments' );
+		if ( is_wp_error( $native_permission ) ) { return $native_permission; }
 		$ready = self::rest_storage_ready();
 		if ( is_wp_error( $ready ) ) { return $ready; }
 		$data = $request->get_json_params();
@@ -298,12 +304,18 @@ final class GCU_Future_Intelligence {
 	}
 
 	public static function rest_quality() {
+		// CV-262: direct PHP invocation is not authorized by the REST route callback.
+		$native_permission = GCU_Capabilities::require_capability( GCU_Capabilities::VIEW_ANALYTICS, null, 'future_intelligence_analytics' );
+		if ( is_wp_error( $native_permission ) ) { return $native_permission; }
 		$ready = self::rest_storage_ready();
 		if ( is_wp_error( $ready ) ) { return $ready; }
 		return self::no_store_response( self::quality_score() );
 	}
 
 	public static function rest_friction( WP_REST_Request $request ) {
+		// CV-262: direct PHP invocation is not authorized by the REST route callback.
+		$native_permission = GCU_Capabilities::require_capability( GCU_Capabilities::VIEW_ANALYTICS, null, 'future_intelligence_analytics' );
+		if ( is_wp_error( $native_permission ) ) { return $native_permission; }
 		$ready = self::rest_storage_ready();
 		if ( is_wp_error( $ready ) ) { return $ready; }
 		$days = GCU_Future_Policy::bounded_query_integer( $request->get_param( 'days' ), 30, 90 );
@@ -314,24 +326,36 @@ final class GCU_Future_Intelligence {
 	}
 
 	public static function rest_scenarios() {
+		// CV-262: direct PHP invocation is not authorized by the REST route callback.
+		$native_permission = GCU_Capabilities::require_capability( GCU_Capabilities::SYSTEM_CHECK, null, 'future_intelligence_system' );
+		if ( is_wp_error( $native_permission ) ) { return $native_permission; }
 		$ready = self::rest_storage_ready();
 		if ( is_wp_error( $ready ) ) { return $ready; }
 		return self::no_store_response( self::scenario_lab() );
 	}
 
 	public static function rest_faq_gaps() {
+		// CV-262: direct PHP invocation is not authorized by the REST route callback.
+		$native_permission = GCU_Capabilities::require_capability( GCU_Capabilities::MANAGE_CONTENT, null, 'future_intelligence_content' );
+		if ( is_wp_error( $native_permission ) ) { return $native_permission; }
 		$ready = self::rest_storage_ready();
 		if ( is_wp_error( $ready ) ) { return $ready; }
 		return self::no_store_response( array( 'items' => self::faq_gap_candidates(), 'source' => 'approved aggregate question adapters only' ) );
 	}
 
 	public static function rest_consistency() {
+		// CV-262: direct PHP invocation is not authorized by the REST route callback.
+		$native_permission = GCU_Capabilities::require_capability( GCU_Capabilities::MANAGE_CONTENT, null, 'future_intelligence_content' );
+		if ( is_wp_error( $native_permission ) ) { return $native_permission; }
 		$ready = self::rest_storage_ready();
 		if ( is_wp_error( $ready ) ) { return $ready; }
 		return self::no_store_response( self::consistency_graph() );
 	}
 
 	public static function rest_ai_copy( WP_REST_Request $request ) {
+		// CV-262: direct PHP invocation is not authorized by the REST route callback.
+		$native_permission = GCU_Capabilities::require_capability( GCU_Capabilities::MANAGE_CONTENT, null, 'future_intelligence_content' );
+		if ( is_wp_error( $native_permission ) ) { return $native_permission; }
 		$ready = self::rest_storage_ready();
 		if ( is_wp_error( $ready ) ) { return $ready; }
 		// Provider-backed drafts are potentially costly even for authorized editors.
@@ -343,6 +367,9 @@ final class GCU_Future_Intelligence {
 	}
 
 	public static function rest_records( WP_REST_Request $request ) {
+		// CV-262: direct PHP invocation is not authorized by the REST route callback.
+		$native_permission = GCU_Capabilities::require_capability( GCU_Capabilities::MANAGE_CONTENT, null, 'future_intelligence_content' );
+		if ( is_wp_error( $native_permission ) ) { return $native_permission; }
 		$ready = self::rest_storage_ready();
 		if ( is_wp_error( $ready ) ) { return $ready; }
 		$query = GCU_Future_Policy::validate_future_read_query( array( 'type' => $request->get_param( 'type' ), 'limit' => $request->get_param( 'limit' ), 'cursor' => $request->get_param( 'cursor' ) ), 'records' );
@@ -353,6 +380,9 @@ final class GCU_Future_Intelligence {
 	}
 
 	public static function rest_record_write( WP_REST_Request $request ) {
+		// CV-262: direct PHP invocation is not authorized by the REST route callback.
+		$native_permission = GCU_Capabilities::require_capability( GCU_Capabilities::MANAGE_CONTENT, null, 'future_intelligence_content' );
+		if ( is_wp_error( $native_permission ) ) { return $native_permission; }
 		$rate = GCU_Plugin::instance()->repository()->consume_rate_limit( 'future-record-write', 120 );
 		if ( is_wp_error( $rate ) ) { return $rate; }
 		$idempotency = self::required_idempotency_key( $request );
@@ -393,6 +423,9 @@ final class GCU_Future_Intelligence {
 	}
 
 	public static function rest_revalidate_claim( WP_REST_Request $request ) {
+		// CV-262: direct PHP invocation is not authorized by the REST route callback.
+		$native_permission = GCU_Capabilities::require_capability( GCU_Capabilities::APPROVE_CLAIMS, null, 'future_intelligence_claims' );
+		if ( is_wp_error( $native_permission ) ) { return $native_permission; }
 		$rate = GCU_Plugin::instance()->repository()->consume_rate_limit( 'future-claim-revalidate', 60 );
 		if ( is_wp_error( $rate ) ) { return $rate; }
 		$idempotency = self::required_idempotency_key( $request );
@@ -573,6 +606,8 @@ final class GCU_Future_Intelligence {
 	}
 
 	public static function revalidate_claim( $key, $expected, $reason ) {
+		$native_permission = GCU_Capabilities::require_capability( GCU_Capabilities::APPROVE_CLAIMS, null, 'future_intelligence_claims' );
+		if ( is_wp_error( $native_permission ) ) { return $native_permission; }
 		$reason = trim( sanitize_textarea_field( $reason ) );
 		if ( strlen( $reason ) < 8 ) {
 			return new WP_Error( 'gcu_future_revalidation_reason_required', __( 'A meaningful revalidation reason is required.', 'global-clinic-usp-integration' ), array( 'status' => 400 ) );
@@ -1037,7 +1072,7 @@ final class GCU_Future_Intelligence {
 		$done=$wpdb->query($wpdb->prepare("UPDATE {$t['reports']} SET status=%s,resolution=%s,row_version=row_version+1,updated_at=%s WHERE id=%d AND row_version=%d AND status IN ('open','reviewing')",$status,$resolution,current_time('mysql',true),(int)$row['id'],(int)$expected));if(1!==$done||false===$repo->audit('copy_quality_report_updated','future_report',$id,'public_feedback_review',$resolution,$row,array('status'=>$status))){$repo->rollback_owned_transaction();return new WP_Error('gcu_future_report_update_failed',__('The report could not be updated with its mandatory audit record.','global-clinic-usp-integration'),array('status'=>409));}if(!$repo->commit_owned_transaction()){$repo->rollback_owned_transaction();return new WP_Error('gcu_future_report_commit_failed',__('The report update could not be committed safely.','global-clinic-usp-integration'),array('status'=>503));}return array('report_id'=>$id,'status'=>$status,'row_version'=>(int)$expected+1);
 	}
 
-	public static function upsert_record( $type, $key, $locale, $region, array $payload, $status = 'draft', $is_public = false, $expected = 0, $system = false ) {
+	private static function upsert_record( $type, $key, $locale, $region, array $payload, $status = 'draft', $is_public = false, $expected = 0, $system = false ) {
 		$ready=self::verify_schema();if(is_wp_error($ready)){return$ready;}$type=sanitize_key($type);$key=sanitize_key($key);$locale=GCU_Policy::sanitize_locale($locale);$region=self::sanitize_region($region);$status=sanitize_key($status);if(!in_array($status,array('draft','suggested','review','active','superseded','rejected'),true)){$status='draft';}$payload=GCU_Hardening::sanitize_structured_value($payload);
 		if ( 'active' === $status || $is_public ) {
 			if ( in_array( $type, array( 'faq_gap', 'ai_draft' ), true ) || ( 'scenario_note' === $type && $is_public ) ) {
@@ -1055,6 +1090,11 @@ final class GCU_Future_Intelligence {
 	}
 
 	public static function records( $type = '', $public_only = false, $limit = 100, $offset = 0 ) {
+		// Public change-log consumers read only the public-filtered projection.
+		if ( ! $public_only ) {
+			$native_permission = GCU_Capabilities::require_capability( GCU_Capabilities::MANAGE_CONTENT, null, 'future_intelligence_content' );
+			if ( is_wp_error( $native_permission ) ) { return $native_permission; }
+		}
 		global $wpdb;
 		$t = self::tables();
 		$limit = max( 1, min( 200, (int) $limit ) );
