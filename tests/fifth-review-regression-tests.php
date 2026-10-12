@@ -129,7 +129,7 @@ fifth_assert( false !== strpos( $r26_dashboard, '$can_resolve_reports = self::ca
 fifth_assert( false !== strpos( $r26_dashboard, '$reports = $can_resolve_reports ? self::review_queue_reports( 50 ) : array();' ), 'R26 diagnostics-only users must not query reporter text.' );
 fifth_assert( false !== strpos( $r26_dashboard, '$can_resolve_reports ? count( $reports ) : \'restricted\'' ), 'R26 diagnostics-only users must not learn report counts.' );
 fifth_assert( false !== strpos( $r26_dashboard, '<?php if ( $can_resolve_reports ) : ?><form' ) && false !== strpos( $r26_dashboard, 'Content-moderation authorization is required to view reports.' ), 'R26 only File00-authorized editors can see report moderation controls and sensitive text.' );
-fifth_assert( false !== strpos( $r26_dashboard, "esc_html( $report['status'] )" ), 'R26 reviewer must see whether a case is open or reviewing.' );
+fifth_assert( false !== strpos( $r26_dashboard, "esc_html( \$report['status'] )" ), 'R26 reviewer must see whether a case is open or reviewing.' );
 
 if ( $failures ) {
 	fwrite( STDERR, "Fifth review regression tests failed:\n- " . implode( "\n- ", $failures ) . "\n" );
