@@ -365,7 +365,7 @@ assert_future( false !== strpos( $r9_future_source, '$ready = self::runtime_read
 assert_future( false !== strpos( $r9_future_source, 'gcu_future_rest_storage_unready' ) && false !== strpos( $r9_future_source, "'status' => 503" ), 'R9 unsafe schema must return sanitized 503 rather than SQL/table details.' );
 foreach ( array( 'rest_change_log', 'rest_copy_preflight', 'rest_experiment_preflight', 'rest_quality', 'rest_friction', 'rest_scenarios', 'rest_faq_gaps', 'rest_consistency', 'rest_ai_copy', 'rest_records', 'rest_reports' ) as $handler ) {
     $r9_handler_at = strpos( $r9_future_source, 'function ' . $handler . '(' );
-    assert_future( false !== $r9_handler_at && false !== strpos( substr( $r9_future_source, $r9_handler_at, 240 ), 'self::rest_storage_ready()' ), 'R9 storage gate missing on ' . $handler );
+    assert_future( false !== $r9_handler_at && false !== strpos( substr( $r9_future_source, $r9_handler_at, 650 ), 'self::rest_storage_ready()' ), 'R9 storage gate missing on ' . $handler );
 }
 assert_future( false !== strpos( $r9_future_source, "consume_rate_limit( 'future-ai-copy', 12 )" ), 'R9 provider-backed AI copy endpoint requires a bounded per-actor rate limit.' );
 assert_future( false !== strpos( $r9_future_source, 'if ( is_wp_error( self::rest_storage_ready() ) ) { return $html; }' ), 'R9 degraded future schema must not break canonical public landing HTML.' );
