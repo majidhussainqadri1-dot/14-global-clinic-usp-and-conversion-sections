@@ -82,6 +82,13 @@ fifth_assert( false !== strpos( $future_source, 'GCU_Future_Policy::strict_recor
 fifth_assert( false !== strpos( $future_source, 'GCU_Future_Policy::strict_mutation_version( $raw_version )' ), 'Future claim revalidation must use bounded exact version.' );
 fifth_assert( false !== strpos( $future_source, 'GCU_Future_Policy::safe_workflow_target( $request->get_param( \'target\' ) )' ), 'Workflow early preflight cannot cast nested input to string.' );
 
+// R23: FUT-12 public report cannot coerce nested JSON, manufacture unknown route/locale, or silently replace a client UUID.
+$r23_future = file_get_contents( $plugin . '/includes/class-gcu-future-intelligence.php' );
+fifth_assert( false !== strpos( $future_policy, 'function validate_copy_quality_report_input_types' ), 'R23 pure copy-report shape/owner validator must ship.' );
+fifth_assert( false !== strpos( $r23_future, 'GCU_Future_Policy::validate_copy_quality_report_input_types( $data )' ) && false !== strpos( $r23_future, 'gcu_future_report_input_invalid' ), 'FUT-12 public report command must guard typed request before any sanitizer.' );
+fifth_assert( false !== strpos( $r23_future, 'gcu_future_report_uuid_invalid' ), 'Supplied invalid report UUID must return explicit 400.' );
+fifth_assert( false === strpos( $r23_future, "if ( ! in_array( $route, array( 'global_clinic', 'how_it_works' ), true ) ) { $route = 'global_clinic'; }" ), 'Unsupported report route must not silently map into a different public journey.' );
+
 if ( $failures ) {
 	fwrite( STDERR, "Fifth review regression tests failed:\n- " . implode( "\n- ", $failures ) . "\n" );
 	exit( 1 );
