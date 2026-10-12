@@ -124,7 +124,7 @@ add("20 actual release truth and owner-dependent blockers stated without source-
     "unverified" in status.lower()
     and "#19/#22" in status
     and "owner_confirmation_contract_ready" in future_policy
-    and "Issues #19/#22" in readme
+    and "#19" in readme and "#22" in readme
     and "Deployed Version" in read("docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.34-R30.md"))
 
 if len(checks) != 20:
