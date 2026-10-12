@@ -89,6 +89,16 @@ fifth_assert( false !== strpos( $r23_future, 'GCU_Future_Policy::validate_copy_q
 fifth_assert( false !== strpos( $r23_future, 'gcu_future_report_uuid_invalid' ), 'Supplied invalid report UUID must return explicit 400.' );
 fifth_assert( false === strpos( $r23_future, "if ( ! in_array( $route, array( 'global_clinic', 'how_it_works' ), true ) ) { $route = 'global_clinic'; }" ), 'Unsupported report route must not silently map into a different public journey.' );
 
+// R23: verify source CV IDs were not confused with 71 locally owned File14 code modules.
+$r23_cv_trace = file_get_contents( $root . '/docs/CENTRAL-CV-71-OWNER-CONSUMER-TRACE-v1.4.27-R23.md' );
+$r23_cv_ids = array_merge( range( 14, 25 ), range( 188, 199 ), range( 239, 285 ) );
+foreach ( $r23_cv_ids as $r23_cv ) {
+    fifth_assert( false !== strpos( $r23_cv_trace, '| CV-' . str_pad( (string) $r23_cv, 3, '0', STR_PAD_LEFT ) . ' |' ), 'Missing source-transferred central CV ID ' . $r23_cv . ' in File14 owner/consumer trace.' );
+}
+preg_match_all( '/^\\| CV-[0-9]{3} \\|/m', $r23_cv_trace, $r23_cv_occurrences );
+fifth_assert( 71 === count( $r23_cv_occurrences[0] ), 'The central CV map must contain exactly 71 individual source IDs.' );
+fifth_assert( false !== strpos( $r23_cv_trace, 'not a proven deployed owner assignment' ), 'Central CV map must not claim speculative owner mapping as live fact.' );
+
 if ( $failures ) {
 	fwrite( STDERR, "Fifth review regression tests failed:\n- " . implode( "\n- ", $failures ) . "\n" );
 	exit( 1 );
