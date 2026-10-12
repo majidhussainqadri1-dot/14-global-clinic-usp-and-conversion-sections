@@ -1,4 +1,12 @@
-# File 14 Status — v1.4.27 R23 Public Report and CV Trace Repository Candidate
+# File 14 Status — v1.4.28 R24 Journey and Preflight Integrity Repository Candidate
+
+Exact-current-head rule: Candidate branch QA, PR QA, and fresh merged-main SHA quality/package/review evidence are distinct. Source evidence is never installed WordPress proof.
+
+Software candidate: `1.4.28`. Frozen prechange main `a5e6fa9eb298d98e00850af16a284ce65d54b71d`; twenty static source/plan/companion lenses **all completed before correction**, with 15 source-guard-present, 3 File14 local defects corrected (multilingual report truncation, explicit context downgrade, malformed preflight shape), 2 owner/design gates Issues #19/#22 open. Ledger: `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.28-R24.md`. Source schema targets Base 10005/Future 1 unchanged. Actual installed plugin/checksum, DB version/options/migrations, logs, staging/live acceptance remain **unverified**.
+
+---
+
+# Historical R23 — v1.4.27 (before R24)
 
 Exact-current-head rule: Current branch and fresh merged-main source SHA require independent quality/review/package evidence. CI green does not prove website deployment.
 
