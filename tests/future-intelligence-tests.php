@@ -225,6 +225,17 @@ $r27_native_allowed = GCU_Future_Intelligence::reports( 'open', 50 );
 assert_future( is_array( $r27_native_allowed ) && false !== strpos( $wpdb->last_sql, "WHERE status='open'" ), 'Permitted content moderator still reads typed reports.' );
 $wpdb = $r27_saved_wpdb;
 
+// R28: final report decisions are terminal; lifecycle policy must reject direct-service reopening.
+foreach ( array( 'open', 'reviewing', 'resolved', 'rejected', 'archived', '', null, false ) as $source ) {
+    foreach ( array( 'reviewing', 'resolved', 'rejected', 'open', 'suspended', '', null, array('reviewing') ) as $target ) {
+        $allowed = is_string($source) && is_string($target) && in_array($source, array('open','reviewing'), true) && in_array($target, array('reviewing','resolved','rejected'), true);
+        assert_future( $allowed === GCU_Future_Policy::report_resolution_transition_allowed( $source, $target ), 'R28 exact report moderation state transition must accept only unresolved-to-review/final.' );
+    }
+}
+assert_future( false === GCU_Future_Policy::report_resolution_transition_allowed('resolved','reviewing'), 'Resolved report must not be silently reopened.' );
+assert_future( false === GCU_Future_Policy::report_resolution_transition_allowed('rejected','resolved'), 'Rejected report must not be silently reclassified without a new governed correction case.' );
+assert_future( true === GCU_Future_Policy::report_resolution_transition_allowed('reviewing','resolved'), 'An actively reviewed report can reach final resolution.' );
+
 $catalog = GCU_Future_Policy::feature_catalog();
 assert_future( 24 === count( $catalog ), 'Exactly 24 Founder-approved Future Intelligence features are required.' );
 for ( $i = 1; $i <= 24; $i++ ) {
