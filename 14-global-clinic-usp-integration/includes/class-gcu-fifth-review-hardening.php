@@ -256,7 +256,7 @@ final class GCU_Fifth_Review_Hardening {
 		);
 		$count = 0;
 		foreach ( is_array( $rows ) ? $rows : array() as $row ) {
-			$lock = GCU_Hardening::acquire_db_lock( 'experiment-early-stop:' . $row['public_id'], 3 );
+			$lock = GCU_Hardening::acquire_db_lock( 'workflow:experiment:' . $row['public_id'], 3 );
 			if ( ! $lock ) {
 				continue;
 			}
