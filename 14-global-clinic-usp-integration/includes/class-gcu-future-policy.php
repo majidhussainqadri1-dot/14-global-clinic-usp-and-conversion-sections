@@ -525,9 +525,7 @@ final class GCU_Future_Policy {
 	}
 
 	public static function experiment_baseline_restoration_ready( $experiment ) {
-		// Never accept a bare option/flag without verified snapshot, owner CAS,
-		// atomic restore and staging rollback proof. No approved contract yet.
-		return false;
+		return class_exists( 'GCU_Experiment_Baseline' ) && GCU_Experiment_Baseline::ready( $experiment );
 	}
 
 
