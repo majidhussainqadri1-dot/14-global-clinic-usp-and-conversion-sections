@@ -93,7 +93,7 @@ final class GCU_Owner_Outcomes {
 
 	/** Aggregates are separate from browser CTA metrics; never imply success rates. */
 	public static function owner_stage_summary( $days = 30 ) {
-		$auth = GCU_Capabilities::require_capability( GCU_Capabilities::VIEW_ANALYTICS, null, 'owner_stage_summary' );
+		$auth = GCU_Capabilities::require_capability( GCU_Capabilities::VIEW_ANALYTICS, null, 'future_intelligence_analytics' );
 		if ( is_wp_error( $auth ) ) { return $auth; }
 		global $wpdb;
 		$t = GCU_Install::tables();
