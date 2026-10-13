@@ -1,3 +1,7 @@
+# File14 v1.4.36 R33 — Forty-Lens Source Audit
+
+Software candidate: `1.4.36`. Owner observation privacy and native volume anomaly corrections are in `docs/REVIEW-40-CROSS-PLAN-v1.4.36-R33.md`; File14 experiment change-rollback remains a separate release blocker. Source CI is not live parity.
+
 # File14 v1.4.35 R32 Source Progress
 
 Owner-origin analytics and experiment baseline safeguards are implemented as bounded source changes. **Issues #19/#22 are not staging/live closed**; see `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.35-R32.md` and the source/owner PRs.

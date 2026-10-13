@@ -37,7 +37,7 @@ future_policy = read("14-global-clinic-usp-integration/includes/class-gcu-future
 # The checked software candidate is read from source, never frozen to an old version.
 match = re.search(r"\bVersion:\s*([0-9]+\.[0-9]+\.[0-9]+)", main)
 current_version = match.group(1) if match else ""
-current_ledger = list((ROOT / "docs").glob(f"REVIEW-20-CROSS-FILE-COMPLETION-v{current_version}-*.md")) if current_version else []
+current_ledger = (list((ROOT / "docs").glob(f"REVIEW-20-CROSS-FILE-COMPLETION-v{current_version}-*.md")) + list((ROOT / "docs").glob(f"REVIEW-40-CROSS-PLAN-v{current_version}-*.md"))) if current_version else []
 
 checks = []
 def add(name, ok):

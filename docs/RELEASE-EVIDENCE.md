@@ -1,3 +1,7 @@
+# File14 v1.4.36 R33 candidate — GitHub source-only
+
+Software candidate: `1.4.36`. Release blockers remain: File01 owner-event acceptance, File07/08/09 staging, confirmed baseline mutation rollback and exact deployed parity. No production resolution claimed.
+
 # File14 v1.4.35 R32 — Exact Candidate Source and Release Evidence
 
 Software candidate: `1.4.35`. Source changes for owner-native outcome reporting and experiment baseline verification have NOT been accepted on staging/live. Issues #19/#22 remain open for File01 producer registry, independent owner integration, actual provenance-linked placement restoration and staged rollback. Repository CI is not deployment parity.

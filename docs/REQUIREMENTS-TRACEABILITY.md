@@ -1,3 +1,9 @@
+**File 14 v1.4.36 may only claim a status** supported by exact source CI, independently verified runtime deployment parity and accepted staging/live results. R33 privacy/anomaly source fix is not a substitute for FUT17 changed-placement restoration.
+
+# Requirements Traceability — v1.4.36
+
+File14 v1.4.36 may only claim a status proven by exact source CI and separately verified live/staging evidence. R33 40-scoped review located two functional gaps; source repaired native privacy/anomaly with remaining restored-placement proof external. See docs/REVIEW-40-CROSS-PLAN-v1.4.36-R33.md.
+
 **File 14 v1.4.35 may only claim a status** supported by exact-source CI and separately accepted staging/live deployment. Current source has not closed owner registry #19 or full auto-restore #22.
 
 **R32 — 2026-10-13:** File14 owner-origin anonymized outcome source + governed experiment immutable baseline/containment. Partial coding only; File01 owner registry, correlated owner-stage acceptance, actual experiment mutation restoration and staging/live parity pending. `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.35-R32.md`.

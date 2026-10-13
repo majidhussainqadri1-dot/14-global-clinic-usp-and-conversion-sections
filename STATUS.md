@@ -1,3 +1,7 @@
+# File14 v1.4.36 — R33 Forty-Review Correction Candidate
+
+Software candidate: `1.4.36`. Forty-plan audit: docs/REVIEW-40-CROSS-PLAN-v1.4.36-R33.md. Sources fixed: native owner sensitive path gate, erasable event subject, cohort-guarded independent anomaly. Full live release is NOT ACCEPTED: changed placement auto-restore and owner registry/staging remain pending; deployed code/DB unverified.
+
 # File14 v1.4.35 — R32 Owner-Origin Observation and Approved Baseline Source Candidate
 
 Repository source branch includes: File07 native rendered-directory hook; File09 native committed application-submission hook; File08 separately proposed postcommit owner booking hook; File14 consented, GPC-safe, unlinked, HMAC-pseudonymous owner-stage aggregates with >=10 suppression. These facts are not end-to-end user journeys or booking conversions inferred from clicks. File08 PR #21 is an independent owner repository gate; File01 owner-event registry acceptance remains unverified.

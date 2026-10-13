@@ -759,7 +759,12 @@ final class GCU_Future_Intelligence {
 		// outcomes. Suppress anomaly judgments until a versioned File07/08/09
 		// acknowledgement contract is independently accepted.
 		if ( ! GCU_Future_Policy::owner_confirmation_contract_ready() ) {
-			$result = array( 'status' => 'owner_confirmation_unavailable', 'severity' => 'none', 'suppressed' => true, 'current_sample' => null, 'baseline_sample' => null, 'checked_at' => gmdate( 'c' ) );
+			// No signed correlated owner journey contract exists: inspect only
+			// independently verified opt-in owner event VOLUMES, never a
+			// conversion rate fabricated from browser CTA totals.
+			$result = class_exists( 'GCU_Owner_Outcomes' )
+				? GCU_Owner_Outcomes::observed_anomaly()
+				: array( 'status' => 'owner_confirmation_unavailable', 'severity' => 'none', 'suppressed' => true, 'current_sample' => null, 'baseline_sample' => null, 'checked_at' => gmdate( 'c' ) );
 			update_option( self::LAST_ANOMALY_OPTION, $result, false );
 			return $result;
 		}
