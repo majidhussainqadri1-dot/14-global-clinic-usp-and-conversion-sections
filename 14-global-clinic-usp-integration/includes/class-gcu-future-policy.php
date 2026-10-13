@@ -498,6 +498,38 @@ final class GCU_Future_Policy {
 	public static function owner_confirmation_contract_ready() {
 		return false;
 	}
+	/**
+	 * F14-FUT-17: variants that name canonical placements, slots or layout
+	 * must never be activated without an owner-approved, versioned baseline
+	 * restoration contract. A checkbox or untrusted input is not proof.
+	 * The current File14 experiment engine does not own a restoration mapping,
+	 * so these mutations intentionally remain fail-closed (Issue #22).
+	 */
+	public static function experiment_requires_baseline_restore( $variants ) {
+		if ( ! is_array( $variants ) ) { return true; }
+		foreach ( $variants as $variant ) {
+			if ( is_array( $variant ) ) {
+				foreach ( array( 'placement_key', 'placement_id', 'slot_key', 'block_key', 'layout', 'navigation', 'shell', 'placement' ) as $key ) {
+					if ( array_key_exists( $key, $variant ) ) { return true; }
+				}
+				$encoded = wp_json_encode( $variant );
+				if ( ! is_string( $encoded ) ) { return true; }
+			} elseif ( is_string( $variant ) ) {
+				$encoded = $variant;
+			} else {
+				return true;
+			}
+			if ( preg_match( '/\\b(?:placement|slot|shell|layout|navigation|variant[_ -]?key)\\b/i', $encoded ) ) { return true; }
+		}
+		return false;
+	}
+
+	public static function experiment_baseline_restoration_ready( $experiment ) {
+		// Never accept a bare option/flag without verified snapshot, owner CAS,
+		// atomic restore and staging rollback proof. No approved contract yet.
+		return false;
+	}
+
 
 	/** Only actual 0..100 measured proportions are evidence; never use
 	 * booleans, arrays, nonfinite or out-of-range values as verified signals. */
