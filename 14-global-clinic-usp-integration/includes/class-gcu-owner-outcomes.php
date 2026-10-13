@@ -41,8 +41,7 @@ final class GCU_Owner_Outcomes {
 
 	public static function consented() {
 		// Optional analytics consent is distinct from medical/booking consent.
-		return GCU_Policy::analytics_consent()
-			&& ! GCU_Privacy::global_privacy_control_requested()
+		return GCU_Privacy::measurement_allowed()
 			&& ! GCU_Privacy::low_bandwidth_requested();
 	}
 
@@ -63,6 +62,13 @@ final class GCU_Owner_Outcomes {
 			|| ! self::consented() ) { return false; }
 		$ready = GCU_Install::ready_for_mutation();
 		if ( is_wp_error( $ready ) ) { return false; }
+		// A pseudonymous subject allows the native WP privacy eraser/exporter
+		// to honor withdrawal; an unerasable owner-reference digest is not
+		// anonymous merely because the raw ID was not stored.
+		$subject = GCU_Plugin::instance()->privacy()->event_subject_hash();
+		if ( ! is_string( $subject ) || ! preg_match( '/^[a-f0-9]{64}$/', $subject ) ) { return false; }
+		$rate = GCU_Plugin::instance()->repository()->consume_rate_limit( 'owner-' . $owner, GCU_Policy::EVENT_RATE_LIMIT );
+		if ( is_wp_error( $rate ) ) { return false; }
 		// This pseudonymous one-way identifier does not store the doctor,
 		// appointment, patient, application or browser subject in File14.
 		$h = hash_hmac( 'sha256', self::CONTRACT . '|' . $owner . '|' . $stage . '|' . $owner_reference, wp_salt( 'auth' ) );
@@ -74,8 +80,8 @@ final class GCU_Owner_Outcomes {
 		$kind = $types[ $owner ];
 		$inserted = $wpdb->query( $wpdb->prepare(
 			"INSERT IGNORE INTO {$tables['events']} (event_id,event_type,event_version,funnel_stage,destination_key,subject_hash,source_value,medium_value,campaign_value,ref_value,consent_state,occurred_at,created_at)
-			 VALUES (%s,%s,1,%s,%s,NULL,NULL,NULL,NULL,NULL,'granted',%s,%s)",
-			$uuid, $kind[1], $stage, $kind[2], $now, $now
+			 VALUES (%s,%s,1,%s,%s,%s,NULL,NULL,NULL,NULL,'granted',%s,%s)",
+			$uuid, $kind[1], $stage, $kind[2], $subject, $now, $now
 		) );
 		if ( 1 === $inserted ) { return true; }
 		if ( 0 !== $inserted ) { return false; }
@@ -86,7 +92,8 @@ final class GCU_Owner_Outcomes {
 		$duplicate = is_array( $existing ) && self::reportable( (string) $existing['event_type'], (string) $existing['funnel_stage'] )
 			&& $kind[1] === $existing['event_type'] && 1 === (int) $existing['event_version']
 			&& $kind[2] === $existing['destination_key'] && 'granted' === $existing['consent_state']
-			&& empty( $existing['subject_hash'] );
+			&& isset( $existing['subject_hash'] )
+			&& is_string( $existing['subject_hash'] ) && hash_equals( $subject, $existing['subject_hash'] );
 		if ( ! $duplicate ) { GCU_Observability::log( 'warning', 'owner_outcome_identity_conflict', array( 'owner' => $owner ) ); }
 		return $duplicate;
 	}
