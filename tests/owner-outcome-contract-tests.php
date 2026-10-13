@@ -2,6 +2,8 @@
 /** Isolated source/policy contract tests. Not a real WordPress E2E test. */
 define( 'ABSPATH', __DIR__ . '/' );
 function wp_json_encode( $x ) { return json_encode( $x ); }
+function get_option( $key, $default = false ) { return $default; }
+function sanitize_key( $key ) { return preg_replace( '/[^a-z0-9_\\-]/', '', strtolower( (string) $key ) ); }
 class GCU_Policy {
 	public static $consent = true;
 	public static function analytics_consent() { return self::$consent; }
@@ -14,6 +16,7 @@ class GCU_Privacy {
 }
 require __DIR__ . '/../14-global-clinic-usp-integration/includes/class-gcu-owner-outcomes.php';
 require __DIR__ . '/../14-global-clinic-usp-integration/includes/class-gcu-future-policy.php';
+require __DIR__ . '/../14-global-clinic-usp-integration/includes/class-gcu-experiment-baseline.php';
 $f = array();
 function check_owner( $ok, $message ) { global $f; if ( ! $ok ) { $f[] = $message; } }
 check_owner( GCU_Owner_Outcomes::consented(), 'Explicit analytics consent should permit optional aggregate observation.' );
@@ -32,6 +35,9 @@ check_owner( ! GCU_Future_Policy::experiment_requires_baseline_restore( array( '
 check_owner( GCU_Future_Policy::experiment_requires_baseline_restore( array( array( 'placement_key' => 'hero' ) ) ), 'Placement-mutating variant requires approved restore.' );
 check_owner( GCU_Future_Policy::experiment_requires_baseline_restore( array( 'change layout', 'headline B' ) ), 'Unstructured layout variant must fail closed.' );
 check_owner( ! GCU_Future_Policy::experiment_baseline_restoration_ready( array( 'status'=>'approved' ) ), 'An undocumented snapshot must not become approved merely through flags.' );
+check_owner( array( 'primary' ) === GCU_Experiment_Baseline::placement_keys( array( array( 'placement_key'=>'primary' ), array( 'placement_key'=>'primary' ) ) ), 'Snapshot scope must deduplicate exact placement keys.' );
+check_owner( null === GCU_Experiment_Baseline::placement_keys( array( array( 'layout'=>'header' ), array( 'placement_key'=>'primary' ) ) ), 'Ambiguous layout effects must not silently receive a baseline.' );
+check_owner( null === GCU_Experiment_Baseline::placement_keys( array( array( 'placement_key'=>'Primary!' ), array( 'placement_key'=>'primary' ) ) ), 'Noncanonical placement identity must be rejected.' );
 $repo = file_get_contents( __DIR__ . '/../14-global-clinic-usp-integration/includes/class-gcu-repository.php' );
 check_owner( false !== strpos( $repo, 'gcu_experiment_baseline_restore_unverified' ), 'Native experiment transition lacks fail-closed baseline gate.' );
 $main = file_get_contents( __DIR__ . '/../14-global-clinic-usp-integration/global-clinic-usp-integration.php' );
