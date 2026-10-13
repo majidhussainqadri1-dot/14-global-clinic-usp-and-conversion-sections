@@ -156,6 +156,7 @@ final class GCU_Owner_Outcomes {
 		$rows = $wpdb->get_results( $wpdb->prepare(
 			"SELECT event_type,funnel_stage,COUNT(*) AS total FROM {$t['events']}
 			 WHERE occurred_at>=DATE_SUB(UTC_TIMESTAMP(),INTERVAL %d DAY)
+			 AND consent_state='granted' AND subject_hash IS NOT NULL
 			 AND event_type IN ('File07.DirectoryServed.v1','File08.BookingStarted.v1','File09.ApplicationStarted.v1')
 			 GROUP BY event_type,funnel_stage", $days
 		), ARRAY_A );
