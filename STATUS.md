@@ -4,6 +4,7 @@ Repository source branch includes: File07 native rendered-directory hook; File09
 
 F14-FUT-17: Founder approval captures a hashed private versioned placement baseline, activation verifies it again under transaction, and audited early-stop reconciles unchanged baselines. Unattributable placement drift is not overwritten; experiment serving is paused and manual review required. Therefore automatic restoration after a verified experiment-owned placement mutation has **not** been proven. Issue #22 must remain OPEN until provenance-linked placement changes and stage rollback are demonstrated.
 
+Software candidate: `1.4.35`.
 **Source version:** 1.4.35; **schema targets:** Base 10005 / Future 1 (no new table migration); **R32 ledger:** docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.35-R32.md.
 
 **Repository HEAD:** independent exact PR and later merged HEAD. **Deployed Version, checksum, actual DB/wp_options/migration, staging and live:** UNVERIFIED. Issues #19/#22 remain external/acceptance blockers; no production resolution claim.
