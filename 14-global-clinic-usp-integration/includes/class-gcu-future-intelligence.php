@@ -330,7 +330,11 @@ final class GCU_Future_Intelligence {
 		if ( null === $days ) {
 			return new WP_Error( 'gcu_future_friction_window_invalid', __( 'A positive reporting window is required.', 'global-clinic-usp-integration' ), array( 'status' => 400 ) );
 		}
-		return self::no_store_response( self::friction_summary( $days ) );
+		$owner_observations = GCU_Owner_Outcomes::owner_stage_summary( $days );
+		if ( is_wp_error( $owner_observations ) ) { return $owner_observations; }
+		$report = self::friction_summary( $days );
+		$report['owner_native_observations'] = $owner_observations;
+		return self::no_store_response( $report );
 	}
 
 	public static function rest_scenarios() {
