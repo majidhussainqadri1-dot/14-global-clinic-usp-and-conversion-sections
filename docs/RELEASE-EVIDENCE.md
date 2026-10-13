@@ -1,6 +1,10 @@
-# File14 v1.4.36 R33 candidate — GitHub source-only
+# File14 v1.4.37 R34 Source Candidate
 
-Software candidate: `1.4.36`. Release blockers remain: File01 owner-event acceptance, File07/08/09 staging, confirmed baseline mutation rollback and exact deployed parity. No production resolution claimed.
+Software candidate: `1.4.37`. R34 forty source-review repeats plus forty simulated lifecycle scenarios; File14 F14-FUT-17 real mutated-placement restore, owner registry acceptance, staging/WordPress DB and live deployment parity remain unverified. No live-fix or Operational claim is authorized.
+
+# File14 v1.4.37 R33 candidate — GitHub source-only
+
+Software candidate: `1.4.37`. Release blockers remain: File01 owner-event acceptance, File07/08/09 staging, confirmed baseline mutation rollback and exact deployed parity. No production resolution claimed.
 
 # File14 v1.4.35 R32 — Exact Candidate Source and Release Evidence
 

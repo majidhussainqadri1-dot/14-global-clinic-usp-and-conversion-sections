@@ -1,6 +1,10 @@
-# File14 v1.4.36 — R33 Forty-Review Correction Candidate
+# File14 R34 v1.4.37 — Iterative Forty-Review Source Candidate
 
-Software candidate: `1.4.36`. Forty-plan audit: docs/REVIEW-40-CROSS-PLAN-v1.4.36-R33.md. Sources fixed: native owner sensitive path gate, erasable event subject, cohort-guarded independent anomaly. Full live release is NOT ACCEPTED: changed placement auto-restore and owner registry/staging remain pending; deployed code/DB unverified.
+Software candidate: `1.4.37`. Sources and replay evidence: `docs/REVIEW-40-CROSS-PLAN-v1.4.37-R34.md`. Corrected: global experiment pause for all variants, expiration stop without false safety-breach dependency, identical workflow locks, manual-stop baseline reconciliation, actual experiment start timestamp. **F14-FUT-17 changed-placement rollback is not fully implemented or staging accepted.** Owner consent/event registry and live parity also unverified.
+
+# File14 v1.4.37 — R33 Forty-Review Correction Candidate
+
+Software candidate: `1.4.37`. Forty-plan audit: docs/REVIEW-40-CROSS-PLAN-v1.4.37-R33.md. Sources fixed: native owner sensitive path gate, erasable event subject, cohort-guarded independent anomaly. Full live release is NOT ACCEPTED: changed placement auto-restore and owner registry/staging remain pending; deployed code/DB unverified.
 
 # File14 v1.4.35 — R32 Owner-Origin Observation and Approved Baseline Source Candidate
 

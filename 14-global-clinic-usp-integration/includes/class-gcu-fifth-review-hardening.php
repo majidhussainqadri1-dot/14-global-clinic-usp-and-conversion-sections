@@ -235,15 +235,28 @@ final class GCU_Fifth_Review_Hardening {
 			|| $destination_failure
 			|| $open_reports >= 5
 			|| ( isset( $anomaly['severity'] ) && 'high' === $anomaly['severity'] );
-		if ( ! $breach ) {
-			return 0;
-		}
-
 		$tables = GCU_Install::tables();
-		$rows = $wpdb->get_results( "SELECT * FROM {$tables['experiments']} WHERE status='running' LIMIT 50", ARRAY_A );
+		// F14-FUT-17: the approved experiment window is authoritative, even
+		// when every trust/destination/complaint signal remains healthy. Expiry
+		// must trigger an audited stop rather than silently extending exposure.
+		$expired_where = "(ends_at IS NULL OR ends_at<=UTC_TIMESTAMP())";
+		if ( ! $breach ) {
+			$expired_count = $wpdb->get_var(
+				"SELECT COUNT(*) FROM {$tables['experiments']} WHERE status='running' AND {$expired_where}"
+			);
+			if ( null === $expired_count || false === $expired_count ) {
+				GCU_Observability::log( 'error', 'experiment_expiry_check_unverified', array() );
+				return new WP_Error( 'gcu_experiment_expiry_check_failed', __( 'Experiment window safety could not be verified.', 'global-clinic-usp-integration' ), array( 'status' => 503 ) );
+			}
+			if ( 0 === (int) $expired_count ) { return 0; }
+		}
+		$expiration_filter = $breach ? '' : " AND {$expired_where}";
+		$rows = $wpdb->get_results(
+			"SELECT * FROM {$tables['experiments']} WHERE status='running'{$expiration_filter} LIMIT 50", ARRAY_A
+		);
 		$count = 0;
 		foreach ( is_array( $rows ) ? $rows : array() as $row ) {
-			$lock = GCU_Hardening::acquire_db_lock( 'experiment-early-stop:' . $row['public_id'], 3 );
+			$lock = GCU_Hardening::acquire_db_lock( 'workflow:experiment:' . $row['public_id'], 3 );
 			if ( ! $lock ) {
 				continue;
 			}
@@ -269,7 +282,7 @@ final class GCU_Fifth_Review_Hardening {
 					'experiment',
 					$row['public_id'],
 					'experiment_safety',
-					'Automatic trust/safety guardrail breach',
+					$breach ? 'Automatic trust/safety guardrail breach' : 'Approved experiment end time reached',
 					$row,
 					array( 'status' => 'stopped', 'row_version' => (int) $row['row_version'] + 1, 'baseline_reconciliation' => $baseline_result )
 				);
