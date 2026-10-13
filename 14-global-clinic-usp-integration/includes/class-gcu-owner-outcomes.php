@@ -98,6 +98,54 @@ final class GCU_Owner_Outcomes {
 		return $duplicate;
 	}
 
+	/**
+	 * F14-FUT-14. Compare independent, native, consented OWNER EVENT VOLUMES,
+	 * not click-to-booking rates. Refuse small samples and incomplete windows.
+	 * Observation is not evidence of causation or representative traffic.
+	 */
+	public static function observed_anomaly() {
+		global $wpdb;
+		$tables = GCU_Install::tables();
+		$rows = $wpdb->get_results(
+			"SELECT event_type,funnel_stage,
+			SUM(CASE WHEN occurred_at>=DATE_SUB(UTC_TIMESTAMP(),INTERVAL 24 HOUR) THEN 1 ELSE 0 END) AS current_count,
+			SUM(CASE WHEN occurred_at<DATE_SUB(UTC_TIMESTAMP(),INTERVAL 24 HOUR) THEN 1 ELSE 0 END) AS previous_seven_days
+			FROM {$tables['events']}
+			WHERE occurred_at>=DATE_SUB(UTC_TIMESTAMP(),INTERVAL 8 DAY)
+			AND consent_state='granted' AND subject_hash IS NOT NULL
+			AND event_type IN ('File07.DirectoryServed.v1','File08.BookingStarted.v1','File09.ApplicationStarted.v1')
+			GROUP BY event_type,funnel_stage",
+			ARRAY_A
+		);
+		$signals = array();
+		$highest = 'none';
+		$minimum = GCU_Future_Policy::MIN_COHORT;
+		foreach ( is_array( $rows ) ? $rows : array() as $row ) {
+			if ( ! self::reportable( (string) $row['event_type'], (string) $row['funnel_stage'] ) ) { continue; }
+			$current = (int) $row['current_count'];
+			$previous = (int) $row['previous_seven_days'];
+			// 10 current and 70 historic events are required before disclosing
+			// even a stage-level percentage; never expose a small cohort count.
+			if ( $current < $minimum || $previous < 7 * $minimum ) { continue; }
+			$historic_daily_average = $previous / 7;
+			$drop = max( 0.0, ( $historic_daily_average - $current ) / $historic_daily_average );
+			$severity = $drop >= 0.60 ? 'high' : ( $drop >= 0.40 ? 'medium' : 'none' );
+			if ( 'high' === $severity || ( 'medium' === $severity && 'none' === $highest ) ) { $highest = $severity; }
+			$signals[] = array(
+				'event_type' => $row['event_type'], 'stage' => $row['funnel_stage'],
+				'relative_volume_drop' => round( $drop, 4 ), 'severity' => $severity,
+				'sample_at_least' => $minimum,
+			);
+		}
+		return array(
+			'status' => $signals ? 'consented_owner_volume_observed' : 'insufficient_owner_event_evidence',
+			'severity' => $highest, 'suppressed' => ! $signals, 'signals' => $signals,
+			'owner_correlated_funnel' => false, 'booking_success_rate' => null,
+			'inference_limit' => 'opt_in_native_event_volume_not_population_conversion_or_causation',
+			'checked_at' => gmdate( 'c' ),
+		);
+	}
+
 	/** Aggregates are separate from browser CTA metrics; never imply success rates. */
 	public static function owner_stage_summary( $days = 30 ) {
 		$auth = GCU_Capabilities::require_capability( GCU_Capabilities::VIEW_ANALYTICS, null, 'future_intelligence_analytics' );
