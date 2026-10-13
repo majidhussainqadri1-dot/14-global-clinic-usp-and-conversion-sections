@@ -87,7 +87,10 @@ $r23_future = file_get_contents( $plugin . '/includes/class-gcu-future-intellige
 fifth_assert( false !== strpos( $future_policy, 'function validate_copy_quality_report_input_types' ), 'R23 pure copy-report shape/owner validator must ship.' );
 fifth_assert( false !== strpos( $r23_future, 'GCU_Future_Policy::validate_copy_quality_report_input_types( $data )' ) && false !== strpos( $r23_future, 'gcu_future_report_input_invalid' ), 'FUT-12 public report command must guard typed request before any sanitizer.' );
 fifth_assert( false !== strpos( $r23_future, 'gcu_future_report_uuid_invalid' ), 'Supplied invalid report UUID must return explicit 400.' );
-fifth_assert( false === strpos( $r23_future, "if ( ! in_array( $route, array( 'global_clinic', 'how_it_works' ), true ) ) { $route = 'global_clinic'; }" ), 'Unsupported report route must not silently map into a different public journey.' );
+$r34_forbidden_report_route_fallback = <<<'PHP'
+if ( ! in_array( $route, array( 'global_clinic', 'how_it_works' ), true ) ) { $route = 'global_clinic'; }
+PHP;
+fifth_assert( false === strpos( $r23_future, $r34_forbidden_report_route_fallback ), 'Unsupported report route must not silently map into a different public journey.' );
 
 // R23: verify source CV IDs were not confused with 71 locally owned File14 code modules.
 $r23_cv_trace = file_get_contents( $root . '/docs/CENTRAL-CV-71-OWNER-CONSUMER-TRACE-v1.4.27-R23.md' );
