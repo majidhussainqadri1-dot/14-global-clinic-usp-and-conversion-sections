@@ -49,6 +49,7 @@ $gcu_files = array(
 	'includes/class-gcu-future-guards.php',
 	'includes/class-gcu-review80-hardening.php',
 	'includes/class-gcu-fifth-review-hardening.php',
+	'includes/class-gcu-owner-outcomes.php',
 );
 
 foreach ( $gcu_files as $gcu_file ) {
@@ -72,3 +73,4 @@ add_action( 'plugins_loaded', array( 'GCU_Future_I18n', 'bootstrap' ), 96 );
 add_action( 'plugins_loaded', array( 'GCU_Future_Guards', 'bootstrap' ), 97 );
 add_action( 'plugins_loaded', array( 'GCU_Review80_Hardening', 'bootstrap' ), 98 );
 add_action( 'plugins_loaded', array( 'GCU_Fifth_Review_Hardening', 'bootstrap' ), 99 );
+add_action( 'plugins_loaded', array( 'GCU_Owner_Outcomes', 'bootstrap' ), 99 );
