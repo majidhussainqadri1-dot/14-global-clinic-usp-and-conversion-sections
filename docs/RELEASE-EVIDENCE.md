@@ -1,3 +1,9 @@
+# File14 v1.4.35 R32 — Exact Candidate Source and Release Evidence
+
+Software candidate: `1.4.35`. Source changes for owner-native outcome reporting and experiment baseline verification have NOT been accepted on staging/live. Issues #19/#22 remain open for File01 producer registry, independent owner integration, actual provenance-linked placement restoration and staged rollback. Repository CI is not deployment parity.
+
+---
+
 # Release Evidence — v1.4.34 R30 Candidate
 
 Software candidate: `1.4.34`. Frozen audited prior exact main `605fcaa5b96d1a46efee65a309c0df8efd3e9fbe`. Twenty independently scoped static File14/master/companion checks completed before correction: 16 narrow source references, two local governed record identity/status/locale/region and nonbinding Doctor Readiness request defects corrected, two external Issues #19/#22 remain open. `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.34-R30.md`. Requires independent exact candidate/PR SHA PHP 7.4 and 8.3, full source and cross-file regressions, two fresh reviews, deterministic package/SBOM and **fresh post-merge exact-main** CI. Do not predeclare CI results. Source schemas Base10005/Future1 unchanged. Real deployed plugin/hash, DB/tables/columns/wp_options, migration, logs, backup/restore, staging and live E2E/Founder acceptance unverified.

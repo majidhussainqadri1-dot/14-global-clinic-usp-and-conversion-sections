@@ -263,6 +263,7 @@ final class GCU_Fifth_Review_Hardening {
 					GCU_Plugin::instance()->repository()->rollback_owned_transaction();
 					continue;
 				}
+				$baseline_result = GCU_Experiment_Baseline::reconcile_after_stop( $row );
 				$audit = GCU_Plugin::instance()->repository()->audit(
 					'experiment_early_stopped',
 					'experiment',
@@ -270,7 +271,7 @@ final class GCU_Fifth_Review_Hardening {
 					'experiment_safety',
 					'Automatic trust/safety guardrail breach',
 					$row,
-					array( 'status' => 'stopped', 'row_version' => (int) $row['row_version'] + 1 )
+					array( 'status' => 'stopped', 'row_version' => (int) $row['row_version'] + 1, 'baseline_reconciliation' => $baseline_result )
 				);
 				if ( false === $audit ) {
 					GCU_Plugin::instance()->repository()->rollback_owned_transaction();
@@ -279,6 +280,17 @@ final class GCU_Fifth_Review_Hardening {
 				if ( ! GCU_Plugin::instance()->repository()->commit_owned_transaction() ) {
 					GCU_Plugin::instance()->repository()->rollback_owned_transaction();
 					continue;
+				}
+				if ( empty( $baseline_result['restored'] ) ) {
+					// The experiment is stopped; unknown concurrent editorial state is
+					// never overwritten. Operator review and a safe serving pause are
+					// explicitly recorded instead of a false "restored" assertion.
+					update_option( 'gcu_experiment_restore_manual_review', array(
+						'experiment_hash' => hash( 'sha256', (string) $row['public_id'] ),
+						'reason' => isset( $baseline_result['reason'] ) ? sanitize_key( $baseline_result['reason'] ) : 'unverified',
+						'created_at' => current_time( 'mysql', true ),
+					), false );
+					update_option( 'gcu_experiment_serving_paused', 1, false );
 				}
 				$count++;
 			} finally {

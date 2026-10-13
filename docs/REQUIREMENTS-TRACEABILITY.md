@@ -1,4 +1,8 @@
-# File 14 — Fresh Central + File Plan + Future CTI Requirements Traceability — v1.4.34
+**File 14 v1.4.35 may only claim a status** supported by exact-source CI and separately accepted staging/live deployment. Current source has not closed owner registry #19 or full auto-restore #22.
+
+**R32 — 2026-10-13:** File14 owner-origin anonymized outcome source + governed experiment immutable baseline/containment. Partial coding only; File01 owner registry, correlated owner-stage acceptance, actual experiment mutation restoration and staging/live parity pending. `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.35-R32.md`.
+
+# File 14 — Fresh Central + File Plan + Future CTI Requirements Traceability — v1.4.35
 
 **R30 2026-10-12:** Twenty frozen File14/central/related File07/08/09/25 source checks before editing (16 source-located, two File14 local defects corrected: explicit governed record identity/state/locale/region not silently rewritten; FUT-24 nonbinding Doctor Readiness JSON/checklist values validated, two owner/design issues #19/#22 still open). Evidence ledger `docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.34-R30.md`. No schema migration or staging/live parity proof.
 
