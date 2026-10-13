@@ -1,8 +1,12 @@
-**File 14 v1.4.36 may only claim a status** supported by exact source CI, independently verified runtime deployment parity and accepted staging/live results. R33 privacy/anomaly source fix is not a substitute for FUT17 changed-placement restoration.
+**File 14 v1.4.37 may only claim a status** supported by exact-source CI and separately verified staging/live/owner-contract acceptance. R34 forty-iteration status: `docs/REVIEW-40-CROSS-PLAN-v1.4.37-R34.md`. F14-FUT-17 changed-placement atomic rollback remains unaccepted.
 
-# Requirements Traceability — v1.4.36
+Requirements Traceability — v1.4.37
 
-File14 v1.4.36 may only claim a status proven by exact source CI and separately verified live/staging evidence. R33 40-scoped review located two functional gaps; source repaired native privacy/anomaly with remaining restored-placement proof external. See docs/REVIEW-40-CROSS-PLAN-v1.4.36-R33.md.
+**File 14 v1.4.37 may only claim a status** supported by exact source CI, independently verified runtime deployment parity and accepted staging/live results. R33 privacy/anomaly source fix is not a substitute for FUT17 changed-placement restoration.
+
+# Requirements Traceability — v1.4.37
+
+File14 v1.4.37 may only claim a status proven by exact source CI and separately verified live/staging evidence. R33 40-scoped review located two functional gaps; source repaired native privacy/anomaly with remaining restored-placement proof external. See docs/REVIEW-40-CROSS-PLAN-v1.4.37-R33.md.
 
 **File 14 v1.4.35 may only claim a status** supported by exact-source CI and separately accepted staging/live deployment. Current source has not closed owner registry #19 or full auto-restore #22.
 
