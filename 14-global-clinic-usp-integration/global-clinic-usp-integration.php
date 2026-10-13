@@ -33,6 +33,7 @@ $gcu_files = array(
 	'includes/class-gcu-hardening.php',
 	'includes/class-gcu-integrity.php',
 	'includes/class-gcu-future-policy.php',
+	'includes/class-gcu-experiment-baseline.php',
 	'includes/class-gcu-capabilities.php',
 	'includes/class-gcu-install.php',
 	'includes/class-gcu-repository.php',
