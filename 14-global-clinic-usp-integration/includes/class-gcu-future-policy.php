@@ -525,7 +525,9 @@ final class GCU_Future_Policy {
 	}
 
 	public static function experiment_baseline_restoration_ready( $experiment ) {
-		return class_exists( 'GCU_Experiment_Baseline' ) && GCU_Experiment_Baseline::ready( $experiment );
+		return ! get_option( 'gcu_experiment_serving_paused', 0 )
+			&& class_exists( 'GCU_Experiment_Baseline' )
+			&& GCU_Experiment_Baseline::ready( $experiment );
 	}
 
 
