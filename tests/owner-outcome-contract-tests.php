@@ -53,7 +53,7 @@ check_owner( null === GCU_Experiment_Baseline::placement_keys( array( array( 'la
 check_owner( null === GCU_Experiment_Baseline::placement_keys( array( array( 'placement_key'=>'Primary!' ), array( 'placement_key'=>'primary' ) ) ), 'Noncanonical placement identity must be rejected.' );
 // The detector only describes opt-in volume when both independent windows
 // meet minimum cohorts. It MUST NOT manufacture a linked conversion rate.
-$wpdb->rows = array( array( 'event_type' => 'File08.BookingStarted.v1', 'funnel_stage' => 'booking_started', 'current_count' => 11, 'previous_seven_days' => 140 ) );
+$wpdb->rows = array( array( 'event_type' => 'File08.BookingStarted.v1', 'funnel_stage' => 'booking_started', 'current_count' => 11, 'previous_seven_days' => 210 ) );
 $observed = GCU_Owner_Outcomes::observed_anomaly();
 check_owner( 'consented_owner_volume_observed' === $observed['status'], 'Mature owner-only cohort should permit independent volume analysis.' );
 check_owner( 'high' === $observed['severity'], 'A >=60% native-volume drop should register high severity.' );
