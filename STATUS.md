@@ -1,3 +1,15 @@
+# File14 v1.4.35 — R32 Owner-Origin Observation and Approved Baseline Source Candidate
+
+Repository source branch includes: File07 native rendered-directory hook; File09 native committed application-submission hook; File08 separately proposed postcommit owner booking hook; File14 consented, GPC-safe, unlinked, HMAC-pseudonymous owner-stage aggregates with >=10 suppression. These facts are not end-to-end user journeys or booking conversions inferred from clicks. File08 PR #21 is an independent owner repository gate; File01 owner-event registry acceptance remains unverified.
+
+F14-FUT-17: Founder approval captures a hashed private versioned placement baseline, activation verifies it again under transaction, and audited early-stop reconciles unchanged baselines. Unattributable placement drift is not overwritten; experiment serving is paused and manual review required. Therefore automatic restoration after a verified experiment-owned placement mutation has **not** been proven. Issue #22 must remain OPEN until provenance-linked placement changes and stage rollback are demonstrated.
+
+**Source version:** 1.4.35; **schema targets:** Base 10005 / Future 1 (no new table migration); **R32 ledger:** docs/REVIEW-20-CROSS-FILE-COMPLETION-v1.4.35-R32.md.
+
+**Repository HEAD:** independent exact PR and later merged HEAD. **Deployed Version, checksum, actual DB/wp_options/migration, staging and live:** UNVERIFIED. Issues #19/#22 remain external/acceptance blockers; no production resolution claim.
+
+---
+
 # File 14 Status — v1.4.34 R30 Canonical Record and Doctor Readiness Repository Candidate
 
 Exact-current-head rule: exact review/PR and separately fresh merged-main SHA require PHP7.4/8.3, regressions, fresh independent reviewers and deterministic artifact/SBOM. GitHub source CI never means WordPress deployed parity.
