@@ -4,7 +4,7 @@ Tags: clinic, doctors, conversion, accessibility, privacy, governance, trust, ex
 Requires at least: 6.6
 Tested up to: 7.0.1
 Requires PHP: 7.4
-Stable tag: 1.4.34
+Stable tag: 1.4.35
 License: GPLv2 or later
 
 Canonical File 14 implementation for approved Worldwide Clinic value-proposition content, ethical conversion journeys, claim governance, destination contracts, Future Conversion & Trust Intelligence and privacy-minimized measurement.
@@ -82,7 +82,7 @@ The File 14 surface includes complete File 14-owned American English, Urdu and A
 8. Obtain explicit Founder acceptance before production deployment.
 
 == Changelog ==
-= 1.4.34 =
+= 1.4.35 =
 * R30 new twenty frozen original File14/Three Central/related File07/08/09/25 requirement reviews. Governed Future record commands reject invalid explicit record IDs, status, supported locale and region instead of silently rewriting identity or state; public Doctor Readiness rejects malformed JSON/checkbox answers without granting medical or verification credentials. Negative/positive PHP and exact-source regressions. No source DB migration. Cross-owner outcome events (#19) and approved experiment baseline restoration (#22) still require verified companion/staging evidence; exact deployed state unverified.
 
 = 1.4.33 =
