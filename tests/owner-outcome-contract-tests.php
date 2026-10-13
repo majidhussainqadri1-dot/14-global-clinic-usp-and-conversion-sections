@@ -11,6 +11,8 @@ class GCU_Policy {
 class GCU_Privacy {
 	public static $gpc = false;
 	public static $low = false;
+	public static $sensitive = false;
+	public static function measurement_allowed() { return GCU_Policy::analytics_consent() && ! self::$gpc && ! self::$sensitive; }
 	public static function global_privacy_control_requested() { return self::$gpc; }
 	public static function low_bandwidth_requested() { return self::$low; }
 }
@@ -26,6 +28,10 @@ GCU_Policy::$consent = true; GCU_Privacy::$gpc = true;
 check_owner( ! GCU_Owner_Outcomes::consented(), 'GPC must deny event.' );
 GCU_Privacy::$gpc = false; GCU_Privacy::$low = true;
 check_owner( ! GCU_Owner_Outcomes::consented(), 'Low-data choice must deny optional measurement.' );
+GCU_Privacy::$low = false; GCU_Privacy::$sensitive = true;
+check_owner( ! GCU_Owner_Outcomes::consented(), 'A sensitive booking/onboarding path must fail closed despite opt-in.' );
+GCU_Privacy::$sensitive = false;
+check_owner( GCU_Owner_Outcomes::consented(), 'Nonsensitive opted-in owner route may record a bounded event.' );
 check_owner( GCU_Owner_Outcomes::reportable( 'File08.BookingStarted.v1', 'booking_started' ), 'Canonical booking fact should classify.' );
 check_owner( GCU_Owner_Outcomes::reportable( 'File09.ApplicationStarted.v1', 'application_started' ), 'Canonical onboarding fact should classify.' );
 check_owner( GCU_Owner_Outcomes::reportable( 'File07.DirectoryServed.v1', 'destination_served' ), 'Owner-served response should classify separately from browser-loaded.' );
