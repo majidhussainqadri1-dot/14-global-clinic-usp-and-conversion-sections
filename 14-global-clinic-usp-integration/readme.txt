@@ -83,6 +83,11 @@ The File 14 surface includes complete File 14-owned American English, Urdu and A
 
 == Changelog ==
 = 1.4.35 =
+* R32 bounded owner-stage observations using File07 native directory, File09 committed onboarding and File08 separately PR'd postcommit booking event. Source-only, opt-in/GPC/low-data protected, non-identifying HMAC-dedupe, minimum cohort 10 and no false completion scoring.
+* R32 F14-FUT-17 approved placement snapshots and CAS readiness; audited early-stop reconciliation. Ambiguous/mutated placements pause serving for manual review, never silently overwrite a possibly independent edit.
+* Cross-file event registry, real experiment-mutating restoration, staging/backup/restore and installed live parity remain unverified; Issues #19/#22 are NOT closed.
+
+= 1.4.35 =
 * R30 new twenty frozen original File14/Three Central/related File07/08/09/25 requirement reviews. Governed Future record commands reject invalid explicit record IDs, status, supported locale and region instead of silently rewriting identity or state; public Doctor Readiness rejects malformed JSON/checkbox answers without granting medical or verification credentials. Negative/positive PHP and exact-source regressions. No source DB migration. Cross-owner outcome events (#19) and approved experiment baseline restoration (#22) still require verified companion/staging evidence; exact deployed state unverified.
 
 = 1.4.33 =
