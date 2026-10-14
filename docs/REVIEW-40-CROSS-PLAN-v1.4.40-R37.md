@@ -5,8 +5,8 @@
 
 ## Mandatory numerical defect statement
 
-- **NEW, independently source-evidenced defects this R37 review:** **3**.
-- **New defects corrected in candidate source:** **3/3**; functional confirmation requires clean exact-PR and post-merge `main` CI.
+- **NEW defects this R37 review:** **5 total** — **3 safety-source defects** and **2 release-evidence version-marker defects identified by quality CI**.
+- **New defects corrected in candidate source and release documents:** **5/5** (3 runtime-source, 2 traceability/release-evidence metadata); final confirmation requires clean exact-PR and post-merge `main` CI.
 - **Prior known separately OPEN requirements:** **2** (GitHub Issues #19, #22). They are NOT counted as newly discovered.
 - **New confirmed live incidents:** **0**; no live diagnostic evidence was obtained.
 - **External blockers:** no approved real File01/07/08/09 event receipt acceptance; no provenance-bound File20/25 truly changed-placement atomic CAS restore; no deployed code checksum, actual DB/options/migrations, staging/production runtime logs and live re-test.
@@ -65,6 +65,10 @@ The approved specification has 16 `F14-FR-` Functional Requirements and 24 `F14-
 **R37-D02 — failed experiment list appeared empty** (F14-FUT-17, F14-NFR-003/006): A failed `get_results()` read of running experiments was changed to an empty array by `is_array($rows) ? $rows : array()`; early-stop returned zero successful stops. **Fix:** refuse to claim successful safety sweep if rows cannot be read; `gcu_experiment_running_list_failed` error and structured log.
 
 **R37-D03 — partial stop batch appeared clean** (F14-FUT-17, F14-NFR-003/006): A failed experiment lock, begin transaction, compare-and-swap update, audit write or commit `continue`d without being represented in the final count. **Fix:** count unsuccessful attempts; preserve each independent rollback/retry boundary; return `gcu_experiment_stop_batch_incomplete` and privacy-minimized counts of attempted failures and succeeded Stops for operator alert. Never log affected subject/experiment IDs.
+
+**R37-D04 — traceability current-version marker missing:** The existing `Second Review` exact-version release gate rejected a documentation heading that did not contain `Requirements Traceability — v1.4.40`. **Fix:** explicit current-version heading, historical ledgers preserved.
+
+**R37-D05 — release evidence candidate marker missing:** The existing `Review 80` release gate required both `v1.4.40` and `Software candidate: ` with the exact version in the current release evidence. **Fix:** added explicit candidate marker; no invented live evidence.
 
 ## Test coverage and remaining tasks
 
