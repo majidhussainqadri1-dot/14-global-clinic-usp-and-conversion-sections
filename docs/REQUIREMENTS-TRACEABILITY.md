@@ -1,6 +1,10 @@
-**File 14 v1.4.38 may only claim a status** proven by exact-source CI, owner-contract acceptance and independent deployed/runtime parity. R35 F14-FUT-16 now enforces safe experiments on actual Founder approval/run; root-cause audit and 40-lens evidence: `docs/REVIEW-40-CROSS-PLAN-v1.4.38-R35.md`. F14-FUT-17 changed-placement restore and F14-FR-011 owner-stage acceptance remain release blockers.
+**File 14 v1.4.39 may only claim a status** supported by exact PR/merged-source CI and separately verified WordPress runtime/deployment parity. R36: `docs/REVIEW-40-CROSS-PLAN-v1.4.39-R36.md`. F14-FUT-13/15 small subgroup presence leak and F14-FUT-14/17 missing stop-guard error signal source fixes; remaining #19/#22 acceptance blockers.
 
-Requirements Traceability — v1.4.38
+Requirements Traceability — v1.4.39
+
+**File 14 v1.4.39 may only claim a status** proven by exact-source CI, owner-contract acceptance and independent deployed/runtime parity. R35 F14-FUT-16 now enforces safe experiments on actual Founder approval/run; root-cause audit and 40-lens evidence: `docs/REVIEW-40-CROSS-PLAN-v1.4.39-R35.md`. F14-FUT-17 changed-placement restore and F14-FR-011 owner-stage acceptance remain release blockers.
+
+Requirements Traceability — v1.4.39
 
 **File 14 v1.4.37 may only claim a status** supported by exact-source CI and separately verified staging/live/owner-contract acceptance. R34 forty-iteration status: `docs/REVIEW-40-CROSS-PLAN-v1.4.37-R34.md`. F14-FUT-17 changed-placement atomic rollback remains unaccepted.
 
