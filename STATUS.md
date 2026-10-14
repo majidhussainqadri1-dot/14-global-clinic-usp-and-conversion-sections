@@ -1,6 +1,10 @@
-# File14 R35 v1.4.38 — Actual Founder Workflow Safety Gate
+# File14 R36 — Privacy Cohort & Experiment Guard Operations v1.4.39
 
-Software candidate: `1.4.38`; R35 evidence `docs/REVIEW-40-CROSS-PLAN-v1.4.38-R35.md`. Real approval/activation now enforces F14-FUT-16 experiment preflight; numeric-zero privacy/claim/accessibility controls reject, while valid zero-error ceiling remains usable; running activation requires F14-FUT-05 central business-policy parity. Issues #19/#22 still OPEN; actual DB, migration, staging and deployed/live state UNVERIFIED. Historical release notes below remain historical.
+Software candidate: `1.4.39`. R36 evidence: `docs/REVIEW-40-CROSS-PLAN-v1.4.39-R36.md`. Complete owner subgroup privacy suppression and stop-guard WP_Error propagation/alert fixes are source-coded and regression-tested. Owner event integration #19 and actual changed-placement restore #22 remain OPEN; deployed WordPress code, schema, options, migrations and staging/live are UNVERIFIED.
+
+# File14 R35 v1.4.39 — Actual Founder Workflow Safety Gate
+
+Software candidate: `1.4.39`; R35 evidence `docs/REVIEW-40-CROSS-PLAN-v1.4.39-R35.md`. Real approval/activation now enforces F14-FUT-16 experiment preflight; numeric-zero privacy/claim/accessibility controls reject, while valid zero-error ceiling remains usable; running activation requires F14-FUT-05 central business-policy parity. Issues #19/#22 still OPEN; actual DB, migration, staging and deployed/live state UNVERIFIED. Historical release notes below remain historical.
 
 # File14 R34 v1.4.37 — Iterative Forty-Review Source Candidate
 

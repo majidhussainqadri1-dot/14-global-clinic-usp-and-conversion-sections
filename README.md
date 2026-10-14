@@ -1,8 +1,14 @@
-Software candidate: `1.4.38`.
+Software candidate: `1.4.39`.
 
-# File14 v1.4.38 — Forty Review R35 Source Candidate
+# File14 R36 — Privacy-Safe Owner Cohorts and Fail-Closed Operational Stop Guard
 
-Actual Founder-approved experiment workflows must now enforce F14-FUT-16 preflight, not just the preview endpoint. Forty repeated source-review passes and forty behavioral preflight scenarios are in GitHub CI. See `docs/REVIEW-40-CROSS-PLAN-v1.4.38-R35.md`. **Issues #19/#22 and staging/live parity are still open; source green is not deployment acceptance.**
+R36 adds direct test coverage of 40 distinct privacy cohorts and 40 hourly stop guard failure/success cases; preserves forty repeated source-plan sweeps. `docs/REVIEW-40-CROSS-PLAN-v1.4.39-R36.md`. Exact deployed parity and File01/07/08/09/20/25 acceptance not established. Issue #19/#22 are open.
+
+Software candidate: `1.4.39`.
+
+# File14 v1.4.39 — Forty Review R35 Source Candidate
+
+Actual Founder-approved experiment workflows must now enforce F14-FUT-16 preflight, not just the preview endpoint. Forty repeated source-review passes and forty behavioral preflight scenarios are in GitHub CI. See `docs/REVIEW-40-CROSS-PLAN-v1.4.39-R35.md`. **Issues #19/#22 and staging/live parity are still open; source green is not deployment acceptance.**
 
 # File14 v1.4.37 R34 Source Review
 

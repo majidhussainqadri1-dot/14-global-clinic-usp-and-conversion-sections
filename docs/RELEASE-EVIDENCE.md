@@ -1,6 +1,10 @@
-# File14 R35 v1.4.38 — source candidate, not deployed truth
+# File14 R36 v1.4.39 — Source Evidence (Not Live)
 
-Software candidate: `1.4.38`. Forty repeated plan checks, forty existing lifecycle simulations, forty new real policy-workflow simulations. Deployed plugin checksum/version, WordPress DB/migrations, staging and Live are UNVERIFIED. Genuine changed-placement rollback and owner-origin registry/consent/attestation are unresolved (#22/#19).
+Software candidate: `1.4.39`; forty repeated plan source passes, forty privacy-group behavior tests and forty hourly stop-error behavior tests. File01 owner registry and full experiment modified-placement rollback remain unaccepted, as do staging and deployed DB/plugin parity.
+
+# File14 R35 v1.4.39 — source candidate, not deployed truth
+
+Software candidate: `1.4.39`. Forty repeated plan checks, forty existing lifecycle simulations, forty new real policy-workflow simulations. Deployed plugin checksum/version, WordPress DB/migrations, staging and Live are UNVERIFIED. Genuine changed-placement rollback and owner-origin registry/consent/attestation are unresolved (#22/#19).
 
 # File14 v1.4.37 R34 Source Candidate
 

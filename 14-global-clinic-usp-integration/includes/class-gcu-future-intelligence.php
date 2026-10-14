@@ -792,7 +792,8 @@ final class GCU_Future_Intelligence {
 
 	public static function early_stop_guard() {
 		if ( class_exists( 'GCU_Fifth_Review_Hardening' ) ) { return GCU_Fifth_Review_Hardening::transactional_early_stop_guard(); }
-		return 0;
+		GCU_Observability::log( 'error', 'experiment_stop_guard_missing', array() );
+		return new WP_Error( 'gcu_experiment_stop_guard_missing', __( 'The required experiment safety guard is unavailable.', 'global-clinic-usp-integration' ), array( 'status' => 503 ) );
 	}
 
 	public static function faq_gap_candidates() {
@@ -950,18 +951,30 @@ final class GCU_Future_Intelligence {
 		self::cleanup();
 	}
 
+	private static function checked_experiment_stop( $origin ) {
+		$result = self::early_stop_guard();
+		if ( is_wp_error( $result ) ) {
+			// Cron ignores return values; emit a low-cardinality alert as well.
+			// Never log patient, applicant, campaign or placement identifiers.
+			GCU_Observability::log( 'error', 'experiment_stop_guard_failed', array(
+				'origin' => $origin, 'code' => sanitize_key( $result->get_error_code() ),
+			) );
+		}
+		return $result;
+	}
+
 	public static function hourly_intelligence() {
 		$ready = self::runtime_ready();
 		if ( is_wp_error( $ready ) ) { return $ready; }
 		self::anomaly_detector();
-		self::early_stop_guard();
+		return self::checked_experiment_stop( 'hourly_intelligence' );
 	}
 
 	public static function business_policy_changed() {
 		$ready = self::runtime_ready();
 		if ( is_wp_error( $ready ) ) { return $ready; }
 		self::parity_status();
-		self::early_stop_guard();
+		return self::checked_experiment_stop( 'business_policy_changed' );
 	}
 
 	public static function cleanup() {
