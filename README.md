@@ -1,3 +1,7 @@
+# File14 v1.4.38 — Forty Review R35 Source Candidate
+
+Actual Founder-approved experiment workflows must now enforce F14-FUT-16 preflight, not just the preview endpoint. Forty repeated source-review passes and forty behavioral preflight scenarios are in GitHub CI. See `docs/REVIEW-40-CROSS-PLAN-v1.4.38-R35.md`. **Issues #19/#22 and staging/live parity are still open; source green is not deployment acceptance.**
+
 # File14 v1.4.37 R34 Source Review
 
 This release candidate includes forty repeated source review cycles and forty independently parameterized simulated lifecycle tests. See `docs/REVIEW-40-CROSS-PLAN-v1.4.37-R34.md`. **Source CI is not live parity.** Real restored-placement rollback remains blocked.
