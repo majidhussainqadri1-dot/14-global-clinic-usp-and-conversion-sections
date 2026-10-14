@@ -1,3 +1,9 @@
+Software candidate: `1.4.40`.
+
+# File14 R37 — Fail-Closed Experiment Guardrail Database Operations
+
+Three NEW source defects repaired: complaint count query failure, running experiments query failure, partially failed stop batch. Exact cross-plan 40-review ledger: `docs/REVIEW-40-CROSS-PLAN-v1.4.40-R37.md`. Forty added adversarial DB/transaction scenario tests plus existing forty-fold plan audits. Issue #19 and #22 remain OPEN and not live verified. Historic release notes below follow.
+
 Software candidate: `1.4.39`.
 
 # File14 R36 — Privacy-Safe Owner Cohorts and Fail-Closed Operational Stop Guard
