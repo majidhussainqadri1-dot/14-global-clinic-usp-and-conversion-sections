@@ -1,3 +1,7 @@
+# File14 R37 — Experimental Guardrail DB Failure Integrity v1.4.40
+
+Software candidate: `1.4.40`. New source defects **3**, corrected in branch **3**, final CI and post-merge evidence recorded in `docs/REVIEW-40-CROSS-PLAN-v1.4.40-R37.md`. Historical known blockers **2**: owner File01/07/08/09 events Issue #19 and real File20/25 changed-placement rollback Issue #22. No staging/live/deployed checksum, actual DB version or migration parity proof. Historic release log below is not the current deployed truth.
+
 # File14 R36 — Privacy Cohort & Experiment Guard Operations v1.4.39
 
 Software candidate: `1.4.39`. R36 evidence: `docs/REVIEW-40-CROSS-PLAN-v1.4.39-R36.md`. Complete owner subgroup privacy suppression and stop-guard WP_Error propagation/alert fixes are source-coded and regression-tested. Owner event integration #19 and actual changed-placement restore #22 remain OPEN; deployed WordPress code, schema, options, migrations and staging/live are UNVERIFIED.

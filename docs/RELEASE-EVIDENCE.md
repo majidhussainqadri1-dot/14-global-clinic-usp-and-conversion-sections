@@ -1,3 +1,7 @@
+# File14 R37 v1.4.40 — Source Candidate, NOT live deployment evidence
+
+Three new source defects fixed with forty adversarial SQL/stop scenarios; forty repeated plan-source reviews preserved. No actual WordPress deployment checksum, database version, migration state, integration staging approval or live retest evidence. See `docs/REVIEW-40-CROSS-PLAN-v1.4.40-R37.md`; historical sections below must not be mistaken for current live truth.
+
 # File14 R36 v1.4.39 — Source Evidence (Not Live)
 
 Software candidate: `1.4.39`; forty repeated plan source passes, forty privacy-group behavior tests and forty hourly stop-error behavior tests. File01 owner registry and full experiment modified-placement rollback remain unaccepted, as do staging and deployed DB/plugin parity.
