@@ -19,6 +19,7 @@ class WP_Error {
 }
 class R37DB {
     public $mode = 0;
+    public $audit_failure = true;
     public $reads = array();
     public function get_var( $sql ) {
         $this->reads[] = $sql;
@@ -49,10 +50,10 @@ class R37Repository {
     public $audits = 0;
     public function begin_owned_transaction() { global $wpdb; return 7 !== $wpdb->mode; }
     public function rollback_owned_transaction() { return true; }
-    public function commit_owned_transaction() { global $wpdb; return 9 !== $wpdb->mode; }
+    public function commit_owned_transaction() { global $wpdb; return 9 !== $wpdb->mode || $wpdb->audit_failure; }
     public function audit( $action, $type, $id, $purpose, $reason, $before, $after ) {
         global $wpdb;
-        if ( 9 === $wpdb->mode ) { $this->audits++; return false; }
+        if ( 9 === $wpdb->mode && $wpdb->audit_failure ) { $this->audits++; return false; }
         $this->audits++;
         return true;
     }
@@ -98,6 +99,7 @@ $expected = array(
 for ( $round = 1; $round <= 40; $round++ ) {
     $mode = ( $round - 1 ) % 10;
     $wpdb->mode = $mode;
+    $wpdb->audit_failure = ( (int) floor( ( $round - 1 ) / 10 ) % 2 ) === 0;
     $wpdb->reads = array();
     GCU_Plugin::instance()->repo = new R37Repository();
     GCU_Observability::$logs = array();
