@@ -228,9 +228,14 @@ final class GCU_Fifth_Review_Hardening {
 
 		global $wpdb;
 		$future_tables = GCU_Future_Intelligence::tables();
-		$open_reports = (int) $wpdb->get_var(
+		$open_reports_result = $wpdb->get_var(
 			"SELECT COUNT(*) FROM {$future_tables['reports']} WHERE status IN ('open','reviewing') AND created_at>=DATE_SUB(UTC_TIMESTAMP(),INTERVAL 7 DAY)"
 		);
+		if ( false === $open_reports_result || null === $open_reports_result || ! is_numeric( $open_reports_result ) ) {
+			GCU_Observability::log( 'error', 'experiment_complaint_count_unverified', array() );
+			return new WP_Error( 'gcu_experiment_complaint_count_failed', __( 'Experiment complaint safety could not be verified.', 'global-clinic-usp-integration' ), array( 'status' => 503 ) );
+		}
+		$open_reports = (int) $open_reports_result;
 		$breach = empty( $parity['ok'] )
 			|| $destination_failure
 			|| $open_reports >= 5
@@ -254,14 +259,21 @@ final class GCU_Fifth_Review_Hardening {
 		$rows = $wpdb->get_results(
 			"SELECT * FROM {$tables['experiments']} WHERE status='running'{$expiration_filter} LIMIT 50", ARRAY_A
 		);
+		if ( ! is_array( $rows ) ) {
+			GCU_Observability::log( 'error', 'experiment_running_list_unverified', array() );
+			return new WP_Error( 'gcu_experiment_running_list_failed', __( 'Running experiment safety could not be verified.', 'global-clinic-usp-integration' ), array( 'status' => 503 ) );
+		}
 		$count = 0;
-		foreach ( is_array( $rows ) ? $rows : array() as $row ) {
+		$incomplete = 0;
+		foreach ( $rows as $row ) {
 			$lock = GCU_Hardening::acquire_db_lock( 'workflow:experiment:' . $row['public_id'], 3 );
 			if ( ! $lock ) {
+				$incomplete++;
 				continue;
 			}
 			try {
 				if ( ! GCU_Plugin::instance()->repository()->begin_owned_transaction() ) {
+					$incomplete++;
 					continue;
 				}
 				$updated = $wpdb->query(
@@ -273,6 +285,7 @@ final class GCU_Fifth_Review_Hardening {
 					)
 				);
 				if ( 1 !== $updated ) {
+					$incomplete++;
 					GCU_Plugin::instance()->repository()->rollback_owned_transaction();
 					continue;
 				}
@@ -287,10 +300,12 @@ final class GCU_Fifth_Review_Hardening {
 					array( 'status' => 'stopped', 'row_version' => (int) $row['row_version'] + 1, 'baseline_reconciliation' => $baseline_result )
 				);
 				if ( false === $audit ) {
+					$incomplete++;
 					GCU_Plugin::instance()->repository()->rollback_owned_transaction();
 					continue;
 				}
 				if ( ! GCU_Plugin::instance()->repository()->commit_owned_transaction() ) {
+					$incomplete++;
 					GCU_Plugin::instance()->repository()->rollback_owned_transaction();
 					continue;
 				}
@@ -309,6 +324,12 @@ final class GCU_Fifth_Review_Hardening {
 			} finally {
 				GCU_Hardening::release_db_lock( $lock );
 			}
+		}
+		if ( $incomplete > 0 ) {
+			// A partially stopped batch is NOT a clean safety sweep. The next
+			// scheduled run can retry; do not log individual experiment IDs.
+			GCU_Observability::log( 'error', 'experiment_stop_batch_incomplete', array( 'failed_count' => $incomplete, 'stopped_count' => $count ) );
+			return new WP_Error( 'gcu_experiment_stop_batch_incomplete', __( 'Some running experiments could not be stopped safely; operator review is required.', 'global-clinic-usp-integration' ), array( 'status' => 503 ) );
 		}
 		return $count;
 	}
