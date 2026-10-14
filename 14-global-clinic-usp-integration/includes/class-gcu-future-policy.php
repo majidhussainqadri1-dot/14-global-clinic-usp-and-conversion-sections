@@ -459,6 +459,12 @@ final class GCU_Future_Policy {
 			$valid = true === $value
 				|| ( is_numeric( $value ) && ! is_bool( $value ) && (float) $value >= 0 && is_finite( (float) $value ) )
 				|| ( is_string( $value ) && '' !== trim( $value ) && ! in_array( strtolower( trim( $value ) ), array( 'false', 'off', 'no', 'none', 'disabled', 'null' ), true ) );
+			// Zero is a legitimate *maximum error/complaint threshold* but
+			// cannot count as an enabled claim, privacy or accessibility guard.
+			if ( in_array( $key, array( 'claim_integrity', 'privacy', 'accessibility' ), true )
+				&& is_numeric( $value ) && (float) $value <= 0 ) {
+				$valid = false;
+			}
 			if ( ! $valid ) {
 				$flags[] = 'invalid_guardrail:' . $key;
 			}

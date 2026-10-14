@@ -4,7 +4,7 @@ Tags: clinic, doctors, conversion, accessibility, privacy, governance, trust, ex
 Requires at least: 6.6
 Tested up to: 7.0.1
 Requires PHP: 7.4
-Stable tag: 1.4.37
+Stable tag: 1.4.38
 License: GPLv2 or later
 
 Canonical File 14 implementation for approved Worldwide Clinic value-proposition content, ethical conversion journeys, claim governance, destination contracts, Future Conversion & Trust Intelligence and privacy-minimized measurement.
@@ -83,17 +83,23 @@ The File 14 surface includes complete File 14-owned American English, Urdu and A
 
 == Changelog ==
 
-= 1.4.37 =
+= 1.4.38 =
+* R35 forty-fold approved-plan source checks plus forty real policy/approval/activation simulation cases.
+* Founder experiment approval and run enforce mandatory FUT16 preflight and FUT05 central business-policy parity; zero-valued core privacy/claim/accessibility protections are rejected, legitimate zero-error guardrails allowed.
+* File01/07/08/09 owner acceptance and actual changed-placement restoration, staging and live parity are still unverified; do not claim completion.
+
+
+= 1.4.38 =
 * R34 40 repeated plan-source reviews, 40 varied experiment-lifecycle regression scenarios.
 * Fail-closed global paused experiments (including copy-only), expire running experiments on schedule, record exact start, share owner workflow locks and audit manual-stop baseline reconciliation.
 * Safe baseline rollback for actually changed placement rows, File01 owner receipt acceptance, staging and live deployment remain unverified.
 
-= 1.4.37 =
+= 1.4.38 =
 * R32 bounded owner-stage observations using File07 native directory, File09 committed onboarding and File08 separately PR'd postcommit booking event. Source-only, opt-in/GPC/low-data protected, non-identifying HMAC-dedupe, minimum cohort 10 and no false completion scoring.
 * R32 F14-FUT-17 approved placement snapshots and CAS readiness; audited early-stop reconciliation. Ambiguous/mutated placements pause serving for manual review, never silently overwrite a possibly independent edit.
 * Cross-file event registry, real experiment-mutating restoration, staging/backup/restore and installed live parity remain unverified; Issues #19/#22 are NOT closed.
 
-= 1.4.37 =
+= 1.4.38 =
 * R30 new twenty frozen original File14/Three Central/related File07/08/09/25 requirement reviews. Governed Future record commands reject invalid explicit record IDs, status, supported locale and region instead of silently rewriting identity or state; public Doctor Readiness rejects malformed JSON/checkbox answers without granting medical or verification credentials. Negative/positive PHP and exact-source regressions. No source DB migration. Cross-owner outcome events (#19) and approved experiment baseline restoration (#22) still require verified companion/staging evidence; exact deployed state unverified.
 
 = 1.4.33 =

@@ -1,3 +1,7 @@
+# File14 R35 v1.4.38 — source candidate, not deployed truth
+
+Software candidate: `1.4.38`. Forty repeated plan checks, forty existing lifecycle simulations, forty new real policy-workflow simulations. Deployed plugin checksum/version, WordPress DB/migrations, staging and Live are UNVERIFIED. Genuine changed-placement rollback and owner-origin registry/consent/attestation are unresolved (#22/#19).
+
 # File14 v1.4.37 R34 Source Candidate
 
 Software candidate: `1.4.37`. R34 forty source-review repeats plus forty simulated lifecycle scenarios; File14 F14-FUT-17 real mutated-placement restore, owner registry acceptance, staging/WordPress DB and live deployment parity remain unverified. No live-fix or Operational claim is authorized.

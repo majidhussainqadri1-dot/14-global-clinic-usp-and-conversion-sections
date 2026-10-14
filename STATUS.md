@@ -1,3 +1,7 @@
+# File14 R35 v1.4.38 — Actual Founder Workflow Safety Gate
+
+Software candidate: `1.4.38`; R35 evidence `docs/REVIEW-40-CROSS-PLAN-v1.4.38-R35.md`. Real approval/activation now enforces F14-FUT-16 experiment preflight; numeric-zero privacy/claim/accessibility controls reject, while valid zero-error ceiling remains usable; running activation requires F14-FUT-05 central business-policy parity. Issues #19/#22 still OPEN; actual DB, migration, staging and deployed/live state UNVERIFIED. Historical release notes below remain historical.
+
 # File14 R34 v1.4.37 — Iterative Forty-Review Source Candidate
 
 Software candidate: `1.4.37`. Sources and replay evidence: `docs/REVIEW-40-CROSS-PLAN-v1.4.37-R34.md`. Corrected: global experiment pause for all variants, expiration stop without false safety-breach dependency, identical workflow locks, manual-stop baseline reconciliation, actual experiment start timestamp. **F14-FUT-17 changed-placement rollback is not fully implemented or staging accepted.** Owner consent/event registry and live parity also unverified.
