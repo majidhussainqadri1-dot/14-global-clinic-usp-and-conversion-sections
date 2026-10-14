@@ -165,14 +165,22 @@ final class GCU_Owner_Outcomes {
 		} ) );
 		$total = array_sum( array_map( static function ( $row ) { return (int) $row['total']; }, $valid ) );
 		$items = array();
-		if ( $total >= 10 ) {
+		$restricted = $total < GCU_Future_Policy::MIN_COHORT;
+		if ( ! $restricted ) {
 			foreach ( $valid as $row ) {
 				$n = (int) $row['total'];
+				// A null count alongside an owner event/stage name still exposes
+				// the presence of a rare applicant or appointment subgroup.
+				// Suppress the entire subgroup, including its category label.
+				if ( $n < GCU_Future_Policy::MIN_COHORT ) {
+					$restricted = true;
+					continue;
+				}
 				$items[] = array( 'stage' => $row['funnel_stage'], 'owner_contract' => $row['event_type'],
-					'count' => $n >= 10 ? $n : null, 'suppressed' => $n < 10 );
+					'count' => $n, 'suppressed' => false );
 			}
 		}
-		return array( 'items' => $items, 'suppressed' => $total < 10,
+		return array( 'items' => $items, 'suppressed' => $restricted,
 			'minimum_cohort' => 10, 'linked_journey' => false,
 			'success_rate' => null, 'live_accepted' => false, 'contract' => self::CONTRACT );
 	}
