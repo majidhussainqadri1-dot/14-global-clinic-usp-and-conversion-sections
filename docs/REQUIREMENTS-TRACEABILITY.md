@@ -2,6 +2,8 @@
 
 Requirements Traceability — v1.4.40
 
+File 14 v1.4.40 may only claim a status that is independently supported by source CI, staging acceptance and verified deployed artifact / database parity. Source-only candidate remains provisional.
+
 F14-FUT-14 and F14-FUT-17: three fail-closed source defects fixed. R37 forty-review requirements report `docs/REVIEW-40-CROSS-PLAN-v1.4.40-R37.md`; prior ledgers remain historical. Issue #19 File01/07/08/09 owner attestation and Issue #22 File20/25 real changed-placement restoration are pending. Staging and live verification unproven.
 
 **File 14 v1.4.39 may only claim a status** supported by exact PR/merged-source CI and separately verified WordPress runtime/deployment parity. R36: `docs/REVIEW-40-CROSS-PLAN-v1.4.39-R36.md`. F14-FUT-13/15 small subgroup presence leak and F14-FUT-14/17 missing stop-guard error signal source fixes; remaining #19/#22 acceptance blockers.
