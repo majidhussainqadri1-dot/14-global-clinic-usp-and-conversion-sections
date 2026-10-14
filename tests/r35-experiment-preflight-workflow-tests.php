@@ -37,6 +37,8 @@ $guards = array( 'claim_integrity' => true, 'privacy' => true, 'accessibility' =
 $valid = array(
     'variants' => json_encode( array( 'Review doctors', 'Read clinic information' ) ),
     'guardrails' => json_encode( $guards ),
+    'hypothesis' => 'Compare clarity of two approved clinic information descriptions',
+    'success_metric' => 'consented_aggregate_handoff_quality',
     'sample_policy' => 'consented adult aggregate sample',
     'privacy_policy' => 'opt-in aggregate only; never patient level',
     'status' => 'proposed', 'ends_at' => gmdate( 'Y-m-d H:i:s', time() + 2 * DAY_IN_SECONDS ),
