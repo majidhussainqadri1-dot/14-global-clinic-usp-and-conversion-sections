@@ -1,3 +1,11 @@
+## Current File14 R38 Source Candidate 1.4.41
+
+Requirements Traceability — v1.4.41
+
+File 14 v1.4.41 may only claim a status that is independently supported by source CI, staging acceptance and verified deployed artifact / database parity. Source-only candidate remains provisional.
+
+F14-FUT-17 R38: 2 new source defects fixed for stop backlog detection and expiry count/list disagreement; R38 forty-lens report `docs/REVIEW-40-CROSS-PLAN-v1.4.41-R38.md`. File07/08/09 owner completion (#19) and File20/25 changed-placement restoration (#22) still BLOCKED. Prior historical ledgers preserved below.
+
 ## Current File14 R37 Source Candidate 1.4.40
 
 Requirements Traceability — v1.4.40

@@ -1,3 +1,7 @@
+# File14 R38 — Verified Source Candidate v1.4.41
+
+Software candidate: `1.4.41`; Repository Candidate only. R38 **2 new runtime-source defects found and 2 fixed**; **1 nonproduction test-fixture expectation fixed**, separately counted. Cross-file requirements Issue #19 and #22 **still OPEN**. See `docs/REVIEW-40-CROSS-PLAN-v1.4.41-R38.md`; source CI cannot prove deployment, staging, DB migrations or live fix. Prior release notes below are historical.
+
 # File14 R37 — Experimental Guardrail DB Failure Integrity v1.4.40
 
 Software candidate: `1.4.40`. New defects **5 total** (3 safety source + 2 release metadata), corrected in branch **5**, final CI and post-merge evidence recorded in `docs/REVIEW-40-CROSS-PLAN-v1.4.40-R37.md`. Historical known blockers **2**: owner File01/07/08/09 events Issue #19 and real File20/25 changed-placement rollback Issue #22. No staging/live/deployed checksum, actual DB version or migration parity proof. Historic release log below is not the current deployed truth.

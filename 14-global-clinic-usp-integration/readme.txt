@@ -4,7 +4,7 @@ Tags: clinic, doctors, conversion, accessibility, privacy, governance, trust, ex
 Requires at least: 6.6
 Tested up to: 7.0.1
 Requires PHP: 7.4
-Stable tag: 1.4.40
+Stable tag: 1.4.41
 License: GPLv2 or later
 
 Canonical File 14 implementation for approved Worldwide Clinic value-proposition content, ethical conversion journeys, claim governance, destination contracts, Future Conversion & Trust Intelligence and privacy-minimized measurement.
@@ -82,6 +82,12 @@ The File 14 surface includes complete File 14-owned American English, Urdu and A
 8. Obtain explicit Founder acceptance before production deployment.
 
 == Changelog ==
+
+= 1.4.41 =
+* R38: experiment early-stop detects >50 running experiment backlog with LIMIT 51 sentinel; a clean stop is never falsely reported if the bounded batch was incomplete.
+* R38: expiry COUNT >0 conflicting with zero selected running experiments fails closed; untrusted/non-numeric expiry COUNT is rejected.
+* Adds forty direct method batch/SQL mismatch regression cases and forty repeated source-to-plan review cycles. Cross-module issue #19 and #22 remain open; no claim of verified WordPress Live deployment.
+
 
 = 1.4.40 =
 * R37: fail closed on unreadable seven-day complaint count and running-experiment list. Incomplete lock/transaction/CAS/audit/commit stops explicitly reported as incomplete, never successful.

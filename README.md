@@ -1,3 +1,9 @@
+Software candidate: `1.4.41`.
+
+# File14 R38 — Exact-Source Safety Backlog and Expiry Evidence Review
+
+Two new source defects corrected and tested: bounded experiment stop batch overflow and positive expiry COUNT followed by empty stop SELECT. Forty approved requirement lenses and 40 new mock-SQL scenario variants in `docs/REVIEW-40-CROSS-PLAN-v1.4.41-R38.md`. Important: owner origin #19 and actual changed-placement rollback #22 remain OPEN. No deployed/live parity evidence. Historical release notes below preserved.
+
 Software candidate: `1.4.40`.
 
 # File14 R37 — Fail-Closed Experiment Guardrail Database Operations

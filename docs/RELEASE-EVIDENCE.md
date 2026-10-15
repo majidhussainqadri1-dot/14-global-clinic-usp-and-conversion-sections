@@ -1,3 +1,9 @@
+# File14 R38 v1.4.41 — Repository Candidate; NOT a deployed release
+
+Software candidate: `1.4.41`. Corrected 2 runtime-source safety defects plus one test fixture. 
+
+Exact review/main SHA must be verified separately; fresh post-merge CI is required. No staged WordPress owner journeys or production deployment parity established. Deployed artifact checksum/version, actual DB/options/migration state and Live re-test UNKNOWN. See `docs/REVIEW-40-CROSS-PLAN-v1.4.41-R38.md`. Prior evidence retained as historical, not Live.
+
 # File14 R37 v1.4.40 — Source Candidate, NOT live deployment evidence
 
 Software candidate: `1.4.40`.
