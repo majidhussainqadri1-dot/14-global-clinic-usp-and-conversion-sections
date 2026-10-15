@@ -565,11 +565,21 @@ final class GCU_Future_Intelligence {
 				$issues[] = 'claim_stale:' . $key;
 			}
 		}
-		$blocks = $wpdb->get_results( "SELECT title,body,cta_label FROM {$t['blocks']} WHERE status='active' LIMIT 500", ARRAY_A );
-		foreach ( is_array( $blocks ) ? $blocks : array() as $block ) {
-			$scan = GCU_Future_Policy::dark_pattern_scan( implode( ' ', array( $block['title'], wp_strip_all_tags( $block['body'] ), $block['cta_label'] ) ) );
-			foreach ( $scan['flags'] as $flag ) {
-				$issues[] = 'active_copy:' . $flag;
+		// Fail closed if active copy cannot be inspected or exceeds the bounded
+		// review set. LIMIT 501 is a sentinel: scanning only 500 rows must never
+		// silently certify uninspected public copy as policy compliant.
+		$blocks = $wpdb->get_results( "SELECT title,body,cta_label FROM {$t['blocks']} WHERE status='active' LIMIT 501", ARRAY_A );
+		if ( ! is_array( $blocks ) ) {
+			$issues[] = 'active_copy_scan_unverified';
+		} else {
+			if ( count( $blocks ) > 500 ) {
+				$issues[] = 'active_copy_scan_limit_exceeded';
+			}
+			foreach ( array_slice( $blocks, 0, 500 ) as $block ) {
+				$scan = GCU_Future_Policy::dark_pattern_scan( implode( ' ', array( $block['title'], wp_strip_all_tags( $block['body'] ), $block['cta_label'] ) ) );
+				foreach ( $scan['flags'] as $flag ) {
+					$issues[] = 'active_copy:' . $flag;
+				}
 			}
 		}
 		$result = array( 'ok' => empty( $issues ), 'issues' => array_values( array_unique( $issues ) ), 'checked_at' => gmdate( 'c' ) );
