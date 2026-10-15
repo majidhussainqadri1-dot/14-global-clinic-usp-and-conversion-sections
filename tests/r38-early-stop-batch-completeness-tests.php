@@ -167,7 +167,7 @@ for ( $round=1; $round<=40; $round++ ) {
         && $expected_audits === GCU_Plugin::instance()->repo->audits
         && ( null === $expected_count || $result === $expected_count )
         && ( 4 !== $family || 0 === $wpdb->selection_count )
-        && ( 0 === $family || count( GCU_Observability::$logs ) > 0 )
+        && ( null === $expected_code || count( GCU_Observability::$logs ) > 0 )
         && ( 1 !== $family || ( isset($last['props']['backlog_detected']) && true === $last['props']['backlog_detected'] && 50 === $last['props']['stopped_count'] ) )
         && ( 2 !== $family || 0 === count( GCU_Observability::$logs ) );
     if ( ! $pass ) { $errors[] = 'Round ' . $round . ': got ' . ( $actual_code ?: var_export($result,true) ) . ' after ' . GCU_Plugin::instance()->repo->audits . ' audits'; }
