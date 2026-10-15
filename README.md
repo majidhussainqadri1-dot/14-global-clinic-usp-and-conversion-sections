@@ -1,3 +1,9 @@
+Software candidate: `1.4.42`.
+
+# File14 R39 — Bounded Truthful Public Copy Parity
+
+After the approved 40-requirement File14/central/owner-contract source review, two local defects were corrected: active-copy database read failure must not count as a clean parity check; 501+ active copy blocks must not be silently certified after scanning only 500. New R39 40-case mocked-WPDB direct-method test + existing 40×40 source sweeps under PHP7.4/8.3 and independent fresh CI. Source ledger: `docs/REVIEW-40-CROSS-PLAN-v1.4.42-R39.md`. **Issues #19 and #22 remain OPEN.** Deployment/version/DB/migration/staging/live states are unverified; do not claim live resolution.
+
 Software candidate: `1.4.41`.
 
 # File14 R38 — Exact-Source Safety Backlog and Expiry Evidence Review
