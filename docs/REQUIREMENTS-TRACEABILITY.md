@@ -1,5 +1,7 @@
 ## Current File14 R39 Source Candidate 1.4.42
 
+Requirements Traceability — v1.4.42
+
 Approved FR001–016/FUT01–24 source requirements are listed individually in `docs/REVIEW-40-CROSS-PLAN-v1.4.42-R39.md`. F14-FUT-05/FUT-08 live-copy policy parity now rejects failed SQL reads and a 501st active block sentinel instead of treating a partial/failed scan as complete. R39 adds 40 direct method mocks and the existing 40-round × 40-plan source markers; all source result claims are conditional on exact candidate and post-merge CI. Issue #19 owner-attested conversion and Issue #22 provenance-safe placement restoration remain BLOCKED. No staging/live acceptance or deployed DB parity proof.
 
 ## Current File14 R38 Source Candidate 1.4.41
