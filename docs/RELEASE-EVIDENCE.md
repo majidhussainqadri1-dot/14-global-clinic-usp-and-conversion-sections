@@ -1,3 +1,9 @@
+Software candidate: `1.4.43`.
+
+# File14 R40 v1.4.43 — Repository Candidate, pending exact evidence
+
+Review: `docs/REVIEW-40-CROSS-PLAN-v1.4.43-R40.md`. Exact review/main SHA, fresh post-merge PHP7.4/8.3 CI, separate post-code reviews and deterministic ZIP/SBOM mandatory; do not equate prior green CI or source code with deployment. New FUT04 safe-failure corrections and 40 parameterized source method cases proposed. Issues #19/#22 remain release blockers. WordPress deployed source/checksum, DB, migrations, staging and live verification NOT KNOWN.
+
 Software candidate: `1.4.42`.
 
 # File14 R39 v1.4.42 — Source/CI Evidence (NOT Production Acceptance)

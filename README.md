@@ -1,3 +1,9 @@
+Software candidate: `1.4.43`.
+
+# File14 R40 — Fail-Closed Claim Freshness Governance
+
+40 approved F14 FR/FUT requirement lenses inspected before runtime corrections; 2 local defects corrected in `GCU_Future_Intelligence::claim_freshness_sentinel()` and `daily_governance()`: (1) DB failure or excess stale backlog silently passed, (2) lock/transaction/history/CAS/audit/commit failures silently skipped and daily cron ignored incomplete result. 40 real method SQL-mocked cases added and 40×40 original plan source checks retained. Evidence: `docs/REVIEW-40-CROSS-PLAN-v1.4.43-R40.md`. Open owner obligations #19/#22 and production parity NOT VERIFIED.
+
 Software candidate: `1.4.42`.
 
 # File14 R39 — Bounded Truthful Public Copy Parity

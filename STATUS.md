@@ -1,3 +1,9 @@
+Software candidate: `1.4.43`.
+
+# File14 R40 — Repository Candidate v1.4.43 (not live accepted)
+
+Frozen source baseline `077e8cd194a2461594b9644039e922731fcdb1c7`. Forty source requirement lenses, 2 local stale-claim governance defects corrected subject to exact PR/merged-main QA, 40 additional real-method SQL-mocked scenarios; source schema Base 10005 / Future 1 unchanged. File01/07/08/09 owner event #19 and File20/25 changed-placement rollback #22 remain open. Deployed plugin/hash, actual DB/wp_options/migration, staging and live NOT VERIFIED. See `docs/REVIEW-40-CROSS-PLAN-v1.4.43-R40.md`. No `Staging-Accepted`, `Live-Deployed` or `Operational` claim.
+
 Software candidate: `1.4.42`.
 
 # File14 R39 — Source Candidate v1.4.42 (NOT LIVE VERIFIED)

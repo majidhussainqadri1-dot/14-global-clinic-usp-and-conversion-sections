@@ -1,3 +1,9 @@
+## File14 R40 Current Source Candidate 1.4.43
+
+Requirements Traceability — v1.4.43
+
+File 14 v1.4.43 may only claim a status independently supported by exact source/CI, staging acceptance, and installed deployed artifact + DB parity. 40 approved FR/FUT source checks and new R40 defects documented in `docs/REVIEW-40-CROSS-PLAN-v1.4.43-R40.md`. The FUT04 freshness sentinel detects failed DB read/100+ backlog and partial claim-processing failures; daily governance propagates them. Issues #19 and #22 unresolved. Not a live result.
+
 ## Current File14 R39 Source Candidate 1.4.42
 
 Requirements Traceability — v1.4.42

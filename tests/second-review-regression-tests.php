@@ -24,7 +24,7 @@ sr_check( false !== strpos( $future, "'sample_count' => GCU_Future_Policy::cohor
 sr_check( false !== strpos( $future, "'current_sample' => null" ) && false !== strpos( $future, "'baseline_sample' => null" ), 'Anomaly detector leaks sub-threshold cohort counts.' );
 sr_check( false !== strpos( $review, 'get_headers()' ) && false !== strpos( $review, "empty( \$headers['Cache-Control'] )" ), 'REST hardening overwrites explicit endpoint cache policy.' );
 sr_check( ! file_exists( $root . '/.github/workflows/file14-one-shot-release-gate.yml' ), 'Obsolete v1.4.0/PR-3 release automation remains.' );
-sr_check( false !== strpos( $trace, 'Requirements Traceability — v1.4.42' ) && false !== strpos( $trace, 'R32 — 2026-10-13' ), 'Traceability current-version truth is stale.' );
+sr_check( false !== strpos( $trace, 'Requirements Traceability — v1.4.43' ) && false !== strpos( $trace, 'R32 — 2026-10-13' ), 'Traceability current-version truth is stale.' );
 sr_check( false !== strpos( $status, 'v1.4.34 R30 Canonical Record and Doctor Readiness Repository Candidate' ) && false !== strpos( $status, 'Exact-current-head rule' ) && false === strpos( $status, 'Corrective Candidate — Merged' ), 'Status wording remains contradictory.' );
 sr_check( false !== strpos( $release, 'v1.4.34 R30 Candidate' ) && false !== strpos( $release, 'exact review/main SHA' ) && false !== strpos( $release, 'fresh post-merge' ), 'Release evidence does not enforce current exact-head/post-merge truth.' );
 

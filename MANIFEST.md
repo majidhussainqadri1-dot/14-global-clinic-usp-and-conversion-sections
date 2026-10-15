@@ -1,8 +1,11 @@
-# File 14 v1.4.42 Source Manifest
+# File 14 v1.4.43 Source Manifest
 
 Canonical plugin folder: `14-global-clinic-usp-integration`
 
 Contents:
+- R40 fail-closed stale-claim database, >100 backlog and incomplete transaction guard with daily propagation
+- R40 forty actual-method negative/edge tests and forty repeated source-plan reviews
+- Owner #19/#22 and WordPress staging/live parity remain OPEN/UNVERIFIED
 - R39 fail-closed active-copy policy parity: failed DB read and 501-row overflow sentinel
 - R39 forty direct-method negative/boundary cases plus 40 repeated approved-plan source review passes
 - Release status: repository source candidate only; actual deployment, DB/migration and staging/live unverified; open owner Issues #19/#22 remain blocking
