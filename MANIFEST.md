@@ -1,8 +1,11 @@
-# File 14 v1.4.34 Manifest
+# File 14 v1.4.42 Source Manifest
 
 Canonical plugin folder: `14-global-clinic-usp-integration`
 
 Contents:
+- R39 fail-closed active-copy policy parity: failed DB read and 501-row overflow sentinel
+- R39 forty direct-method negative/boundary cases plus 40 repeated approved-plan source review passes
+- Release status: repository source candidate only; actual deployment, DB/migration and staging/live unverified; open owner Issues #19/#22 remain blocking
 - R19 strict legacy REST reporting-window and mutation validation, and non-text AI/UUID guard hardening
 - bootstrap and GCU classes
 - native schema/migration/rollback
