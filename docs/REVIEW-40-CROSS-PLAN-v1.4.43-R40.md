@@ -60,3 +60,26 @@ Finish this 40-requirement inspection before editing runtime. Scope local fix to
 
 ## Separate release-state ledger
 Repository HEAD: pre-edit freeze above; Candidate source target 1.4.43; Deployed version: UNVERIFIED; DB version: UNVERIFIED; Migration: UNVERIFIED; Live verification: NOT DONE.
+
+## Post-review R40 corrective batch — tracked separately from the pre-code ledger
+
+**Code correction AFTER all 40 plan lenses were inspected (not at the point each defect was discovered):**
+
+- **R40-D01 FIXED at source:** explicit `gcu_claim_freshness_read_failed` on null/false SQL read. Ordered `LIMIT 101` permits at most 100 bounded changes while reporting a nonzero unprocessed backlog through `gcu_claim_freshness_batch_incomplete`. The result cannot silently certify the complete stale-claim inventory.
+- **R40-D02 FIXED at source:** skipped lock, begin transaction, history insert, optimistic CAS, audit or commit counts toward `failed_count`; the method returns `WP_Error` after the sweep if any work remained incomplete. `daily_governance()` now directly checks that error, records only a low-cardinality code and stops the daily process rather than silently treating failed claim governance as completed.
+
+**Evidence from exact PR HEAD `dd0331d0a3528154a11f7315b2120841005a1cf9`:** CI successful on PHP 7.4 and 8.3 with full quality suite, 40 sequential source review rounds × 40 approved markers per round, and 40 direct SQL/transaction-mocked FUT-04 method scenarios. Both independent fresh source reviews and deterministic ZIP/SBOM succeeded. GitHub actions are source/package evidence, not a live WordPress re-test.
+
+**Per-review defect findings in these 40 requirement lenses:** requirement 20 (`F14-FUT-04`) contained the **two local source defects**, now corrected in proposed 1.4.43. Requirement 11 (`F14-FR-011`) remains blocked by preexisting external owner Issue #19. Requirement 33 (`F14-FUT-17`) remains blocked by preexisting changed-placement owner Issue #22. Other 37 lenses had an examined source-level marker/boundary, **not 37 verified live E2E passes**. No other new local defect has been evidenced in this scoped review. No inference that the 2 external gaps are resolved.
+
+### R40 numeric summary
+| Classification | Count | Status |
+|---|---:|---|
+| Scoped plan requirement lenses | 40 | Inspected |
+| Freshly found local source defects | 2 | 2 corrected in PR |
+| Newly added direct-method SQL-mock test cases | 40 | 40 passed exact PR QA |
+| Repeat source-plan sweeps | 40 | Passed exact PR QA |
+| Preexisting cross-file acceptance blockers | 2 | Still OPEN |
+| Verified actual WordPress/staging/live deployments | 0 | Not performed |
+
+**Release gates:** review branch/PR green; approval/merge into main requires independent **new HEAD** quality + 2 Fresh Reviews + package/SBOM, and separately the actual deployed plugin/version/hash, actual DB columns/rows/options, migration state, staging and Live validation. Thus R40 source correction is not evidence of a production fix.
