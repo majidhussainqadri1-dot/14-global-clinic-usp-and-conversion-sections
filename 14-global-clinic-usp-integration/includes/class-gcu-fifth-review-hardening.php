@@ -245,24 +245,36 @@ final class GCU_Fifth_Review_Hardening {
 		// when every trust/destination/complaint signal remains healthy. Expiry
 		// must trigger an audited stop rather than silently extending exposure.
 		$expired_where = "(ends_at IS NULL OR ends_at<=UTC_TIMESTAMP())";
+		$expired_count = null;
 		if ( ! $breach ) {
 			$expired_count = $wpdb->get_var(
 				"SELECT COUNT(*) FROM {$tables['experiments']} WHERE status='running' AND {$expired_where}"
 			);
-			if ( null === $expired_count || false === $expired_count ) {
+			if ( null === $expired_count || false === $expired_count || ! is_numeric( $expired_count ) || (float) $expired_count < 0 ) {
 				GCU_Observability::log( 'error', 'experiment_expiry_check_unverified', array() );
 				return new WP_Error( 'gcu_experiment_expiry_check_failed', __( 'Experiment window safety could not be verified.', 'global-clinic-usp-integration' ), array( 'status' => 503 ) );
 			}
 			if ( 0 === (int) $expired_count ) { return 0; }
 		}
 		$expiration_filter = $breach ? '' : " AND {$expired_where}";
+		// Read ONE extra row beyond the bounded 50-stop transaction workload.
+		// Without this sentinel, a trust breach with 51+ running experiments
+		// returns "50 stopped" even though the safety sweep is incomplete.
 		$rows = $wpdb->get_results(
-			"SELECT * FROM {$tables['experiments']} WHERE status='running'{$expiration_filter} LIMIT 50", ARRAY_A
+			"SELECT * FROM {$tables['experiments']} WHERE status='running'{$expiration_filter} LIMIT 51", ARRAY_A
 		);
 		if ( ! is_array( $rows ) ) {
 			GCU_Observability::log( 'error', 'experiment_running_list_unverified', array() );
 			return new WP_Error( 'gcu_experiment_running_list_failed', __( 'Running experiment safety could not be verified.', 'global-clinic-usp-integration' ), array( 'status' => 503 ) );
 		}
+		if ( ! $breach && (int) $expired_count > 0 && 0 === count( $rows ) ) {
+			// A positive DB count followed by an empty result is conflicting
+			// evidence (or a concurrent change), never proof of a clean stop.
+			GCU_Observability::log( 'error', 'experiment_expiry_list_mismatch', array() );
+			return new WP_Error( 'gcu_experiment_expiry_list_mismatch', __( 'Experiment expiry count and stop list disagreed; verification is required.', 'global-clinic-usp-integration' ), array( 'status' => 503 ) );
+		}
+		$backlog = count( $rows ) > 50;
+		if ( $backlog ) { $rows = array_slice( $rows, 0, 50 ); }
 		$count = 0;
 		$incomplete = 0;
 		foreach ( $rows as $row ) {
@@ -325,11 +337,15 @@ final class GCU_Fifth_Review_Hardening {
 				GCU_Hardening::release_db_lock( $lock );
 			}
 		}
-		if ( $incomplete > 0 ) {
-			// A partially stopped batch is NOT a clean safety sweep. The next
-			// scheduled run can retry; do not log individual experiment IDs.
-			GCU_Observability::log( 'error', 'experiment_stop_batch_incomplete', array( 'failed_count' => $incomplete, 'stopped_count' => $count ) );
-			return new WP_Error( 'gcu_experiment_stop_batch_incomplete', __( 'Some running experiments could not be stopped safely; operator review is required.', 'global-clinic-usp-integration' ), array( 'status' => 503 ) );
+		if ( $incomplete > 0 || $backlog ) {
+			// The 51st row proves at least one experiment was unprocessed.
+			// Report a bounded signal without any experiment or subject IDs.
+			GCU_Observability::log( 'error', 'experiment_stop_batch_incomplete', array(
+				'failed_count' => $incomplete,
+				'stopped_count' => $count,
+				'backlog_detected' => $backlog,
+			) );
+			return new WP_Error( 'gcu_experiment_stop_batch_incomplete', __( 'The running experiment stop batch was incomplete; operator review or another bounded stop sweep is required.', 'global-clinic-usp-integration' ), array( 'status' => 503 ) );
 		}
 		return $count;
 	}
