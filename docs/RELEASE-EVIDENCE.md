@@ -1,3 +1,9 @@
+Software candidate: `1.4.42`.
+
+# File14 R39 v1.4.42 — Source/CI Evidence (NOT Production Acceptance)
+
+Approved 40-requirement cross-plan scope: `docs/REVIEW-40-CROSS-PLAN-v1.4.42-R39.md`. New source changes reject failed or over-capacity active-copy parity scans and add forty negative/boundary SQL-mocked direct-method cases. Exact PR/merged-main PHP7.4/8.3, fresh reviews, deterministic ZIP/SBOM are mandatory proof gates; two owner/design blockers #19/#22 remain OPEN. Deployed plugin, actual DB/schema/migration, staging and Live status are UNKNOWN.
+
 # File14 R38 v1.4.41 — Repository Candidate; NOT a deployed release
 
 Software candidate: `1.4.41`. Corrected 2 runtime-source safety defects plus one test fixture. 
