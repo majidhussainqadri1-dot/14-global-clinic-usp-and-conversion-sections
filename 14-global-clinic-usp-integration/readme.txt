@@ -4,7 +4,7 @@ Tags: clinic, doctors, conversion, accessibility, privacy, governance, trust, ex
 Requires at least: 6.6
 Tested up to: 7.0.1
 Requires PHP: 7.4
-Stable tag: 1.4.42
+Stable tag: 1.4.43
 License: GPLv2 or later
 
 Canonical File 14 implementation for approved Worldwide Clinic value-proposition content, ethical conversion journeys, claim governance, destination contracts, Future Conversion & Trust Intelligence and privacy-minimized measurement.
@@ -82,6 +82,10 @@ The File 14 surface includes complete File 14-owned American English, Urdu and A
 8. Obtain explicit Founder acceptance before production deployment.
 
 == Changelog ==
+
+= 1.4.43 =
+* R40 Claim Freshness Sentinel now flags failed DB reads, stale-claim overflow beyond 100, and incomplete lock/transaction/history/CAS/audit/commit work instead of signaling false completion.
+* Daily Future governance propagates freshness failures with privacy-safe operational logging; 40 direct mocked-SQL negative/boundary cases added. Owner Issues #19/#22 and live parity remain open.
 
 = 1.4.42 =
 * R39 active-copy parity now fails closed on DB read failures and 501+ active blocks; no silent pass after a capped 500-row review.
