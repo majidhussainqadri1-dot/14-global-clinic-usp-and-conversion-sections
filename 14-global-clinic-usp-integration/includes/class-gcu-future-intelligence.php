@@ -598,15 +598,25 @@ final class GCU_Future_Intelligence {
 	public static function claim_freshness_sentinel() {
 		global $wpdb;
 		$t = GCU_Install::tables();
-		$rows = $wpdb->get_results( "SELECT * FROM {$t['claims']} WHERE status='active' AND ((review_due_at IS NOT NULL AND review_due_at<=UTC_TIMESTAMP()) OR (expires_at IS NOT NULL AND expires_at<=UTC_TIMESTAMP())) LIMIT 100", ARRAY_A );
+		// Inspect one extra row so the bounded daily sweep never reports a
+		// successful full check when stale claims remain beyond the first 100.
+		$rows = $wpdb->get_results( "SELECT * FROM {$t['claims']} WHERE status='active' AND ((review_due_at IS NOT NULL AND review_due_at<=UTC_TIMESTAMP()) OR (expires_at IS NOT NULL AND expires_at<=UTC_TIMESTAMP())) ORDER BY id ASC LIMIT 101", ARRAY_A );
+		if ( ! is_array( $rows ) ) {
+			GCU_Observability::log( 'error', 'claim_freshness_read_unverified', array() );
+			return new WP_Error( 'gcu_claim_freshness_read_failed', __( 'Claim freshness safety could not be verified.', 'global-clinic-usp-integration' ), array( 'status' => 503 ) );
+		}
+		$backlog = count( $rows ) > 100;
 		$count = 0;
-		foreach ( is_array( $rows ) ? $rows : array() as $row ) {
+		$incomplete = 0;
+		foreach ( array_slice( $rows, 0, 100 ) as $row ) {
 			$lock = GCU_Hardening::acquire_db_lock( 'future-claim:' . $row['claim_key'], 3 );
 			if ( ! $lock ) {
+				$incomplete++;
 				continue;
 			}
 			try {
 				if ( ! GCU_Plugin::instance()->repository()->begin_owned_transaction() ) {
+					$incomplete++;
 					continue;
 				}
 				$history = array(
@@ -616,11 +626,13 @@ final class GCU_Future_Intelligence {
 				);
 				$inserted = $wpdb->query( $wpdb->prepare( "INSERT IGNORE INTO {$t['claim_history']} (claim_key,row_version,status,claim_hash,reason,snapshot,actor_id,created_at) VALUES (%s,%d,%s,%s,%s,%s,%d,%s)", $history['claim_key'], $history['row_version'], $history['status'], $history['claim_hash'], $history['reason'], $history['snapshot'], 0, $history['created_at'] ) );
 				if ( false === $inserted ) {
+					$incomplete++;
 					GCU_Plugin::instance()->repository()->rollback_owned_transaction();
 					continue;
 				}
 				$done = $wpdb->query( $wpdb->prepare( "UPDATE {$t['claims']} SET status='review_required',is_public=0,row_version=row_version+1,updated_at=%s WHERE id=%d AND row_version=%d AND status='active'", current_time( 'mysql', true ), (int) $row['id'], (int) $row['row_version'] ) );
 				if ( 1 !== $done || false === GCU_Plugin::instance()->repository()->audit( 'claim_freshness_blocked', 'claim', $row['claim_key'], 'claim_governance', 'Review due or expiry reached', $row, array( 'status' => 'review_required', 'is_public' => 0 ) ) || ! GCU_Plugin::instance()->repository()->commit_owned_transaction() ) {
+					$incomplete++;
 					GCU_Plugin::instance()->repository()->rollback_owned_transaction();
 					continue;
 				}
@@ -628,6 +640,14 @@ final class GCU_Future_Intelligence {
 			} finally {
 				GCU_Hardening::release_db_lock( $lock );
 			}
+		}
+		if ( $incomplete > 0 || $backlog ) {
+			GCU_Observability::log( 'error', 'claim_freshness_batch_incomplete', array(
+				'blocked_count' => $count,
+				'failed_count' => $incomplete,
+				'backlog_detected' => $backlog,
+			) );
+			return new WP_Error( 'gcu_claim_freshness_batch_incomplete', __( 'The claim freshness batch was incomplete; another bounded sweep or operator review is needed.', 'global-clinic-usp-integration' ), array( 'status' => 503 ) );
 		}
 		return $count;
 	}
@@ -949,7 +969,13 @@ final class GCU_Future_Intelligence {
 		if ( is_wp_error( $ready ) ) { return $ready; }
 		$schema = self::verify_schema();
 		if ( is_wp_error( $schema ) ) { update_option( self::SAFE_MODE_OPTION, 1, false ); return $schema; }
-		self::claim_freshness_sentinel();
+		$freshness = self::claim_freshness_sentinel();
+		if ( is_wp_error( $freshness ) ) {
+			GCU_Observability::log( 'error', 'claim_freshness_governance_incomplete', array(
+				'code' => sanitize_key( $freshness->get_error_code() ),
+			) );
+			return $freshness;
+		}
 		self::parity_status();
 		self::consistency_graph();
 		foreach ( self::faq_gap_candidates() as $index => $candidate ) {
