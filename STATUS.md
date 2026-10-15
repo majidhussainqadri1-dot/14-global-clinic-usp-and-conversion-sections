@@ -1,3 +1,7 @@
+# File14 R39 — Source Candidate v1.4.42 (NOT LIVE VERIFIED)
+
+Frozen repository main before corrections: `675a26bcdb44087f1767dde0b664bd9f1c44ac07` (1.4.41). R39: 40 requirement lenses, 2 new source defects identified and corrected in branch; 40 new real parity-method/SQL-mock cases added. Exact candidate/merged CI and package/SBOM evidence required. Two previously open owner acceptance/design blockers remain: Issue #19 (File01/07/08/09 native outcomes), Issue #22 (File20/25 experiment-mutated placement rollback). Deployed plugin+checksum, real DB/schema, wp_options, migration state, staging and live re-test NOT VERIFIED. See `docs/REVIEW-40-CROSS-PLAN-v1.4.42-R39.md`.
+
 # File14 R38 — Verified Source Candidate v1.4.41
 
 Software candidate: `1.4.41`; Repository Candidate only. R38 **2 new runtime-source defects found and 2 fixed**; **1 nonproduction test-fixture expectation fixed**, separately counted. Cross-file requirements Issue #19 and #22 **still OPEN**. See `docs/REVIEW-40-CROSS-PLAN-v1.4.41-R38.md`; source CI cannot prove deployment, staging, DB migrations or live fix. Prior release notes below are historical.
