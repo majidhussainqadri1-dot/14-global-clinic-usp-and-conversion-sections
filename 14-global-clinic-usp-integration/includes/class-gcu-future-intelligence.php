@@ -585,6 +585,14 @@ final class GCU_Future_Intelligence {
 				$issues[] = 'active_copy_scan_limit_exceeded';
 			}
 			foreach ( array_slice( $blocks, 0, 500 ) as $block ) {
+				// An incomplete/invalid SQL row must not be interpreted as clean copy.
+				if ( ! is_array( $block )
+					|| ! isset( $block['title'], $block['body'], $block['cta_label'] )
+					|| ! is_string( $block['title'] ) || ! is_string( $block['body'] )
+					|| ! is_string( $block['cta_label'] ) ) {
+					$issues[] = 'active_copy_row_unverified';
+					continue;
+				}
 				$scan = GCU_Future_Policy::dark_pattern_scan( implode( ' ', array( $block['title'], wp_strip_all_tags( $block['body'] ), $block['cta_label'] ) ) );
 				foreach ( $scan['flags'] as $flag ) {
 					$issues[] = 'active_copy:' . $flag;
@@ -596,11 +604,24 @@ final class GCU_Future_Intelligence {
 		return $result;
 	}
 
+	/** Validate UTC SQL datetime strictly; a present invalid date is never "no deadline". */
+	private static function claim_deadline_utc( $value ) {
+		if ( null === $value || '' === $value ) { return null; }
+		if ( ! is_string( $value ) || ! preg_match( '/^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}$/D', $value ) ) {
+			return false;
+		}
+		$date = DateTimeImmutable::createFromFormat( '!Y-m-d H:i:s', $value, new DateTimeZone( 'UTC' ) );
+		return $date && $date->format( 'Y-m-d H:i:s' ) === $value ? $date->getTimestamp() : false;
+	}
+
 	private static function claim_freshness( array $row ) {
 		$now = time();
-		$review = ! empty( $row['review_due_at'] ) ? strtotime( $row['review_due_at'] . ' UTC' ) : 0;
-		$expires = ! empty( $row['expires_at'] ) ? strtotime( $row['expires_at'] . ' UTC' ) : 0;
-		$fresh = ( ! $review || $review > $now ) && ( ! $expires || $expires > $now );
+		$review = self::claim_deadline_utc( isset( $row['review_due_at'] ) ? $row['review_due_at'] : null );
+		$expires = self::claim_deadline_utc( isset( $row['expires_at'] ) ? $row['expires_at'] : null );
+		// null means an omitted deadline; false means malformed and must fail closed.
+		$fresh = false !== $review && false !== $expires
+			&& ( null === $review || $review > $now )
+			&& ( null === $expires || $expires > $now );
 		return array( 'fresh' => $fresh, 'review_due_at' => isset( $row['review_due_at'] ) ? $row['review_due_at'] : null, 'expires_at' => isset( $row['expires_at'] ) ? $row['expires_at'] : null );
 	}
 
