@@ -62,3 +62,19 @@ One local code batch: explicit fail-closed retention cleanup and public change-l
 
 ### Mandatory reality statement
 Repository HEAD: 20065823df87cabe0232d52c951361530d392c9b. Deployed Version: UNVERIFIED. DB Version: UNVERIFIED. Migration State: UNVERIFIED. Live Verification Status: NOT RUN. Exact deployed code ابھی unverified ہے؛ repository-based diagnosis provisional ہے۔
+
+## R45 one-batch corrections AFTER the frozen 40-source-lens review
+
+**Chronology:** pre-patch 40-source-lens table and BOTH defects were recorded before runtime coding in commit `23117c3117ed6d7c825390d6aa80c336a4d58901`. No local defect was corrected during the incomplete inspection.
+
+| Defect | Source fix | Evidence required |
+|---|---|---|
+| R45-D01 | `GCU_Future_Intelligence::cleanup()` now propagates existing `runtime_ready()` WP_Error instead of unverified skip. Each bounded report/record retention DELETE tests `false === $n`, emits only a privacy-safe constant error code and returns a 503 WP_Error. Actual successful/partial batch counts remain separately tracked; backlog retains its independent warning. Daily governance already returns `cleanup()` result. | 40 real-method SQL mocked cases for failure first batch, failure after varied successful 200-row batches, runtime unready, and positive cleanup. No real staging purge attempted. |
+| R45-D02 | Only the public-only `records()` reader now treats false/null SQL as unverified WP_Error. `public_change_log()` propagates the error instead of publishing `[]`; `rest_change_log()` forwards WP_Error, while HTML displays non-sensitive temporarily-unavailable history message. A genuinely empty but successful SQL array still publishes empty change history, and vetted active approved change rows retain normal REST/HTML shape. | The same method-mocked 40-case test checks public read error, REST error, HTML fallback, verified empty and healthy history. |
+
+**New regression file** `tests/r45-retention-public-history-tests.php`, with ten targeted method-level behavior groups × four cases, reuses R41's real-method test harness (which itself executes 40 test cases) without pretending it is WordPress staging. Integrated `scripts/quality.sh` plus prior 40x40 repeated plan-source sweeps. The R41 stub alone gained a configurable runtime response and approved-record test mock, not production schema changes. CI must confirm exact PHP7.4 and 8.3, source scans, 2 fresh reviews and package/SBOM, then full merged-main rerun.
+
+**Exact scoped tally:** forty specification lenses reviewed, two NEW source defects corrected in candidate, two preexisting external owner gaps (#19/#22) OPEN, zero real staging/installed production tests performed. No assertion of live fix.
+
+### Final five-part reality ledger
+Repository HEAD before code: `20065823df87cabe0232d52c951361530d392c9b`; candidate v1.4.48 must be rechecked after CI/merge. Deployed Version: UNVERIFIED. DB Version: UNVERIFIED. Migration State: UNVERIFIED. Live Verification Status: NOT RUN. Exact deployed code ابھی unverified ہے؛ repository-based diagnosis provisional ہے۔
