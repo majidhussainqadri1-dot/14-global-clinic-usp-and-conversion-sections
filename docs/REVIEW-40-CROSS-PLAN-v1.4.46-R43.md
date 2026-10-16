@@ -65,3 +65,20 @@ GitHub Issue #19: independently owner-registered and stage-tested File01/07/08/0
 Introduce bounded canonical SQL aggregate count validator; reject and log any malformed native anomaly/owner-stage/browser-friction result, including invalid counts; add explicit consent + event origin/version predicate for browser friction; 40 new direct-real-PHP-method SQL mocks; run exact PHP7.4/8.3, 40 repeated 40-source-marker CI, fresh reviews, deterministic zip/SBOM; merged-main re-test. Candidate source v1.4.46; source schema targets unchanged. No application/booking backend or companion plugin changes.
 
 **Required post-run separate report:** Repository HEAD / Deployed Version / Actual DB Version / Migration State / Live Verification Status. Current: source frozen above / UNVERIFIED / UNVERIFIED / UNVERIFIED / NOT RUN. Exact deployed code ابھی unverified ہے؛ repository-based diagnosis provisional ہے۔
+
+## R43 one corrective batch completed after frozen full inspection
+
+The **40 distinct requirement lenses and all three defects were committed to GitHub BEFORE any R43 runtime code edit**. The corrective source change batch is:
+
+| Local source defect | Actual file/method | Correction state |
+|---|---|---|
+| R43-D01 | `class-gcu-owner-outcomes.php::observed_anomaly` | Source fixed: any malformed row, missing required field, invalid integer count or nonstring owner identifiers now produces anonymous `owner_event_volume_read_unverified`; no fabricated signals/clinical booking success. |
+| R43-D02 | `class-gcu-future-policy.php::valid_aggregate_count`, `class-gcu-owner-outcomes.php::owner_stage_summary`, `class-gcu-future-intelligence.php::friction_summary` | Source fixed: exact nonnegative PHP int or canonical unsigned decimal integer string in PHP_INT_MAX range only; deny fractions, floats, negatives, scientific notation, overflow and missing counts before cohort analytics. |
+| R43-D03 | `class-gcu-future-intelligence.php::friction_summary` SQL | Source fixed: query only consent-granted File14 `ClinicUSPFunnelEvent` v1 records with nonnull subject hash; owner event counts remain separately classified. |
+
+New forty direct actual-PHP-method mocked SQL checks in `tests/r43-aggregate-count-provenance-tests.php` (ten behavior families × four variations), which reruns R42's forty prior cases. R43 script is invoked from `scripts/quality.sh`. `scripts/review40-iterative.sh` independently repeats the existing forty-marker plan test forty times; it never claims a WordPress staging/live run. PHP7.4/8.3 fresh review and deterministic package/SBOM must pass on exact pull-request SHA and new merged `main`.
+
+**New R43 local defect count 3, source corrections 3; previous owner/design release blockers 2 (Issue #19, Issue #22) remain OPEN.** Neither repeated source scans nor mocks establish external owner plugin deployed integrity or actual live consent behavior.
+
+### Final evidence categories — to be confirmed after CI/merge
+Repository HEAD: originally frozen `ae691d9f16969a62935f5043fb3707dec44d5c1d`, candidate 1.4.46 pending CI; Deployed Version: UNVERIFIED; Actual DB Version: UNVERIFIED; Migration State: UNVERIFIED; Live Verification Status: NOT RUN. Exact deployed code ابھی unverified ہے؛ repository-based diagnosis provisional ہے۔
