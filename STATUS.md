@@ -1,3 +1,9 @@
+Software candidate: `1.4.45`.
+
+# File14 R42 — Repository Candidate v1.4.45, SOURCE ONLY
+
+Pre-review main `2d4414a07b1b244f2461219f182531c768c0e942` was v1.4.44. Source review: 40 distinct approved FR/FUT requirements and companion ownership; 3 newly proven local analytic SQL error-status defects (owner anomaly, owner stage, browser friction), all coded for correction with 40 actual-method SQL mocked negative and positive cases. QA needs exact PR and merged-main green PHP 7.4/8.3, fresh reviews, deterministic ZIP/SBOM. Other approved gaps Issue #19 (File01/07/08/09 registered owner events/staging), #22 (File20/25 placement restore provenance/CAS/staging) OPEN. Base 10005 / Future 1 source schema targets unchanged. Deployed Version / actual DB / migration / production re-test all UNVERIFIED. No live acceptance. See `docs/REVIEW-40-CROSS-PLAN-v1.4.45-R42.md`.
+
 Software candidate: `1.4.44`.
 
 # R41 — Repository Candidate v1.4.44, only SOURCE under review
