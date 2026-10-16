@@ -1,8 +1,12 @@
-# File 14 v1.4.47 Source Manifest
+# File 14 v1.4.48 Source Manifest
 
 Canonical plugin folder: `14-global-clinic-usp-integration`
 
 Contents:
+- R45 false SQL DELETE cannot be reported as successful governed-record/report retention cleanup; explicit failure and privacy-safe operational alert
+- R45 public reviewed trust-policy change log false/null SQL reads trigger explicit unverified REST response and neutral public fallback
+- Forty additional real-method mocked SQL regression checks plus forty repeated source review rounds; no WordPress staging/live proof
+- Owner issues #19/#22 remain open; deployed package/version and actual DB migration unverified
 - R44: every public browser-friction stage smaller than cohort 10 suppressed, irrespective of combined funnel counts
 - R44: File07/08/09 v1 owner analytics WHERE clauses require event_version=1 independently of event-type name
 - R44: forty real-method mocked SQL cases + 40 consecutive 40-marker source-plan checks
