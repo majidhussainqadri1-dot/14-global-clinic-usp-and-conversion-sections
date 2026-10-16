@@ -1,3 +1,9 @@
+## File14 R42 Source Candidate 1.4.45
+
+Requirements Traceability — v1.4.45
+
+40 distinct plan lenses trace `F14-FR-001..016` and `F14-FUT-01..24` to current source; evidence and review limitations in `docs/REVIEW-40-CROSS-PLAN-v1.4.45-R42.md`. R42-D01 native owner anomaly SQL cannot silently pass as small sample; R42-D02 native owner stage SQL fails closed in privacy-safe REST; R42-D03 browser friction SQL fails closed and preserves cohort guards. 40 direct actual-method tests added; need exact-code PR and merged-main CI, then WordPress staging/Live re-test. This does NOT close owner Issue #19 or #22.
+
 ## R41 File14 Current Source Candidate 1.4.44
 
 Requirements Traceability — v1.4.44
