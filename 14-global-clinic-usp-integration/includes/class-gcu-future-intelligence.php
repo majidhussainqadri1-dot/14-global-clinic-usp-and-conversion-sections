@@ -954,24 +954,59 @@ final class GCU_Future_Intelligence {
 	public static function consistency_graph() {
 		global $wpdb;
 		$t = GCU_Install::tables();
-		$rows = $wpdb->get_results( "SELECT block_key,locale,title,body,cta_label,claim_keys FROM {$t['blocks']} WHERE status='active' ORDER BY block_key,locale", ARRAY_A );
+		// Inspect one extra active block: a partial set cannot be certified
+		// as a globally consistent copy/claim graph.
+		$rows = $wpdb->get_results( "SELECT block_key,locale,title,body,cta_label,claim_keys FROM {$t['blocks']} WHERE status='active' ORDER BY block_key,locale LIMIT 501", ARRAY_A );
 		if ( ! is_array( $rows ) ) {
 			GCU_Observability::log( 'error', 'message_consistency_read_unverified', array() );
 			return array( 'ok' => false, 'verified' => false, 'issues' => array( 'active_blocks_consistency_read_unverified' ), 'nodes' => array(), 'terminology_lock' => GCU_Future_Policy::terminology_lock() );
 		}
+		if ( count( $rows ) > 500 ) {
+			GCU_Observability::log( 'error', 'message_consistency_scan_limit_exceeded', array() );
+			return array( 'ok' => false, 'verified' => false, 'issues' => array( 'active_blocks_consistency_scan_limit_exceeded' ), 'nodes' => array(), 'terminology_lock' => GCU_Future_Policy::terminology_lock() );
+		}
 		$nodes = array();
 		$issues = array();
 		foreach ( $rows as $row ) {
-			if ( ! is_array( $row ) || ! isset( $row['block_key'], $row['locale'], $row['title'], $row['body'], $row['cta_label'], $row['claim_keys'] ) ) {
+			if ( ! is_array( $row ) || ! isset( $row['block_key'], $row['locale'], $row['title'], $row['body'], $row['cta_label'], $row['claim_keys'] )
+				|| ! is_string( $row['block_key'] ) || '' === $row['block_key']
+				|| sanitize_key( $row['block_key'] ) !== $row['block_key']
+				|| ! is_string( $row['locale'] ) || ! in_array( $row['locale'], GCU_Policy::supported_locales(), true )
+				|| ! is_string( $row['title'] ) || ! is_string( $row['body'] ) || ! is_string( $row['cta_label'] )
+				|| ! is_string( $row['claim_keys'] ) ) {
 				$issues[] = 'active_block_consistency_row_invalid';
 				continue;
 			}
+			// An invalid populated claim set must NOT be treated as a valid
+			// empty set; otherwise drift can silently disappear across locales.
+			$decoded = json_decode( $row['claim_keys'] );
+			if ( JSON_ERROR_NONE !== json_last_error() || ! is_array( $decoded ) || count( $decoded ) > 20 ) {
+				$issues[] = 'active_block_consistency_claims_unverified';
+				continue;
+			}
+			$claims = array();
+			$invalid_claim = false;
+			foreach ( $decoded as $claim ) {
+				if ( ! is_string( $claim ) || '' === $claim || sanitize_key( $claim ) !== $claim || in_array( $claim, $claims, true ) ) {
+					$invalid_claim = true;
+					break;
+				}
+				$claims[] = $claim;
+			}
+			if ( $invalid_claim ) {
+				$issues[] = 'active_block_consistency_claims_unverified';
+				continue;
+			}
 			$key = $row['block_key'];
+			$locale = $row['locale'];
+			if ( isset( $nodes[ $key ][ $locale ] ) ) {
+				$issues[] = 'active_block_consistency_duplicate_locale';
+				continue;
+			}
 			if ( ! isset( $nodes[ $key ] ) ) {
 				$nodes[ $key ] = array();
 			}
-			$claims = self::json_array( $row['claim_keys'] );
-			$nodes[ $key ][ $row['locale'] ] = array( 'claims' => $claims, 'hash' => hash( 'sha256', $row['title'] . '|' . wp_strip_all_tags( $row['body'] ) . '|' . $row['cta_label'] ) );
+			$nodes[ $key ][ $locale ] = array( 'claims' => $claims, 'hash' => hash( 'sha256', $row['title'] . '|' . wp_strip_all_tags( $row['body'] ) . '|' . $row['cta_label'] ) );
 		}
 		foreach ( $nodes as $key => $locales ) {
 			foreach ( GCU_Policy::supported_locales() as $locale ) {
@@ -989,7 +1024,7 @@ final class GCU_Future_Intelligence {
 				$issues[] = 'claim_set_drift:' . $key;
 			}
 		}
-		return array( 'ok' => empty( $issues ), 'verified' => ! in_array( 'active_block_consistency_row_invalid', $issues, true ), 'issues' => $issues, 'nodes' => $nodes, 'terminology_lock' => GCU_Future_Policy::terminology_lock() );
+		return array( 'ok' => empty( $issues ), 'verified' => ! array_intersect( array( 'active_block_consistency_row_invalid', 'active_block_consistency_claims_unverified', 'active_block_consistency_duplicate_locale' ), $issues ), 'issues' => array_values( array_unique( $issues ) ), 'nodes' => $nodes, 'terminology_lock' => GCU_Future_Policy::terminology_lock() );
 	}
 
 	public static function ai_copy_assist( array $data ) {
