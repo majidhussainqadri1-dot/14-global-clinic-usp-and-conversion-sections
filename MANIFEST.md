@@ -1,8 +1,12 @@
-# File 14 v1.4.49 Source Manifest
+# File 14 v1.4.50 Source Manifest
 
 Canonical plugin folder: `14-global-clinic-usp-integration`
 
 Contents:
+- R47 quality_score filters to consented File14 version-1 pseudonymous acquisition stage events; SQL rows validated, broken reads never become cohort evidence
+- R47 stale claim/complaint SQL count failures produce null component scores with missing-evidence labels, no fabricated perfect 100 percent
+- Forty real PHP quality method SQL-mocked scenarios, 40 successive 40-marker source review passes, PHP7.4/8.3, fresh reviews, deterministic ZIP/SBOM
+- Owner #19/#22 and actual deployed plugin/DB/staging/live parity remain OPEN/UNVERIFIED
 - R46 invalid or noncanonical UTC claim review/expiry times fail closed and can no longer be considered fresh
 - R46 malformed active public copy SQL rows cannot pass policy parity without all required fields
 - R46 40 direct actual PHP method SQL mocks and forty repeated 40-marker source review tests
