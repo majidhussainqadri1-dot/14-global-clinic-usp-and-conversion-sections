@@ -79,6 +79,8 @@ class R41DB {
     public $queries = array();
     public $writes = 0;
     public function prepare( $sql, ...$args ) {
+        // WordPress wpdb::prepare accepts both variadic arguments and a single array.
+        if ( count( $args ) === 1 && is_array( $args[0] ) ) { $args = $args[0]; }
         foreach ( $args as $v ) {
             $sql = preg_replace( '/%s|%d/', is_numeric( $v ) ? (string) $v : "'" . (string) $v . "'", $sql, 1 );
         }
