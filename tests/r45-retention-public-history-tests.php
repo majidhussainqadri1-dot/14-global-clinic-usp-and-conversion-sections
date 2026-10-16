@@ -5,6 +5,9 @@
  * NOT real WordPress, production DB, backend retention or browser E2E.
  */
 require __DIR__ . '/r41-faq-consistency-governance-tests.php';
+function esc_html( $value ) {
+    return htmlspecialchars( (string) $value, ENT_QUOTES, 'UTF-8' );
+}
 
 class R45DB extends R41DB {
     public $public_records = array();
