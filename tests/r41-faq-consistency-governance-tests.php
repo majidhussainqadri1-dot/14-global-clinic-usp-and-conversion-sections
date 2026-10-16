@@ -152,7 +152,7 @@ for ( $case=1; $case<=40; $case++ ) {
         $result = GCU_Future_Intelligence::faq_gap_candidates();
         $passed = is_array($result) && count($result) === 0;
     } elseif ( 2 === $family ) {
-        $wpdb->faq = array('different approved question');
+        $wpdb->faq = array('unrelated clinical administration topic');
         $result = GCU_Future_Intelligence::faq_gap_candidates();
         $passed = is_array($result) && count($result) === 1
             && 'suggested_only' === $result[0]['status'] && false === $result[0]['auto_publish'];
