@@ -1,3 +1,9 @@
+Software candidate: `1.4.50`.
+
+# R47 — Quality Score Source Provenance and Verified SQL Metrics
+
+Precode frozen main `1146c256d668d9dd28975b43f5956a82c9fd966c` (File14 plugin v1.4.49). Inspected 40 approved File14 FR/FUT source-plan lenses against attached amended File14 CTI24, Consolidated central master plans and File07/08/09/25 canonical companion plans. Two new verified SOURCE defects: (D01) `quality_score()` grouped acquisition events lacking consent/source/version restrictions and robust SQL read/shape validation; (D02) unreadable stale-claim and complaint counts turned into apparently perfect 100% score components. Both now fail closed for metrics using canonical integer validator, explicit missing-evidence and SQL provenance filters. Added 40 direct actual PHP-method mock-SQL scenario checks to PHP7.4/8.3 CI and existing 40 consecutive source-plan checks, fresh reviews, package/SBOM. See `docs/REVIEW-40-CROSS-PLAN-v1.4.50-R47.md`. Source schema Base 10005/Future1 unchanged; no WordPress installed/deployed DB proof. Owner #19/#22 still OPEN.
+
 Software candidate: `1.4.49`.
 
 # R46 — Trust Claim UTC Date Freshness and Active-Copy Parity Row Integrity
