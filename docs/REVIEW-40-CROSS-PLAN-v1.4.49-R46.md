@@ -61,3 +61,18 @@
 After frozen review, fix only exact local source defects, add 40 *real production PHP method* mock WordPress/SQL tests covering nonempty malformed dates, true null/empty, valid future/expired, corrupted active public copy, healthy and parity+REST checks; gate PHP7.4/8.3, repeated 40×40 source markers, both independent fresh reviews, reproducible package/SBOM. Proposed source plugin **1.4.49**, DB targets Base `10005` and Future `1` remain unchanged. Merge after exact branch SHA all green, then separately verify new merged-main SHA.
 
 **Source HEAD:** `63ee5d27121cc8f56a465f81c470a23e2c1fb947`; **Deployed Version:** UNKNOWN; **Actual DB Version:** UNKNOWN; **Migration State:** UNKNOWN; **Live Verification Status:** NOT RUN. Exact deployed code ابھی unverified ہے؛ repository-based diagnosis provisional ہے۔
+
+## R46 implemented corrections AFTER full forty-lens pre-code review
+
+**Chronological verification:** the exact 40-lens original File14/central/companion ledger and two code defect records were committed first in `bf6501a0443897290ef63db4626ee57ce4a56a71`. Only afterwards was runtime PHP changed.
+
+| New source defect | Root cause | R46 source correction | Independent direct-method test |
+|---|---|---|---|
+| **R46-D01** (FR016/FUT04) | Parsed `strtotime(...)=false` was treated the same as `0`/omitted deadline, so invalid nonempty date might be certified as fresh | New private `claim_deadline_utc` rejects noncanonical `Y-m-d H:i:s`, invalid rollover dates, unexpected type or unparsable populated values; `claim_freshness` fails closed on present invalid review or expiry; null/empty absence remains explicitly optional; UTC future/past dates handled strictly | Actual `claim_freshness` Reflection invocation for malformed review/expiry, invalid calendar, past and valid future; `parity_status` source method invalid claim proof prevents `ok=true` |
+| **R46-D02** (FUT05/FUT08/FR016) | SQL copy scan accessed missing/wrong type fields without validation and could produce `dark_pattern_scan(' ')` with no warnings in returned policy parity | Validate every inspected row is array with nonnull string `title`, `body` and `cta_label` before scan; invalid shape adds `active_copy_row_unverified` and blocks clean parity; preserved 501 sentinel, 500 cap and existing dark pattern flags | 40 new cases across missing/nested/scalar/malformed and healthy active rows, including combined date and copy failure; R39 40 existing actual-method cases rerun independently |
+
+**Quality boundary:** `tests/r46-claim-date-and-parity-row-tests.php` runs **40** new real-production-PHP-method tests against SQL/WP mocks; `scripts/quality.sh` adds them to PHP7.4 and PHP8.3. `scripts/review40-iterative.sh` repeats 40 source contract markers 40 times and may not be presented as 40 distinct live WP E2E tests. After PR exact SHA checks, independently verify merged-main SHA both Fresh Reviews, quality and deterministic ZIP/SBOM.
+
+**Unresolved external owner items remain** #19 (File01 owner attestation of File07/08/09 actual directory/application/booking events, staging/live owner parity) and #22 (File20/25 Founder-approved real changed-placement restore and CAS, staging rollback). No direct owner repo or deployed plugin changed. No DB schema change.
+
+**Exact reality ledger**: original Repository main SHA `63ee5d27121cc8f56a465f81c470a23e2c1fb947`; proposed v1.4.49 source; Deployed Version **UNVERIFIED**; Actual DB Version **UNVERIFIED**; Migration State **UNVERIFIED**; Live Verification Status **NOT RUN**. Exact deployed code ابھی unverified ہے؛ repository-based diagnosis provisional ہے۔
