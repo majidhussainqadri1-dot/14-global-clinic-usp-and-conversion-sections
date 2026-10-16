@@ -1,3 +1,9 @@
+Software candidate: `1.4.45`.
+
+# File14 R42 — Owner-Native Measurement Integrity, No False Small-Cohort Success
+
+Frozen main `2d4414a07b1b244f2461219f182531c768c0e942`, v1.4.44. Forty F14 FR/FUT plan/central/companion lenses inspected before code editing. Three source omissions fixed: native owner-anomaly query failure no longer implies insufficient evidence/no anomaly; owner-stage and browser-friction failing SQL / malformed result no longer imply legitimate privacy suppression. `rest_friction` now propagates SQL errors. 40 **direct-method** SQL mocked scenarios and 40×40 source-plan sweeps are CI-gated; no real WordPress/staging/live attestation. Details `docs/REVIEW-40-CROSS-PLAN-v1.4.45-R42.md`. Open Issues #19/#22 and exact deployed plugin+schema+wp_options+migration+live remain unverified.
+
 Software candidate: `1.4.44`.
 
 # File14 R41 — Verified-Facts FAQ and Cross-Locale Consistency Guards
