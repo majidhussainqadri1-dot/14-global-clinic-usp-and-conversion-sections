@@ -67,3 +67,18 @@ Do not count either as R49 source fixed.
 After freezing all 40 requirement lenses and these two defects, patch only confirmed local Source methods, add 40 direct real PHP-method SQL/REST mocks (false/null, malformed rows/payload, cursor and positive/empty pages); PHP7.4/8.3, 40 repeated 40-marker source reviews, fresh post-code reviews and deterministic ZIP/SBOM. Candidate plugin `v1.4.52`; no schema change, no owner plugin changes. Merge only after exact PR SHA fully green, then independently verify exact merged-main SHA.
 
 **Repository HEAD:** `cb1572184abf25bd4f084f6555f8986bd523d28f`; **Deployed Version:** UNVERIFIED; **Actual DB Version:** UNVERIFIED; **Migration State:** UNVERIFIED; **Live Verification Status:** NOT RUN. Exact deployed code ابھی unverified ہے؛ repository-based diagnosis provisional ہے۔
+
+## After-forty-lens R49 source corrective batch (not live)
+
+**Strict chronology:** all 40 original FR/FUT source requirement lenses and both proven defects were committed in `456cc678efb5263b89fef0ad9b88b6c6f23ab1b7` BEFORE any PHP runtime code changed.
+
+| Newly proven defect | Corrective code and fail-safe behavior | Regression evidence |
+|---|---|---|
+| **R49-D01 / FUT12** | `reports_page()` now rejects WPDB false/null with redacted `gcu_future_reports_page_read_failed` 503 error and constant operator log, validates each required report record and strictly increasing positive canonical page ID, refuses nonmonotonic/corrupt pagination. Legitimate SQL `[]` still returns a valid empty authorized page; complete rows provide a bounded cursor and strip raw internal row ID. REST `rest_reports` preserves native auth and propagates WP_Error through `no_store_response()`. | Forty real-method PHP SQL mocks cover false/null, missing/invalid row ID, page ordering, valid empty, positive page and REST error. |
+| **R49-D02 / FUT22 / FR016** | `records_page()` similarly rejects SQL false/null, incomplete rows, bad monotonic ID or non-array valid JSON payload, with privacy-safe error and no fake history. Valid JSON object/list decoded to approved array shape and correct first/next cursor. `rest_records()` carries the WP_Error unchanged. | Same forty-case suite covers unreadable DB, corrupted JSON, scalar JSON masquerading as record, malformed/missing keys, good 0–3 record pages and no leak of internal row IDs. |
+
+**Test scope:** 40 newly added direct actual candidate File14 PHP service+REST methods against WPDB/WordPress mocks in `tests/r49-admin-pagination-fail-closed-tests.php` (ten families × four variations), plus previous R41 forty cases and forty sequential repetitions of 40 contract source markers in `scripts/review40-iterative.sh`. GitHub PHP7.4/8.3, Fresh Post-Code Reviews and deterministic package+SBOM still must be green on exact PR commit and new merged main. **Not** 40 actual WordPress staging/live browser E2E runs.
+
+**Counts:** 40 distinct requirement source lenses, 2 newly identified local source errors, 2 source corrections in R49, 2 previous external owner acceptance gaps #19 and #22 remain OPEN, zero verified live deployments.
+
+**Final five-field deployed-evidence ledger:** Repository prepatch main `cb1572184abf25bd4f084f6555f8986bd523d28f`, candidate 1.4.52; Deployed Version **UNVERIFIED**; DB Version **UNVERIFIED**; Migration State **UNVERIFIED**; Live Verification Status **NOT RUN**. Exact deployed code ابھی unverified ہے؛ repository-based diagnosis provisional ہے۔
