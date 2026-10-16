@@ -1,3 +1,9 @@
+Software candidate: `1.4.49`.
+
+# File14 R46 v1.4.49 — Exact source candidate only, NOT installed Live acceptance
+
+Frozen pre-code repository main `63ee5d27121cc8f56a465f81c470a23e2c1fb947` version 1.4.48. Actual File14 amended v2.0 FUT04/05/08 plus central master and File07/08/09/25 ownership requirements reviewed in 40 distinct source lenses, recorded before edits. Two NEW source defects corrected: present invalid noncanonical SQL UTC deadlines were considered absent in claim freshness; malformed active copy database rows could be scanned as benign empty string with false clean parity. 40 new actual PHP-method mocked SQL cases integrated into PHP7.4/8.3, two fresh reviews, repeat 40 source contract checks ×40, deterministic ZIP and SBOM. Exact PR and merged-main CI required. External #19/#22 owner staging contracts OPEN. Deployed artifact hash/version, DB schema/rows/wp_options/migration, real WordPress staging and production re-test all UNKNOWN. See `docs/REVIEW-40-CROSS-PLAN-v1.4.49-R46.md`.
+
 Software candidate: `1.4.48`.
 
 # R45 source-only evidence: 1.4.48, NEVER assumed installed
