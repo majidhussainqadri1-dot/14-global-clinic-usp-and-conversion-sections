@@ -1,3 +1,9 @@
+Software candidate: `1.4.49`.
+
+# R46 File14 — SOURCE/Repository candidate v1.4.49, NOT Production acceptance
+
+Pre-code main `63ee5d27121cc8f56a465f81c470a23e2c1fb947` (v1.4.48). 40 approved FR/FUT lenses evaluated against amended File14, central master governing plans and File07/08/09/25 documentation. Two newly confirmed SOURCE defects fixed: malformed review_due_at/expires_at in trust claim freshness was treated as absent; active-copy parity accepted missing/wrong type fields. Added 40 direct real-method SQL mocked date/copy validity tests, integrated existing 40×40 source reviews. PHP7.4/8.3, two fresh reviews, reproducible ZIP/SBOM and new merged-main validation are required. Existing owner #19/#22 cross-file gaps OPEN. Actual deployed plugin/hash, DB/wp_options/migration, WordPress staging and live verification not yet available. Detailed `docs/REVIEW-40-CROSS-PLAN-v1.4.49-R46.md`.
+
 Software candidate: `1.4.48`.
 
 # R45 File14 candidate 1.4.48 — SOURCE under review only
