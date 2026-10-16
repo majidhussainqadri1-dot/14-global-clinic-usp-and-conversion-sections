@@ -254,7 +254,9 @@ final class GCU_Future_Intelligence {
 	public static function rest_change_log() {
 		$ready = self::rest_storage_ready();
 		if ( is_wp_error( $ready ) ) { return $ready; }
-		return self::public_response( array( 'items' => self::public_change_log( 20 ) ) );
+		$history = self::public_change_log( 20 );
+		if ( is_wp_error( $history ) ) { return $history; }
+		return self::public_response( array( 'items' => $history ) );
 	}
 
 	public static function rest_readiness( WP_REST_Request $request ) {
@@ -1073,10 +1075,39 @@ final class GCU_Future_Intelligence {
 
 	public static function cleanup() {
 		$ready = self::runtime_ready();
-		if ( is_wp_error( $ready ) ) { return array( 'skipped' => 'runtime_unready' ); }
+		if ( is_wp_error( $ready ) ) {
+			GCU_Observability::log( 'error', 'future_lifecycle_runtime_unready', array() );
+			return $ready;
+		}
 		global $wpdb;
 		$t = self::tables();
-		$reports=0;$records=0;for($i=0;$i<10;$i++){$n=$wpdb->query($wpdb->prepare("DELETE FROM {$t['reports']} WHERE status IN ('resolved','rejected') AND updated_at<DATE_SUB(UTC_TIMESTAMP(),INTERVAL %d DAY) LIMIT 200",self::REPORT_RETENTION_DAYS));if(false===$n){$reports=false;break;}$reports+=$n;if($n<200){break;}}for($i=0;$i<10;$i++){$n=$wpdb->query("DELETE FROM {$t['records']} WHERE status IN ('superseded','rejected') AND updated_at<DATE_SUB(UTC_TIMESTAMP(),INTERVAL 730 DAY) LIMIT 200");if(false===$n){$records=false;break;}$records+=$n;if($n<200){break;}}if(2000===$reports||2000===$records){GCU_Observability::log('warning','future_lifecycle_cleanup_backlog',array('reports'=>$reports,'records'=>$records));}return array('reports'=>$reports,'records'=>$records);
+		$reports = 0;
+		$records = 0;
+		for ( $i = 0; $i < 10; $i++ ) {
+			$n = $wpdb->query( $wpdb->prepare(
+				"DELETE FROM {$t['reports']} WHERE status IN ('resolved','rejected') AND updated_at<DATE_SUB(UTC_TIMESTAMP(),INTERVAL %d DAY) LIMIT 200",
+				self::REPORT_RETENTION_DAYS
+			) );
+			if ( false === $n ) {
+				GCU_Observability::log( 'error', 'future_lifecycle_report_cleanup_failed', array() );
+				return new WP_Error( 'gcu_future_report_cleanup_failed', __( 'Expired report retention could not be verified.', 'global-clinic-usp-integration' ), array( 'status' => 503 ) );
+			}
+			$reports += $n;
+			if ( $n < 200 ) { break; }
+		}
+		for ( $i = 0; $i < 10; $i++ ) {
+			$n = $wpdb->query( "DELETE FROM {$t['records']} WHERE status IN ('superseded','rejected') AND updated_at<DATE_SUB(UTC_TIMESTAMP(),INTERVAL 730 DAY) LIMIT 200" );
+			if ( false === $n ) {
+				GCU_Observability::log( 'error', 'future_lifecycle_record_cleanup_failed', array() );
+				return new WP_Error( 'gcu_future_record_cleanup_failed', __( 'Expired governance record retention could not be verified.', 'global-clinic-usp-integration' ), array( 'status' => 503 ) );
+			}
+			$records += $n;
+			if ( $n < 200 ) { break; }
+		}
+		if ( 2000 === $reports || 2000 === $records ) {
+			GCU_Observability::log( 'warning', 'future_lifecycle_cleanup_backlog', array( 'reports' => $reports, 'records' => $records ) );
+		}
+		return array( 'reports' => $reports, 'records' => $records );
 	}
 
 	/**
@@ -1241,6 +1272,10 @@ final class GCU_Future_Intelligence {
 		$rows = $args ? $wpdb->get_results( $wpdb->prepare( $sql, $args ), ARRAY_A ) : $wpdb->get_results( $sql, ARRAY_A );
 		// Decode the actual array returned to consumers. Iterating over a
 		// ternary expression by reference modifies a temporary copy instead.
+		if ( ! is_array( $rows ) && $public_only ) {
+			GCU_Observability::log( 'error', 'public_change_log_read_unverified', array() );
+			return new WP_Error( 'gcu_public_change_log_read_failed', __( 'The public policy history is temporarily unavailable.', 'global-clinic-usp-integration' ), array( 'status' => 503 ) );
+		}
 		$rows = is_array( $rows ) ? $rows : array();
 		foreach ( $rows as &$row ) {
 			$row['payload'] = self::json_array( isset( $row['payload'] ) ? $row['payload'] : '' );
@@ -1259,6 +1294,7 @@ final class GCU_Future_Intelligence {
 		$max_scanned = 1000;
 		for ( $offset = 0; $offset < $max_scanned && count( $out ) < $limit; $offset += $page_size ) {
 			$rows = self::records( 'change_log', true, $page_size, $offset );
+			if ( is_wp_error( $rows ) ) { return $rows; }
 			foreach ( $rows as $row ) {
 				$proof = GCU_Future_Policy::validate_public_record_payload( 'change_log', $row['payload'] );
 				if ( empty( $proof['safe'] ) ) { continue; }
@@ -1388,6 +1424,9 @@ final class GCU_Future_Intelligence {
 
 	private static function render_change_log() {
 		$items = self::public_change_log( 5 );
+		if ( is_wp_error( $items ) ) {
+			return '<section class="gcu-future gcu-future--warning"><h2>Clinic trust and policy change log</h2><p>Policy history is temporarily unavailable. Please try again later.</p></section>';
+		}
 		if ( ! $items ) {
 			return '';
 		}

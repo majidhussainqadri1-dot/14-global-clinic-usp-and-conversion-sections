@@ -1,3 +1,9 @@
+Software candidate: `1.4.48`.
+
+# R45 File14 candidate 1.4.48 — SOURCE under review only
+
+Precode frozen repo `main@20065823df87cabe0232d52c951361530d392c9b`, version 1.4.47. 40 approved FR/FUT source requirement lenses inspected against attached amended File14, Consolidated central master plan and File07/08/09/25 owner docs. Two local source bugs (failing cleanup SQL/invalid readiness falsely succeeded; public change-log failed DB read reported no entries) now coded for explicit fail-close with anonymous operational signal and REST/HTML truth. Forty actual method SQL-mocked scenarios added; source reviews repeat 40×40 markers. Must pass PHP7.4/8.3, two fresh independent reviews, deterministic ZIP/SBOM on exact PR and merged main before repository acceptance. Actual deployed plugin/hash, wp_options/migrations, DB schema and contents, staging and live remain unverified; owner issues #19/#22 unresolved. Full evidence `docs/REVIEW-40-CROSS-PLAN-v1.4.48-R45.md`.
+
 Software candidate: `1.4.47`.
 
 # R44 — File14 Repository candidate 1.4.47, NOT live accepted

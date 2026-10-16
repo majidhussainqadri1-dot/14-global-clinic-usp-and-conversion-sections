@@ -1,3 +1,9 @@
+Software candidate: `1.4.48`.
+
+# File14 R45 — Retention Cleanup and Public Policy History Read Integrity
+
+FROZEN baseline `main@20065823df87cabe0232d52c951361530d392c9b` plugin 1.4.47. Read amended File14 plan (FUT22/history, retention privacy lifecycle), consolidated Three Central Plans and companion File07/08/09/25 ownership. Forty source FR/FUT lenses were registered before coding. Two NEW local defects found and corrected: privacy retention cleanup had silent SQL and runtime failures; change log public-reader SQL failure falsely became an empty published history. New 40 direct real-PHP-method SQL-mocked regressions, 40 sequential source-scan rounds ×40 markers, PHP7.4/8.3, two fresh reviews and deterministic package/SBOM required on PR and merged main. See `docs/REVIEW-40-CROSS-PLAN-v1.4.48-R45.md`. Owner #19/#22 and actual installed artifact/database/migration/staging/live unverified.
+
 Software candidate: `1.4.47`.
 
 # R44 — File14 Small-Cohort Stage Privacy and Owner v1 Contract Proof

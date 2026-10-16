@@ -65,7 +65,7 @@ checks=[
 ('16 Future runtime inherits base runtime','$base_ready = GCU_Install::ready_for_runtime();' in future),
 ('17 Future daily governance has runtime boundary','public static function daily_governance()' in future and 'self::verify_schema();' in future),
 ('18 Future hourly intelligence has runtime boundary','public static function hourly_intelligence()' in future and future.count('self::runtime_ready()')>=6),
-('19 Future cleanup has runtime boundary',"return array( 'skipped' => 'runtime_unready' )" in future),
+('19 Future cleanup propagates runtime unready and SQL retention errors', 'public static function cleanup()' in future and "'future_lifecycle_runtime_unready'" in future and "'gcu_future_report_cleanup_failed'" in future and "'gcu_future_record_cleanup_failed'" in future),
 ('20 Future admin/assets fail closed when unready','public static function admin_page()' in future and 'public static function enqueue_assets()' in future and future.count('self::runtime_ready()')>=6),
 ('21 Future report create/resolve paths have runtime boundary','public static function create_report' in future and 'public static function resolve_report_record' in future and future.count('self::runtime_ready()')>=6),
 ('22 governed public cache no longer uses stale-while-revalidate','stale-while-revalidate' not in rest and 'stale-while-revalidate' not in future and 'public, no-cache, max-age=0, must-revalidate' in future),
