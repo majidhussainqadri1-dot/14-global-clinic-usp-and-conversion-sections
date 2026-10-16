@@ -117,6 +117,18 @@ final class GCU_Owner_Outcomes {
 			GROUP BY event_type,funnel_stage",
 			ARRAY_A
 		);
+		if ( ! is_array( $rows ) ) {
+			// Missing SQL evidence is not a quiet or low-volume owner period.
+			// Never expose owner/person IDs or diagnostic SQL to analytics.
+			GCU_Observability::log( 'error', 'owner_anomaly_volume_read_unverified', array() );
+			return array(
+				'status' => 'owner_event_volume_read_unverified',
+				'severity' => 'unverified', 'suppressed' => true, 'signals' => array(),
+				'owner_correlated_funnel' => false, 'booking_success_rate' => null,
+				'inference_limit' => 'owner_event_sql_evidence_unavailable',
+				'checked_at' => gmdate( 'c' ),
+			);
+		}
 		$signals = array();
 		$highest = 'none';
 		$minimum = GCU_Future_Policy::MIN_COHORT;
@@ -160,7 +172,17 @@ final class GCU_Owner_Outcomes {
 			 AND event_type IN ('File07.DirectoryServed.v1','File08.BookingStarted.v1','File09.ApplicationStarted.v1')
 			 GROUP BY event_type,funnel_stage", $days
 		), ARRAY_A );
-		$valid = array_values( array_filter( is_array( $rows ) ? $rows : array(), static function ( $row ) {
+		if ( ! is_array( $rows ) ) {
+			GCU_Observability::log( 'error', 'owner_stage_volume_read_unverified', array() );
+			return new WP_Error( 'gcu_owner_stage_read_unverified', __( 'Owner stage analytics could not be verified.', 'global-clinic-usp-integration' ), array( 'status' => 503 ) );
+		}
+		foreach ( $rows as $row ) {
+			if ( ! is_array( $row ) || ! isset( $row['event_type'], $row['funnel_stage'], $row['total'] ) || ! is_numeric( $row['total'] ) ) {
+				GCU_Observability::log( 'error', 'owner_stage_volume_row_unverified', array() );
+				return new WP_Error( 'gcu_owner_stage_row_unverified', __( 'Owner stage analytics evidence was incomplete.', 'global-clinic-usp-integration' ), array( 'status' => 503 ) );
+			}
+		}
+		$valid = array_values( array_filter( $rows, static function ( $row ) {
 			return self::reportable( $row['event_type'], $row['funnel_stage'] );
 		} ) );
 		$total = array_sum( array_map( static function ( $row ) { return (int) $row['total']; }, $valid ) );
