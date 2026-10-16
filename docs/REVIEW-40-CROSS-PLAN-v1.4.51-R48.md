@@ -64,3 +64,18 @@ Issue **#19**: authentic File01-registered, versioned, consented native File07/0
 One local batch fixes D01/D02 in Future Intelligence consistency graph; adds 40 direct actual-PHP-method SQL/WordPress mocked tests (invalid claim JSON, duplicate locale, incomplete scalar, 501 limit, healthy/empty/missing-locale/claim divergence, protected REST and daily fail-closed); applies PHP7.4/8.3 quality gate, forty repeated 40-source-marker scans, two fresh reviews and reproducible ZIP/SBOM. Candidate version **v1.4.51**; Base schema target `10005`, Future schema target `1` unchanged. Merge only after exact PR HEAD checks succeed, then recheck merged main.
 
 **Repository HEAD:** `f67e49a4a0f1cdcf7da8cf25f2833f05033410b7`; **Deployed Version:** UNKNOWN; **Actual DB Version:** UNKNOWN; **Migration State:** UNKNOWN; **Live Verification:** NOT RUN. Exact deployed code ابھی unverified ہے؛ repository-based diagnosis provisional ہے۔
+
+## One corrective batch AFTER the full forty-lens frozen source review
+
+**Review-then-fix evidence:** full 40 FR/FUT requirement-lens/source-ownership ledger and BOTH defect records were first committed at `94948bd04030a75ad0ed7aa0eee7b36a791b4f0a`, **before changing runtime PHP**.
+
+| New defect | Exact PHP source fix | Direct regression scope |
+|---|---|---|
+| **R48-D01 (FUT19)** | `GCU_Future_Intelligence::consistency_graph()` now validates complete canonical `block_key`, approved `locale`, scalar copy fields, a correctly JSON-decoded LIST of no more than 20 approved canonical File14 claim keys (an intentional `[]` is valid), and detects duplicate active `block_key/locale` rows. Invalid, unknown, nested, duplicate keys or repeated locale nodes add explicit unverified issues and prevent clean graph or REST success; no raw copy in operator logs. | New `tests/r48-consistency-evidence-boundary-tests.php` 40 real-method SQL-mocked cases covering corrupt JSON, unknown/non-scalar claim keys, duplicate locale, bad fields/locale, healthy 3-language sets, true missing locale and semantic claim set drift, protected REST and governance. |
+| **R48-D02 (FUT19)** | Active block consistency SQL is now bounded `ORDER BY block_key,locale LIMIT 501`; a returned 501st row rejects verified completeness before parsing. `count>500` yields `active_blocks_consistency_scan_limit_exceeded` and privacy-safe operational error, not a deceptive partial clean graph. SQL false/null still rejects with its existing operator-safe status. | Same tests include 497–500 rows, 501+ mock rows, LIMIT 501 query assertion, fail-closed daily governance and no automatic suggestion writes after consistency failure. |
+
+**Quality acceptance limitations:** `scripts/quality.sh` runs 40 **actual PHP-method mocked-SQL** new scenarios and previously existing test suites under PHP7.4/8.3; `scripts/review40-iterative.sh` repeats 40 approved source requirements 40 times. These are NOT 40 real WordPress/browser/staging exercises; no deployed plugin, actual database, migration or founder owner-staging acceptance has been observed.
+
+**Count:** forty requirement lenses reviewed, two local source defects identified and corrected in candidate, two existing external owner acceptance blockers **#19** and **#22** still OPEN. Exact PR SHA and merged-main CI results to be confirmed before accepted repository release.
+
+**Five required realities:** Repository HEAD before changes `f67e49a4a0f1cdcf7da8cf25f2833f05033410b7` (proposed v1.4.51); Deployed Version **UNVERIFIED**; Actual DB Version **UNVERIFIED**; Migration State **UNVERIFIED**; Live Verification Status **NOT DONE**. Exact deployed code ابھی unverified ہے؛ repository-based diagnosis provisional ہے۔
