@@ -1,8 +1,12 @@
-# File 14 v1.4.46 Source Manifest
+# File 14 v1.4.47 Source Manifest
 
 Canonical plugin folder: `14-global-clinic-usp-integration`
 
 Contents:
+- R44: every public browser-friction stage smaller than cohort 10 suppressed, irrespective of combined funnel counts
+- R44: File07/08/09 v1 owner analytics WHERE clauses require event_version=1 independently of event-type name
+- R44: forty real-method mocked SQL cases + 40 consecutive 40-marker source-plan checks
+- Owner issues #19/#22 and WordPress staging/live/artifact+DB parity remain OPEN/UNVERIFIED
 - R43 strict nonnegative SQL aggregate integer validator, malformed owner anomaly fail-close, native summary protection
 - R43 File14 browser friction limited to granted-consent, v1, File14-origin, non-null subject events
 - R43 40 direct real-method malformed count/consent-provenance tests, 40 consecutive source-review passes
