@@ -1,8 +1,12 @@
-# File 14 v1.4.51 Source Manifest
+# File 14 v1.4.52 Source Manifest
 
 Canonical plugin folder: `14-global-clinic-usp-integration`
 
 Contents:
+- R49 governed Report and Record admin pagination SQL false/null no longer lies about an empty moderation/record queue
+- R49 malformed or nonmonotonic SQL page identity and corrupt governed JSON payload fail closed with operator-safe 503 errors
+- R49 forty new REAL PHP service/REST method SQL mock cases; original 40x40 source review, both PHP versions, fresh reviews, deterministic ZIP/SBOM required
+- Owner issues #19/#22 remain OPEN; actual WordPress deployment, DB state and live verification UNVERIFIED
 - R48 F14-FUT19: malformed/unknown/doubled linked claims and duplicate block-locale variants cannot be certified as a clean message-consistency graph
 - R48 F14-FUT19: LIMIT 501 SQL sentinel requires full bounded active-copy scan or returns unverified
 - R48 forty actual PHP consistency methods with mocked SQL/REST/governance checks plus 40x40 original source scans
