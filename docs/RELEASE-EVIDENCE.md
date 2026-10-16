@@ -1,3 +1,9 @@
+Software candidate: `1.4.45`.
+
+# R42 v1.4.45 — Proposed SOURCE release evidence, not live installed state
+
+Frozen main HEAD `2d4414a07b1b244f2461219f182531c768c0e942`; original source plugin v1.4.44. Forty approved base/Future FR source lenses inspected before corrections, with amended File14 and central v3 governing doc and linked 07/08/09/25 boundaries. Three fail-open/no-data analytics errors corrected and forty direct real-method SQL/REST/owner test cases included in quality. Exact PR SHA and merged-main SHA independent fresh reviews, PHP 7.4/8.3, forty source review loops and package/SBOM must be green. Owner #19/#22 unresolved; actual deployed checksum, wp_options/schema/migration and WordPress staging/live E2E unavailable. Report: `docs/REVIEW-40-CROSS-PLAN-v1.4.45-R42.md`.
+
 Software candidate: `1.4.44`.
 
 # R41 v1.4.44 — Repository Candidate, NOT WordPress staging/live accepted
