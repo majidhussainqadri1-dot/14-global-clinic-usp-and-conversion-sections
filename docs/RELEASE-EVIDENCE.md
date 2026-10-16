@@ -1,3 +1,9 @@
+Software candidate: `1.4.48`.
+
+# R45 source-only evidence: 1.4.48, NEVER assumed installed
+
+Frozen source exact main `20065823df87cabe0232d52c951361530d392c9b` at v1.4.47; 40 distinct source plan lenses reviewed against amended File14 CTI24, consolidated master plan and File07/08/09/25 ownership. 2 new local defects recorded before code: retention cleanup silently converted failed SQL and unready runtime into apparent successful/skip results; FUT22 public change-log SQL false/null silently fabricated an empty history. Source now explicitly returns WP_Error and redacted operations signal, preserves honest REST/HTML fallback, and adds 40 actual PHP-method mocked SQL tests. Exact PR and merged main green PHP7.4/8.3, repeat 40 plan-source scans, 2 fresh reviews, reproducible ZIP/SBOM required. Owner issues #19/#22 OPEN. Staging, live installed artifact/hash, actual database/wp_options/migrations and postdeploy verification are UNKNOWN. See `docs/REVIEW-40-CROSS-PLAN-v1.4.48-R45.md`.
+
 Software candidate: `1.4.47`.
 
 # R44 v1.4.47 — Source-only release evidence, no installed production acceptance
