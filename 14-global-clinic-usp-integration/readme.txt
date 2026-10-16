@@ -4,7 +4,7 @@ Tags: clinic, doctors, conversion, accessibility, privacy, governance, trust, ex
 Requires at least: 6.6
 Tested up to: 7.0.1
 Requires PHP: 7.4
-Stable tag: 1.4.47
+Stable tag: 1.4.48
 License: GPLv2 or later
 
 Canonical File 14 implementation for approved Worldwide Clinic value-proposition content, ethical conversion journeys, claim governance, destination contracts, Future Conversion & Trust Intelligence and privacy-minimized measurement.
@@ -82,6 +82,11 @@ The File 14 surface includes complete File 14-owned American English, Urdu and A
 8. Obtain explicit Founder acceptance before production deployment.
 
 == Changelog ==
+
+= 1.4.48 =
+* R45 privacy lifecycle: report and governed-record retention SQL failures and runtime unready are now visible failures with redacted operational logs, not false successful cleanup results.
+* R45 FUT-22 public reviewed change log: false/null DB reads now fail closed, protected public endpoint returns unverified error rather than false empty history, and public HTML shows a neutral unavailable notice.
+* R45 40 direct real-method SQL mocks plus 40 repeated 40-marker source checks; deployed/staging/live still unverified and owners #19/#22 remain open.
 
 = 1.4.47 =
 * R44 FUT-13/15: each browser funnel stage below 10 is suppressed in full (stage and count), even when combined traffic exceeds 10; independent >=10 stages remain visible without fabricated dropoff rates.
