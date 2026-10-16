@@ -731,12 +731,27 @@ final class GCU_Future_Intelligence {
 	public static function quality_score() {
 		global $wpdb;
 		$t = GCU_Install::tables();
-		$rows = $wpdb->get_results( "SELECT funnel_stage,COUNT(*) total FROM {$t['events']} WHERE occurred_at>=DATE_SUB(UTC_TIMESTAMP(),INTERVAL 30 DAY) GROUP BY funnel_stage", ARRAY_A );
+		$rows = $wpdb->get_results( "SELECT funnel_stage,COUNT(*) total FROM {$t['events']} WHERE occurred_at>=DATE_SUB(UTC_TIMESTAMP(),INTERVAL 30 DAY) AND event_type='ClinicUSPFunnelEvent' AND event_version=1 AND consent_state='granted' AND subject_hash IS NOT NULL GROUP BY funnel_stage", ARRAY_A );
 		$counts = array();
-		foreach ( is_array( $rows ) ? $rows : array() as $row ) {
-			$counts[ $row['funnel_stage'] ] = (int) $row['total'];
+		$funnel_verified = is_array( $rows );
+		if ( $funnel_verified ) {
+			foreach ( $rows as $row ) {
+				if ( ! is_array( $row ) || ! isset( $row['funnel_stage'], $row['total'] )
+					|| ! is_string( $row['funnel_stage'] )
+					|| ! GCU_Future_Policy::valid_aggregate_count( $row['total'] ) ) {
+					$funnel_verified = false;
+					break;
+				}
+				if ( GCU_Future_Policy::acquisition_stage_reportable( $row['funnel_stage'] ) ) {
+					$counts[ $row['funnel_stage'] ] = (int) $row['total'];
+				}
+			}
 		}
-		$selected = isset( $counts['cta_selected'] ) ? $counts['cta_selected'] : 0;
+		if ( ! $funnel_verified ) {
+			$counts = array();
+			GCU_Observability::log( 'error', 'future_quality_funnel_read_unverified', array() );
+		}
+		$selected = $funnel_verified && isset( $counts['cta_selected'] ) ? $counts['cta_selected'] : 0;
 		// Historic owner-only events were not authenticated by an owner-native contract.
 		// They cannot be used as successful handoffs, even if rows still exist.
 		$loaded = 0;
@@ -749,8 +764,15 @@ final class GCU_Future_Intelligence {
 			$evidence['missing'][] = 'privacy_effectiveness_measurement_unavailable';
 		}
 		$parity = self::parity_status();
-		$stale = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$t['claims']} WHERE status='review_required' OR (status='active' AND review_due_at IS NOT NULL AND review_due_at<=UTC_TIMESTAMP())" );
-		$open_reports = (int) $wpdb->get_var( 'SELECT COUNT(*) FROM ' . self::tables()['reports'] . " WHERE status IN ('open','reviewing')" );
+		$stale_raw = $wpdb->get_var( "SELECT COUNT(*) FROM {$t['claims']} WHERE status='review_required' OR (status='active' AND review_due_at IS NOT NULL AND review_due_at<=UTC_TIMESTAMP())" );
+		$open_reports_raw = $wpdb->get_var( 'SELECT COUNT(*) FROM ' . self::tables()['reports'] . " WHERE status IN ('open','reviewing')" );
+		$stale_verified = GCU_Future_Policy::valid_aggregate_count( $stale_raw );
+		$reports_verified = GCU_Future_Policy::valid_aggregate_count( $open_reports_raw );
+		if ( ! $stale_verified || ! $reports_verified ) {
+			GCU_Observability::log( 'error', 'future_quality_governance_counts_unverified', array() );
+		}
+		$stale = $stale_verified ? (int) $stale_raw : null;
+		$open_reports = $reports_verified ? (int) $open_reports_raw : null;
 		$destinations = GCU_Plugin::instance()->contracts()->all_destination_health();
 		$healthy = 0;
 		foreach ( $destinations as $destination ) {
@@ -760,12 +782,20 @@ final class GCU_Future_Intelligence {
 		$metrics = array(
 			'handoff_success' => $loaded > 0 && GCU_Future_Policy::cohort_allowed( $selected ) ? min( 100, round( 100 * $loaded / max( 1, $selected ), 1 ) ) : null,
 			'accessibility' => GCU_Future_Policy::valid_quality_percentage( $accessibility ) ? (float) $accessibility : null,
-			'claim_freshness' => $stale ? max( 0, 100 - 20 * $stale ) : 100,
+			'claim_freshness' => $stale_verified && ! empty( $parity['ok'] ) ? ( $stale ? max( 0, 100 - 20 * $stale ) : 100 ) : null,
 			'privacy' => GCU_Future_Policy::valid_quality_percentage( $privacy_effectiveness ) ? (float) $privacy_effectiveness : null,
-			'complaint_health' => max( 0, 100 - min( 100, $open_reports * 10 ) ),
+			'complaint_health' => $reports_verified ? max( 0, 100 - min( 100, $open_reports * 10 ) ) : null,
 			'destination_health' => $destination_score,
 			'performance' => GCU_Future_Policy::valid_quality_percentage( $performance ) ? (float) $performance : null,
 		);
+		// An unreadable SQL count must never be treated as observed zero or a
+		// perfect quality component. Keep the composite unmeasured too.
+		if ( ! $funnel_verified ) { $evidence['missing'][] = 'quality_funnel_read_unverified'; }
+		if ( ! $stale_verified ) { $evidence['missing'][] = 'claim_freshness_count_unverified'; }
+		if ( ! $reports_verified ) { $evidence['missing'][] = 'complaint_count_unverified'; }
+		if ( empty( $parity['ok'] ) ) { $evidence['missing'][] = 'quality_policy_parity_unverified'; }
+		$evidence['missing'] = array_values( array_unique( $evidence['missing'] ) );
+		$evidence['complete'] = $evidence['complete'] && $funnel_verified && $stale_verified && $reports_verified && ! empty( $parity['ok'] );
 		// A provisional score would misleadingly turn missing evidence into zero or
 		// perfect marks. Publish no composite score until mandatory data exists.
 		return array(

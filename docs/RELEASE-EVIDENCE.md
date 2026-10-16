@@ -1,3 +1,9 @@
+Software candidate: `1.4.50`.
+
+# File14 R47 v1.4.50 — exact source evidence only, NOT deployed production acceptance
+
+Precode source freeze `main@1146c256d668d9dd28975b43f5956a82c9fd966c` at v1.4.49. Forty approved amended File14, Three Central Plans and companion File07/08/09/25 owner lenses frozen before code. Two verified local source defects corrected: quality_score unfiltered event group counts and invalid SQL assumptions; unresolved false/null governance SQL counters converted to perfect claim/complaint score components. New 40 actual production PHP method SQL/WordPress mocked cases integrated in PHP7.4/8.3, repeat 40 source contracts ×40, two fresh reviews and deterministic ZIP+SBOM. Must prove exact PR HEAD and merged-main HEAD success before repository acceptance. External owner File01/07/08/09 #19 and File20/25 placement #22 OPEN. Actual deployed code/hash, real DB rows/schema/wp_options/migration, WordPress staging and Live re-test UNVERIFIED. Evidence ledger `docs/REVIEW-40-CROSS-PLAN-v1.4.50-R47.md`.
+
 Software candidate: `1.4.49`.
 
 # File14 R46 v1.4.49 — Exact source candidate only, NOT installed Live acceptance

@@ -1,3 +1,9 @@
+Software candidate: `1.4.50`.
+
+# R47 File14 — SOURCE v1.4.50 pending exact main and deployed-state proof
+
+Frozen pre-correction main `1146c256d668d9dd28975b43f5956a82c9fd966c`, v1.4.49. The amended File14 CTI24 FR/FUT, central master governing plans and File07/08/09/25 companion boundaries were reviewed with all 40 lenses committed prior to code modifications. Two new source errors fixed in quality_score: previously acquisition telemetry counts lacked consent/F14-v1 origin predicates or aggregate read validation; SQL false/null complaint+claim counters were silently cast to zero and perfect metrics. 40 new direct actual PHP method SQL-mocked cases in `tests/r47-quality-provenance-and-sql-evidence-tests.php`, 40x40 source reviews retained. Exact PR+merged-main PHP7.4/8.3, fresh reviews, reproducible ZIP/SBOM required. Issues #19 and #22 remain OPEN; deployed plugin/version/hash, actual database/schema/options, migration, owner acceptance and live verification all NOT KNOWN.
+
 Software candidate: `1.4.49`.
 
 # R46 File14 — SOURCE/Repository candidate v1.4.49, NOT Production acceptance
