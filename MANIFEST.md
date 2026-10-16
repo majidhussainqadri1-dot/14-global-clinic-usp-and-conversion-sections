@@ -1,8 +1,12 @@
-# File 14 v1.4.43 Source Manifest
+# File 14 v1.4.44 Source Manifest
 
 Canonical plugin folder: `14-global-clinic-usp-integration`
 
 Contents:
+- R41 FUT18 fail-closed FAQ catalogue read; no false missing FAQ proposals
+- R41 FUT19 fail-closed locale/claim consistency scans and malformed rows
+- R41 daily governance propagates parity, consistency and FAQ candidate errors; adds 40 direct SQL mocked cases
+- External owner Issues #19/#22 and real staging/live parity remain NOT VERIFIED
 - R40 fail-closed stale-claim database, >100 backlog and incomplete transaction guard with daily propagation
 - R40 forty actual-method negative/edge tests and forty repeated source-plan reviews
 - Owner #19/#22 and WordPress staging/live parity remain OPEN/UNVERIFIED

@@ -352,7 +352,9 @@ final class GCU_Future_Intelligence {
 		if ( is_wp_error( $native_permission ) ) { return $native_permission; }
 		$ready = self::rest_storage_ready();
 		if ( is_wp_error( $ready ) ) { return $ready; }
-		return self::no_store_response( array( 'items' => self::faq_gap_candidates(), 'source' => 'approved aggregate question adapters only' ) );
+		$candidates = self::faq_gap_candidates();
+		if ( is_wp_error( $candidates ) ) { return $candidates; }
+		return self::no_store_response( array( 'items' => $candidates, 'source' => 'approved aggregate question adapters only' ) );
 	}
 
 	public static function rest_consistency() {
@@ -361,7 +363,11 @@ final class GCU_Future_Intelligence {
 		if ( is_wp_error( $native_permission ) ) { return $native_permission; }
 		$ready = self::rest_storage_ready();
 		if ( is_wp_error( $ready ) ) { return $ready; }
-		return self::no_store_response( self::consistency_graph() );
+		$graph = self::consistency_graph();
+		if ( empty( $graph['verified'] ) ) {
+			return new WP_Error( 'gcu_future_consistency_read_failed', __( 'Message consistency could not be verified.', 'global-clinic-usp-integration' ), array( 'status' => 503 ) );
+		}
+		return self::no_store_response( $graph );
 	}
 
 	public static function rest_ai_copy( WP_REST_Request $request ) {
@@ -834,6 +840,10 @@ final class GCU_Future_Intelligence {
 		global $wpdb;
 		$t = GCU_Install::tables();
 		$faq = $wpdb->get_col( "SELECT LOWER(title) FROM {$t['blocks']} WHERE block_type='faq' AND status='active'" );
+		if ( ! is_array( $faq ) ) {
+			GCU_Observability::log( 'error', 'faq_gap_catalog_read_unverified', array() );
+			return new WP_Error( 'gcu_faq_gap_catalog_read_failed', __( 'The approved FAQ catalogue could not be verified.', 'global-clinic-usp-integration' ), array( 'status' => 503 ) );
+		}
 		$out = array();
 		foreach ( $signals as $signal ) {
 			if ( ! is_array( $signal ) ) {
@@ -849,7 +859,7 @@ final class GCU_Future_Intelligence {
 			}
 			$norm = strtolower( $question );
 			$covered = false;
-			foreach ( is_array( $faq ) ? $faq : array() as $title ) {
+			foreach ( $faq as $title ) {
 				if ( self::text_similarity( $norm, $title ) >= 0.55 ) {
 					$covered = true;
 					break;
@@ -867,9 +877,17 @@ final class GCU_Future_Intelligence {
 		global $wpdb;
 		$t = GCU_Install::tables();
 		$rows = $wpdb->get_results( "SELECT block_key,locale,title,body,cta_label,claim_keys FROM {$t['blocks']} WHERE status='active' ORDER BY block_key,locale", ARRAY_A );
+		if ( ! is_array( $rows ) ) {
+			GCU_Observability::log( 'error', 'message_consistency_read_unverified', array() );
+			return array( 'ok' => false, 'verified' => false, 'issues' => array( 'active_blocks_consistency_read_unverified' ), 'nodes' => array(), 'terminology_lock' => GCU_Future_Policy::terminology_lock() );
+		}
 		$nodes = array();
 		$issues = array();
-		foreach ( is_array( $rows ) ? $rows : array() as $row ) {
+		foreach ( $rows as $row ) {
+			if ( ! is_array( $row ) || ! isset( $row['block_key'], $row['locale'], $row['title'], $row['body'], $row['cta_label'], $row['claim_keys'] ) ) {
+				$issues[] = 'active_block_consistency_row_invalid';
+				continue;
+			}
 			$key = $row['block_key'];
 			if ( ! isset( $nodes[ $key ] ) ) {
 				$nodes[ $key ] = array();
@@ -893,7 +911,7 @@ final class GCU_Future_Intelligence {
 				$issues[] = 'claim_set_drift:' . $key;
 			}
 		}
-		return array( 'ok' => empty( $issues ), 'issues' => $issues, 'nodes' => $nodes, 'terminology_lock' => GCU_Future_Policy::terminology_lock() );
+		return array( 'ok' => empty( $issues ), 'verified' => ! in_array( 'active_block_consistency_row_invalid', $issues, true ), 'issues' => $issues, 'nodes' => $nodes, 'terminology_lock' => GCU_Future_Policy::terminology_lock() );
 	}
 
 	public static function ai_copy_assist( array $data ) {
@@ -976,15 +994,30 @@ final class GCU_Future_Intelligence {
 			) );
 			return $freshness;
 		}
-		self::parity_status();
-		self::consistency_graph();
-		foreach ( self::faq_gap_candidates() as $index => $candidate ) {
-			self::upsert_record( 'faq_gap', 'candidate_' . substr( hash( 'sha256', $candidate['question'] ), 0, 16 ), 'en-US', 'ZZ', $candidate, 'suggested', false, 0, true );
-			if ( $index >= 19 ) {
-				break;
-			}
+		$parity = self::parity_status();
+		if ( ! is_array( $parity ) || empty( $parity['ok'] ) ) {
+			GCU_Observability::log( 'error', 'daily_policy_parity_unverified', array() );
+			return new WP_Error( 'gcu_daily_policy_parity_failed', __( 'Daily policy parity failed or could not be verified.', 'global-clinic-usp-integration' ), array( 'status' => 503 ) );
 		}
-		self::cleanup();
+		$graph = self::consistency_graph();
+		if ( empty( $graph['ok'] ) || empty( $graph['verified'] ) ) {
+			GCU_Observability::log( 'error', 'daily_message_consistency_unverified', array() );
+			return new WP_Error( 'gcu_daily_consistency_failed', __( 'Daily message consistency could not be confirmed.', 'global-clinic-usp-integration' ), array( 'status' => 503 ) );
+		}
+		$candidates = self::faq_gap_candidates();
+		if ( is_wp_error( $candidates ) ) {
+			GCU_Observability::log( 'error', 'daily_faq_gaps_unverified', array() );
+			return $candidates;
+		}
+		foreach ( $candidates as $index => $candidate ) {
+			$stored = self::upsert_record( 'faq_gap', 'candidate_' . substr( hash( 'sha256', $candidate['question'] ), 0, 16 ), 'en-US', 'ZZ', $candidate, 'suggested', false, 0, true );
+			if ( is_wp_error( $stored ) ) {
+				GCU_Observability::log( 'error', 'daily_faq_suggestion_store_failed', array( 'code' => sanitize_key( $stored->get_error_code() ) ) );
+				return $stored;
+			}
+			if ( $index >= 19 ) { break; }
+		}
+		return self::cleanup();
 	}
 
 	private static function checked_experiment_stop( $origin ) {

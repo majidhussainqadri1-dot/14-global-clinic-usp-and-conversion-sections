@@ -1,3 +1,9 @@
+## R41 File14 Current Source Candidate 1.4.44
+
+Requirements Traceability — v1.4.44
+
+File 14 v1.4.44 may only claim a status supported by exact source CI, independent staging acceptance and the live deployed artifact plus actual DB/migration parity. Approved F14-FR-001..016 and FUT-01..24 are mapped in `docs/REVIEW-40-CROSS-PLAN-v1.4.44-R41.md`. R41-D01 (FUT18 FAQ database read), R41-D02 (FUT19 consistency database read) and R41-D03 (daily governance verification/result propagation) have a proposed local source fix and 40 direct real-method mocked-SQL scenarios; exact-PR and post-merge QA required. Open owner #19 and #22 remain. This document establishes no deployed truth.
+
 ## File14 R40 Current Source Candidate 1.4.43
 
 Requirements Traceability — v1.4.43

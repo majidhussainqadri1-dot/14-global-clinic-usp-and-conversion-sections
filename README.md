@@ -1,3 +1,9 @@
+Software candidate: `1.4.44`.
+
+# File14 R41 — Verified-Facts FAQ and Cross-Locale Consistency Guards
+
+A new 40-requirement source/spec boundary pass over the amended File14 Future CTI24, consolidated master plan and File01/07/08/09/20/24/25 ownership found three local defects: failed FAQ catalogue DB reads could be treated as unanswered questions; failed consistency graph reads could claim `ok=true`; daily governance could ignore parity/consistency/FAQ DB and draft persistence errors. Fixes are in source with a 40-case real-method mocked-SQL regression test; 40 repeated source-plan scans and fresh PHP7.4/8.3/ZIP/SBOM CI remain mandatory. `docs/REVIEW-40-CROSS-PLAN-v1.4.44-R41.md` holds the findings. Cross-owner Issues #19/#22 stay OPEN. Deployed code, real DB/migration, staging and live are NOT VERIFIED.
+
 Software candidate: `1.4.43`.
 
 # File14 R40 — Fail-Closed Claim Freshness Governance

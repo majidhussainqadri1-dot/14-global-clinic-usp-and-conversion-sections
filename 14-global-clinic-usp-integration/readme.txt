@@ -4,7 +4,7 @@ Tags: clinic, doctors, conversion, accessibility, privacy, governance, trust, ex
 Requires at least: 6.6
 Tested up to: 7.0.1
 Requires PHP: 7.4
-Stable tag: 1.4.43
+Stable tag: 1.4.44
 License: GPLv2 or later
 
 Canonical File 14 implementation for approved Worldwide Clinic value-proposition content, ethical conversion journeys, claim governance, destination contracts, Future Conversion & Trust Intelligence and privacy-minimized measurement.
@@ -82,6 +82,11 @@ The File 14 surface includes complete File 14-owned American English, Urdu and A
 8. Obtain explicit Founder acceptance before production deployment.
 
 == Changelog ==
+
+= 1.4.44 =
+* R41 prevents a failed FAQ catalogue read from inventing FAQ suggestions (F14-FUT-18); guarded REST and daily governance return explicit errors.
+* R41 marks failed or malformed consistency graph reads as unverified rather than clean (F14-FUT-19); daily parity and consistency errors are propagated.
+* R41 adds 40 direct method mocks for FAQ/consistency/REST/daily and retains 40x40 approved-plan source scan. Issues #19/#22 and staging/live parity remain open.
 
 = 1.4.43 =
 * R40 Claim Freshness Sentinel now flags failed DB reads, stale-claim overflow beyond 100, and incomplete lock/transaction/history/CAS/audit/commit work instead of signaling false completion.

@@ -1,3 +1,9 @@
+Software candidate: `1.4.44`.
+
+# R41 — Repository Candidate v1.4.44, only SOURCE under review
+
+Frozen exact prepatch main `d2bf13a9ce71b185452c17d0ad7c915ddfd6e78f` (1.4.43). 40 separate plan/owner lenses, 3 source defects found (FUT18: false FAQ suggestions on DB error; FUT19: false-green consistency read; daily governance ignores evidence errors). Source fixes and 40 additional real-method SQL mocks added subject to exact PR and fresh post-merge GitHub CI. Existing Issues #19/#22 remain unclosed. Base/Future schema targets 10005/1 unchanged. Installed version/artifact checksum, actual DB version, migration/wp_options, WordPress staging and Live verification all UNVERIFIED. No `Staging-Accepted`, `Live-Deployed` or `Operational` claim. Details `docs/REVIEW-40-CROSS-PLAN-v1.4.44-R41.md`.
+
 Software candidate: `1.4.43`.
 
 # File14 R40 — Repository Candidate v1.4.43 (not live accepted)
