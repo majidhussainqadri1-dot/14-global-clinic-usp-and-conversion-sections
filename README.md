@@ -1,3 +1,9 @@
+Software candidate: `1.4.51`.
+
+# File14 R48 — Cross-locale Message Consistency Evidence Boundaries
+
+Frozen pre-code repository source `main@f67e49a4a0f1cdcf7da8cf25f2833f05033410b7` (plugin 1.4.50). Forty distinct approved 16 FR + 24 FUT requirement/owner lenses inspected against attached File14 amended v2.0 CTI24, consolidated Three Central Governing Plans, and File07/08/09/25 plans BEFORE runtime changes. TWO new FUT19 source defects: (D01) malformed claim_keys JSON/nested values/unknown canonical keys or duplicate key+locale rows could silently replace or normalize truthful graph evidence; (D02) unbounded active-block scan could grow indefinitely without detecting an uninspected remainder. Corrected with canonical row and claim-list validation, duplicate detection, LIMIT 501 fail-closed sentinel and privacy-safe constant-code logging. Added 40 direct real method mocked SQL/REST/governance cases plus 40 repeated source-contract checks. Source Base 10005 / Future1 targets unchanged. Exact deployed artifact/DB/wp_options/migrations, external owner #19/#22 and real staging/live verification remain unavailable. See `docs/REVIEW-40-CROSS-PLAN-v1.4.51-R48.md`.
+
 Software candidate: `1.4.50`.
 
 # R47 — Quality Score Source Provenance and Verified SQL Metrics
