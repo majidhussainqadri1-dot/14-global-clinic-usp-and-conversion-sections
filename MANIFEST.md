@@ -1,8 +1,12 @@
-# File 14 v1.4.48 Source Manifest
+# File 14 v1.4.49 Source Manifest
 
 Canonical plugin folder: `14-global-clinic-usp-integration`
 
 Contents:
+- R46 invalid or noncanonical UTC claim review/expiry times fail closed and can no longer be considered fresh
+- R46 malformed active public copy SQL rows cannot pass policy parity without all required fields
+- R46 40 direct actual PHP method SQL mocks and forty repeated 40-marker source review tests
+- Owner issues #19/#22 OPEN; installed plugin, DB schema/migration, staging and live UNVERIFIED
 - R45 false SQL DELETE cannot be reported as successful governed-record/report retention cleanup; explicit failure and privacy-safe operational alert
 - R45 public reviewed trust-policy change log false/null SQL reads trigger explicit unverified REST response and neutral public fallback
 - Forty additional real-method mocked SQL regression checks plus forty repeated source review rounds; no WordPress staging/live proof
