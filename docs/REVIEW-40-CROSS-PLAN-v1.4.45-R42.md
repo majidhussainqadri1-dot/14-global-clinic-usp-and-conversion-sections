@@ -64,3 +64,19 @@
 Fail closed on the three above independent SQL integrity omissions with anonymous operational diagnostic status (no user or event IDs); keep small-cohort suppression; add 40 direct actual-method mocked SQL/privacy failure, healthy, REST propagation and anomaly cases, integrate into PHP7.4/8.3 build; exact SHA quality, forty repeated source sweeps, fresh reviews, deterministic package/SBOM; post-merge main re-test. Candidate **v1.4.45**, source schema Base `10005`, Future `1` unchanged. No owner plugin mutation or guessed deployment.
 
 Repository HEAD = 2d4414a07b1b244f2461219f182531c768c0e942; Deployed Version = UNVERIFIED; DB Version = UNVERIFIED; Migration State = UNVERIFIED; Live Verification Status = UNVERIFIED. Exact deployed code ابھی unverified ہے؛ repository-based diagnosis provisional ہے۔
+
+## Post-complete-inspection corrective batch — NOT part of initial freeze
+
+All forty source requirement lenses above were frozen on GitHub **before** modifying any R42 code. Only afterward the following corrective changes were made:
+
+| Defect | Exact source fix | Confidence boundary |
+|---|---|---|
+| R42-D01 | `GCU_Owner_Outcomes::observed_anomaly()` SQL false/null now returns explicit `owner_event_volume_read_unverified`, suppressed owner-stage signals and no fabricated booking success rate; logs privacy-safe operator error; caller `anomaly_detector()` preserves this actual status in last-option, not `insufficient_owner_event_evidence`. | Source under PR test; no deployed events or actual correlated conversion inference. |
+| R42-D02 | `GCU_Owner_Outcomes::owner_stage_summary()` SQL false/null and malformed result rows return `WP_Error` instead of an apparently healthy small-cohort suppression. Authorized `rest_friction` already checks owner errors and forwards them. | No raw subject, application, doctor, appointment or event IDs exposed. |
+| R42-D03 | `GCU_Future_Intelligence::friction_summary()` SQL false/null and malformed result rows return `WP_Error` and privacy-safe low-cardinality error; `rest_friction()` checks that value before accessing it as an array and forwards the protected error. | Existing cohort threshold 10 and prohibition of inferred stage drop-offs remain in place. |
+
+Added **40** different method-level SQL/WordPress mocked cases in `tests/r42-analytics-read-integrity-tests.php`, divided into ten failure/success/privacy/REST branches, four parameter variations each. Added to `scripts/quality.sh`. The full forty-pass source-review suite remains in CI, **but repeating a source marker forty times is not forty independent deployments or browser runs**. Actual deployed, owner plugin and migration evidence is absent.
+
+**R42 tally:** 40 distinct requirements inspected; 3 new local source defects and 3 proposed corrections; 40 new direct-method test cases; 2 preexisting cross-file owner acceptance blockers (#19/#22) still OPEN. All source corrections are conditional on CI, then staging and Live parity for a real-world completion claim.
+
+**Required final acceptance separately:** Repository HEAD (after review and merge) / Deployed Version (not known) / DB Version (not known) / Migration State (not known) / Live Verification Status (not verified). GitHub success does not equal installed production health.
