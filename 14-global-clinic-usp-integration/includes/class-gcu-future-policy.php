@@ -602,6 +602,24 @@ final class GCU_Future_Policy {
 		return round( $score, 1 );
 	}
 
+	/**
+	 * Verify canonical SQL COUNT(*) / SUM(CASE...) results before aggregation.
+	 * Accept PHP integers or nonnegative decimal integer strings in signed-int
+	 * range. Never coerce fractions, scientific notation, negative counts or
+	 * overflowing strings into privacy cohort decisions.
+	 */
+	public static function valid_aggregate_count( $value ) {
+		if ( is_int( $value ) ) {
+			return $value >= 0;
+		}
+		if ( ! is_string( $value ) || ! preg_match( '/^(0|[1-9][0-9]*)$/D', $value ) ) {
+			return false;
+		}
+		$max = (string) PHP_INT_MAX;
+		return strlen( $value ) < strlen( $max )
+			|| ( strlen( $value ) === strlen( $max ) && strcmp( $value, $max ) <= 0 );
+	}
+
 	public static function cohort_allowed( $count, $threshold = self::MIN_COHORT ) {
 		return (int) $count >= max( self::MIN_COHORT, (int) $threshold );
 	}
