@@ -63,3 +63,21 @@ Fail closed on invalid FAQ lookup without fabricating gaps; preserve error throu
 
 ## Required separate evidence
 Repository HEAD = d2bf13a9ce71b185452c17d0ad7c915ddfd6e78f; Deployed Version = UNVERIFIED; Actual DB Version = UNVERIFIED; Migration State = UNVERIFIED; Live Verification Status = NOT RUN. Exact deployed code ابھی unverified ہے؛ repository-based diagnosis provisional ہے۔
+
+## R41 first complete corrective pass — code against the frozen findings
+
+The **pre-correction 40-plan ledger was committed before modifying runtime PHP**. Source defects were collected before coding, not patched mid-review.
+
+| New distinct defect | Approved owner requirement | Source correction | Status before CI |
+|---|---|---|---|
+| R41-D01 (failed FAQ catalogue read became empty set, fabricated gaps) | F14-FUT-18 | `faq_gap_candidates()` returns explicit `WP_Error`; /future/faq-gaps and daily cron forward error, never suggest on missing database evidence | Coded; awaiting exact-source CI |
+| R41-D02 (failed/malformed graph read returned clean) | F14-FUT-19 | `consistency_graph()` returns `ok=false`, `verified=false`; protected REST fails closed on unverified data, while valid missing locale and drift remain enumerated | Coded; awaiting exact-source CI |
+| R41-D03 (daily parity/consistency/FAQ failures ignored) | F14-FUT-05,18,19 | Daily governance stops and logs privacy-safe evidence-failure signals; individual suggestion store `WP_Error` also propagates | Coded; awaiting exact-source CI |
+
+One new self-contained test file `tests/r41-faq-consistency-governance-tests.php` invokes the **real** `GCU_Future_Intelligence` methods in 40 distinct SQL-mocked negative, healthy, locale-gap, inconsistent, malformed, REST and daily-governance branches; no live WordPress or owner-plugin integration is simulated as deployed truth.
+
+**Two distinct preexisting OWNER/DESIGN release blockers** (#19/#22) remain unresolved and are not counted as corrected local defects. Correcting these without authoritative owner changes, real approved event contract/provenance or actual experimental placement mutation/restoration would invent completion.
+
+**Additional evidence limitations:** External File01/07/08/09/20/24/25 contract relations are checked at source interface boundaries; current installed companion runtime and exact deployed source/DB/migrations are not available. The 40-step automated script repeats marker/contract scans 40 times; it does not constitute 40 actual WordPress UI sessions or 40 independently reviewed production deployments.
+
+**Source release state:** candidate 1.4.44, base schema target 10005 and future 1 (these are source targets only). Repository HEAD initially frozen: `d2bf13a9ce71b185452c17d0ad7c915ddfd6e78f`; candidate/merged HEAD and CI statuses to be appended after exact run verification. Deployed Version: UNVERIFIED. Actual DB Version: UNVERIFIED. Migration State: UNVERIFIED. Live Verification Status: NOT TESTED.
