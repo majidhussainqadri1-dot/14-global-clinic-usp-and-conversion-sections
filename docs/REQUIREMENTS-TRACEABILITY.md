@@ -1,3 +1,9 @@
+## File14 R46 Source Candidate 1.4.49
+
+Requirements Traceability — v1.4.49
+
+File 14 v1.4.49 may only claim a status independently supported by exact source/CI, staging acceptance, and installed deployed artifact plus DB migration parity. Forty approved File14 FR/FUT plus central and owner boundary source lenses, two fixed truth defects (claim UTC freshness and malformed active copy policy parity), and owner blockers #19/#22 detailed in `docs/REVIEW-40-CROSS-PLAN-v1.4.49-R46.md`. R46 adds 40 direct PHP real-method mocked SQL cases. 40 repeated source review loops are NOT forty actual WordPress browser sessions. Actual deployed state and DB migrations unverified.
+
 ## R45 File14 current SOURCE candidate 1.4.48
 
 Requirements Traceability — v1.4.48
