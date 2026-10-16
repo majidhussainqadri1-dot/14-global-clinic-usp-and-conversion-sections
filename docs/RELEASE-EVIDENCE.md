@@ -1,3 +1,9 @@
+Software candidate: `1.4.46`.
+
+# R43 v1.4.46 source release — automated quality is not deployed confirmation
+
+Precode freeze exact repository main `ae691d9f16969a62935f5043fb3707dec44d5c1d` and approved File14 CTI24/central/companion source scopes. Three local source defects (malformed native anomaly rows; noncanonical aggregate counts; consent/unverified origin browser-friction SQL) corrected in source and forty direct method/SQL mocked scenarios added. 40 distinct FR/FUT lenses and repeated 40×40 source scans described in `docs/REVIEW-40-CROSS-PLAN-v1.4.46-R43.md`. Exact PR SHA and new merged-main SHA must green both PHP7.4/8.3, two fresh reviews, deterministic release ZIP/SBOM. Owner #19/#22 remain OPEN; no deployed plugin/hash, real DB/wp_options/migrations, companion staging or live behavior evidence exists.
+
 Software candidate: `1.4.45`.
 
 # R42 v1.4.45 — Proposed SOURCE release evidence, not live installed state
