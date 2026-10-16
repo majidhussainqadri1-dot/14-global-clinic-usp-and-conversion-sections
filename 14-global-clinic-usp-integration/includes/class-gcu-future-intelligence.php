@@ -333,6 +333,7 @@ final class GCU_Future_Intelligence {
 		$owner_observations = GCU_Owner_Outcomes::owner_stage_summary( $days );
 		if ( is_wp_error( $owner_observations ) ) { return $owner_observations; }
 		$report = self::friction_summary( $days );
+		if ( is_wp_error( $report ) ) { return $report; }
 		$report['owner_native_observations'] = $owner_observations;
 		return self::no_store_response( $report );
 	}
@@ -765,9 +766,19 @@ final class GCU_Future_Intelligence {
 		$t = GCU_Install::tables();
 		$days = max( 1, min( 90, (int) $days ) );
 		$rows = $wpdb->get_results( $wpdb->prepare( "SELECT funnel_stage,COUNT(*) total FROM {$t['events']} WHERE occurred_at>=DATE_SUB(UTC_TIMESTAMP(),INTERVAL %d DAY) GROUP BY funnel_stage", $days ), ARRAY_A );
+		if ( ! is_array( $rows ) ) {
+			GCU_Observability::log( 'error', 'friction_stage_read_unverified', array() );
+			return new WP_Error( 'gcu_friction_stage_read_unverified', __( 'Friction analytics evidence could not be verified.', 'global-clinic-usp-integration' ), array( 'status' => 503 ) );
+		}
+		foreach ( $rows as $row ) {
+			if ( ! is_array( $row ) || ! isset( $row['funnel_stage'], $row['total'] ) || ! is_numeric( $row['total'] ) ) {
+				GCU_Observability::log( 'error', 'friction_stage_row_unverified', array() );
+				return new WP_Error( 'gcu_friction_stage_row_unverified', __( 'Friction analytics evidence was incomplete.', 'global-clinic-usp-integration' ), array( 'status' => 503 ) );
+			}
+		}
 		$total = 0;
 		$stages = array();
-		foreach ( is_array( $rows ) ? $rows : array() as $row ) {
+		foreach ( $rows as $row ) {
 			if ( ! GCU_Future_Policy::acquisition_stage_reportable( isset( $row['funnel_stage'] ) ? $row['funnel_stage'] : '' ) ) { continue; }
 			$total += (int) $row['total'];
 			$stages[ $row['funnel_stage'] ] = (int) $row['total'];

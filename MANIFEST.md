@@ -1,8 +1,12 @@
-# File 14 v1.4.44 Source Manifest
+# File 14 v1.4.45 Source Manifest
 
 Canonical plugin folder: `14-global-clinic-usp-integration`
 
 Contents:
+- R42 native owner event volume anomalies: failed SQL not confused with insufficient sample
+- R42 owner-stage counts and browser funnel friction: unverified SQL/row payload fail-close; REST propagates errors
+- Forty new actual method SQL-mocked tests, forty consecutive forty-marker source review passes
+- Owner issues #19/#22 remain OPEN; real deployed WP and DB parity unverified
 - R41 FUT18 fail-closed FAQ catalogue read; no false missing FAQ proposals
 - R41 FUT19 fail-closed locale/claim consistency scans and malformed rows
 - R41 daily governance propagates parity, consistency and FAQ candidate errors; adds 40 direct SQL mocked cases

@@ -4,7 +4,7 @@ Tags: clinic, doctors, conversion, accessibility, privacy, governance, trust, ex
 Requires at least: 6.6
 Tested up to: 7.0.1
 Requires PHP: 7.4
-Stable tag: 1.4.44
+Stable tag: 1.4.45
 License: GPLv2 or later
 
 Canonical File 14 implementation for approved Worldwide Clinic value-proposition content, ethical conversion journeys, claim governance, destination contracts, Future Conversion & Trust Intelligence and privacy-minimized measurement.
@@ -82,6 +82,11 @@ The File 14 surface includes complete File 14-owned American English, Urdu and A
 8. Obtain explicit Founder acceptance before production deployment.
 
 == Changelog ==
+
+= 1.4.45 =
+* R42 F14-FUT-14 native owner-volume anomaly SQL failures report measurement unverified (never clean small cohort), with private operational signal.
+* R42 F14-FUT-13 native owner stage and browser friction SQL failures or invalid rows now fail closed through protected REST; verified small-cohort suppression unchanged.
+* 40 direct actual-method SQL/REST cases added and 40 approved-plan source scans x40 retained. Owner #19/#22 and live parity remain open.
 
 = 1.4.44 =
 * R41 prevents a failed FAQ catalogue read from inventing FAQ suggestions (F14-FUT-18); guarded REST and daily governance return explicit errors.
