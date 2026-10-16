@@ -38,7 +38,8 @@ class GCU_Install {
         return array( 'claims'=>'wp_gcu_claims', 'blocks'=>'wp_gcu_blocks',
             'claim_history'=>'wp_gcu_claim_history' );
     }
-    public static function ready_for_runtime() { return true; }
+    public static $runtime = true;
+    public static function ready_for_runtime() { return self::$runtime; }
 }
 class GCU_Observability {
     public static $events = array();
@@ -66,6 +67,9 @@ class GCU_Future_Policy {
             && is_numeric( $v['count'] ) && (int) $v['count'] >= 10;
     }
     public static function dark_pattern_scan( $text ) { return array( 'flags'=>array() ); }
+    public static function validate_public_record_payload( $type, $payload ) {
+        return array( 'safe' => is_array( $payload ) && ! empty( $payload['title'] ) && ! empty( $payload['effective_date'] ) );
+    }
 }
 class R41DB {
     public $prefix = 'wp_';
