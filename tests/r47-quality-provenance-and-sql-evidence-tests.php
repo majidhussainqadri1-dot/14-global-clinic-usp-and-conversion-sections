@@ -91,7 +91,7 @@ for($case=1;$case<=40;$case++){
         $wpdb->events=$v===0?array(array('funnel_stage'=>'cta_selected')):
             ($v===1?array(array('funnel_stage'=>'cta_selected','total'=>'-10')):
             ($v===2?array(array('funnel_stage'=>'cta_selected','total'=>'1e5')):
-            array(array('funnel_stage'=>'cta_selected','total'=>(string)PHP_INT_MAX.'0')));
+            array(array('funnel_stage'=>'cta_selected','total'=>(string)PHP_INT_MAX.'0'))));
         $r=GCU_Future_Intelligence::quality_score();
         $ok=$r['sample_count']===null && $r['small_cohort_suppressed']===true
             && in_array('quality_funnel_read_unverified',$r['missing_evidence'],true);
