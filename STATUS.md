@@ -1,3 +1,9 @@
+Software candidate: `1.4.51`.
+
+# R48 File14 — SOURCE-ONLY v1.4.51, installed state UNKNOWN
+
+Precode main `f67e49a4a0f1cdcf7da8cf25f2833f05033410b7` v1.4.50; approved CTI24 File14 FR/FUT, central master governing and File07/08/09/25 companion boundaries inspected in 40 unique source lenses, ledger committed before PHP changes. Newly corrected local source errors: malformed/duplicate linked claim graph locale variants wrongly could be declared consistent; limitless SQL active-block consistency scan lacked a fail-closed completeness sentinel. New 40 real actual-method SQL-mocked FUT19 cases plus prior 40x40 source reviews; exact PR/merged main PHP7.4/8.3, both fresh reviews, deterministic package/SBOM required. Owner #19 and #22 still OPEN. Actual deployed package/hash/plugin, DB/wp_options/migration, WordPress staging and live all UNVERIFIED. See `docs/REVIEW-40-CROSS-PLAN-v1.4.51-R48.md`.
+
 Software candidate: `1.4.50`.
 
 # R47 File14 — SOURCE v1.4.50 pending exact main and deployed-state proof
