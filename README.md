@@ -1,3 +1,9 @@
+Software candidate: `1.4.49`.
+
+# R46 — Trust Claim UTC Date Freshness and Active-Copy Parity Row Integrity
+
+PRE-CODE frozen main `63ee5d27121cc8f56a465f81c470a23e2c1fb947` source 1.4.48. Compared amended File14 CTI24 16 FR+24 FUT to Consolidated Three Central Governing Master Plans and companion File07/08/09/25 boundaries. 40 distinct source-plan lenses reviewed before edits. **Two new local source omissions:** (R46-D01) invalid populated review/expiry date parsed false and thereby treated as no deadline; (R46-D02) incomplete active copy row could be scanned as empty policy text and parity wrongly marked clean. Source now strictly parses canonical UTC SQL timestamps and validates every active block row shape. New `tests/r46-claim-date-and-parity-row-tests.php` contains 40 actual PHP-method SQL mocks and reuses R39's 40 direct method tests; 40 repeated 40-plan source scans remain CI-gated. Source schema targets Base 10005/Future 1 unchanged, **NOT actual deployed DB**. Owner #19/#22 and real staging/live verification remain open. See `docs/REVIEW-40-CROSS-PLAN-v1.4.49-R46.md`.
+
 Software candidate: `1.4.48`.
 
 # File14 R45 — Retention Cleanup and Public Policy History Read Integrity
