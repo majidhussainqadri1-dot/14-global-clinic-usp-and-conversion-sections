@@ -64,3 +64,20 @@ Original supplied sources consulted: amended **File14 Global Clinic USP and Conv
 Candidate plugin 1.4.50; add fail-closed FUT11 query and metrics evidence, **40 new direct real-method PHP mocked WPDB** cases for false/null, malformed counts, denied consent/source and successful zero vs unknown, tested PHP7.4 + PHP8.3, original forty source review repeated 40 times, fresh post-code independent checks, reproducible ZIP + SBOM. Exact PR HEAD green, then merge and exact **new main HEAD recheck**. NO SQL schema changes, no touching owner plugins, no staging or live deployment.
 
 Final reality ledger: Repository HEAD `1146c256d668d9dd28975b43f5956a82c9fd966c` (pre-patch); Deployed Version **UNVERIFIED**; Actual DB Version **UNVERIFIED**; Migration State **UNVERIFIED**; Live Verification Status **NOT RUN**. Exact deployed code ابھی unverified ہے؛ repository-based diagnosis provisional ہے۔
+
+## R47 code corrections AFTER freezing all forty requirements
+
+**Chronological source evidence:** the initial forty approved FR/FUT scope findings and the two new FUT11 defects were committed **before runtime edits** at GitHub commit `c8d54c3802f20d3787f586e8a5700b8b077a401c`.
+
+| Defect | Exact code correction | Actual verified test intent |
+|---|---|---|
+| **R47-D01** | `GCU_Future_Intelligence::quality_score()` selects only **consent-granted File14 ClinicUSPFunnelEvent version 1 with nonnull subject_hash**. Each SQL aggregate must be a canonical nonnegative integer; a false/null/malformed SQL result marks funnel unverified with privacy-minimized log; source-supplied stage `impression` and `cta_selected` remain distinct from owner-authenticated bookings. | 40 direct method tests include query predicates, cohort valid sample, failure false/null, malformed/negative/exponent/overflow counts, and no false complete quality. |
+| **R47-D02** | `quality_score()` validates claims-stale and open-report COUNT results with `GCU_Future_Policy::valid_aggregate_count`. SQL false/null/invalid => `metrics.claim_freshness=null` and/or `metrics.complaint_health=null`, explicit `missing_evidence`, `provisional=true`, composite null, constant code operational error; actual SQL count 0 remains a valid possible full component. Non-ok business parity prevents false 100% verified claim-freshness. | Same 40 actual-method mock SQL suite tests failed/count-not-zero, valid zero/positive, stale/complaint actual score changes, and invalid numeric counter form. |
+
+The new `tests/r47-quality-provenance-and-sql-evidence-tests.php` uses a separate isolated mock WordPress/SQL harness and exercises the **actual deployed candidate PHP method body**, not a replacement quality_score() function. `scripts/quality.sh` includes it in PHP7.4/8.3 alongside historical tests. The historical forty-round source review runs forty marker checks forty times; these are static source QA **not WordPress staging or live E2E**.
+
+**Counts:** forty source requirement lenses reviewed; two newly verified local source defects identified, two source corrections added; two prior owner acceptance blockers (#19/#22) continue unresolved. Claims of package, staging, installed parity or verified production resolution must await exact tests and live evidence.
+
+Five final fields (to be re-evaluated after QA/merge): Repository precode HEAD `1146c256d668d9dd28975b43f5956a82c9fd966c`, candidate code 1.4.50; Deployed Version UNKNOWN; Actual DB Version UNKNOWN; Migration State UNKNOWN; Live Verification NOT DONE.
+
+Exact deployed code ابھی unverified ہے؛ repository-based diagnosis provisional ہے۔
