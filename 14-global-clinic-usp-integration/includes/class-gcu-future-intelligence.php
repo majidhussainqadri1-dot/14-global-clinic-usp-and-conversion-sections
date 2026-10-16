@@ -967,6 +967,7 @@ final class GCU_Future_Intelligence {
 		}
 		$nodes = array();
 		$issues = array();
+		$known_claims = GCU_Policy::canonical_claims();
 		foreach ( $rows as $row ) {
 			if ( ! is_array( $row ) || ! isset( $row['block_key'], $row['locale'], $row['title'], $row['body'], $row['cta_label'], $row['claim_keys'] )
 				|| ! is_string( $row['block_key'] ) || '' === $row['block_key']
@@ -987,7 +988,7 @@ final class GCU_Future_Intelligence {
 			$claims = array();
 			$invalid_claim = false;
 			foreach ( $decoded as $claim ) {
-				if ( ! is_string( $claim ) || '' === $claim || sanitize_key( $claim ) !== $claim || in_array( $claim, $claims, true ) ) {
+				if ( ! is_string( $claim ) || '' === $claim || sanitize_key( $claim ) !== $claim || ! isset( $known_claims[ $claim ] ) || in_array( $claim, $claims, true ) ) {
 					$invalid_claim = true;
 					break;
 				}
