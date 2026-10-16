@@ -4,7 +4,7 @@ Tags: clinic, doctors, conversion, accessibility, privacy, governance, trust, ex
 Requires at least: 6.6
 Tested up to: 7.0.1
 Requires PHP: 7.4
-Stable tag: 1.4.48
+Stable tag: 1.4.49
 License: GPLv2 or later
 
 Canonical File 14 implementation for approved Worldwide Clinic value-proposition content, ethical conversion journeys, claim governance, destination contracts, Future Conversion & Trust Intelligence and privacy-minimized measurement.
@@ -82,6 +82,11 @@ The File 14 surface includes complete File 14-owned American English, Urdu and A
 8. Obtain explicit Founder acceptance before production deployment.
 
 == Changelog ==
+
+= 1.4.49 =
+* R46 F14-FR016/FUT04: strictly parse UTC trust claim due/expiry timestamps; present malformed deadlines are unverified/stale, never indistinguishable from no deadline.
+* R46 F14-FUT05/08: refuse incomplete/malformed active copy SQL rows in parity checker, never silently claim a clean policy scan.
+* Forty direct real PHP-method simulated SQL cases plus repeated forty-plan source scans; owner Issues #19/#22 and staging/Live remain open.
 
 = 1.4.48 =
 * R45 privacy lifecycle: report and governed-record retention SQL failures and runtime unready are now visible failures with redacted operational logs, not false successful cleanup results.
