@@ -1,8 +1,12 @@
-# File 14 v1.4.50 Source Manifest
+# File 14 v1.4.51 Source Manifest
 
 Canonical plugin folder: `14-global-clinic-usp-integration`
 
 Contents:
+- R48 F14-FUT19: malformed/unknown/doubled linked claims and duplicate block-locale variants cannot be certified as a clean message-consistency graph
+- R48 F14-FUT19: LIMIT 501 SQL sentinel requires full bounded active-copy scan or returns unverified
+- R48 forty actual PHP consistency methods with mocked SQL/REST/governance checks plus 40x40 original source scans
+- Cross-owner issues #19/#22 OPEN; exact deployed package, real schema/migration, WordPress staging/live unverified
 - R47 quality_score filters to consented File14 version-1 pseudonymous acquisition stage events; SQL rows validated, broken reads never become cohort evidence
 - R47 stale claim/complaint SQL count failures produce null component scores with missing-evidence labels, no fabricated perfect 100 percent
 - Forty real PHP quality method SQL-mocked scenarios, 40 successive 40-marker source review passes, PHP7.4/8.3, fresh reviews, deterministic ZIP/SBOM

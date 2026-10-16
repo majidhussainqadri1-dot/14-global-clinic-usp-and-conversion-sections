@@ -1,3 +1,9 @@
+Software candidate: `1.4.51`.
+
+# R48 File14 v1.4.51 — repository source evidence, NOT installed production acceptance
+
+Pre-code HEAD `f67e49a4a0f1cdcf7da8cf25f2833f05033410b7` and PHP plugin v1.4.50. Forty amended File14 FR/FUT source plan lenses matched with governing consolidated Three Central Plans and attached File07/08/09/25 owner docs, frozen in `docs/REVIEW-40-CROSS-PLAN-v1.4.51-R48.md` before R48 edits. TWO newly proven GitHub source defects fixed after review: malformed/duplicate semantic locale/claim consistency rows no longer produce false verified graph, and bounded 501-row sentinel prevents unchecked full-table consistency loads or falsely accepted truncated scans. 40 direct real PHP method tests added for bad JSON, unknown canonical claims, duplicate languages, malformed rows, 501 cap, REST fail-close and daily governance. All exact PR/merged main PHP7.4/8.3, 40x40 source review loops, two fresh reviews and deterministic package/SBOM mandatory. External owner Issues #19/#22 OPEN. No actual installed code/hash, DB/schema/wp_options/migrations, staging or Live verification available.
+
 Software candidate: `1.4.50`.
 
 # File14 R47 v1.4.50 — exact source evidence only, NOT deployed production acceptance
