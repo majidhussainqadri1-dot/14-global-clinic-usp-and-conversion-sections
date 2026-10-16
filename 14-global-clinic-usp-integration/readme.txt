@@ -4,7 +4,7 @@ Tags: clinic, doctors, conversion, accessibility, privacy, governance, trust, ex
 Requires at least: 6.6
 Tested up to: 7.0.1
 Requires PHP: 7.4
-Stable tag: 1.4.50
+Stable tag: 1.4.51
 License: GPLv2 or later
 
 Canonical File 14 implementation for approved Worldwide Clinic value-proposition content, ethical conversion journeys, claim governance, destination contracts, Future Conversion & Trust Intelligence and privacy-minimized measurement.
@@ -82,6 +82,11 @@ The File 14 surface includes complete File 14-owned American English, Urdu and A
 8. Obtain explicit Founder acceptance before production deployment.
 
 == Changelog ==
+
+= 1.4.51 =
+* R48 FUT19: active multilingual consistency graphs fail closed on invalid/unknown linked-claim JSON, wrong-shaped copy fields and duplicate locale variants.
+* R48 FUT19: SQL consistency graph uses LIMIT 501 overflow sentinel and never certifies an uninspected >500 set as verified.
+* R48 40 direct real-method SQL-mocked graph/governance/REST tests and 40x40 source-review checks; external #19/#22 and staging/live parity remain unverified.
 
 = 1.4.50 =
 * R47 FUT11 quality: only consented File14 v1 owner-separate acquisition telemetry counts; malformed or failed SQL does not claim valid cohorts.
