@@ -1,3 +1,9 @@
+Software candidate: `1.4.47`.
+
+# R44 — File14 Small-Cohort Stage Privacy and Owner v1 Contract Proof
+
+Frozen precode `main@f4ee9baf3881c47d9a255cae920ec96204ec59ef` source 1.4.46; read attached amended File14 CTI24 plus Consolidated Three Central Plans and File07/08/09/25 owner plans. 40 distinct FR/FUT source lenses inspected first; 2 local defects: (1) combined traffic >=10 incorrectly exposed a stage count <10; (2) both owner observation SQL queries omitted event_version=1 despite using owner v1 event type names. Source corrections suppress rare stage name + count and filter owner event_version=1. New forty real method SQL-mocked regression cases and repeated 40×40 source scans in CI; no WordPress installed proof. See `docs/REVIEW-40-CROSS-PLAN-v1.4.47-R44.md`. Owner #19/#22 still open; DB migration and staging/live unverified.
+
 Software candidate: `1.4.46`.
 
 # R43 — SQL Aggregate Source Provenance & Cohort Integrity (File14)

@@ -786,15 +786,29 @@ final class GCU_Future_Intelligence {
 		if ( ! GCU_Future_Policy::cohort_allowed( $total ) ) {
 			return array( 'suppressed' => true, 'threshold' => GCU_Future_Policy::MIN_COHORT, 'days' => $days, 'stages' => array(), 'dropoffs' => array(), 'dropoff_status' => 'insufficient_sample', 'owner_stage_evidence_status' => 'not_attested_excluded' );
 		}
+		// Overall traffic is not a per-stage privacy cohort. Never expose an
+		// individual rare stage merely because combined acquisition volume >=10.
+		$public_stages = array();
+		$has_suppressed_stage = false;
+		foreach ( $stages as $stage => $count ) {
+			if ( ! GCU_Future_Policy::cohort_allowed( $count ) ) {
+				$has_suppressed_stage = true;
+				continue;
+			}
+			$public_stages[ $stage ] = $count;
+		}
+		if ( ! $public_stages ) {
+			return array( 'suppressed' => true, 'threshold' => GCU_Future_Policy::MIN_COHORT, 'days' => $days, 'stages' => array(), 'dropoffs' => array(), 'dropoff_status' => 'insufficient_stage_sample', 'owner_stage_evidence_status' => 'not_attested_excluded' );
+		}
 		// These are independently emitted stage totals, NOT a correlated cohort.
 		// A patient booking is not downstream of doctor application. Never
 		// fabricate dropoff percentages by subtracting unrelated branches.
 		// Owner-native correlated transition evidence is required before rates.
 		return array(
-			'suppressed' => false,
+			'suppressed' => $has_suppressed_stage,
 			'threshold' => GCU_Future_Policy::MIN_COHORT,
 			'days' => $days,
-			'stages' => $stages,
+			'stages' => $public_stages,
 			'dropoffs' => array(),
 			'dropoff_status' => 'owner_correlated_transition_evidence_unavailable',
 			'owner_stage_evidence_status' => 'not_attested_excluded',

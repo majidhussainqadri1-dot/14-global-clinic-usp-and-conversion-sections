@@ -112,7 +112,7 @@ final class GCU_Owner_Outcomes {
 			SUM(CASE WHEN occurred_at<DATE_SUB(UTC_TIMESTAMP(),INTERVAL 24 HOUR) THEN 1 ELSE 0 END) AS previous_seven_days
 			FROM {$tables['events']}
 			WHERE occurred_at>=DATE_SUB(UTC_TIMESTAMP(),INTERVAL 8 DAY)
-			AND consent_state='granted' AND subject_hash IS NOT NULL
+			AND consent_state='granted' AND subject_hash IS NOT NULL AND event_version=1
 			AND event_type IN ('File07.DirectoryServed.v1','File08.BookingStarted.v1','File09.ApplicationStarted.v1')
 			GROUP BY event_type,funnel_stage",
 			ARRAY_A
@@ -182,7 +182,7 @@ final class GCU_Owner_Outcomes {
 		$rows = $wpdb->get_results( $wpdb->prepare(
 			"SELECT event_type,funnel_stage,COUNT(*) AS total FROM {$t['events']}
 			 WHERE occurred_at>=DATE_SUB(UTC_TIMESTAMP(),INTERVAL %d DAY)
-			 AND consent_state='granted' AND subject_hash IS NOT NULL
+			 AND consent_state='granted' AND subject_hash IS NOT NULL AND event_version=1
 			 AND event_type IN ('File07.DirectoryServed.v1','File08.BookingStarted.v1','File09.ApplicationStarted.v1')
 			 GROUP BY event_type,funnel_stage", $days
 		), ARRAY_A );

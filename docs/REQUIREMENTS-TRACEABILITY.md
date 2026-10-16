@@ -1,3 +1,9 @@
+## R44 File14 Source Candidate 1.4.47
+
+Requirements Traceability — v1.4.47
+
+File 14 v1.4.47 may only claim a status independently supported by exact source/CI, staging acceptance, and installed deployed artifact plus DB migration parity. Frozen 40 approved FR/FUT/companion lenses, 2 per-stage privacy and owner v1 contract corrections, and the open owner Issues #19/#22 are in `docs/REVIEW-40-CROSS-PLAN-v1.4.47-R44.md`. Forty direct real-method mocked SQL cases do NOT constitute staging/live. Real deployed database and plugin parity UNKNOWN.
+
 ## File14 R43 current SOURCE candidate 1.4.46
 
 Requirements Traceability — v1.4.46

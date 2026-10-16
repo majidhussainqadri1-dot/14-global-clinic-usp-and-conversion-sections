@@ -1,3 +1,9 @@
+Software candidate: `1.4.47`.
+
+# R44 v1.4.47 — Source-only release evidence, no installed production acceptance
+
+Precode source freeze `f4ee9baf3881c47d9a255cae920ec96204ec59ef`. Actual File14 amended CTI24 FUT13/14/15 minimum-cohort and owner version contract requirements plus central master plan and File07/08/09/25 companion boundaries inspected in `docs/REVIEW-40-CROSS-PLAN-v1.4.47-R44.md` before code. Two local source defects fixed: per-stage counts below 10 suppressed regardless combined traffic; File07/08/09 v1 event-type observations constrained by event_version=1 SQL. 40 direct actual-method mocked WordPress+SQL tests and 40x40 original source review regression checks are added; exact PR SHA and merged-main PHP7.4/8.3, 2 fresh reviews, deterministic package/SBOM required. #19 and #22 unresolved; deployed version, real DB, migration/wp_options, WordPress staging/live NOT KNOWN.
+
 Software candidate: `1.4.46`.
 
 # R43 v1.4.46 source release — automated quality is not deployed confirmation

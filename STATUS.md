@@ -1,3 +1,9 @@
+Software candidate: `1.4.47`.
+
+# R44 — File14 Repository candidate 1.4.47, NOT live accepted
+
+Precode freeze `f4ee9baf3881c47d9a255cae920ec96204ec59ef`. 40 approved source-plan lenses: 2 local source bugs found/corrected (FUT13/15 per-stage small cohort disclosure, FR011/FUT14 owner event_version v1 missing predicate). Forty real PHP-method mocked SQL cases and 40 repeated forty-plan source markers added. Exact candidate/merged main CI with PHP7.4/8.3, fresh reviews, package/SBOM required. Source Base schema target 10005/Future1 (not deployed DB). External owner contracts #19 and experiment changed-placement restore #22 remain OPEN; actual deployed plugin/version/hash, wp_options, DB rows/schema/migrations, staging and Live all UNVERIFIED. See `docs/REVIEW-40-CROSS-PLAN-v1.4.47-R44.md`.
+
 Software candidate: `1.4.46`.
 
 # R43 — File14 candidate v1.4.46, GitHub/source status only
