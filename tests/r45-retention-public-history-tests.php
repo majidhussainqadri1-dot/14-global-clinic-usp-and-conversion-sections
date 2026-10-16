@@ -86,16 +86,16 @@ for ( $case = 1; $case <= 40; $case++ ) {
             && $wpdb->delete_queries === array('reports','records')
             && GCU_Observability::$events === array();
     } elseif ( $family === 4 ) {
-        $wpdb->report_deletes = array( 200 + $variant, false );
+        $wpdb->report_deletes = array_merge( array_fill( 0, $variant + 1, 200 ), array( false ) );
         $result = GCU_Future_Intelligence::cleanup();
         $ok = is_wp_error($result) && $result->get_error_code()==='gcu_future_report_cleanup_failed'
-            && $wpdb->delete_queries === array('reports','reports')
+            && count($wpdb->delete_queries)===$variant+2 && count(array_unique($wpdb->delete_queries))===1
             && count(GCU_Observability::$events) === 1;
     } elseif ( $family === 5 ) {
-        $wpdb->record_deletes = array( 200 + $variant, false );
+        $wpdb->record_deletes = array_merge( array_fill( 0, $variant + 1, 200 ), array( false ) );
         $result = GCU_Future_Intelligence::cleanup();
         $ok = is_wp_error($result) && $result->get_error_code()==='gcu_future_record_cleanup_failed'
-            && $wpdb->delete_queries === array('reports','records','records')
+            && count($wpdb->delete_queries)===$variant+3 && $wpdb->delete_queries[0]==='reports' && $wpdb->delete_queries[1]==='records'
             && count(GCU_Observability::$events) === 1;
     } elseif ( $family === 6 ) {
         $wpdb->public_records = ($variant % 2) ? null : false;
