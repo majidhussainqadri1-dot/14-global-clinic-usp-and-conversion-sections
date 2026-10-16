@@ -38,6 +38,12 @@ class GCU_Future_Policy {
     public static function acquisition_stage_reportable( $stage ) {
         return in_array( $stage, array( 'cta_selected', 'destination_loaded' ), true );
     }
+    public static function valid_aggregate_count( $v ) {
+        if ( is_int( $v ) ) { return $v >= 0; }
+        if ( ! is_string( $v ) || ! preg_match( '/^(0|[1-9][0-9]*)$/D', $v ) ) { return false; }
+        $limit = (string) PHP_INT_MAX;
+        return strlen( $v ) < strlen( $limit ) || ( strlen( $v ) === strlen( $limit ) && strcmp( $v, $limit ) <= 0 );
+    }
     public static function cohort_allowed( $n ) { return $n >= self::MIN_COHORT; }
     public static function bounded_query_integer( $n, $default, $maximum ) {
         return null === $n ? $default : min( $maximum, max( 1, (int) $n ) );
