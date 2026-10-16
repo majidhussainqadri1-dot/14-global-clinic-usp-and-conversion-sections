@@ -1,3 +1,9 @@
+Software candidate: `1.4.52`.
+
+# File14 R49 v1.4.52 — Repository source-only evidence, NOT WordPress installed/live acceptance
+
+Exact baseline precode `main@cb1572184abf25bd4f084f6555f8986bd523d28f`, plugin 1.4.51. Actual amended File14, three central governing plans and companion File07/08/09/25 source requirements inspected through forty approved FR/FUT lenses, frozen in `docs/REVIEW-40-CROSS-PLAN-v1.4.52-R49.md` before code. Two newly proven source defects fixed in privileged admin Report and Governed Record Pagination: missing SQL read fail-closed, missing row ID/cursor and governed JSON type verification. Forty new direct real PHP-method SQL/REST mock scenarios under PHP7.4/8.3, repeat 40 source markers ×40, two fresh reviews, reproducible ZIP/SBOM. Exact candidate PR and merged main tests must be green before release. Two external owner Issues #19/#22 remain OPEN. Actual deployed plugin/version/hash, live DB/wp_options/migrations, WordPress staging, backup/rollback and live verification NOT observed.
+
 Software candidate: `1.4.51`.
 
 # R48 File14 v1.4.51 — repository source evidence, NOT installed production acceptance

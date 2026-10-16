@@ -1,3 +1,9 @@
+Software candidate: `1.4.52`.
+
+# File14 R49 GitHub candidate SOURCE v1.4.52; no production acceptance
+
+R49 PRE-CODE frozen main `cb1572184abf25bd4f084f6555f8986bd523d28f` v1.4.51. 40 File14 FR/FUT requirement/source lenses inspected against the attached amended File14, central plan and companion File07/08/09/25 docs, committed before code. Two newly verified source defects in guarded `reports_page` and `records_page` were SQL failure or corrupt row incorrectly published as empty or successful admin queue. R49 source fixes fail closed with non-sensitive errors; 40 new real PHP method SQL-mocked REST/read cases added; existing 40x40 source contract checks retained. Exact PR and merged-main PHP7.4/8.3, two fresh reviews, deterministic ZIP/SBOM required. Preexisting File01/07/08/09 owner attestation #19 and File20/25 changed placement restoration #22 remain OPEN. Deployed artifact/hash, real DB, migrations, staging and live never inferred from GitHub source.
+
 Software candidate: `1.4.51`.
 
 # R48 File14 — SOURCE-ONLY v1.4.51, installed state UNKNOWN

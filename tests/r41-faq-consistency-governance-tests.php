@@ -36,7 +36,7 @@ class GCU_Capabilities {
 class GCU_Install {
     public static function tables() {
         return array( 'claims'=>'wp_gcu_claims', 'blocks'=>'wp_gcu_blocks',
-            'claim_history'=>'wp_gcu_claim_history' );
+            'claim_history'=>'wp_gcu_claim_history', 'reports'=>'wp_gcu_future_reports', 'records'=>'wp_gcu_future_records' );
     }
     public static $runtime = true;
     public static function ready_for_runtime() { return self::$runtime; }
@@ -65,6 +65,18 @@ class GCU_Future_Policy {
     public static function valid_faq_aggregate_signal( $v ) {
         return isset( $v['question'], $v['count'] ) && is_string( $v['question'] )
             && is_numeric( $v['count'] ) && (int) $v['count'] >= 10;
+    }
+    public static function valid_aggregate_count( $value ) {
+        if ( is_int( $value ) ) { return $value >= 0; }
+        if ( ! is_string( $value ) || ! preg_match('/^(0|[1-9][0-9]*)$/D', $value) ) { return false; }
+        $max=(string)PHP_INT_MAX;
+        return strlen($value)<strlen($max) || (strlen($value)===strlen($max) && strcmp($value,$max)<=0);
+    }
+    public static function validate_future_read_query( array $input, $kind ) {
+        return array('safe'=>true,'type'=>isset($input['type'])?(string)$input['type']:'',
+            'status'=>isset($input['status'])?(string)$input['status']:'open',
+            'cursor'=>isset($input['cursor'])?(int)$input['cursor']:0,
+            'limit'=>isset($input['limit'])?(int)$input['limit']:2);
     }
     public static function dark_pattern_scan( $text ) { return array( 'flags'=>array() ); }
     public static function validate_public_record_payload( $type, $payload ) {

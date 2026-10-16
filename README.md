@@ -1,3 +1,9 @@
+Software candidate: `1.4.52`.
+
+# R49 — Privileged Admin Moderation and Governed Record Read Integrity
+
+Frozen GitHub main `cb1572184abf25bd4f084f6555f8986bd523d28f` source 1.4.51; actual attached amended File14 plan, three central governing plans, File07/08/09/25 ownership consulted. Forty unique File14 FR/FUT requirement/source lenses captured BEFORE editing. Two new source bugs found in independently authorized REST-proxied admin services: (D01) report list pagination treats failed SQL/null as an empty moderation queue; (D02) record pagination treats SQL failure, invalid ID/cursor or malformed JSON as successful governed list/empty payload. Now both fail closed on SQL/row evidence errors, with bounded anonymous operator log and 503 WP_Error, while valid empty/positive pages and authorized boundaries remain. Forty actual PHP-method SQL-mocked tests in `tests/r49-admin-pagination-fail-closed-tests.php`, plus existing 40 x 40 source-marker checks and PHP7.4/8.3 QA. See `docs/REVIEW-40-CROSS-PLAN-v1.4.52-R49.md`. Actual deployed plugin/checksum, DB/wp_options/migrations, stage/live remain UNVERIFIED, issues #19/#22 open.
+
 Software candidate: `1.4.51`.
 
 # File14 R48 — Cross-locale Message Consistency Evidence Boundaries
