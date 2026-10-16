@@ -1,3 +1,9 @@
+Software candidate: `1.4.44`.
+
+# R41 v1.4.44 — Repository Candidate, NOT WordPress staging/live accepted
+
+Frozen original `main@d2bf13a9ce71b185452c17d0ad7c915ddfd6e78f`, 1.4.43. Before runtime edits: 40-lens File14/Central/companion inspection recorded. Local R41-D01/D02/D03 fixes are reviewed as source only until exact review/main SHA, two independent fresh reviews, PHP7.4/8.3, direct method regression suite, 40 repeated approved-plan checks and deterministic ZIP/SBOM are all green on the new code. Require **fresh post-merge** CI on exact review/main SHA before claiming source candidate verified. No real WordPress staging owner-acceptance or installed package/DB migrations have been inspected. Issue #19 File01/07/08/09 outcome provenance and #22 File20/25 experiment changed-placement rollback remain OPEN. See `docs/REVIEW-40-CROSS-PLAN-v1.4.44-R41.md`.
+
 Software candidate: `1.4.43`.
 
 # File14 R40 v1.4.43 — Repository Candidate, pending exact evidence
