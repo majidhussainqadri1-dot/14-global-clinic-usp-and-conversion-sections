@@ -132,8 +132,22 @@ final class GCU_Owner_Outcomes {
 		$signals = array();
 		$highest = 'none';
 		$minimum = GCU_Future_Policy::MIN_COHORT;
-		foreach ( is_array( $rows ) ? $rows : array() as $row ) {
-			if ( ! self::reportable( (string) $row['event_type'], (string) $row['funnel_stage'] ) ) { continue; }
+		foreach ( $rows as $row ) {
+			if ( ! is_array( $row )
+				|| ! isset( $row['event_type'], $row['funnel_stage'], $row['current_count'], $row['previous_seven_days'] )
+				|| ! is_string( $row['event_type'] ) || ! is_string( $row['funnel_stage'] )
+				|| ! GCU_Future_Policy::valid_aggregate_count( $row['current_count'] )
+				|| ! GCU_Future_Policy::valid_aggregate_count( $row['previous_seven_days'] ) ) {
+				GCU_Observability::log( 'error', 'owner_anomaly_volume_row_unverified', array() );
+				return array(
+					'status' => 'owner_event_volume_read_unverified', 'severity' => 'unverified',
+					'suppressed' => true, 'signals' => array(),
+					'owner_correlated_funnel' => false, 'booking_success_rate' => null,
+					'inference_limit' => 'owner_event_sql_evidence_unavailable',
+					'checked_at' => gmdate( 'c' ),
+				);
+			}
+			if ( ! self::reportable( $row['event_type'], $row['funnel_stage'] ) ) { continue; }
 			$current = (int) $row['current_count'];
 			$previous = (int) $row['previous_seven_days'];
 			// 10 current and 70 historic events are required before disclosing
@@ -177,7 +191,7 @@ final class GCU_Owner_Outcomes {
 			return new WP_Error( 'gcu_owner_stage_read_unverified', __( 'Owner stage analytics could not be verified.', 'global-clinic-usp-integration' ), array( 'status' => 503 ) );
 		}
 		foreach ( $rows as $row ) {
-			if ( ! is_array( $row ) || ! isset( $row['event_type'], $row['funnel_stage'], $row['total'] ) || ! is_numeric( $row['total'] ) ) {
+			if ( ! is_array( $row ) || ! isset( $row['event_type'], $row['funnel_stage'], $row['total'] ) || ! GCU_Future_Policy::valid_aggregate_count( $row['total'] ) ) {
 				GCU_Observability::log( 'error', 'owner_stage_volume_row_unverified', array() );
 				return new WP_Error( 'gcu_owner_stage_row_unverified', __( 'Owner stage analytics evidence was incomplete.', 'global-clinic-usp-integration' ), array( 'status' => 503 ) );
 			}

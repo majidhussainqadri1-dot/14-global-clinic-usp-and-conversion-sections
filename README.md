@@ -1,3 +1,9 @@
+Software candidate: `1.4.46`.
+
+# R43 — SQL Aggregate Source Provenance & Cohort Integrity (File14)
+
+40 governing F14 FR/FUT requirement/companion scope lenses inspected BEFORE coding against frozen `ae691d9f16969a62935f5043fb3707dec44d5c1d` (1.4.45). Three local source defects found and corrected in PR: (D01) malformed native owner anomaly rows, (D02) fractional/negative/exponent/overflow SQL counts in owner and browser analytics, (D03) browser funnel query missing required consent, origin, version and nonnull-subject restrictions. Forty direct real-method SQL-mocked negative/positive cases added; 40×40 source marker reviews retained. See `docs/REVIEW-40-CROSS-PLAN-v1.4.46-R43.md`. Source targets Base 10005/Future 1 (NOT confirmed live DB). Owner #19/22 and deployed, staged, live parity remain unverified.
+
 Software candidate: `1.4.45`.
 
 # File14 R42 — Owner-Native Measurement Integrity, No False Small-Cohort Success

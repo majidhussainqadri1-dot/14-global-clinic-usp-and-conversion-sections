@@ -1,3 +1,9 @@
+Software candidate: `1.4.46`.
+
+# R43 — File14 candidate v1.4.46, GitHub/source status only
+
+Frozen main before inspection: `ae691d9f16969a62935f5043fb3707dec44d5c1d` (source 1.4.45). Forty approved FR/FUT source requirements and related File01/07/08/09/20/24/25 boundaries inspected; three source-level analytics/provenance defects corrected locally, with 40 direct real method SQL mock tests and 40×40 repeated source marker runs. Exact PR SHA and post-merge main CI must prove PHP7.4/8.3, two fresh reviews and SBOM/package. No owner Issue #19/#22 closure or actual staging/live operation shown. Deployed Version/Checksum: UNVERIFIED. Actual DB Version: UNVERIFIED. Migration State: UNVERIFIED. Live Verification: NOT RUN. See `docs/REVIEW-40-CROSS-PLAN-v1.4.46-R43.md`.
+
 Software candidate: `1.4.45`.
 
 # File14 R42 — Repository Candidate v1.4.45, SOURCE ONLY

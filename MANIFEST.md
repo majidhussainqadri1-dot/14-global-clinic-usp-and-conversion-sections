@@ -1,8 +1,12 @@
-# File 14 v1.4.45 Source Manifest
+# File 14 v1.4.46 Source Manifest
 
 Canonical plugin folder: `14-global-clinic-usp-integration`
 
 Contents:
+- R43 strict nonnegative SQL aggregate integer validator, malformed owner anomaly fail-close, native summary protection
+- R43 File14 browser friction limited to granted-consent, v1, File14-origin, non-null subject events
+- R43 40 direct real-method malformed count/consent-provenance tests, 40 consecutive source-review passes
+- Owner issues #19/#22 and exact deployed artifact/schema/migration/staging/live parity remain OPEN/UNVERIFIED
 - R42 native owner event volume anomalies: failed SQL not confused with insufficient sample
 - R42 owner-stage counts and browser funnel friction: unverified SQL/row payload fail-close; REST propagates errors
 - Forty new actual method SQL-mocked tests, forty consecutive forty-marker source review passes
