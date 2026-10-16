@@ -1266,8 +1266,74 @@ final class GCU_Future_Intelligence {
 		return (bool) preg_match( '/[A-Z0-9._%+\-]+@[A-Z0-9.\-]+\.[A-Z]{2,}|\+?\d[\d\s\-]{6,}\d|\b(?:CNIC|NICOP|passport|diagnosis|prescription|patient\s*id|medical\s*record|case\s*(?:no|number))\b|(?:شناختی\s*کارڈ|پاسپورٹ|مریض|تشخیص|نسخہ|میڈیکل\s*ریکارڈ|فون|موبائل|ای\s*میل)|(?:هوية|جواز\s*السفر|مريض|تشخيص|وصفة|سجل\s*طبي|هاتف|جوال|بريد\s*إلكتروني)/iu', $message );
 	}
 
-	private static function reports_page($status,$cursor,$limit){global$wpdb;$t=self::tables();$rows=$wpdb->get_results($wpdb->prepare("SELECT id,public_id,report_type,route_key,block_key,locale,reason_code,message,status,resolution,row_version,created_at,updated_at FROM {$t['reports']} WHERE status=%s AND id>%d ORDER BY id ASC LIMIT %d",$status,absint($cursor),$limit+1),ARRAY_A);$rows=is_array($rows)?$rows:array();$more=count($rows)>$limit;if($more){$rows=array_slice($rows,0,$limit);}$next=$more&&!empty($rows)?(int)$rows[count($rows)-1]['id']:null;foreach($rows as&$row){unset($row['id']);}unset($row);return array('items'=>$rows,'next_cursor'=>$next,'limit'=>$limit);}
-	private static function records_page($type,$cursor,$limit){global$wpdb;$t=self::tables();$where='id>%d';$args=array(absint($cursor));if($type){$where.=' AND record_type=%s';$args[]=sanitize_key($type);}$args[]=$limit+1;$sql="SELECT id,record_type,record_key,locale,region,status,is_public,payload,row_version,review_due_at,updated_at FROM {$t['records']} WHERE $where ORDER BY id ASC LIMIT %d";$rows=$wpdb->get_results($wpdb->prepare($sql,$args),ARRAY_A);$rows=is_array($rows)?$rows:array();$more=count($rows)>$limit;if($more){$rows=array_slice($rows,0,$limit);}$next=$more&&!empty($rows)?(int)$rows[count($rows)-1]['id']:null;foreach($rows as&$row){unset($row['id']);$row['payload']=self::json_array($row['payload']);}unset($row);return array('items'=>$rows,'next_cursor'=>$next,'limit'=>$limit);}
+	private static function reports_page( $status, $cursor, $limit ) {
+		global $wpdb;
+		$t = self::tables();
+		$cursor = absint( $cursor );
+		$limit = max( 1, min( 200, (int) $limit ) );
+		$rows = $wpdb->get_results( $wpdb->prepare(
+			"SELECT id,public_id,report_type,route_key,block_key,locale,reason_code,message,status,resolution,row_version,created_at,updated_at FROM {$t['reports']} WHERE status=%s AND id>%d ORDER BY id ASC LIMIT %d",
+			$status, $cursor, $limit + 1
+		), ARRAY_A );
+		if ( ! is_array( $rows ) ) {
+			GCU_Observability::log( 'error', 'future_reports_page_read_unverified', array() );
+			return new WP_Error( 'gcu_future_reports_page_read_failed', __( 'The report list could not be verified.', 'global-clinic-usp-integration' ), array( 'status' => 503 ) );
+		}
+		$previous = $cursor;
+		foreach ( $rows as $row ) {
+			if ( ! is_array( $row ) || ! isset( $row['id'], $row['public_id'], $row['report_type'], $row['route_key'], $row['locale'], $row['reason_code'], $row['message'], $row['status'], $row['row_version'], $row['created_at'], $row['updated_at'] )
+				|| ! GCU_Future_Policy::valid_aggregate_count( $row['id'] ) || (int) $row['id'] <= $previous ) {
+				GCU_Observability::log( 'error', 'future_reports_page_row_unverified', array() );
+				return new WP_Error( 'gcu_future_reports_page_row_failed', __( 'A report page was incomplete or invalid.', 'global-clinic-usp-integration' ), array( 'status' => 503 ) );
+			}
+			$previous = (int) $row['id'];
+		}
+		$more = count( $rows ) > $limit;
+		if ( $more ) { $rows = array_slice( $rows, 0, $limit ); }
+		$next = $more && $rows ? (int) $rows[ count( $rows ) - 1 ]['id'] : null;
+		foreach ( $rows as &$row ) { unset( $row['id'] ); }
+		unset( $row );
+		return array( 'items' => $rows, 'next_cursor' => $next, 'limit' => $limit );
+	}
+	private static function records_page( $type, $cursor, $limit ) {
+		global $wpdb;
+		$t = self::tables();
+		$cursor = absint( $cursor );
+		$limit = max( 1, min( 200, (int) $limit ) );
+		$where = 'id>%d';
+		$args = array( $cursor );
+		if ( $type ) { $where .= ' AND record_type=%s'; $args[] = sanitize_key( $type ); }
+		$args[] = $limit + 1;
+		$sql = "SELECT id,record_type,record_key,locale,region,status,is_public,payload,row_version,review_due_at,updated_at FROM {$t['records']} WHERE $where ORDER BY id ASC LIMIT %d";
+		$rows = $wpdb->get_results( $wpdb->prepare( $sql, $args ), ARRAY_A );
+		if ( ! is_array( $rows ) ) {
+			GCU_Observability::log( 'error', 'future_records_page_read_unverified', array() );
+			return new WP_Error( 'gcu_future_records_page_read_failed', __( 'The governed record list could not be verified.', 'global-clinic-usp-integration' ), array( 'status' => 503 ) );
+		}
+		$previous = $cursor;
+		foreach ( $rows as &$row ) {
+			if ( ! is_array( $row ) || ! isset( $row['id'], $row['record_type'], $row['record_key'], $row['locale'], $row['region'], $row['status'], $row['is_public'], $row['payload'], $row['row_version'], $row['updated_at'] )
+				|| ! GCU_Future_Policy::valid_aggregate_count( $row['id'] ) || (int) $row['id'] <= $previous
+				|| ! is_string( $row['payload'] ) ) {
+				GCU_Observability::log( 'error', 'future_records_page_row_unverified', array() );
+				return new WP_Error( 'gcu_future_records_page_row_failed', __( 'A governed record page was incomplete or invalid.', 'global-clinic-usp-integration' ), array( 'status' => 503 ) );
+			}
+			$payload = json_decode( $row['payload'], true );
+			if ( JSON_ERROR_NONE !== json_last_error() || ! is_array( $payload ) ) {
+				GCU_Observability::log( 'error', 'future_records_page_payload_unverified', array() );
+				return new WP_Error( 'gcu_future_records_page_payload_failed', __( 'A governed record payload could not be verified.', 'global-clinic-usp-integration' ), array( 'status' => 503 ) );
+			}
+			$row['payload'] = $payload;
+			$previous = (int) $row['id'];
+		}
+		unset( $row );
+		$more = count( $rows ) > $limit;
+		if ( $more ) { $rows = array_slice( $rows, 0, $limit ); }
+		$next = $more && $rows ? (int) $rows[ count( $rows ) - 1 ]['id'] : null;
+		foreach ( $rows as &$row ) { unset( $row['id'] ); }
+		unset( $row );
+		return array( 'items' => $rows, 'next_cursor' => $next, 'limit' => $limit );
+	}
 	/** File00 owns the authorized content-reader truth, including direct service calls.
 	 * Public PHP service and REST callbacks can be invoked outside their UI/route gates. */
 	private static function require_report_read() {
