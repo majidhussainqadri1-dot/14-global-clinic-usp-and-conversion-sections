@@ -1353,6 +1353,7 @@ final class GCU_Future_Intelligence {
 				! is_string( $row['report_type'] ) || ! is_string( $row['route_key'] ) ||
 				! is_string( $row['locale'] ) || ! is_string( $row['reason_code'] ) ||
 				! is_string( $row['message'] ) || ! is_string( $row['status'] ) ||
+				! in_array( $row['status'], array( 'open', 'reviewing', 'resolved', 'rejected' ), true ) ||
 				! GCU_Future_Policy::valid_aggregate_count( $row['row_version'] ) || (int) $row['row_version'] < 1 ) {
 				GCU_Observability::log( 'error', 'future_moderation_row_unverified', array() );
 				return new WP_Error( 'gcu_future_moderation_row_failed', __( 'A moderation queue entry could not be verified.', 'global-clinic-usp-integration' ), array( 'status' => 503 ) );
