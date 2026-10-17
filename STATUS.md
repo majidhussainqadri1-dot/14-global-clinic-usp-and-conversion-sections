@@ -1,3 +1,9 @@
+Software candidate: `1.4.55`.
+
+# R52 File14 — SOURCE corrections and specific incomplete work disposition
+
+Frozen `main@39b8ff69bc9496ca55690669d7b59c92203b64ee`, v1.4.54. Forty FR/FUT unique governing source lenses and canonical File01/07/08/09/20/25 owner requirements frozen before any code. R52 fixes two newly verified FUT17 experiment guard numeric evidence defects: malformed/noncanonical COUNTs for open complaints or expired experiments no longer cast to benign/success-like integers. Forty REAL method mocked SQL cases added with R34 40 lifecycle scenarios rerun. Cross-owner Issues #19 and #22 researched against *fresh source heads*, published actionable owner+staging acceptance runbook `docs/R52-OPEN-BLOCKERS-CROSS-OWNER-ACCEPTANCE.md`, **not closed**: File08 postcommit/09 application/07 render hooks present in GitHub, File01 signed approved registry and actual staging absent; File14 snapshot/no-drift/pause is not actual File20/25 modified-placement CAS restore. Exact PR and new merged-main PHP7.4/8.3, fresh reviews, ZIP/SBOM required. Actual installed code/hash, wp_options and DB, migrations, staging and live retest unverified. See `docs/REVIEW-40-CROSS-PLAN-v1.4.55-R52.md`.
+
 Software candidate: `1.4.54`.
 
 # File14 R51 source-only status: v1.4.54, not accepted in production
