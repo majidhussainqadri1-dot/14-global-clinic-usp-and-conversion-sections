@@ -1,3 +1,9 @@
+Software candidate: `1.4.53`.
+
+# File14 R50 — Guarded Source Readers, SQL Failure and Governance Integrity
+
+Frozen precode GitHub `main@5689742d9d9848f65d2e610c5b0d43738ea1b4c3` plugin 1.4.52. Actual supplied File14 amended CTI24, Three Central Consolidated Governing Plans, and File07/08/09/25 owner contracts inspected through forty distinct FR/FUT source lenses *before* runtime changes. Two new local source defects recorded: R50-D01 native `reports()` and `review_queue_reports()` direct service reads passed through failed SQL and malformed report states; R50-D02 nonpublic `records()` mapped unreadable DB to empty and both public/nonpublic readers mapped corrupted JSON to apparently valid empty governed content. Code now fail-closes for all affected services with privacy-safe constant-code 503 results while preserving real empty rows, vetted positive rows and original native File00 capability guard. `tests/r50-guarded-list-read-integrity-tests.php`: 40 real-method SQL mock scenarios, quality PHP7.4/8.3, repeated 40×40 source plan scans, fresh reviews and deterministic ZIP/SBOM. See `docs/REVIEW-40-CROSS-PLAN-v1.4.53-R50.md`. No source schema bump (Base10005/Future1), owner issues #19/#22 and actual staged/live artifact+database parity remain OPEN/UNVERIFIED.
+
 Software candidate: `1.4.52`.
 
 # R49 — Privileged Admin Moderation and Governed Record Read Integrity
