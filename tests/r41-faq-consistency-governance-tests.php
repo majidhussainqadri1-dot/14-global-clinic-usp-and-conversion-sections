@@ -49,6 +49,9 @@ class GCU_Observability {
 }
 class GCU_Policy {
     public static function supported_locales() { return array( 'en-US', 'ur-PK', 'ar-SA' ); }
+    public static function sanitize_locale( $locale ) {
+        return is_string( $locale ) && in_array( $locale, self::supported_locales(), true ) ? $locale : 'en-US';
+    }
     public static function canonical_claims() {
         return array(
             'zero_platform_commission'=>array('text'=>'Zero platform commission'),

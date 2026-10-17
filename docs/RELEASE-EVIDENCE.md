@@ -1,3 +1,9 @@
+Software candidate: `1.4.54`.
+
+# File14 R51 v1.4.54 — SOURCE Release Evidence Only; Not Installed Live Acceptance
+
+Exact source baseline before modification `main@6e3794dc8ea0a89d085b5bb4a1de6828b2e2947c` v1.4.53. Forty unique approved File14 CTI24 FR/FUT source lenses compared with central governing plans and companion File07/08/09/25 owner plans before PHP corrections. Two newly found source defects and fixes: public_change_log with 1000-row full cap incorrectly could publish false complete/empty policy history despite unscanned tail; jurisdiction_disclosure SQL false/null silently rendered no approved region copy. R51 now returns privacy-safe 503 when storage evidence unavailable or scan completion unverified, and public HTML displays neutral temporary unavailable copy. Forty new direct candidate PHP-method mocked SQL/REST/history/regional test cases integrated PHP7.4/8.3, historical repeated forty-marker source review ×40, two Fresh Post-Code Reviews and deterministic ZIP+SBOM. Exact PR SHA and new merged main must pass. External #19 and #22 accepted owner integration blockers OPEN. Actual deployed plugin/hash, database/wp_options/migrations, WordPress staging and Live not verified.
+
 Software candidate: `1.4.53`.
 
 # File14 R50 v1.4.53 Source-Only Release Evidence — exact artifacts and DB remain UNKNOWN

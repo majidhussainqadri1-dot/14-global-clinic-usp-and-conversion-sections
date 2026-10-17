@@ -1,3 +1,9 @@
+Software candidate: `1.4.54`.
+
+# R51 File14 — Public Reviewed Policy History and Jurisdiction Copy Read Evidence
+
+Frozen exact precode GitHub `main@6e3794dc8ea0a89d085b5bb4a1de6828b2e2947c` source plugin 1.4.53. Compared 40 approved amended File14 16 FR+24 FUT requirement lenses to Consolidated Three Central Governing Master Plans and attached File07/08/09/25 companion owner plans, fully recorded BEFORE PHP changes in `docs/REVIEW-40-CROSS-PLAN-v1.4.54-R51.md`. Two NEW source defects: (D01/FUT22) `public_change_log()` could exhaust ten full 100-row pages of unreviewed/invalid legacy data while declaring fewer than requested valid entries a complete history; now returns an explicit constant-code 503 rather than false empty/partial claims. (D02/FUT06) `jurisdiction_disclosure()` equated WPDB SQL failure false/null to verified absent regional/generic copy, quietly hiding a required truthful notice; now fails closed with a redacted diagnostic and neutral accessible UI unavailable text, preserving approved PK/ZZ precedence. Forty direct real candidate PHP method SQL-mocked tests plus historic 40x40 plan-source checks, PHP7.4/8.3, Fresh Reviews, deterministic ZIP/SBOM required on PR and merged main. Source schema Base10005/Future1 unchanged, not installed DB. Cross-owner #19/#22 and staging/live plugin parity remain unknown.
+
 Software candidate: `1.4.53`.
 
 # File14 R50 — Guarded Source Readers, SQL Failure and Governance Integrity

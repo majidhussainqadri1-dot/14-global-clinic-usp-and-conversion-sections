@@ -4,7 +4,7 @@ Tags: clinic, doctors, conversion, accessibility, privacy, governance, trust, ex
 Requires at least: 6.6
 Tested up to: 7.0.1
 Requires PHP: 7.4
-Stable tag: 1.4.53
+Stable tag: 1.4.54
 License: GPLv2 or later
 
 Canonical File 14 implementation for approved Worldwide Clinic value-proposition content, ethical conversion journeys, claim governance, destination contracts, Future Conversion & Trust Intelligence and privacy-minimized measurement.
@@ -82,6 +82,11 @@ The File 14 surface includes complete File 14-owned American English, Urdu and A
 8. Obtain explicit Founder acceptance before production deployment.
 
 == Changelog ==
+
+= 1.4.54 =
+* R51 FUT22: Public change-log source scan cannot falsely return a complete empty/partial history when its ten-page, thousand-row cap ends without a verified terminal page; protected REST and public HTML show a safe unavailable state.
+* R51 FUT06: jurisdictional copy SQL false/null no longer silently resembles absent approved guidance; log constant-code operator evidence and show a neutral temporary unavailable notice, retaining region-specific and general fallback.
+* Forty new real PHP-method SQL-mocked tests and forty repeated 40-source-contract loops, PHP7.4/8.3 and package/SBOM; owner #19/#22, staging and installed live parity remain OPEN/UNVERIFIED.
 
 = 1.4.53 =
 * R50 FUT12: direct authorized report listing and open/reviewing moderation queue reject SQL false/null, invalid rows, version and status rather than allowing ambiguous empty/unchecked reviewer evidence.

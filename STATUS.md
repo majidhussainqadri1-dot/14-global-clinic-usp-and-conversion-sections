@@ -1,3 +1,9 @@
+Software candidate: `1.4.54`.
+
+# File14 R51 source-only status: v1.4.54, not accepted in production
+
+Baseline main `6e3794dc8ea0a89d085b5bb4a1de6828b2e2947c` version 1.4.53. Forty approved source FR/FUT requirements and central/companion File07/08/09/25 canonical boundaries frozen before code changes. Two newly proven SOURCE omissions fixed: incomplete cap-limited public policy history incorrectly returned as complete; failed jurisdictional SQL silently treated as no approved notice. Forty direct actual-method mocked SQL checks plus repeat 40×40 source reviews. Verify exact PR and merged-main PHP7.4/8.3 + two Fresh Reviews + deterministic ZIP/SBOM. #19 native File01/07/08/09 owner accepted outcomes and #22 File20/25 actual experiment placement restoration still OPEN. Installed artifact version/hash, real database rows/schema, wp_options/migration, staging and live retest unverified. Details `docs/REVIEW-40-CROSS-PLAN-v1.4.54-R51.md`.
+
 Software candidate: `1.4.53`.
 
 # File14 R50 GitHub SOURCE candidate 1.4.53, NOT accepted as deployed
