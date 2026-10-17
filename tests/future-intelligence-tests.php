@@ -641,6 +641,17 @@ $r14_db->rows[] = array(
     'record_key' => 'governed_change', 'locale' => 'en-US',
     'updated_at' => '2026-10-10 06:00:00', 'payload' => json_encode( $r14_valid_payload ),
 );
+// A successful SQL projection contains all declared governed record fields.
+ // Legacy-invalid here means *missing publication proof inside payload*, not
+ // a truncated database row with missing mandatory columns.
+foreach ( $r14_db->rows as &$r14_row ) {
+    $r14_row['record_type'] = 'change_log';
+    $r14_row['region'] = 'ZZ';
+    $r14_row['status'] = 'active';
+    $r14_row['is_public'] = 1;
+    $r14_row['row_version'] = '1';
+}
+unset( $r14_row );
 $GLOBALS['wpdb'] = $r14_db;
 $r14_decoded = GCU_Future_Intelligence::records( 'change_log', true, 1, 100 );
 assert_future( 1 === count( $r14_decoded ) && is_array( $r14_decoded[0]['payload'] ) && 'Founder-reviewed transparency change' === $r14_decoded[0]['payload']['title'], 'R14 regression-discovered: records() must decode JSON payload into returned array, not a temporary foreach copy.' );
