@@ -4,7 +4,7 @@ Tags: clinic, doctors, conversion, accessibility, privacy, governance, trust, ex
 Requires at least: 6.6
 Tested up to: 7.0.1
 Requires PHP: 7.4
-Stable tag: 1.4.52
+Stable tag: 1.4.53
 License: GPLv2 or later
 
 Canonical File 14 implementation for approved Worldwide Clinic value-proposition content, ethical conversion journeys, claim governance, destination contracts, Future Conversion & Trust Intelligence and privacy-minimized measurement.
@@ -82,6 +82,11 @@ The File 14 surface includes complete File 14-owned American English, Urdu and A
 8. Obtain explicit Founder acceptance before production deployment.
 
 == Changelog ==
+
+= 1.4.53 =
+* R50 FUT12: direct authorized report listing and open/reviewing moderation queue reject SQL false/null, invalid rows, version and status rather than allowing ambiguous empty/unchecked reviewer evidence.
+* R50 FUT22/FR016: governed records() public/nonpublic rejects failed SQL, malformed identity and unreadable/scalar JSON without fabricating an empty policy/administrative record; safe 503 codes and no sensitive logs.
+* Forty additional direct actual File14 method simulated SQL cases, forty repeated source-plan review loops; external owner #19/#22 and deployed WordPress parity still open.
 
 = 1.4.52 =
 * R49 FUT12: privileged report moderation pagination fails closed on unreadable SQL or malformed rows and preserves accurate authorized paging.
