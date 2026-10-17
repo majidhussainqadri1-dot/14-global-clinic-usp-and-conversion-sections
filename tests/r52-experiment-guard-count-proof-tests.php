@@ -86,7 +86,9 @@ for($case=1;$case<=40;$case++){
     $sql=implode(' ',$wpdb->read_sql);
     if(strpos($sql,"gcu_future_reports")===false) $ok=false;
     if($family===9 && empty($r34_opts['gcu_experiment_serving_paused']))$ok=false;
-    if($family===4 && strpos($sql,'gcu_experiments')!==false)$ok=false;
+    // A complaint breach skips only the expiry COUNT; it MUST still read
+    // the running experiment list to stop safely.
+    if($family===4 && strpos($sql,'SELECT COUNT(*) FROM wp_gcu_experiments')!==false)$ok=false;
     if($family>=5 && $family<=8 && strpos($sql,'gcu_experiments')===false)$ok=false;
     printf("R52 actual FUT17 guardrail canonical SQL-count case %02d/40: %s (family %d)\n",$case,$ok?'PASS':'FAIL',$family);
     if(!$ok)$bad[]=sprintf('R52 case %02d family %d failed',$case,$family);
