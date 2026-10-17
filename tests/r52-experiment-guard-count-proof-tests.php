@@ -65,6 +65,8 @@ for($case=1;$case<=40;$case++){
         $expectedCode='gcu_experiment_expiry_check_failed';
     }elseif($family===8){
         $wpdb->expiring=$v===0?'0':($v===1?0:($v===2?'1':1));
+        // R34's mock SELECT obeys its separate expired-clock flag.
+        $wpdb->expired=$v<2?0:1;
         $expectedResult=$v<2?0:1;
     }else{
         $wpdb->complaints=$v===0?'0':($v===1?0:($v===2?'4':4));
