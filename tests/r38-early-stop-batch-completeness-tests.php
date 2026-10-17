@@ -82,6 +82,8 @@ class GCU_Observability {
     public static function log( $level, $name, $props = array() ) { self::$logs[] = array( 'name'=>$name, 'props'=>$props ); }
 }
 $wpdb = new R37DB();
+// R52: exercise the actual strict aggregate source policy rather than a stub.
+require __DIR__ . '/../14-global-clinic-usp-integration/includes/class-gcu-future-policy.php';
 require __DIR__ . '/../14-global-clinic-usp-integration/includes/class-gcu-fifth-review-hardening.php';
 
 // Existing R37 harness defines the real class plus test-only WP/SQL stubs.
