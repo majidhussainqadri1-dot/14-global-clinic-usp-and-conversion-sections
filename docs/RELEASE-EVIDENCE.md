@@ -1,6 +1,6 @@
 Software candidate: `1.4.53`.
 
-# File14 R50 Source-Only Release Evidence — exact artifacts and DB remain UNKNOWN
+# File14 R50 v1.4.53 Source-Only Release Evidence — exact artifacts and DB remain UNKNOWN
 
 Frozen precode main `5689742d9d9848f65d2e610c5b0d43738ea1b4c3`, plugin 1.4.52. Inspected all 40 approved File14 v2 CTI24 FR/FUT source requirements against Three Central Governing Plans and attached File07/08/09/25 owner plans before runtime edits. Two identified local source defects corrected: native moderator report/review queue SQL reads could silently pass false/malformed data, while governed `records()` converted unreadable admin SQL or malformed public/private JSON into apparently empty evidence. New forty direct actual PHP-method mocked WPDB tests gate PHP7.4/8.3, repeated 40-plan source marker scans, two Fresh Reviews and deterministic ZIP/SBOM on PR and new main. #19 native owner source validation and #22 File20/25 approved changed-placement rollback remain OPEN. No deployed artifact hash/version parity, real WordPress schema/options/migration, staging or live acceptance established.
 
