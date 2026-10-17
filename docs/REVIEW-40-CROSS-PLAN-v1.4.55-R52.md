@@ -76,3 +76,24 @@ The source-loop script independently reruns 40 source-contract markers 40 times;
 Implement D01/D02 with negative tests against **actual** PHP method (40 direct SQL mocked scenarios), retain existing historical 40×40 source markers, PHP 7.4/8.3, two independent Fresh Reviews and reproducible package/SBOM, exact PR SHA then merged main. Add explicit File01/07/08/09/14 and File20/25 acceptance checklist as source artifact; update two open issues with verified HEADs and precise missing requirements. Candidate **1.4.55**; no DB migration or speculative owner writes. Actual WordPress staging/live verification awaits authorised connection.
 
 **Reality ledger:** Repo HEAD baseline `39b8ff69bc9496ca55690669d7b59c92203b64ee`. Deployed Version UNVERIFIED. Actual DB Version UNVERIFIED. Migration State UNVERIFIED. Live Verification Status NOT RUN. Exact deployed code ابھی unverified ہے؛ repository-based diagnosis provisional ہے۔
+
+## Post-frozen 40-lens source remediation and two owner block dispositions
+
+**Chronology:** exact source baseline, all forty unique amended-File14 governing lenses, the precise File01/07/08/09/20 owner HEADs, issue acceptance gaps and both newly proven FUT17 defects were FIRST committed at `0b282b55a7e8d6bc0e8ea840330844ff9f75be78`, before any R52 production PHP edit.
+
+| Newly proven local source defect | Corrected after completing review | New direct-method evidence |
+|---|---|---|
+| **R52-D01 / FUT17** | `GCU_Fifth_Review_Hardening::transactional_early_stop_guard()` validates the complaints `COUNT(*)` with canonical `GCU_Future_Policy::valid_aggregate_count()`, rather than `is_numeric` and integer cast that accepted negative/decimal/exponent/overflow and might return false safe. Bad SQL evidence propagates its existing `gcu_experiment_complaint_count_failed` 503 and privacy-safe diagnostic; real whole count 0/4/5 remains distinct. | `tests/r52-experiment-guard-count-proof-tests.php` invokes the actual guard 40 times with mocked WPDB counts, includes negative/fraction/exponent/overflow/bad PHP data, valid integer 0,4,5 and no unexpected audit/stop on unreadable guards. |
+| **R52-D02 / FUT17** | The same guard now validates `expired_count` as strictly canonical nonnegative whole number before deciding `0=healthy` or processing a bounded expiry stop. Bad count explicitly produces existing `gcu_experiment_expiry_check_failed` 503 with no false healthy return; owner baseline containment logic remains unchanged. | New 40-case test and historical R34 40-case lifecycle test; real candidate production method is executed under mock WPDB. |
+
+### Issue #19 — owner event/registry completion work actually undertaken
+The R52 review read owner File01/07/08/09 **current exact GitHub source**, not only old issue text. It identified File07 server-render `ddd_after_directory`, File09 post-commit `gdo_application_submitted`, and File08 v1.2.16 postcommit `wca_appointment_requested_committed_v1` with its own T27 source regression, plus File14 matching opt-in owner observer. This narrows **source hookup uncertainty only**. File01's approved/signed event registry, actual installed plugin parity, real WordPress staging event delivery, opt-out/GPC/erasure proof, and Founder acceptance **remain unverified**; Issue #19 OPEN. File14 owner conversion success flags must remain disabled.
+
+### Issue #22 — source baseline-versus-actual-restore distinction documented
+R52 reviewed actual File14 baseline source `GCU_Experiment_Baseline`: there is approved snapshot hash/persist and no-drift verification; mutated/drifted placements are **not** overwritten, instead stop+serving pause+manual review. This is truthful safety containment, not changed-placement CAS restore. Real File20/25 owner mapping, Founder-approved restore command, staging concurrent rollback, installed artifacts and DB state **not verified**; Issue #22 OPEN. No speculative cross-owner update was written.
+
+See the separate detailed and executable acceptance criteria in `docs/R52-OPEN-BLOCKERS-CROSS-OWNER-ACCEPTANCE.md`. The absence of actual staging/installed evidence is a **hard blocker**, not a locally fixable Source shortcut.
+
+**Review count:** forty unique approved source lenses evaluated and existing script's forty rounds of forty source-marker checks; 2 NEW File14 SOURCE defects found and fixed in candidate; 2 preexisting external integration issues actively investigated but NOT CLOSED. Forty R52 direct real PHP method mock-SQL cases are source tests and are NOT forty real WordPress browser/staging/live E2E runs.
+
+**Five field deployment reality:** Repository baseline HEAD `39b8ff69bc9496ca55690669d7b59c92203b64ee`, proposed source v1.4.55; Deployed Version UNVERIFIED; Actual DB Version UNVERIFIED; Migration State UNVERIFIED; Live Verification Status NOT RUN. Exact deployed code ابھی unverified ہے؛ repository-based diagnosis provisional ہے۔
