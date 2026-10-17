@@ -206,7 +206,17 @@ class R26_Queue_DB_Spy {
     public function get_results( $sql, $format ) {
         $this->last_sql = $sql;
         $this->last_format = $format;
-        return array( array( 'public_id'=>'id-1', 'status'=>'open' ), array( 'public_id'=>'id-2', 'status'=>'reviewing' ) );
+        // A real File14 SELECT returns the complete governed moderation DTO.
+        // R50 explicitly rejects under-specified SQL rows.
+        $item = array( 'public_id'=>'id-1', 'report_type'=>'copy_quality',
+            'route_key'=>'global_clinic', 'block_key'=>null, 'locale'=>'en-US',
+            'reason_code'=>'unclear', 'message'=>'Safe reviewed feedback',
+            'status'=>'open', 'resolution'=>null, 'row_version'=>'1',
+            'created_at'=>'2026-10-17 00:00:00', 'updated_at'=>'2026-10-17 00:00:00' );
+        $reviewing = $item;
+        $reviewing['public_id'] = 'id-2';
+        $reviewing['status'] = 'reviewing';
+        return array( $item, $reviewing );
     }
 }
 global $wpdb;
@@ -631,6 +641,17 @@ $r14_db->rows[] = array(
     'record_key' => 'governed_change', 'locale' => 'en-US',
     'updated_at' => '2026-10-10 06:00:00', 'payload' => json_encode( $r14_valid_payload ),
 );
+// A successful SQL projection contains all declared governed record fields.
+ // Legacy-invalid here means *missing publication proof inside payload*, not
+ // a truncated database row with missing mandatory columns.
+foreach ( $r14_db->rows as &$r14_row ) {
+    $r14_row['record_type'] = 'change_log';
+    $r14_row['region'] = 'ZZ';
+    $r14_row['status'] = 'active';
+    $r14_row['is_public'] = 1;
+    $r14_row['row_version'] = '1';
+}
+unset( $r14_row );
 $GLOBALS['wpdb'] = $r14_db;
 $r14_decoded = GCU_Future_Intelligence::records( 'change_log', true, 1, 100 );
 assert_future( 1 === count( $r14_decoded ) && is_array( $r14_decoded[0]['payload'] ) && 'Founder-reviewed transparency change' === $r14_decoded[0]['payload']['title'], 'R14 regression-discovered: records() must decode JSON payload into returned array, not a temporary foreach copy.' );

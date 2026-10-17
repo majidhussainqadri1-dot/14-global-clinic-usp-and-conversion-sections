@@ -1340,6 +1340,28 @@ final class GCU_Future_Intelligence {
 		return GCU_Capabilities::require_capability( GCU_Capabilities::MANAGE_CONTENT, null, 'future_intelligence_content' );
 	}
 
+	/** Verify report moderation SQL results; never expose raw report text in diagnostic logs. */
+	private static function checked_report_list( $rows ) {
+		if ( ! is_array( $rows ) ) {
+			GCU_Observability::log( 'error', 'future_moderation_read_unverified', array() );
+			return new WP_Error( 'gcu_future_moderation_read_failed', __( 'The moderation queue could not be verified.', 'global-clinic-usp-integration' ), array( 'status' => 503 ) );
+		}
+		foreach ( $rows as $row ) {
+			if ( ! is_array( $row ) ||
+				! isset( $row['public_id'], $row['report_type'], $row['route_key'], $row['locale'], $row['reason_code'], $row['message'], $row['status'], $row['row_version'], $row['created_at'], $row['updated_at'] ) ||
+				! is_string( $row['public_id'] ) || '' === $row['public_id'] ||
+				! is_string( $row['report_type'] ) || ! is_string( $row['route_key'] ) ||
+				! is_string( $row['locale'] ) || ! is_string( $row['reason_code'] ) ||
+				! is_string( $row['message'] ) || ! is_string( $row['status'] ) ||
+				! in_array( $row['status'], array( 'open', 'reviewing', 'resolved', 'rejected' ), true ) ||
+				! GCU_Future_Policy::valid_aggregate_count( $row['row_version'] ) || (int) $row['row_version'] < 1 ) {
+				GCU_Observability::log( 'error', 'future_moderation_row_unverified', array() );
+				return new WP_Error( 'gcu_future_moderation_row_failed', __( 'A moderation queue entry could not be verified.', 'global-clinic-usp-integration' ), array( 'status' => 503 ) );
+			}
+		}
+		return $rows;
+	}
+
 	public static function reports( $status = 'open', $limit = 100 ) {
 		$read_permission = self::require_report_read();
 		if ( is_wp_error( $read_permission ) ) { return $read_permission; }
@@ -1347,7 +1369,8 @@ final class GCU_Future_Intelligence {
 		$t = self::tables();
 		$limit = max( 1, min( 200, (int) $limit ) );
 		$status = sanitize_key( $status );
-		return $wpdb->get_results( $wpdb->prepare( "SELECT public_id,report_type,route_key,block_key,locale,reason_code,message,status,resolution,row_version,created_at,updated_at FROM {$t['reports']} WHERE status=%s ORDER BY created_at ASC LIMIT %d", $status, $limit ), ARRAY_A );
+		$rows = $wpdb->get_results( $wpdb->prepare( "SELECT public_id,report_type,route_key,block_key,locale,reason_code,message,status,resolution,row_version,created_at,updated_at FROM {$t['reports']} WHERE status=%s ORDER BY created_at ASC LIMIT %d", $status, $limit ), ARRAY_A );
+		return self::checked_report_list( $rows );
 	}
 
 
@@ -1359,13 +1382,14 @@ final class GCU_Future_Intelligence {
 		global $wpdb;
 		$t = self::tables();
 		$limit = max( 1, min( 200, (int) $limit ) );
-		return $wpdb->get_results(
+		$rows = $wpdb->get_results(
 			$wpdb->prepare(
 				"SELECT public_id,report_type,route_key,block_key,locale,reason_code,message,status,resolution,row_version,created_at,updated_at FROM {$t['reports']} WHERE status IN ('open','reviewing') ORDER BY created_at ASC,id ASC LIMIT %d",
 				$limit
 			),
 			ARRAY_A
 		);
+		return self::checked_report_list( $rows );
 	}
 
 	public static function resolve_report_record( $id, $expected, $status, $resolution ) {
@@ -1423,15 +1447,28 @@ final class GCU_Future_Intelligence {
 		}
 		$sql = "SELECT record_type,record_key,locale,region,status,is_public,payload,row_version,review_due_at,updated_at FROM {$t['records']} WHERE $where ORDER BY updated_at DESC, id DESC LIMIT $limit OFFSET $offset";
 		$rows = $args ? $wpdb->get_results( $wpdb->prepare( $sql, $args ), ARRAY_A ) : $wpdb->get_results( $sql, ARRAY_A );
-		// Decode the actual array returned to consumers. Iterating over a
-		// ternary expression by reference modifies a temporary copy instead.
-		if ( ! is_array( $rows ) && $public_only ) {
-			GCU_Observability::log( 'error', 'public_change_log_read_unverified', array() );
-			return new WP_Error( 'gcu_public_change_log_read_failed', __( 'The public policy history is temporarily unavailable.', 'global-clinic-usp-integration' ), array( 'status' => 503 ) );
+		// Both privileged and public projections must not turn a failed SQL
+		// read into verified emptiness, or corrupt JSON into apparent blank policy.
+		if ( ! is_array( $rows ) ) {
+			GCU_Observability::log( 'error', 'future_governed_list_read_unverified', array() );
+			return new WP_Error( $public_only ? 'gcu_public_change_log_read_failed' : 'gcu_future_governed_list_read_failed', __( 'The governed record list could not be verified.', 'global-clinic-usp-integration' ), array( 'status' => 503 ) );
 		}
-		$rows = is_array( $rows ) ? $rows : array();
 		foreach ( $rows as &$row ) {
-			$row['payload'] = self::json_array( isset( $row['payload'] ) ? $row['payload'] : '' );
+			if ( ! is_array( $row ) ||
+				! isset( $row['record_type'], $row['record_key'], $row['locale'], $row['region'], $row['status'], $row['is_public'], $row['payload'], $row['row_version'], $row['updated_at'] ) ||
+				! is_string( $row['record_type'] ) || ! is_string( $row['record_key'] ) ||
+				! is_string( $row['locale'] ) || ! is_string( $row['region'] ) ||
+				! is_string( $row['status'] ) || ! is_string( $row['payload'] ) ||
+				! GCU_Future_Policy::valid_aggregate_count( $row['row_version'] ) || (int) $row['row_version'] < 1 ) {
+				GCU_Observability::log( 'error', 'future_governed_list_row_unverified', array() );
+				return new WP_Error( 'gcu_future_governed_list_row_failed', __( 'A governed record could not be verified.', 'global-clinic-usp-integration' ), array( 'status' => 503 ) );
+			}
+			$payload = json_decode( $row['payload'], true );
+			if ( JSON_ERROR_NONE !== json_last_error() || ! is_array( $payload ) ) {
+				GCU_Observability::log( 'error', 'future_governed_list_payload_unverified', array() );
+				return new WP_Error( 'gcu_future_governed_list_payload_failed', __( 'A governed record payload is unavailable for review.', 'global-clinic-usp-integration' ), array( 'status' => 503 ) );
+			}
+			$row['payload'] = $payload;
 		}
 		unset( $row );
 		return $rows;

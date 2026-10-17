@@ -1,8 +1,12 @@
-# File 14 v1.4.52 Source Manifest
+# File 14 v1.4.53 Source Manifest
 
 Canonical plugin folder: `14-global-clinic-usp-integration`
 
 Contents:
+- R50 direct native authorized report and reviewer queue reader fails closed on unreadable SQL/invalid moderated rows
+- R50 governed records() public/private SQL reads reject malformed row/JSON instead of fabricating blank records
+- Forty new direct actual PHP service-method WordPress+SQL mocks, repeated 40 approved-plan marker scans 40 times
+- Cross-file acceptance #19/#22, installed plugin/DB/migration, staging and live verification remain OPEN/UNVERIFIED
 - R49 governed Report and Record admin pagination SQL false/null no longer lies about an empty moderation/record queue
 - R49 malformed or nonmonotonic SQL page identity and corrupt governed JSON payload fail closed with operator-safe 503 errors
 - R49 forty new REAL PHP service/REST method SQL mock cases; original 40x40 source review, both PHP versions, fresh reviews, deterministic ZIP/SBOM required

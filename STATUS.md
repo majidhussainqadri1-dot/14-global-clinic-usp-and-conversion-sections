@@ -1,3 +1,9 @@
+Software candidate: `1.4.53`.
+
+# File14 R50 GitHub SOURCE candidate 1.4.53, NOT accepted as deployed
+
+Precode main `5689742d9d9848f65d2e610c5b0d43738ea1b4c3` (1.4.52). The approved amended File14's 16 FR+24 FUT plus Three Central master and File07/08/09/25 owner scope cross-check was frozen before PHP changes. Two newly confirmed source defects corrected: direct protected moderation service reads accepted failed SQL/malformed report rows, and native governed records read failed SQL/corrupt JSON as false empty or valid empty. New forty actual File14 PHP method WordPress/SQL mocked regressions; existing forty repeated forty-marker plan-source reviews. Exact SHA PHP7.4/8.3 CI, two Fresh Reviews and deterministic ZIP/SBOM required both PR and merged main. #19 File01/07/08/09 actual owner native evidence and #22 File20/25 approved real placement rollback OPEN. Actual installed plugin, hash, wp_options, live DB/migration, staging and re-test UNKNOWN. See `docs/REVIEW-40-CROSS-PLAN-v1.4.53-R50.md`.
+
 Software candidate: `1.4.52`.
 
 # File14 R49 GitHub candidate SOURCE v1.4.52; no production acceptance
