@@ -206,7 +206,17 @@ class R26_Queue_DB_Spy {
     public function get_results( $sql, $format ) {
         $this->last_sql = $sql;
         $this->last_format = $format;
-        return array( array( 'public_id'=>'id-1', 'status'=>'open' ), array( 'public_id'=>'id-2', 'status'=>'reviewing' ) );
+        // A real File14 SELECT returns the complete governed moderation DTO.
+        // R50 explicitly rejects under-specified SQL rows.
+        $item = array( 'public_id'=>'id-1', 'report_type'=>'copy_quality',
+            'route_key'=>'global_clinic', 'block_key'=>null, 'locale'=>'en-US',
+            'reason_code'=>'unclear', 'message'=>'Safe reviewed feedback',
+            'status'=>'open', 'resolution'=>null, 'row_version'=>'1',
+            'created_at'=>'2026-10-17 00:00:00', 'updated_at'=>'2026-10-17 00:00:00' );
+        $reviewing = $item;
+        $reviewing['public_id'] = 'id-2';
+        $reviewing['status'] = 'reviewing';
+        return array( $item, $reviewing );
     }
 }
 global $wpdb;
