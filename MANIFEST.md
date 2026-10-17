@@ -1,8 +1,12 @@
-# File 14 v1.4.54 Source Manifest
+# File 14 v1.4.55 Source Manifest
 
 Canonical plugin folder: `14-global-clinic-usp-integration`
 
 Contents:
+- R52 exact 40-plan cross-owner review and new FUT17 strict complaint/expiry COUNT guard with no malformed SQL count accepted
+- R52 forty REAL PHP lifecycle guardrail SQL-mocked tests plus prior forty scenario suites, forty 40-marker repeated source scans
+- R52 issues #19/#22 canonical File01/07/08/09/20 owner source provenance and staging/Founder acceptance handoff: docs/R52-OPEN-BLOCKERS-CROSS-OWNER-ACCEPTANCE.md
+- Existing #19/#22 remain OPEN: deployed plugin/hash, real DB version/migration, staging and Live NOT VERIFIED
 - R51 FUT22 capped 1000-row public change-history scan does not misreport an incomplete remaining approved policy history as empty/complete
 - R51 FUT06 jurisdiction disclosure SQL read failure cannot silently masquerade as no approved regional/general information; privacy-safe public unavailable notice
 - R51 40 real PHP method SQL/REST/HTML mocks, repeat forty source contract markers forty times, PHP 7.4/8.3, two fresh reviews and reproducible ZIP/SBOM
