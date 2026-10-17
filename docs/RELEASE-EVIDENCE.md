@@ -1,3 +1,9 @@
+Software candidate: `1.4.55`.
+
+# R52 File14 v1.4.55 — exact SOURCE and cross-owner acceptance evidence; NOT live acceptance
+
+Pre-code exact main `39b8ff69bc9496ca55690669d7b59c92203b64ee` (1.4.54) compared to amended File14 CTI24, Consolidated Three Central Plans and File07/08/09/25; 40 distinct requirement lenses frozen in `docs/REVIEW-40-CROSS-PLAN-v1.4.55-R52.md` before any PHP changes. Two **new actual source** FUT17 guard defects corrected: SQL complaint COUNT and expiry COUNT accepted noncanonical numeric values and coerced them into safety decisions. New 40 actual method SQL mocked tests with R34 historical forty cases, 40 repeat source-contract rounds, PHP 7.4/8.3 fresh reviews and reproducible ZIP/SBOM required exact PR and merged main. The requested two preexisting cross-owner blockers were actively investigated using exact separate GitHub HEADs: #19 has File07/08/09 owner hooks in SOURCE, File14 consumer present, but File01 approved registered producer contract and real consent/staging/liveness unverified; #22 File14 approved baseline and no-change reconciliation are SOURCE implementations, not restored modified File20/25 placement. Details `docs/R52-OPEN-BLOCKERS-CROSS-OWNER-ACCEPTANCE.md`. Both remain OPEN absent Founder approval, installed plugin/hash/DB state, backed-up WordPress staging tests, actual changed-placement CAS restore and Live retest.
+
 Software candidate: `1.4.54`.
 
 # File14 R51 v1.4.54 — SOURCE Release Evidence Only; Not Installed Live Acceptance

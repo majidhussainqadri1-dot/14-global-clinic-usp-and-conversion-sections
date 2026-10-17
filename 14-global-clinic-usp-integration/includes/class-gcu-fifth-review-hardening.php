@@ -231,7 +231,7 @@ final class GCU_Fifth_Review_Hardening {
 		$open_reports_result = $wpdb->get_var(
 			"SELECT COUNT(*) FROM {$future_tables['reports']} WHERE status IN ('open','reviewing') AND created_at>=DATE_SUB(UTC_TIMESTAMP(),INTERVAL 7 DAY)"
 		);
-		if ( false === $open_reports_result || null === $open_reports_result || ! is_numeric( $open_reports_result ) ) {
+		if ( ! GCU_Future_Policy::valid_aggregate_count( $open_reports_result ) ) {
 			GCU_Observability::log( 'error', 'experiment_complaint_count_unverified', array() );
 			return new WP_Error( 'gcu_experiment_complaint_count_failed', __( 'Experiment complaint safety could not be verified.', 'global-clinic-usp-integration' ), array( 'status' => 503 ) );
 		}
@@ -250,7 +250,7 @@ final class GCU_Fifth_Review_Hardening {
 			$expired_count = $wpdb->get_var(
 				"SELECT COUNT(*) FROM {$tables['experiments']} WHERE status='running' AND {$expired_where}"
 			);
-			if ( null === $expired_count || false === $expired_count || ! is_numeric( $expired_count ) || (float) $expired_count < 0 ) {
+			if ( ! GCU_Future_Policy::valid_aggregate_count( $expired_count ) ) {
 				GCU_Observability::log( 'error', 'experiment_expiry_check_unverified', array() );
 				return new WP_Error( 'gcu_experiment_expiry_check_failed', __( 'Experiment window safety could not be verified.', 'global-clinic-usp-integration' ), array( 'status' => 503 ) );
 			}

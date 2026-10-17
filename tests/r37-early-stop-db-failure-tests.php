@@ -82,6 +82,8 @@ class GCU_Observability {
     public static function log( $level, $name, $props = array() ) { self::$logs[] = array( 'name'=>$name, 'props'=>$props ); }
 }
 $wpdb = new R37DB();
+// R52: the real FUT17 guard now requires the canonical strict SQL count policy.
+require __DIR__ . '/../14-global-clinic-usp-integration/includes/class-gcu-future-policy.php';
 require __DIR__ . '/../14-global-clinic-usp-integration/includes/class-gcu-fifth-review-hardening.php';
 $errors = array();
 $expected = array(

@@ -1,3 +1,11 @@
+Software candidate: `1.4.55`.
+
+# R52 — Cross-Owner Blocker Work and Experiment Guardrail Evidence
+
+Pre-code frozen main `39b8ff69bc9496ca55690669d7b59c92203b64ee`, File14 v1.4.54. Actually compared attached amended File14 CTI24 16 FR+24 FUT, Consolidated Three Central Governing Master Plans and companion File07/08/09/25 owner plans. Forty distinct source/owner requirement lenses and two source defects committed before PHP edits. Two newly confirmed local defects corrected in `transactional_early_stop_guard()`: complaint SQL COUNT allowed negative/fraction/exponent/overflow values to be cast as harmless or wrong whole counts; expiry COUNT had the same weak `is_numeric`/integer cast flaw, possibly skipping necessary expired experiment safety stops. Both now call already approved strict `GCU_Future_Policy::valid_aggregate_count()` and fail closed with existing safe 503 codes, no changes to owner placements. Forty new real PHP-method SQL-mocked scenarios, historical R34 40 tests, 40 repeated 40-marker source reviews, PHP7.4/8.3, Fresh Reviews and deterministic ZIP/SBOM. See `docs/REVIEW-40-CROSS-PLAN-v1.4.55-R52.md`.
+
+**Owner issues actioned, NOT falsely closed:** exact File01/07/08/09/20 source heads and hook evidence, specific signed event schema/consent/WordPress staging gates for #19, and approved real File20/25 changed-placement CAS restoration/backup/rollback gates for #22 captured in `docs/R52-OPEN-BLOCKERS-CROSS-OWNER-ACCEPTANCE.md`. GitHub code contains producer hooks and File14 baseline containment; it does **not** prove registered owner end-to-end staging or actual changed-placement restoration. Owner #19/#22 OPEN, live artifact/DB/migrations/rollback unverified.
+
 Software candidate: `1.4.54`.
 
 # R51 File14 — Public Reviewed Policy History and Jurisdiction Copy Read Evidence
