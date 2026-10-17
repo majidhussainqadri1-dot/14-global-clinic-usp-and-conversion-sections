@@ -1,8 +1,12 @@
-# File 14 v1.4.53 Source Manifest
+# File 14 v1.4.54 Source Manifest
 
 Canonical plugin folder: `14-global-clinic-usp-integration`
 
 Contents:
+- R51 FUT22 capped 1000-row public change-history scan does not misreport an incomplete remaining approved policy history as empty/complete
+- R51 FUT06 jurisdiction disclosure SQL read failure cannot silently masquerade as no approved regional/general information; privacy-safe public unavailable notice
+- R51 40 real PHP method SQL/REST/HTML mocks, repeat forty source contract markers forty times, PHP 7.4/8.3, two fresh reviews and reproducible ZIP/SBOM
+- Owner issues #19/#22, exact installed deployed code, real DB/migration, staged/live acceptance OPEN/UNVERIFIED
 - R50 direct native authorized report and reviewer queue reader fails closed on unreadable SQL/invalid moderated rows
 - R50 governed records() public/private SQL reads reject malformed row/JSON instead of fabricating blank records
 - Forty new direct actual PHP service-method WordPress+SQL mocks, repeated 40 approved-plan marker scans 40 times
