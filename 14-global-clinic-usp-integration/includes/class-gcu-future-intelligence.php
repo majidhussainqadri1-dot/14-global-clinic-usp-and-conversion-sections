@@ -1482,6 +1482,7 @@ final class GCU_Future_Intelligence {
 		// crowding out a valid, older public policy history entry.
 		$page_size = 100;
 		$max_scanned = 1000;
+		$end_of_history_verified = false;
 		for ( $offset = 0; $offset < $max_scanned && count( $out ) < $limit; $offset += $page_size ) {
 			$rows = self::records( 'change_log', true, $page_size, $offset );
 			if ( is_wp_error( $rows ) ) { return $rows; }
@@ -1491,7 +1492,16 @@ final class GCU_Future_Intelligence {
 				$out[] = array( 'key' => $row['record_key'], 'locale' => $row['locale'], 'payload' => $row['payload'], 'updated_at' => $row['updated_at'] );
 				if ( count( $out ) >= $limit ) { break; }
 			}
-			if ( count( $rows ) < $page_size ) { break; }
+			if ( count( $rows ) < $page_size ) {
+				$end_of_history_verified = true;
+				break;
+			}
+		}
+		// A complete bounded batch at the cap has not established that older
+		// approved policy changes do not exist. Never publish a false empty log.
+		if ( count( $out ) < $limit && ! $end_of_history_verified ) {
+			GCU_Observability::log( 'error', 'public_change_log_scan_incomplete', array() );
+			return new WP_Error( 'gcu_public_change_log_scan_incomplete', __( 'The full public policy history could not be verified.', 'global-clinic-usp-integration' ), array( 'status' => 503 ) );
 		}
 		return $out;
 	}
@@ -1505,8 +1515,15 @@ final class GCU_Future_Intelligence {
 		// Never publish that malformed record, but still consider a separately
 		// approved generic ZZ disclosure before hiding all regional guidance.
 		$rows = $wpdb->get_results( $wpdb->prepare( "SELECT region,payload FROM {$t['records']} WHERE record_type='jurisdiction_copy' AND record_key='global_clinic_disclosure' AND locale=%s AND region IN (%s,'ZZ') AND status='active' AND is_public=1 AND (review_due_at IS NULL OR review_due_at>UTC_TIMESTAMP()) ORDER BY (region=%s) DESC LIMIT 2", $locale, $region, $region ), ARRAY_A );
-		foreach ( is_array( $rows ) ? $rows : array() as $row ) {
-			$payload = self::json_array( isset( $row['payload'] ) ? $row['payload'] : '' );
+		if ( ! is_array( $rows ) ) {
+			GCU_Observability::log( 'error', 'jurisdiction_disclosure_read_unverified', array() );
+			return new WP_Error( 'gcu_jurisdiction_disclosure_read_failed', __( 'Regional policy information is temporarily unavailable.', 'global-clinic-usp-integration' ), array( 'status' => 503 ) );
+		}
+		foreach ( $rows as $row ) {
+			if ( ! is_array( $row ) || ! isset( $row['region'], $row['payload'] ) || ! is_string( $row['region'] ) || ! is_string( $row['payload'] ) ) {
+				continue;
+			}
+			$payload = self::json_array( $row['payload'] );
 			$proof = GCU_Future_Policy::validate_public_record_payload( 'jurisdiction_copy', $payload );
 			if ( ! empty( $proof['safe'] ) ) {
 				return $payload;
@@ -1552,7 +1569,9 @@ final class GCU_Future_Intelligence {
 		}
 		$html .= '</div></section>';
 		$disclosure = self::jurisdiction_disclosure( $locale, $region );
-		if ( ! empty( $disclosure['body'] ) ) {
+		if ( is_wp_error( $disclosure ) ) {
+			$html .= '<aside class="gcu-future__disclosure gcu-future__disclosure--unavailable" role="status"><strong>Regional information</strong><p>Regional policy information is temporarily unavailable. Please try again later.</p></aside>';
+		} elseif ( ! empty( $disclosure['body'] ) ) {
 			$html .= '<aside class="gcu-future__disclosure" role="note"><strong>Regional information</strong><p>' . esc_html( $disclosure['body'] ) . '</p></aside>';
 		}
 		$html .= self::render_trust_evidence( $locale );
