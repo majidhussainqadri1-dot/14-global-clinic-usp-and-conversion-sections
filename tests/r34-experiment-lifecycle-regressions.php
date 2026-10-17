@@ -84,6 +84,9 @@ class GCU_Experiment_Baseline {
         return array( 'restored'=>self::$restored, 'reason'=>self::$restored ? 'approved_baseline_unchanged' : 'placement_drift_requires_owner_reconciliation', 'manual_review'=>true );
     }
 }
+// R52: the production experiment guard now delegates strict COUNT validation
+// to the real canonical Future policy. Load its actual method, not a mock.
+require __DIR__ . '/../14-global-clinic-usp-integration/includes/class-gcu-future-policy.php';
 require __DIR__ . '/../14-global-clinic-usp-integration/includes/class-gcu-fifth-review-hardening.php';
 require __DIR__ . '/../14-global-clinic-usp-integration/includes/class-gcu-repository.php';
 
