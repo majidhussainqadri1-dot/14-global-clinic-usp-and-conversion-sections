@@ -79,6 +79,27 @@ final class GCU_Hardening {
 		$path = self::normalized_request_path();
 		$prefixes = array( '/wp-admin/', '/wp-login.php/', '/account/', '/doctor/apply/', '/doctor/application/', '/doctor/verification/', '/checkout/', '/messages/', '/appointments/', '/settings/', '/profile/edit/' );
 		foreach ( $prefixes as $prefix ) { if ( 0 === strpos( $path, $prefix ) ) { return true; } }
+
+		// A booking/onboarding POST reaches WordPress through REST, not the
+		// /appointments/ page path. Classify the actual owner API request
+		// before optional File14 analytics consent can be consulted.
+		// Include clinical/support owner APIs: a source event is not permission
+		// to collect sensitive journey analytics.
+		foreach ( array( '/wp-json/wca/', '/wp-json/gdo/', '/wp-json/cf01/', '/wp-json/cf02/' ) as $rest_prefix ) {
+			if ( false !== strpos( $path, $rest_prefix ) ) { return true; }
+		}
+		// WP supports non-pretty REST URLs: /?rest_route=/wca/v1/appointments.
+		// Malformed rest_route must fail closed rather than be treated as a
+		// harmless public page under the optional analytics pipeline.
+		if ( isset( $_GET['rest_route'] ) ) {
+			$raw_route = wp_unslash( $_GET['rest_route'] );
+			if ( ! is_string( $raw_route ) ) { return true; }
+			$route = '/' . ltrim( rawurldecode( $raw_route ), '/' );
+			$route = strtolower( (string) preg_replace( '#/+#', '/', $route ) );
+			foreach ( array( '/wca/', '/gdo/', '/cf01/', '/cf02/' ) as $rest_prefix ) {
+				if ( 0 === strpos( $route, $rest_prefix ) ) { return true; }
+			}
+		}
 		return false;
 	}
 
