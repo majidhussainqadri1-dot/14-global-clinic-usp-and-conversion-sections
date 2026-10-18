@@ -1,3 +1,9 @@
+Software candidate: `1.4.57`.
+
+# R54 — Forty exact plan lenses and source integrity remediation, 2026-10-18
+
+Frozen prior GitHub source main `4c717d6543f6524105f2caaa2adeec1e6a1a6fc2` (v1.4.56), independently cross-mapped 16 F14-FR and 24 F14-FUT with Consolidated Three Central Plans and File07/08/09/20/25 in `docs/REVIEW-40-CROSS-PLAN-v1.4.57-R54.md` before runtime edits. Two new File14 source defects corrected: FUT18 FAQ signal numeric coercion previously bypassed FUT15 canonical small-cohort validation; FUT13 friction stage had no typed/nonblank SQL row guard. New `tests/r54-faq-friction-evidence-tests.php`: 40 actual FAQ public method/policy vectors and 40 friction PHP SQL-mocked method vectors. Existing full forty plan-source rounds, PHP7.4/8.3, two separate Fresh Reviews and deterministic ZIP/checksum/SBOM must pass on exact PR and post-merge main independently. No File07/08/09/20/25 owner database writes. Cross-owner Issues #19 (owner signed real events) and #22 (actual changed-placement CAS restoration) remain OPEN; installed WordPress plugin, real DB/schema, migrations/options, staging and live re-test unverified. This is SOURCE candidate work, not Production-Resolved.
+
 Software candidate: `1.4.56`.
 
 # R53 — 40-plan review and strict whole-count privacy correction (source candidate)

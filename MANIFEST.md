@@ -1,8 +1,9 @@
-# File 14 v1.4.56 Source Manifest
+# File 14 v1.4.57 Source Manifest
 
 Canonical plugin folder: `14-global-clinic-usp-integration`
 
 Contents:
+- R54 40-plan amended cross-owner audit precode freeze, two local source evidence fixes, 80 direct policy/public method SQL-mock regressions; File01/07/08/09 and File20/25 cross-owner issues still open
 - R53 after pre-code 40-plan freeze: strict whole-count validation in FUT15 privacy cohorts and FUT11 owner evidence; 40 direct policy count vectors + quality regressions
 - Exact R53 issue #19 (signed owner events) / #22 (real changed-placement restore) remain open; no live/staging parity assumption
 - R52 exact 40-plan cross-owner review and new FUT17 strict complaint/expiry COUNT guard with no malformed SQL count accepted

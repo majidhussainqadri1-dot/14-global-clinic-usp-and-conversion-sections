@@ -824,7 +824,9 @@ final class GCU_Future_Intelligence {
 			return new WP_Error( 'gcu_friction_stage_read_unverified', __( 'Friction analytics evidence could not be verified.', 'global-clinic-usp-integration' ), array( 'status' => 503 ) );
 		}
 		foreach ( $rows as $row ) {
-			if ( ! is_array( $row ) || ! isset( $row['funnel_stage'], $row['total'] ) || ! GCU_Future_Policy::valid_aggregate_count( $row['total'] ) ) {
+			if ( ! is_array( $row ) || ! isset( $row['funnel_stage'], $row['total'] )
+				|| ! is_string( $row['funnel_stage'] ) || '' === trim( $row['funnel_stage'] )
+				|| ! GCU_Future_Policy::valid_aggregate_count( $row['total'] ) ) {
 				GCU_Observability::log( 'error', 'friction_stage_row_unverified', array() );
 				return new WP_Error( 'gcu_friction_stage_row_unverified', __( 'Friction analytics evidence was incomplete.', 'global-clinic-usp-integration' ), array( 'status' => 503 ) );
 			}

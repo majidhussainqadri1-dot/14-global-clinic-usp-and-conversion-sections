@@ -1,3 +1,9 @@
+Software candidate: `1.4.57`.
+
+# R54 source release ledger (NOT installed/staging/live)
+
+Frozen exact source main `4c717d6543f6524105f2caaa2adeec1e6a1a6fc2`; completed 40 unique amended FR/FUT lenses in R54 frozen plan before runtime source modification. Source v1.4.57 corrects FAQ raw canonical-count validation and friction evidence SQL stage typing, with 80 real PHP method/policy mock cases. PR and merged main each require PHP7.4/8.3, 40 repeated 40-contract source checks, two fresh reviews, reproducible ZIP/checksum/SBOM. Issue #19 and Issue #22 are **OPEN**. No deployment/parity/DB/migration/staging/live evidence; release must not claim operational status.
+
 Software candidate: `1.4.56`.
 
 # R53 — Source candidate / release gates (NOT DEPLOYMENT ACCEPTANCE)
