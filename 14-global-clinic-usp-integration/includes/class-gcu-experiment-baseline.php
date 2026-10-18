@@ -50,8 +50,19 @@ final class GCU_Experiment_Baseline {
 	}
 
 	private static function shape( $row ) {
+		// R60: an incomplete SELECT result is not a durable owner-approved
+		// baseline. Nullable schedule fields must still be *present*.
 		$fields = array( 'public_id', 'placement_key', 'block_key', 'route_key', 'slot_key', 'audience', 'priority', 'status', 'starts_at', 'ends_at', 'row_version' );
-		return array_intersect_key( (array) $row, array_fill_keys( $fields, true ) );
+		if ( ! is_array( $row ) ) { return null; }
+		foreach ( $fields as $field ) {
+			if ( ! array_key_exists( $field, $row ) ) { return null; }
+		}
+		if ( ! is_string( $row['public_id'] ) || ! wp_is_uuid( $row['public_id'] )
+			|| ! is_string( $row['placement_key'] ) || '' === $row['placement_key']
+			|| sanitize_key( $row['placement_key'] ) !== $row['placement_key']
+			|| ! GCU_Future_Policy::valid_aggregate_count( $row['row_version'] )
+			|| (int) $row['row_version'] < 1 ) { return null; }
+		return array_intersect_key( $row, array_fill_keys( $fields, true ) );
 	}
 
 	public static function capture_approved( $experiment, $approver ) {
@@ -79,7 +90,11 @@ final class GCU_Experiment_Baseline {
 		foreach ( $keys as $key ) {
 			$p = self::read_placement( $key, true );
 			if ( ! is_array( $p ) ) { return new WP_Error( 'gcu_baseline_placement_missing', 'Every linked placement must already exist.' ); }
-			$placements[ $key ] = self::shape( $p );
+			$shape = self::shape( $p );
+			if ( null === $shape || $shape['placement_key'] !== $key ) {
+				return new WP_Error( 'gcu_baseline_placement_unverified', 'An approved placement requires complete canonical owner evidence.' );
+			}
+			$placements[ $key ] = $shape;
 		}
 		ksort( $placements );
 		$data = array(
@@ -128,6 +143,12 @@ final class GCU_Experiment_Baseline {
 			|| ! GCU_Future_Policy::valid_aggregate_count( $s['approval_version'] )
 			|| (int) $s['approved_by'] < 1
 			|| (int) $row['created_by'] !== (int) $s['approved_by'] ) { return null; }
+		// A matching hash proves only bytes, not a complete placement contract.
+		foreach ( $s['placements'] as $key => $saved ) {
+			if ( ! is_string( $key ) || ! is_array( $saved )
+				|| self::shape( $saved ) !== $saved
+				|| $saved['placement_key'] !== $key ) { return null; }
+		}
 		return $s;
 	}
 
