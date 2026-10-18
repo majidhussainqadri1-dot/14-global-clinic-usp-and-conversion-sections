@@ -6,6 +6,7 @@
  */
 define( 'ABSPATH', __DIR__ . '/' );
 function wp_unslash( $x ) { return $x; }
+function sanitize_text_field( $x ) { return trim( strip_tags( (string) $x ) ); }
 function wp_parse_url( $x, $part = -1 ) { return parse_url( $x, $part ); }
 function trailingslashit( $x ) { return rtrim( $x, '/' ) . '/'; }
 class GCU_Policy {
