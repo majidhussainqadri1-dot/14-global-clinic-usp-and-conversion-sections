@@ -1,3 +1,9 @@
+Software candidate: `1.4.61`.
+
+# R58 — Forty-plan owner anomaly and approved experiment evidence review, 2026-10-18
+
+Exact pre-PHP frozen source main `68872368f562064036df52ed414b32570e6c4937` v1.4.60. `docs/REVIEW-40-CROSS-PLAN-v1.4.61-R58.md` enumerates 16 FR plus 24 FUT unique lenses against amended File14 master plan, three central plans and Files01/07/08/09/20/25. Confirmed local defects: R58-D01 `GCU_Experiment_Baseline::ready()` and `snapshot()` previously cast original corrupted approver/version metadata before equality; now raw canonical numeric proof required for experiment and snapshot creator, with intact correct WordPress SQL strings. R58-D02 `GCU_Owner_Outcomes::observed_anomaly()` previously silently omitted blank but string-typed SQL group identity; now marks anomaly owner evidence unverified and suppressed; 40 native anomaly method cases and 40 actual baseline ready/snapshot PHP-mock cases. Previously merged source safety hardening retained. GitHub exact candidate and merged main require PHP 7.4/8.3, forty repeated 40-marker plan checks, two independent Fresh Reviews, deterministic ZIP/SHA/SBOM. Owner signed registry #19 and real changed-placement CAS #22 remain OPEN; installed WordPress deployed code, actual DB schema/options, migration, logs, staging and live re-test UNVERIFIED. Source correctness alone is NOT production resolution.
+
 Software candidate: `1.4.60`.
 
 # R57 — Forty-plan native-owner producer/replay integrity review, 2026-10-18
