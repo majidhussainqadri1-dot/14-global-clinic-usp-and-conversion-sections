@@ -1,6 +1,6 @@
 Software candidate: `1.4.58`.
 
-# R55 source-only release candidate / not deployed acceptance
+# R55 v1.4.58 source-only release candidate / not deployed acceptance
 
 Frozen prior main `43364ea2d417d787cc4843d4afcbed004b234834` v1.4.57. Forty amended plan/central/owner source lenses frozen precode. R55-D01 now denies owner-placement experimental variants without executable CAS restore; R55-D02 anomaly missing/unverified is a trust breach during automatic early stop. Added 80 direct PHP-policy and WordPress/SQL mock test scenarios. Both source issues #19 and #22 remain incomplete across owners; no File01 signed registry / no File20/25 owner CAS mapping approved. Require fresh exact-head PHP7.4/8.3, forty repeated full source checks, both independent reviews, deterministic ZIP and checksum and SBOM on PR and merged main. Actual WordPress package/DB/schema/wp_options/migration/staging/live unknown. No Resolved production claim.
 
