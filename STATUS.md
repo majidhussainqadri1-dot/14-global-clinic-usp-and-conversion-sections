@@ -1,3 +1,9 @@
+Software candidate: `1.4.65`.
+
+# R62 — forty amended File14 plan and cross-owner source review, 2026-10-18
+
+Prior exact GitHub main `1fdebbf3f76976bc2c34780883c5f1d81752b59b` v1.4.64. Frozen pre-edit owner/central plan ledger `docs/REVIEW-40-CROSS-PLAN-v1.4.65-R62.md` contains 16 FR plus 24 FUT distinct amended requirement scopes and File01/07/08/09/20/25 ownership. R62-D01: approved File20 placement snapshot shape accepted arbitrary nonempty `starts_at`/`ends_at` strings, impossible dates or inverted schedule; now requires NULL or real canonical SQL UTC Y-m-d H:i:s Gregorian times and valid start/end order. R62-D02: File07/08/09 readiness event consumer accepted positive unknown `contract_version` 2+ under explicit .v1 event names without signed version negotiation; only canonical raw 1/'1' or missing legacy v1 permitted, all others rejected before state writes. Adds 40 direct actual baseline PHP/SQL mock cases and 40 direct native event version/option cases, adjusting prior R61 v2 assumption. Must pass PHP7.4/8.3, 40 repeated full plan-source scans, two fresh reviews, deterministic ZIP/SHA/SBOM on exact PR and postmerge main. File01 signed attested events #19 and actual File20/25 changed-placement CAS restore #22 remain OPEN. Installed WordPress version/code checksum, real database/schema/options/migration, staging and live re-test UNVERIFIED; repository fixes are not production resolution.
+
 Software candidate: `1.4.64`.
 
 # R61 — forty-plan owner-snapshot typed evidence and event-contract integrity audit, 2026-10-18

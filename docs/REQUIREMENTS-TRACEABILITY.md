@@ -1,3 +1,16 @@
+Requirements Traceability — v1.4.65
+
+File 14 v1.4.65 may only claim a status independently supported by exact source/CI, staging acceptance, and installed deployed artifact plus DB migration parity. GitHub source != deployed WordPress truth.
+
+## R62 pre-code amended 40 FR/FUT plan and cross-owner source evidence
+
+| Requirement / canonical owner | Verified local source gap and repair | Source test evidence and operational blocker |
+|---|---|---|
+| FR007 / FUT16/17, File20 placement owner / File25 presentation | R62-D01 SQL owner placement starts_at / ends_at were accepted as arbitrary nonempty text; invalid Gregorian dates and backwards ranges could become hash-consistent approved baseline. Require real exact SQL Y-m-d H:i:s time and valid ordering; keep NULL schedule. | Forty actual baseline method PHP/mock SQL date and rehashed snapshot cases; #22 actual owner CAS changed-placement restore and staging remains OPEN |
+| FR009 / FUT02/09, File07/08/09 readiness owners | R62-D02 .v1 event names accepted arbitrary canonical positive contract_version such as 2/999, without versioned producer/consumer negotiation; now only explicit v1 1 or '1' or missing historical v1, all others fail closed before wp_options writes. | Forty actual owner availability event consumer PHP/option mocks, historical R61 expectation fixed; File01 signed registry #19 remains OPEN |
+
+Forty individually scoped amended FR/FUT source/owner lenses recorded BEFORE code in `docs/REVIEW-40-CROSS-PLAN-v1.4.65-R62.md` at main `1fdebbf3f76976bc2c34780883c5f1d81752b59b`. Actual WordPress DB options, installed source/plugin checksums, migrations, staging and live E2E are UNVERIFIED.
+
 Requirements Traceability — v1.4.64
 
 File 14 v1.4.64 may only claim a status independently supported by exact source/CI, staging acceptance, and installed deployed artifact plus DB migration parity. GitHub is source truth, not live installed parity.

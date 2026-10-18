@@ -4,7 +4,7 @@ Tags: clinic, doctors, conversion, accessibility, privacy, governance, trust, ex
 Requires at least: 6.6
 Tested up to: 7.0.1
 Requires PHP: 7.4
-Stable tag: 1.4.64
+Stable tag: 1.4.65
 License: GPLv2 or later
 
 Version 1.4.56 tightens canonical whole-number cohort and owner-outcome evidence gates (40 direct privacy-policy test vectors); pending production/staging parity and external owner #19/#22.
@@ -24,6 +24,8 @@ R59 source v1.4.62 validates raw canonical Founder approval actor and signed-int
 R60 v1.4.63: deny experiment activation on changed File20 route/audience/priority/status/scheduling owner fields; require complete validated immutable owner placement SQL and baseline snapshot evidence. 80 direct PHP source method cases, File01/#19 and File20/25/#22 remain owner blocked, installed WordPress staging/live unverified.
 
 R61 source 1.4.64 validates signed SQL priority, text types and nullable schedule evidence in saved File20-style baseline snapshots, and requires positive canonical File07/08/09 owner readiness contract_version plus valid original owner envelope. 80 direct source PHP/SQL-mock tests; external #19/#22 and actual deployed staging/live unverified.
+
+R62 v1.4.65 rejects impossible, noncanonical or inverted File20-style placement DATETIME windows before approved snapshots; rejects unnegotiated event contract_version >1 for File07/08/09 .v1 owner readiness. Adds eighty direct PHP/mock SQL/WordPress cases. #19 and #22 remain OPEN for owner/staging/deployed evidence.
 
 Canonical File 14 implementation for approved Worldwide Clinic value-proposition content, ethical conversion journeys, claim governance, destination contracts, Future Conversion & Trust Intelligence and privacy-minimized measurement.
 

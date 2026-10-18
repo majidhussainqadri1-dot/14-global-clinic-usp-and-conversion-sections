@@ -68,9 +68,19 @@ final class GCU_Experiment_Baseline {
 		foreach ( array( 'block_key', 'route_key', 'slot_key', 'audience', 'status' ) as $field ) {
 			if ( ! is_string( $row[ $field ] ) || '' === trim( $row[ $field ] ) ) { return null; }
 		}
+		// R62: MySQL DATETIME (nullable) owner evidence must contain real
+		// Gregorian SQL datetimes; any nonempty text such as 'tomorrow' is not
+		// a verifiable, Founder-approved placement schedule.
 		foreach ( array( 'starts_at', 'ends_at' ) as $field ) {
-			if ( null !== $row[ $field ] && ( ! is_string( $row[ $field ] ) || '' === trim( $row[ $field ] ) ) ) { return null; }
+			if ( null === $row[ $field ] ) { continue; }
+			$value = $row[ $field ];
+			if ( ! is_string( $value )
+				|| ! preg_match( '/^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}$/D', $value ) ) { return null; }
+			$date = DateTimeImmutable::createFromFormat( '!Y-m-d H:i:s', $value, new DateTimeZone( 'UTC' ) );
+			if ( false === $date || $date->format( 'Y-m-d H:i:s' ) !== $value ) { return null; }
 		}
+		if ( null !== $row['starts_at'] && null !== $row['ends_at']
+			&& strcmp( $row['starts_at'], $row['ends_at'] ) > 0 ) { return null; }
 		// File14 schema: priority is a *signed 32-bit SQL INT*. Unlike an
 		// aggregate count, negative values are valid, but decimal coercion is not.
 		$priority = $row['priority'];

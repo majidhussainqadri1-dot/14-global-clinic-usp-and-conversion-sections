@@ -36,7 +36,7 @@ for($i=0;$i<40;$i++){
     $expected=$mode<=3; $error='gcu_owner_event_contract_version_unverified';
     if($mode===1)$event['contract_version']='1';
     if($mode===2)unset($event['contract_version']);
-    if($mode===3){$event['contract_version']=(string)(2+$v);$event['available']=false;$event['url']='';}
+    if($mode===3){$event['contract_version']='1';$event['available']=false;$event['url']='';}
     if($mode===4)$event['contract_version']=-1;
     if($mode===5)$event['contract_version']='0';
     if($mode===6)$event['contract_version']='01';
