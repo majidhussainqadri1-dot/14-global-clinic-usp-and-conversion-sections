@@ -1,3 +1,9 @@
+Software candidate: `1.4.61`.
+
+# R58 v1.4.61 source-only acceptance and release evidence
+
+Frozen exact original GitHub main `68872368f562064036df52ed414b32570e6c4937`, 40 amended FR/FUT plan lenses. Two new local bugs corrected: (1) cast-based snapshot author/experiment approver/version readiness bypass, (2) empty-but-string native anomaly event/stage identity accepted as non-evidence instead of malformed SQL row. Added 40 real-method PHP/mock cases for each gap. Require exact-head PHP7.4/8.3, 40 repeated 40-source marker scans, two Fresh Reviews and deterministic ZIP SHA256/SBOM on PR and merged main. #19 owner registry, #22 actual File20/25 changed placement CAS restore and deployed WordPress package/parity, DB schema, migration, staging/live remain unverified. NOT production resolved.
+
 Software candidate: `1.4.60`.
 
 # R57 v1.4.60 Source release / deployment not verified
