@@ -1,3 +1,9 @@
+Software candidate: `1.4.63`.
+
+# R60 v1.4.63 source-package evidence, not production acceptance
+
+Exact GitHub pre-code main `b8304f6bbff2c1d0e63a3c0966bc8a7302bb5aca` v1.4.62, 40 unique FR/FUT amended owner/central plan lenses frozen before PHP edits. Source gap 1: File20 owner route/scheduling/priority metadata could be wrongly treated as copy-only and bypass changed-placement restore requirement. Source gap 2: incomplete SQL owner placement shape could be committed/reconciled as authentic immutable snapshot. Both fail-closed with 40 direct policy/mutation cases and 40 real native baseline method mock rows, including rehashed incomplete saved snapshots. Exact PR and postmerge main require PHP7.4/8.3, forty repeated 40-marker source checks, two fresh reviews and deterministic ZIP SHA/SBOM. Issue #19 owner-signed File01 real File07/08/09 events and Issue #22 owner File20/25 changed-placement CAS still OPEN. Staging/deployed source checksum/DB/wp_options/migrations/logs/live unverified.
+
 Software candidate: `1.4.62`.
 
 # R59 v1.4.62, source/package candidate (no real deployment acceptance)
