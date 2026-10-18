@@ -1,5 +1,7 @@
 Requirements Traceability — v1.4.59
 
+File 14 v1.4.59 may only claim a status independently supported by exact source/CI, staging acceptance, and installed deployed artifact plus DB migration parity. Repository fixes are not deployed truth.
+
 # R56 amended File14 40-plan source-ledger and owner contract truth
 
 | Requirement | Confirmed and corrected source issue | Tests and unresolved acceptance |
