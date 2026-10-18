@@ -1,3 +1,9 @@
+Software candidate: `1.4.63`.
+
+# R60 — forty amended File14/central/owner plan scope audit and source hardening, 2026-10-18
+
+Frozen pre-code exact repository main `b8304f6bbff2c1d0e63a3c0966bc8a7302bb5aca`, v1.4.62, 40 distinct FR(16)/FUT(24) source plan lenses and owner File01/07/08/09/20/25 boundaries inventoried in `docs/REVIEW-40-CROSS-PLAN-v1.4.63-R60.md` BEFORE PHP edits. File08 source owner HEAD changed to `92e2422d6a235632810ed4981f151fc3250784aa` but this does not prove deployed parity. R60-D01: real File20-style changed-placement metadata keys (route_key, audience, priority, status, starts_at, ends_at, public_id, row_version and nested JSON) previously bypassed placement-restore-required classifier; fail-close them and deny mutating experiments unless authorized owner CAS exists. R60-D02: baseline shape previously silently omitted missing SQL columns and could store a partial owner snapshot or treat rehashed incomplete snapshot as a no-op; now requires full canonical owner row fields, row version and public UUID plus placement key congruence before capture/readiness/no-op. 40 direct classifier/activation vectors plus 40 actual PHP/SQL mock shape and rehashed snapshot regression cases integrated. Exact-head PHP7.4/8.3, 40 repeated source-plan rounds, independent two Fresh Reviews, deterministic ZIP/SHA256/SBOM required on PR and merged main. Issue #19 signed File01/07/08/09 real owner events and #22 File20/25 actual owner CAS changed-placement restore remain OPEN. Deployed plugin/hash, DB version/schema/options, migration state, staging and live re-test UNVERIFIED. GitHub source truth is NOT Production Resolution.
+
 Software candidate: `1.4.62`.
 
 # R59 — Forty-plan File14 Founder actor and quality SQL-evidence review, 2026-10-18
