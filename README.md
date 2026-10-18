@@ -1,3 +1,9 @@
+Software candidate: `1.4.56`.
+
+# R53 — 40-plan review and strict whole-count privacy correction (source candidate)
+
+Frozen pre-code GitHub main `a9bf74cfca80d358b6e5c3bcbeef3d30831e738d` v1.4.55; independent 16 FR + 24 FUT owner boundary audit frozen in `docs/REVIEW-40-CROSS-PLAN-v1.4.56-R53.md` **before** this fix. Two new source defects: `GCU_Future_Policy::cohort_allowed()` cast noncanonical positive counts/fractional thresholds into cohort success, and `quality_evidence_status()` cast malformed owner success counts. v1.4.56 verifies canonical whole-number counts before declaring privacy cohort/evidence ready; `tests/r53-canonical-cohort-evidence-tests.php` includes 40 actual policy-method cohort vectors plus quality input regressions. Exact candidate PR/merged-main PHP7.4/8.3, both fresh reviews, package and SBOM must be verified separately. Cross-owner #19 owner-signed events and #22 changed-placement owner restoration remain **OPEN**, awaiting approved contract/staging/deployment parity; neither is locally closed. Deployed WordPress plugin/DB/migration/live retest are **UNVERIFIED**. This is a repository/source fix only.
+
 Software candidate: `1.4.55`.
 
 # R52 — Cross-Owner Blocker Work and Experiment Guardrail Evidence

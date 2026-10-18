@@ -1,3 +1,18 @@
+Requirements Traceability — v1.4.56
+
+File 14 v1.4.56 may only claim a status independently supported by exact source/CI, staging acceptance, and installed deployed artifact plus DB migration parity. Source-only corrections and automated review loops are not proof of an installed WordPress or live release.
+
+## R53 Source v1.4.56: strict observed-count policy and cross-owner truth
+
+| Requirement | Defect/proof | v1.4.56 correction and exact evidence |
+|---|---|---|
+| F14-FUT-15 | `cohort_allowed('10.5')` or `cohort_allowed('10junk')` passed by PHP int cast, potentially enabling privacy cohort disclosure on malformed data | `valid_aggregate_count` for count **and** threshold before comparison; R53 forty direct policy-method vectors |
+| F14-FUT-11 / F14-FR-011 | Malformed owner handoff count `'1junk'` could be counted as 1 if future attestation enabled | `quality_evidence_status` requires canonical whole count; R53 positive/negative method regressions |
+| F14-FR-011 | File01 signed owner registration/staging evidence unknown | Issue #19 OPEN, no invented owner success |
+| F14-FUT-17 | No approved File20/25 changed-placement CAS restore and no staging | Issue #22 OPEN, pause/fail-closed retained |
+
+Pre-code exact frozen source main `a9bf74cfca80d358b6e5c3bcbeef3d30831e738d`; `docs/REVIEW-40-CROSS-PLAN-v1.4.56-R53.md` lists all 40 approved FR/FUT reviews. CI and 40 repeat loops are source tests, **not** deployment acceptance. Actual deployed/DB/migration/live all UNVERIFIED.
+
 ## R52 File14 Candidate Source v1.4.55
 
 Requirements Traceability — v1.4.55
