@@ -1,3 +1,9 @@
+Software candidate: `1.4.59`.
+
+# R56 — Forty-plan File14 cross-owner integrity review and source corrections, 2026-10-18
+
+Source baseline `main@c4bb87ea6fcb80bf21d4b315acb0e90cd2c84488` (v1.4.58) was frozen into `docs/REVIEW-40-CROSS-PLAN-v1.4.59-R56.md` with 40 separate FR/FUT lenses and special File14 / three central plans / Files01,07,08,09,20,25 boundaries BEFORE modifying PHP. R56-D01: `GCU_Owner_Outcomes::owner_stage_summary` now rejects malformed nonstring/blank owner event/stage SQL groups, rather than silently discarding invalid evidence and publishing partial native volume. R56-D02: `GCU_Experiment_Baseline::reconcile_after_stop` now proves same approved actor, exact approval/version progression and immutable placement mapping before claiming no-op unchanged baseline; absent match requires containment/manual review and no cross-owner write. New 40 direct native event evidence mocks + 40 real baseline PHP method mocks. Exact candidate and merged HEAD quality (PHP7.4/8.3, forty source cycles, two independent Fresh Reviews, ZIP/SHA/SBOM) required independently. Issues #19 signed File01/07/08/09 native owner registry/staging and #22 real File20/25 owner CAS rollback still OPEN; installed WordPress version/checksum, actual DB schema/options, migration and live re-test all UNVERIFIED. This is source-only candidate, NOT resolved production incident.
+
 Software candidate: `1.4.58`.
 
 # R55 source-blocker safety fixes and forty-plan review, 2026-10-18

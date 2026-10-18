@@ -1,3 +1,9 @@
+Software candidate: `1.4.59`.
+
+# R56 — v1.4.59 Source release truth, not live acceptance
+
+Pre-code GitHub main `c4bb87ea6fcb80bf21d4b315acb0e90cd2c84488` (v1.4.58). R56 forty amended FR/FUT review lenses frozen first. Strict SQL group evidence and approved experiment snapshot identity/version/map source fixes with forty actual File14 owner-stage summary mocked PHP tests and forty actual File14 baseline reconciliation mocked PHP tests. Exact candidate/merged-main PHP7.4/8.3, forty repeated source reviews, independent fresh reviews and deterministic package SHA/SBOM required. External File01 signed native events (#19), File20/25 owner CAS changed-placement rollback (#22) and real WordPress staging/deployment parity remain unverified; never claim production resolved.
+
 Software candidate: `1.4.58`.
 
 # R55 v1.4.58 source-only release candidate / not deployed acceptance

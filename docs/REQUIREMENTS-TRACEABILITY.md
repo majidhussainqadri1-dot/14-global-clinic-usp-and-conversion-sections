@@ -1,3 +1,16 @@
+Requirements Traceability — v1.4.59
+
+File 14 v1.4.59 may only claim a status independently supported by exact source/CI, staging acceptance, and installed deployed artifact plus DB migration parity. Repository fixes are not deployed truth.
+
+# R56 amended File14 40-plan source-ledger and owner contract truth
+
+| Requirement | Confirmed and corrected source issue | Tests and unresolved acceptance |
+|---|---|---|
+| F14-FUT-13/FUT-14/FUT-15; File01/07/08/09 | Native owner-stage result group event_type/funnel_stage malformed row would silently disappear, yielding partial report. Strict nonblank string SQL row proof now required; well-formed unregistered combinations remain excluded. | 40 real PHP method SQL-mock typed evidence vectors; Issue #19 signed registry/staging still OPEN |
+| F14-FUT-17; File20/25 | Snapshot hash alone does not prove experiment was approved under same approver/version and variant placement mapping when stopped. Strict identity, version progression and map check before no-op restoral status. Never foreign owner table write. | 40 real method source mock baseline variants; Issue #22 actual owner-CAS restored changed placement still OPEN |
+
+Frozen pre-code exact GitHub main: `c4bb87ea6fcb80bf21d4b315acb0e90cd2c84488`, `docs/REVIEW-40-CROSS-PLAN-v1.4.59-R56.md` lists 40 FR/FUT lenses. CI is not installed staging/live verification; deployed plugin/schema/migrations/DB/live still unknown.
+
 Requirements Traceability — v1.4.58
 
 File 14 v1.4.58 may only claim a status independently supported by exact source/CI, staging acceptance, and installed deployed artifact plus DB migration parity. Source fixes are not owner acceptance.
