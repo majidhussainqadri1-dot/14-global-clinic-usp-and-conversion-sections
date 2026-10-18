@@ -1,3 +1,8 @@
+Software candidate: `1.4.66`.
+
+# R63 v1.4.66 source-only release — deployed and live acceptance NOT verified
+
+Repository Candidate v1.4.66; exact review/main SHA and fresh post-merge PHP/package checks must be verified separately. Frozen prior GitHub main f3166a19dd42ce6e03e7f3c3534a9e8c9f6539c6 v1.4.65, with 40 amended FR/FUT/central/owner lenses recorded pre-edit in docs/REVIEW-40-CROSS-PLAN-v1.4.66-R63.md. R63-D01 BusinessPolicyChanged.v1 replay now requires raw canonical event UUID and v1 version before persisted options/notifications; R63-D02 repository validates explicit owner .v1 contract_version pre-inbox to avoid false-positive durable failed attempts. Forty direct native policy event option and forty actual GCU_Repository validator PHP cases added. Require exact PR and postmerge PHP7.4/8.3, forty repeated 40-marker scans, two fresh post-code reviews, deterministic ZIP SHA256/SBOM. Issue #19 signed File01/07/08/09 real owner event proof and Issue #22 File20/25 owner-authorized changed-placement CAS remain OPEN. Real installed WordPress plugin/hash, DB schema/options/migrations/staging/live are UNVERIFIED; no Production Resolved claim.
 Software candidate: `1.4.65`.
 
 # R62 v1.4.65 source/package evidence only — deployed staging and live unverified
