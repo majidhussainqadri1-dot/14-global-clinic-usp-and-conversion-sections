@@ -1,3 +1,9 @@
+Software candidate: `1.4.60`.
+
+# R57 v1.4.60 Source release / deployment not verified
+
+Pre-code frozen GitHub main `8c0d96e990c652f04b0d460a0f1f387a21152d8e` v1.4.59. 40 distinct amended FR/FUT source/owner plan lenses fully inventoried precode; R57-D01 canonical File09 owner postcommit application identifier validated before hashing/record; R57-D02 replay duplicate row now strictly typed and v1 canonical, rejecting coercion and incomplete SQL evidence. New tests: 40 actual native File09 identity method cases + 40 actual strict SQL duplicate replay method cases. Require exact candidate and then merged main PHP7.4/8.3, 40 repeated 40-contract source scans, 2 independent fresh reviews, deterministic ZIP/SHA/SBOM. #19 and #22 remain OPEN owner/real deployment acceptance blockers. WordPress deployed version, exact DB version, migration, logs and live retest not verified.
+
 Software candidate: `1.4.59`.
 
 # R56 — v1.4.59 Source release truth, not live acceptance
