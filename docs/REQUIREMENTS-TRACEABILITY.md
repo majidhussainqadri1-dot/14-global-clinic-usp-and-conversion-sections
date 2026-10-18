@@ -1,3 +1,16 @@
+Requirements Traceability — v1.4.62
+
+File 14 v1.4.62 may only claim a status independently supported by exact source/CI, staging acceptance, and installed deployed artifact plus DB migration parity. Source correctness is not deployed truth.
+
+## R59 source proof and external acceptance boundaries
+
+| Plan ID | Exact local source defect/fix | Acceptance status |
+|---|---|---|
+| F14-FR-012, FUT16/FUT17 | R59-D01: Founder immutable approved snapshot actor `absint` coercion and unvalidated row-version +1; now strictly canonical positive actor, nonnegative source version before cast and version overflow denial | 40 actual capture_approved() SQL/WP-mock cases; File20/25 changed placement owner CAS #22 OPEN |
+| F14-FR-016, FUT11/13/15 | R59-D02: quality_score SQL grouped stage empty/whitespace string accepted; now fail-close unverified, privacy neutral logging and null composite | 40 direct quality_score() SQL mock cases; File01 signed File07/08/09 owner registry #19 OPEN |
+
+Source baseline `416c6a576a7d88260fbaa9d2c3dd8a6532fe03f8`, reviewed 16FR+24FUT separately before edits in `docs/REVIEW-40-CROSS-PLAN-v1.4.62-R59.md`. No DB schema/version, installed build/checksum, staging or live re-test evidence; #19/#22 remain OPEN.
+
 Requirements Traceability — v1.4.61
 
 File 14 v1.4.61 may only claim a status independently supported by exact source/CI, staging acceptance, and installed deployed artifact plus DB migration parity. GitHub source fixes are not Production acceptance.
