@@ -1,3 +1,16 @@
+Requirements Traceability — v1.4.61
+
+File 14 v1.4.61 may only claim a status independently supported by exact source/CI, staging acceptance, and installed deployed artifact plus DB migration parity. GitHub source fixes are not Production acceptance.
+
+## R58 distinct 40-lens amended File14 / Three Central Plans source trace
+
+| Requirement | Frozen defect and exact source correction | Regression / blocker |
+|---|---|---|
+| F14-FR-012, FUT16/17 | Baseline `ready()` and `snapshot()` accepted cast-equivalent malformed actor/version values, exposing possible false approval identity. Strict canonical source value and snapshot creator/approver/version proofs, before any cast. | 40 real PHP direct baseline readiness + SQL mock cases; actual File20/25 changed-placement CAS restoration #22 OPEN |
+| F14-FR-011, FUT14/15 | Native anomaly SQL reader accepted blank event/stage string groups and silently excluded them, producing misleading complete-looking volume. Now reports `severity=unverified`, no signals, privacy neutral diagnostic. | 40 actual method anomaly SQL mock cases; File01 approved native event registry and real File07/08/09 owner staging #19 OPEN |
+
+Frozen pre-edit source main `68872368f562064036df52ed414b32570e6c4937` v1.4.60, forty distinct 16FR/24FUT lens review `docs/REVIEW-40-CROSS-PLAN-v1.4.61-R58.md`. CI must pass exact source head; live deployed DB/migrations/runtime not verified.
+
 Requirements Traceability — v1.4.60
 
 File 14 v1.4.60 may only claim a status independently supported by exact source/CI, staging acceptance, and installed deployed artifact plus DB migration parity; source corrections alone are NOT live acceptance.
