@@ -236,9 +236,17 @@ final class GCU_Fifth_Review_Hardening {
 			return new WP_Error( 'gcu_experiment_complaint_count_failed', __( 'Experiment complaint safety could not be verified.', 'global-clinic-usp-integration' ), array( 'status' => 503 ) );
 		}
 		$open_reports = (int) $open_reports_result;
+		// R55 / Issue #19: absence of a verified owner-stage anomaly read is
+		// not a healthy signal. Stop/pause unsafe experiments rather than
+		// treating SQL failure or corrupt last-anomaly state as severity none.
+		$anomaly_unverified = ! is_array( $anomaly )
+			|| ! isset( $anomaly['severity'] )
+			|| ! in_array( $anomaly['severity'], array( 'none', 'medium', 'high' ), true )
+			|| ( isset( $anomaly['status'] ) && 'owner_event_volume_read_unverified' === $anomaly['status'] );
 		$breach = empty( $parity['ok'] )
 			|| $destination_failure
 			|| $open_reports >= 5
+			|| $anomaly_unverified
 			|| ( isset( $anomaly['severity'] ) && 'high' === $anomaly['severity'] );
 		$tables = GCU_Install::tables();
 		// F14-FUT-17: the approved experiment window is authoritative, even

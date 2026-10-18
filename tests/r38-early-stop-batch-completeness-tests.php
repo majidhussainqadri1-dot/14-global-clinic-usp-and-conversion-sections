@@ -9,7 +9,10 @@ define( 'ARRAY_A', 'ARRAY_A' );
 function __( $s, $domain = '' ) { return $s; }
 function sanitize_key( $s ) { return preg_replace( '/[^a-z0-9_-]/', '', strtolower( (string) $s ) ); }
 function current_time( $format, $gmt = false ) { return '2026-10-14 16:30:00'; }
-function get_option( $key, $default = false ) { return $default; }
+function get_option( $key, $default = false ) {
+    // Isolate batch completeness: owner analytics is explicitly healthy.
+    return 'gcu_future_last_anomaly' === $key ? array( 'severity' => 'none' ) : $default;
+}
 function update_option( $key, $value, $autoload = false ) { return true; }
 function is_wp_error( $x ) { return $x instanceof WP_Error; }
 class WP_Error {

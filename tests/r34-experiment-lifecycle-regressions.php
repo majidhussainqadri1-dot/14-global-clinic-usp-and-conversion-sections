@@ -80,6 +80,7 @@ class GCU_Observability {
 }
 class GCU_Experiment_Baseline {
     public static $restored = true;
+    public static function ready( $row ) { return true; }
     public static function reconcile_after_stop( $row ) {
         return array( 'restored'=>self::$restored, 'reason'=>self::$restored ? 'approved_baseline_unchanged' : 'placement_drift_requires_owner_reconciliation', 'manual_review'=>true );
     }

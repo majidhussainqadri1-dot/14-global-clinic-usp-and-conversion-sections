@@ -531,6 +531,18 @@ final class GCU_Future_Policy {
 	}
 
 	public static function experiment_baseline_restoration_ready( $experiment ) {
+		// R55 / Issue #22: a matching snapshot proves only no current drift.
+		// It does NOT prove an executable File20/25 owner-authorized CAS
+		// restoration command for placements changed later by an experiment.
+		// Deny placement-mutating experiments until that separately approved
+		// and staging-tested restoration contract actually exists.
+		if ( ! is_array( $experiment ) || ! isset( $experiment['variants'] ) || ! is_string( $experiment['variants'] ) ) {
+			return false;
+		}
+		$variants = json_decode( $experiment['variants'], true );
+		if ( self::experiment_requires_baseline_restore( $variants ) ) {
+			return false;
+		}
 		return ! get_option( 'gcu_experiment_serving_paused', 0 )
 			&& class_exists( 'GCU_Experiment_Baseline' )
 			&& GCU_Experiment_Baseline::ready( $experiment );

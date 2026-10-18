@@ -1,3 +1,9 @@
+Software candidate: `1.4.58`.
+
+# R55 source-blocker safety fixes and forty-plan review, 2026-10-18
+
+Frozen pre-code repository main `43364ea2d417d787cc4843d4afcbed004b234834` (v1.4.57). Forty File14 amended FR/FUT source-owner lenses were recorded in `docs/REVIEW-40-CROSS-PLAN-v1.4.58-R55.md` **before** the PHP edits, compared against central governance and File01/07/08/09/20/25 source. Two newly verified source gaps: FUT17 changed-placement experiment was allowed with a no-drift snapshot despite no authorized restore command (R55-D01); FUT14 owner anomaly SQL read failed as 'unverified' but experiment automatic safety guard ignored it (R55-D02). Source v1.4.58 now denies all placement-mutating experiment activation until a separate real owner-approved CAS restoration contract exists, and treats 'unverified' anomaly/read failures as safety breaches. Forty policy gate and forty direct transactional guard PHP/mock tests added. A separate File01 signed event registry, actual owner producer trust, restored placement contract, migration, staging and installed WordPress live evidence are NOT provided by these fixes. Issues #19/#22 remain OPEN. Exact candidate and post-merge PHP7.4/8.3, two Fresh Reviews, 40 full 40-source-contract rounds, ZIP/SBOM are necessary but not live acceptance.
+
 Software candidate: `1.4.57`.
 
 # R54 — Forty exact plan lenses and source integrity remediation, 2026-10-18
