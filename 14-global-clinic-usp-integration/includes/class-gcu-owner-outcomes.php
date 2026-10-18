@@ -28,10 +28,14 @@ final class GCU_Owner_Outcomes {
 	}
 
 	public static function application_submitted( $application_id, $unused_user_id = 0 ) {
-		if ( ! class_exists( 'GDO_Application' ) || ! is_int( $application_id ) && ! ctype_digit( (string) $application_id ) ) { return false; }
-		if ( (int) $application_id <= 0 ) { return false; }
+		// R57 / File09 native contract: never turn a malformed, padded or
+		// overflowing owner identifier into a different integer event identity.
+		// File09's canonical post-commit hook supplies the actual database id.
+		if ( ! class_exists( 'GDO_Application' )
+			|| ! GCU_Future_Policy::valid_aggregate_count( $application_id )
+			|| (int) $application_id <= 0 ) { return false; }
 		// The owner fired its post-commit hook. Never read its private evidence.
-		return self::record( 'file09', 'application_started', (string) (int) $application_id );
+		return self::record( 'file09', 'application_started', (string) $application_id );
 	}
 
 	public static function booking_started( $public_ref ) {
@@ -89,11 +93,20 @@ final class GCU_Owner_Outcomes {
 			"SELECT event_type,event_version,funnel_stage,destination_key,consent_state,subject_hash FROM {$tables['events']} WHERE event_id=%s",
 			$uuid
 		), ARRAY_A );
-		$duplicate = is_array( $existing ) && self::reportable( (string) $existing['event_type'], (string) $existing['funnel_stage'] )
-			&& $kind[1] === $existing['event_type'] && 1 === (int) $existing['event_version']
+		// R57: an INSERT IGNORE duplicate is only idempotent with complete,
+		// strictly typed owner evidence. Do not coerce malformed schema/version
+		// values such as '1junk', '01' or true into event_version=1.
+		$duplicate = is_array( $existing )
+			&& isset( $existing['event_type'], $existing['event_version'], $existing['funnel_stage'],
+				$existing['destination_key'], $existing['consent_state'], $existing['subject_hash'] )
+			&& is_string( $existing['event_type'] ) && is_string( $existing['funnel_stage'] )
+			&& is_string( $existing['destination_key'] ) && is_string( $existing['consent_state'] )
+			&& is_string( $existing['subject_hash'] )
+			&& in_array( $existing['event_version'], array( 1, '1' ), true )
+			&& self::reportable( $existing['event_type'], $existing['funnel_stage'] )
+			&& $kind[1] === $existing['event_type']
 			&& $kind[2] === $existing['destination_key'] && 'granted' === $existing['consent_state']
-			&& isset( $existing['subject_hash'] )
-			&& is_string( $existing['subject_hash'] ) && hash_equals( $subject, $existing['subject_hash'] );
+			&& hash_equals( $subject, $existing['subject_hash'] );
 		if ( ! $duplicate ) { GCU_Observability::log( 'warning', 'owner_outcome_identity_conflict', array( 'owner' => $owner ) ); }
 		return $duplicate;
 	}
