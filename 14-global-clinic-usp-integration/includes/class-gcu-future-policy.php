@@ -577,7 +577,7 @@ final class GCU_Future_Policy {
 		if ( ! self::cohort_allowed( $selected ) ) {
 			$missing[] = 'insufficient_cta_sample';
 		}
-		if ( (int) $owner_loaded < 1 || true !== $owner_attested ) {
+		if ( ! self::valid_aggregate_count( $owner_loaded ) || (int) $owner_loaded < 1 || true !== $owner_attested ) {
 			$missing[] = 'owner_handoff_confirmation_unavailable';
 		}
 		// Scores outside the defined 0–100 measurement scale are not evidence.
@@ -621,6 +621,12 @@ final class GCU_Future_Policy {
 	}
 
 	public static function cohort_allowed( $count, $threshold = self::MIN_COHORT ) {
+		// F14-FUT-15: never use PHP integer coercion to grant a privacy
+		// cohort. SQL NULL, malformed strings, floats and booleans are not
+		// verified nonnegative whole-number observations or thresholds.
+		if ( ! self::valid_aggregate_count( $count ) || ! self::valid_aggregate_count( $threshold ) ) {
+			return false;
+		}
 		return (int) $count >= max( self::MIN_COHORT, (int) $threshold );
 	}
 
