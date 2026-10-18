@@ -1,3 +1,18 @@
+Requirements Traceability — v1.4.57
+
+File 14 v1.4.57 may only claim a status independently supported by exact source/CI, staging acceptance, and installed deployed artifact plus DB migration parity. This cycle documents repository-only R54 fixes.
+
+## R54 corrections, under amended File14 and central owner constitution
+
+| Requirement | Source defect | Evidence/status |
+|---|---|---|
+| F14-FUT-18/FUT-15 | FAQ aggregate numeric input was coerced to integer before privacy gate; leading zeros and malformed count could be treated as observed canonical volume | Raw `valid_aggregate_count` before `cohort_allowed`; preserve string size bound. R54 40 method/policy vectors |
+| F14-FUT-13/F14-FR-010 | Malformed nonstring/blank friction funnel stage was not rejected on SQL row validation | Typed, nonblank stage, fail-closed 503 with privacy-minimized log. R54 40 mocked PHP method vectors |
+| F14-FR-011 | File01/07/08/09 signed owner event registry + real staging absent | Issue #19 OPEN; no made-up booking success |
+| F14-FUT-17 | File20/25 approved cross-owner changed-placement restore unavailable | Issue #22 OPEN; safe pause/manual review, not actual changed placement rollback |
+
+Frozen 40 independently selected FR/FUT source/owner lenses: `docs/REVIEW-40-CROSS-PLAN-v1.4.57-R54.md`. Actual deployed plugin, DB and migration UNVERIFIED; live NOT RUN.
+
 Requirements Traceability — v1.4.56
 
 File 14 v1.4.56 may only claim a status independently supported by exact source/CI, staging acceptance, and installed deployed artifact plus DB migration parity. Source-only corrections and automated review loops are not proof of an installed WordPress or live release.
