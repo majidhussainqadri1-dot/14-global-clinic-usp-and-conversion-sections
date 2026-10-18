@@ -1,8 +1,9 @@
-# File 14 v1.4.58 Source Manifest
+# File 14 v1.4.59 Source Manifest
 
 Canonical plugin folder: `14-global-clinic-usp-integration`
 
 Contents:
+- R56 forty amended FR/FUT owner/central plan review frozen pre-code; strict typed owner SQL stage evidence + experiment snapshot approver/version/placement-map reconciliation; 80 direct mocked WordPress/PHP method cases; external Issues #19/#22 still open.
 - R55 freeze exact source and forty owner/plan lenses before code; FUT17 placement-changing experiments cannot activate on a snapshot alone without approved owner CAS restore; FUT14 unverified owner anomaly forces early stop; 80 direct source-mode tests. Cross-file #19/#22 remain open.
 - R54 40-plan amended cross-owner audit precode freeze, two local source evidence fixes, 80 direct policy/public method SQL-mock regressions; File01/07/08/09 and File20/25 cross-owner issues still open
 - R53 after pre-code 40-plan freeze: strict whole-count validation in FUT15 privacy cohorts and FUT11 owner evidence; 40 direct policy count vectors + quality regressions
