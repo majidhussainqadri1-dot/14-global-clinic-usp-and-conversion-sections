@@ -24,7 +24,7 @@ $cases = array(
 	array( null, 10, false ),
 	array( array(), 10, false ),
 	array( array('10'), 10, false ),
-	array( 10, 10, false ),
+	array( 10.0, 10, false ),
 	array( 10.5, 10, false ),
 	array( 9.9, 10, false ),
 	array( '10.0', 10, false ),
