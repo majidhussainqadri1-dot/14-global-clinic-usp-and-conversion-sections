@@ -1,3 +1,9 @@
+Software candidate: `1.4.64`.
+
+# R61 v1.4.64 exact source/package only; no staging/live acceptance
+
+Frozen prior main `58b4c0e453c37ca195adffe681237ee98e294c10` v1.4.63; 40 unique amended File14 FR/FUT source and central/owner contract lenses inventoried first. Fixed R61-D01 incomplete typed placement SQL evidence and signed INT priority in immutable Founder snapshot; fixed R61-D02 owner availability version/envelope coercion in inbox consumer. New 40 direct baseline source PHP SQL-mock + 40 direct File07/08/09 event consumer PHP-mock tests. Exact candidate and postmerge main must pass PHP7.4/8.3, 40 repeated source-plan scans, two fresh reviews, deterministic ZIP/SHA/SBOM. Issues #19 File01 signed native owner registry and #22 File20/25 actual changed-placement CAS restore remain OPEN. No deployed plugin/version/DB/schema/migration/staging/live verification.
+
 Software candidate: `1.4.63`.
 
 # R60 v1.4.63 source-package evidence, not production acceptance

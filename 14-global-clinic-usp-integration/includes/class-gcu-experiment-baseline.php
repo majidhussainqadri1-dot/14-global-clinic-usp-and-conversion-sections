@@ -62,6 +62,23 @@ final class GCU_Experiment_Baseline {
 			|| sanitize_key( $row['placement_key'] ) !== $row['placement_key']
 			|| ! GCU_Future_Policy::valid_aggregate_count( $row['row_version'] )
 			|| (int) $row['row_version'] < 1 ) { return null; }
+		// R61 / File20: SQL NOT NULL text columns must have genuine,
+		// nonempty source strings. A hash-consistent corrupt snapshot is not
+		// proof of a real owner placement, even when its keys are present.
+		foreach ( array( 'block_key', 'route_key', 'slot_key', 'audience', 'status' ) as $field ) {
+			if ( ! is_string( $row[ $field ] ) || '' === trim( $row[ $field ] ) ) { return null; }
+		}
+		foreach ( array( 'starts_at', 'ends_at' ) as $field ) {
+			if ( null !== $row[ $field ] && ( ! is_string( $row[ $field ] ) || '' === trim( $row[ $field ] ) ) ) { return null; }
+		}
+		// File14 schema: priority is a *signed 32-bit SQL INT*. Unlike an
+		// aggregate count, negative values are valid, but decimal coercion is not.
+		$priority = $row['priority'];
+		if ( ! is_int( $priority ) && ( ! is_string( $priority )
+			|| ! preg_match( '/^(0|-?[1-9][0-9]*)$/D', $priority ) ) ) { return null; }
+		if ( false === filter_var( $priority, FILTER_VALIDATE_INT, array(
+			'options' => array( 'min_range' => -2147483648, 'max_range' => 2147483647 ),
+		) ) ) { return null; }
 		return array_intersect_key( $row, array_fill_keys( $fields, true ) );
 	}
 
