@@ -1,3 +1,11 @@
+Software candidate: `1.4.56`.
+
+# R53 — Source candidate / release gates (NOT DEPLOYMENT ACCEPTANCE)
+
+Baseline before correction: `main@a9bf74cfca80d358b6e5c3bcbeef3d30831e738d` v1.4.55. Forty approved FR/FUT checks were frozen before PHP modifications and the existing 40 repeat full source-marker reviews ran successfully on the frozen baseline, PHP7.4/8.3. Two local source defects corrected for v1.4.56: FUT15 `cohort_allowed` now verifies the actual nonnegative whole count and threshold; FUT11 `quality_evidence_status` rejects malformed owner counts even if future owner attestation becomes approved. Added 40 direct method cohort cases + quality regression. Do not equate source CI to WordPress staging or production.
+
+Cross-owner **#19** signed File01/07/08/09 owner outcome registration/staging still OPEN; **#22** File20/25 changed-placement CAS restoration still OPEN. Installed artifact/checksum, actual DB/schema, migration/wp_options, staging and live are NOT VERIFIED. PR quality, two fresh reviews, package+SHA/SBOM and post-merge exact main must be collected independently.
+
 Software candidate: `1.4.55`.
 
 # R52 File14 v1.4.55 — exact SOURCE and cross-owner acceptance evidence; NOT live acceptance
