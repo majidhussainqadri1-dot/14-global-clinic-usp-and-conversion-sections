@@ -1,5 +1,6 @@
 <?php
 /** R56: forty actual owner-stage SQL row-identity validation scenarios. Mocked WordPress, NOT live. */
+function __( $text, $domain = '' ) { return $text; }
 class GCU_Observability {
     public static $entries = array();
     public static function log( $level, $code, $fields = array() ) {
