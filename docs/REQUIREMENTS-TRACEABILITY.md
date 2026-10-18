@@ -1,3 +1,16 @@
+Requirements Traceability — v1.4.58
+
+File 14 v1.4.58 may only claim a status independently supported by exact source/CI, staging acceptance, and installed deployed artifact plus DB migration parity. Source fixes are not owner acceptance.
+
+## R55 cross-plan source blockers and guards
+
+| Plan | Proved source defect and change | Remaining mandatory owner acceptance |
+|---|---|---|
+| F14-FUT-17, #22 | `experiment_baseline_restoration_ready()` previously treated a matching pre-run snapshot as proof of later changed-placement restoration. Activation for placement-mutating variants now fails closed until approved owner-authorized CAS exists. 40 direct policy gate tests. | File20/25 approved restore and concurrent rollback/staging, real schema/DB/runtime parity |
+| F14-FUT-14/FUT-17, #19 | `transactional_early_stop_guard()` previously ignored 'unverified' anomaly SQL evidence. Now malformed/absent owner anomaly is a safety breach. 40 actual mocked guard tests. | File01 signed owner registry + File07/08/09 attested post-commit outcomes, consent/GPC, replay, staging/live |
+
+Frozen precode ledger: `docs/REVIEW-40-CROSS-PLAN-v1.4.58-R55.md`, main SHA `43364ea2d417d787cc4843d4afcbed004b234834`. Issues #19/#22 OPEN. Actual Deployed/DB/Migration/Live all UNVERIFIED.
+
 Requirements Traceability — v1.4.57
 
 File 14 v1.4.57 may only claim a status independently supported by exact source/CI, staging acceptance, and installed deployed artifact plus DB migration parity. This cycle documents repository-only R54 fixes.
