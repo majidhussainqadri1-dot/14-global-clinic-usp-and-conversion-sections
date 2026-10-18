@@ -1,3 +1,9 @@
+Software candidate: `1.4.66`.
+
+# R63 — Forty-plan cross-owner source audit, business-policy replay and pre-inbox version truth, 2026-10-18
+
+Exact repository main before edits `f3166a19dd42ce6e03e7f3c3534a9e8c9f6539c6` (source v1.4.65); File14 amended CTI24, Three Central Plans and File01/07/08/09/20/25 owner scope audited in 40 separate FR/FUT lenses, frozen BEFORE code in `docs/REVIEW-40-CROSS-PLAN-v1.4.66-R63.md`. Two File14 source defects: R63-D01 `GCU_Contracts::queue_policy_revalidation` accepted sanitized but not UUID-verified replayed BusinessPolicyChanged.v1 owner event identity and wrote unverified state; now original valid UUID and raw explicit v1 contract required before option/callback. R63-D02 repository `validate_inbound_event` allowed unnegotiated .v1 owner contract version 2/999 into stored inbox to retry/dead-letter while downstream consumer rejected it; reject raw unsupported schema version before inbox persistence for all four .v1 owner events, with missing version historical v1. New 40 direct native policy consumer PHP/wpopts source mocks and 40 direct repository validator PHP cases; prior full PHP7.4/8.3 source suite and forty repeated contract scans, fresh reviews and deterministic ZIP/SHA/SBOM required on exact PR and postmerge. Cross-file #19 signed File01 owner registration/real File07/08/09 staging and #22 File20/25 actual authorized changed-placement CAS restoration remain OPEN. Deployed code/version/DB/schema/options/migration/staging/live unknown — source-only candidate, NOT production resolved.
+
 Software candidate: `1.4.65`.
 
 # R62 — forty amended File14 plan and cross-owner source review, 2026-10-18

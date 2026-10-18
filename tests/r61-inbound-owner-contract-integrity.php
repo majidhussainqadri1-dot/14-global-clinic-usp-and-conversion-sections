@@ -9,6 +9,8 @@ function __( $s,$domain='' ){return $s;}
 function wp_is_uuid($v){return is_string($v) && (bool)preg_match('/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/Di',$v);}
 function sanitize_text_field($v){return trim((string)$v);}
 function wp_json_encode($v){return json_encode($v);}
+function sanitize_key($v){return preg_replace('/[^a-z0-9_-]/','',strtolower((string)$v));}
+function do_action($name,$data=array()){$GLOBALS['r63_policy_actions'][]=array($name,$data);}
 function get_option($k,$default=false){return array_key_exists($k,$GLOBALS['r61_options'])?$GLOBALS['r61_options'][$k]:$default;}
 function update_option($k,$value,$autoload=false){$GLOBALS['r61_options'][$k]=$value;$GLOBALS['r61_writes']++;return true;}
 class WP_Error {
@@ -17,6 +19,7 @@ class WP_Error {
     public function get_error_code(){return $this->code;}
 }
 class GCU_Hardening {
+    public static function bounded_text($s,$max=64){return substr((string)$s,0,$max);}
     public static function strict_same_origin_url($url){
         return is_string($url) && 0===strpos($url,'https://sabrihomeopathy.com/') ? $url : '';
     }
