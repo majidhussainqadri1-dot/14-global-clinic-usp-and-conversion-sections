@@ -1,3 +1,9 @@
+Software candidate: `1.4.65`.
+
+# R62 v1.4.65 source/package evidence only — deployed staging and live unverified
+
+Repository Candidate `v1.4.65`; exact review/main SHA must be verified independently and fresh post-merge quality must pass. Frozen prior source main `1fdebbf3f76976bc2c34780883c5f1d81752b59b` (v1.4.64), with forty amended FR/FUT owner/central plan lenses frozen before PHP changes. Two local source gaps corrected: File20 owner baseline schedule now rejects impossible/backwards SQL DATETIME owner evidence, and File07/08/09 readiness .v1 consumer rejects unnegotiated v2+ contract_version (historical omitted v1 remains supported). New 40 actual baseline source PHP/SQL-mock cases + 40 native event consumer PHP/WordPress-option mocks. Require exact candidate and postmerge PHP7.4/8.3, 40 repeated full 40-source contract reviews, two independent fresh post-code reviews, deterministic ZIP SHA256/SBOM. Issue #19 signed File01 genuine File07/08/09 producer attestation/staging and Issue #22 File20/25 changed-placement CAS restore still OPEN. No proof of installed WordPress plugin/source checksum, actual schema/wp_options/migration/runtime or Live re-test. No production resolved claim.
+
 Software candidate: `1.4.64`.
 
 # R61 v1.4.64 exact source/package only; no staging/live acceptance
