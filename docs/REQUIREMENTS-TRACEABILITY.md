@@ -1,3 +1,7 @@
+Requirements Traceability — v1.4.56
+
+File 14 v1.4.56 may only claim a status independently supported by exact source/CI, staging acceptance, and installed deployed artifact plus DB migration parity. Source-only corrections and automated review loops are not proof of an installed WordPress or live release.
+
 ## R53 Source v1.4.56: strict observed-count policy and cross-owner truth
 
 | Requirement | Defect/proof | v1.4.56 correction and exact evidence |
