@@ -47,9 +47,10 @@ public function apply_inbound_event($name,array$p){$map=array('DoctorDirectoryAv
        ||!array_key_exists('available',$p)||!is_bool($p['available'])){
         return new WP_Error('gcu_owner_event_envelope_unverified',__('Owner readiness envelope could not be verified.','global-clinic-usp-integration'));
     }
+    // These inbox event names are explicitly .v1, not negotiated v2.
+    // Never upgrade an unknown owner message's schema by integer casting.
     if(array_key_exists('contract_version',$p)
-       &&(!GCU_Future_Policy::valid_aggregate_count($p['contract_version'])
-          ||(int)$p['contract_version']<1)){
+       && !in_array($p['contract_version'],array(1,'1'),true)){
         return new WP_Error('gcu_owner_event_contract_version_unverified',__('Owner event contract version was not verified.','global-clinic-usp-integration'));
     }
     $key=$map[$name];$url=!empty($p['url'])?GCU_Hardening::strict_same_origin_url($p['url']):'';if(!empty($p['available'])&&!$url){return new WP_Error('gcu_owner_event_url_invalid',__('Owner readiness cannot be accepted without a safe same-origin URL.','global-clinic-usp-integration'));}$r=array('available'=>!empty($p['available']),'url'=>$url,'reason'=>!empty($p['available'])?'owner_event_ready':'owner_event_unavailable','contract_version'=>isset($p['contract_version'])?(int)$p['contract_version']:1,'verified_at'=>time(),'event_id'=>sanitize_text_field($p['event_id']));if(!$this->persist_option_exact(self::STATE_PREFIX.$key,$r)){return new WP_Error('gcu_owner_state_persist_failed',__('Owner readiness could not be persisted safely.','global-clinic-usp-integration'));}return true;}if('BusinessPolicyChanged.v1'===$name){return$this->queue_policy_revalidation($p);}return new WP_Error('gcu_owner_event_unknown',__('Unknown owner event.','global-clinic-usp-integration'));}
