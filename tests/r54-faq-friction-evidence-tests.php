@@ -8,6 +8,7 @@ define( 'ABSPATH', __DIR__ . '/' );
 define( 'ARRAY_A', 'ARRAY_A' );
 function __( $text, $domain = '' ) { return $text; }
 function sanitize_text_field( $v ) { return trim( (string) $v ); }
+function sanitize_key( $v ) { return preg_replace( '/[^a-z0-9_-]/', '', strtolower( (string) $v ) ); }
 function apply_filters( $name, $default ) {
     return 'gcu_future_question_aggregates' === $name ? $GLOBALS['r54_signals'] : $default;
 }
