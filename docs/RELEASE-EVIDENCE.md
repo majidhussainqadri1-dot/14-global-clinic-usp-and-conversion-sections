@@ -1,3 +1,9 @@
+Software candidate: `1.4.62`.
+
+# R59 v1.4.62, source/package candidate (no real deployment acceptance)
+
+Frozen GitHub main prior to code `416c6a576a7d88260fbaa9d2c3dd8a6532fe03f8` v1.4.61; forty approved FR/FUT coverage lenses captured BEFORE modifying code. Two independently proven File14 source bugs: `capture_approved` accepted coerced/overflow Founder actor/version; `quality_score` silently excluded blank grouped funnel-stage SQL identities. Fixed with exact provenance fail-close and 80 direct actual PHP method source mock regressions. Required on exact PR/merged main: PHP7.4/8.3 full quality, 40 repeated 40-marker review source scans, two fresh reviews, deterministic package ZIP SHA/SBOM. File01 signed owner event #19 and actual File20/25 changed placement CAS #22 still OPEN. Installed WordPress version/code/schema/DB/migration/live re-test UNVERIFIED.
+
 Software candidate: `1.4.61`.
 
 # R58 v1.4.61 source-only acceptance and release evidence
