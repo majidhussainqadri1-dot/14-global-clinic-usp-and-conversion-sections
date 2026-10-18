@@ -52,6 +52,9 @@ for($i=0;$i<40;$i++){
     }else{
        if($capture!==true){$errors[]='R61 test setup capture case '.($i+1);continue;}
        $snapshot=json_decode($db->writes[0]['payload'],true);
+       // A valid owner row at reconciliation must actually match the approved
+       // saved shape, not just carry a valid priority in isolation.
+       if($valid){$db->placement['priority']=$owner['priority'];$db->placement['starts_at']=$owner['starts_at'];}
        $snapshot['placements'][$key]=$owner;
        unset($snapshot['placements'][$key]['id']);
        // Valid SQL case can retain its canonical keys and fields.
