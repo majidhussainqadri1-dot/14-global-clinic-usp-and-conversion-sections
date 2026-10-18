@@ -1,3 +1,16 @@
+Requirements Traceability — v1.4.64
+
+File 14 v1.4.64 may only claim a status independently supported by exact source/CI, staging acceptance, and installed deployed artifact plus DB migration parity. GitHub is source truth, not live installed parity.
+
+## R61 source-only accepted fixes and cross-owner gates
+
+| Requirement | Actual source defect/correction | Evidence and unresolved work |
+|---|---|---|
+| F14-FR-007, FUT16/FUT17, File20 and File25 owner boundary | R61-D01: full column presence in approved placement baseline was not sufficient, as text/schedule/priority fields accepted false, arrays and coerced strings. Require nonblank text, NULL or real schedule strings, and canonical signed SQL INT priority without forgery. | Forty actual source PHP capture/rehash/ready/reconcile mock cases, Issue #22 File20/25 real changed-placement CAS and staging remains OPEN |
+| F14-FR-009, FUT02/FUT09; File07/08/09 | R61-D02: inbound owner readiness `contract_version` coerced invalid values with absint/max and cached inbox could bypass previously validated event UUID/available bool. Require canonical positive version when present and complete typed original envelope before option write; optional omitted version remains historical v1. | Forty actual owner event consumer method mock cases, Issue #19 signed File01 registry/staging producer proof still OPEN |
+
+Full forty distinct amended FR/FUT plan scope ledger frozen BEFORE patch in `docs/REVIEW-40-CROSS-PLAN-v1.4.64-R61.md`, exact pre-code main `58b4c0e453c37ca195adffe681237ee98e294c10`. All true deployed WP code/DB version/options/migration/runtime/live status still unverified.
+
 Requirements Traceability — v1.4.63
 
 File 14 v1.4.63 may only claim a status independently supported by exact source/CI, staging acceptance, and installed deployed artifact plus DB migration parity. Repository source fixes are not live installed truth.
