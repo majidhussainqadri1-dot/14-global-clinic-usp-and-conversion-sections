@@ -1,3 +1,15 @@
+Requirements Traceability — v1.4.66
+
+File 14 v1.4.66 may only claim a status independently supported by exact source/CI, staging acceptance, and installed deployed artifact plus DB migration parity. GitHub source truth is not deployed WordPress reality.
+
+## R63 source corrections and owner contract boundaries
+| F14 owner requirement | Exact source defect and repair | Tests / external acceptance |
+|---|---|---|
+| FR010/FUT04/FUT05/FUT17 — File01 policy event trust | R63-D01: queue_policy_revalidation sanitized rather than authenticated the original BusinessPolicyChanged.v1 event_id; valid raw UUID and v1 version now required before policy option write or callback. | Forty direct actual File14 policy PHP/wp_options tests; File01 signed producer owner proof #19 OPEN |
+| FR009/FUT02/FUT09 — File07/08/09 owner readiness | R63-D02: repository validator admitted explicit .v1 event version 2+ and downstream consumer then rejected, generating avoidable queue retry/dead-letter; now pre-inbox reject raw unnegotiated schema, omitted legacy v1 preserved. | Forty actual repository native-method source PHP cases; signed owner staging #19 OPEN |
+| FUT16/FUT17 — File20/25 placement restoration | No new changes to foreign owner placement; source fail-closed remains | Real authorized CAS changed-placement restore and staged concurrency #22 OPEN |
+
+Exactly forty 16 FR + 24 FUT amended source lenses frozen BEFORE PHP changes in docs/REVIEW-40-CROSS-PLAN-v1.4.66-R63.md from GitHub main f3166a19dd42ce6e03e7f3c3534a9e8c9f6539c6. Installed code, DB version/schema/wp_options, migration, staging and live E2E remain UNKNOWN.
 Requirements Traceability — v1.4.65
 
 File 14 v1.4.65 may only claim a status independently supported by exact source/CI, staging acceptance, and installed deployed artifact plus DB migration parity. GitHub source != deployed WordPress truth.
