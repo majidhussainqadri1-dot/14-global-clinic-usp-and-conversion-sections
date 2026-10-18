@@ -1,3 +1,9 @@
+Software candidate: `1.4.60`.
+
+# R57 — Forty-plan native-owner producer/replay integrity review, 2026-10-18
+
+Frozen exact GitHub main `8c0d96e990c652f04b0d460a0f1f387a21152d8e` v1.4.59; 16 FR plus 24 FUT lens audit against the attached amended File14, consolidated three central plans and canonical Files01/07/08/09/20/25, committed as `docs/REVIEW-40-CROSS-PLAN-v1.4.60-R57.md` BEFORE PHP changes. R57-D01 File09 native application IDs previously accepted noncanonical/overflow decimal strings after int coercion; now only original canonical positive PHP integer/decimal ID in 64-bit integer range accepted. R57-D02 duplicate replay previously accepted malformed `event_version` such as `'1junk'` through cast or missing identity SQL row fields; now complete correctly typed evidence + raw integer 1 or decimal string '1' required to classify a duplicate as successful. 40 direct producer + 40 direct duplicate method SQL mock regressions integrated. No cross-file owner writes. Signed File01/07/08/09 registered outcomes (#19) and real File20/25 changed placement CAS restore (#22) remain OPEN. Exact deployed plugin/source hash, DB version, wp_options, migrations, staging and live verification all UNVERIFIED. GitHub CI PHP 7.4/8.3, repeated 40 marker source scans, 2 Fresh Reviews and ZIP/SBOM are source/release gates, NOT production acceptance.
+
 Software candidate: `1.4.59`.
 
 # R56 — Forty-plan File14 cross-owner integrity review and source corrections, 2026-10-18
