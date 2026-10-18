@@ -57,9 +57,21 @@ final class GCU_Experiment_Baseline {
 	public static function capture_approved( $experiment, $approver ) {
 		// Called inside the File14 owner workflow transaction at Founder approval.
 		$ref = self::identity( $experiment );
-		$approver = absint( $approver );
-		if ( ! $ref || ! $approver ) { return new WP_Error( 'gcu_baseline_approval_missing', 'A real approving actor and experiment are required.' ); }
-		$variants = json_decode( (string) $experiment['variants'], true );
+		// R59 / Founder audit: preserve *raw* approver and row-version truth.
+		// absint() or (int) would turn a negative, fractional, forged or
+		// overflowing identity into an apparently approved new baseline.
+		if ( ! $ref || ! GCU_Future_Policy::valid_aggregate_count( $approver )
+			|| (int) $approver < 1 ) {
+			return new WP_Error( 'gcu_baseline_approval_missing', 'A real approving actor and experiment are required.' );
+		}
+		if ( ! is_array( $experiment ) || ! isset( $experiment['row_version'], $experiment['variants'] )
+			|| ! GCU_Future_Policy::valid_aggregate_count( $experiment['row_version'] )
+			|| (int) $experiment['row_version'] >= PHP_INT_MAX
+			|| ! is_string( $experiment['variants'] ) ) {
+			return new WP_Error( 'gcu_baseline_version_unverified', 'The approved experiment version and variants must be verified.' );
+		}
+		$approver = (int) $approver;
+		$variants = json_decode( $experiment['variants'], true );
 		$keys = self::placement_keys( $variants );
 		if ( null === $keys ) { return new WP_Error( 'gcu_baseline_mapping_invalid', 'Placement-mutating variants require explicit canonical placement keys.' ); }
 		if ( count( $keys ) > 20 ) { return new WP_Error( 'gcu_baseline_scope_exceeded', 'A baseline may cover at most twenty owner placements.' ); }

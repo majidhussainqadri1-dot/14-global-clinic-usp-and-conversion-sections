@@ -1,8 +1,9 @@
-# File 14 v1.4.61 Source Manifest
+# File 14 v1.4.62 Source Manifest
 
 Canonical plugin folder: `14-global-clinic-usp-integration`
 
 Contents:
+- R59 exact source 40-scope cross-plan precode freeze, Founder actor/version capture canonical proof, quality SQL funnel nonblank identity; eighty direct method tests. Cross-owner #19/#22 OPEN.
 - R58 40 amended FR/FUT source/central plan audit frozen BEFORE code; native anomaly nonblank group identity and immutable snapshot/experiment original-value approval actor/version checks; 80 direct PHP/SQL-mock regressions. Owner #19/#22 and actual deployed parity remain OPEN.
 - R57 forty plan and owner contract scopes frozen pre-code, strict File09 application identity and idempotent owner event v1 replay evidence with 80 source-mode regression cases; #19/#22 remain OPEN.
 - R56 forty amended FR/FUT owner/central plan review frozen pre-code; strict typed owner SQL stage evidence + experiment snapshot approver/version/placement-map reconciliation; 80 direct mocked WordPress/PHP method cases; external Issues #19/#22 still open.
