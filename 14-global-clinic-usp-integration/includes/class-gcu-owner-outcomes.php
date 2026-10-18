@@ -148,7 +148,8 @@ final class GCU_Owner_Outcomes {
 		foreach ( $rows as $row ) {
 			if ( ! is_array( $row )
 				|| ! isset( $row['event_type'], $row['funnel_stage'], $row['current_count'], $row['previous_seven_days'] )
-				|| ! is_string( $row['event_type'] ) || ! is_string( $row['funnel_stage'] )
+				|| ! is_string( $row['event_type'] ) || '' === trim( $row['event_type'] )
+				|| ! is_string( $row['funnel_stage'] ) || '' === trim( $row['funnel_stage'] )
 				|| ! GCU_Future_Policy::valid_aggregate_count( $row['current_count'] )
 				|| ! GCU_Future_Policy::valid_aggregate_count( $row['previous_seven_days'] ) ) {
 				GCU_Observability::log( 'error', 'owner_anomaly_volume_row_unverified', array() );
