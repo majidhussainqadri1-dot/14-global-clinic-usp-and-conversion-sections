@@ -75,7 +75,7 @@ for ( $i = 0; $i < 40; $i++ ) {
     $bad = false;
     $expected_suppressed = false;
     if ( 1 === $family ) {
-        $wpdb->rows[] = array( 'funnel_stage' => 'destination_loaded', 'total' => (string) ( 1 + $v ) );
+        $wpdb->rows[] = array( 'funnel_stage' => 'impression', 'total' => (string) ( 1 + $v ) );
         $expected_suppressed = true;
     } elseif ( 2 === $family ) { $wpdb->rows[] = array( 'funnel_stage' => array( 'cta_selected' ), 'total' => '40' ); $bad = true; }
     elseif ( 3 === $family ) { $wpdb->rows[] = array( 'funnel_stage' => 123, 'total' => '40' ); $bad = true; }
@@ -101,7 +101,8 @@ for ( $i = 0; $i < 40; $i++ ) {
             && $actual['stages']['cta_selected'] === 20 + $v
             && $actual['suppressed'] === $expected_suppressed
             && ! isset( $actual['stages']['unknown_stage'] )
-            && ! isset( $actual['stages']['destination_loaded'] );
+            && ! isset( $actual['stages']['destination_loaded'] )
+            && ! isset( $actual['stages']['impression'] );
     if ( ! $ok ) { $errors[] = 'R54 friction scenario ' . ( $i + 1 ); }
     echo 'R54 friction method ' . ( $i + 1 ) . '/40: ' . ( $ok ? 'PASS' : 'FAIL' ) . PHP_EOL;
 }
