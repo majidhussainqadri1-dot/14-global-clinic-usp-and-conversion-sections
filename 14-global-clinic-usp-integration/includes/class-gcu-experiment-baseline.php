@@ -130,6 +130,32 @@ final class GCU_Experiment_Baseline {
 	public static function reconcile_after_stop( $experiment ) {
 		$s = self::snapshot( $experiment );
 		if ( ! $s ) { return array( 'restored' => false, 'reason' => 'approved_snapshot_missing', 'manual_review' => true ); }
+		// R56 / FUT17: integrity of snapshot bytes is not sufficient.
+		// Before claiming even a *no-op*, confirm the same Founder approval,
+		// original placement mapping and permitted approved->running version
+		// progression. Fail closed on stale or rewritten experiment metadata.
+		$approval_version = isset( $s['approval_version'] ) ? $s['approval_version'] : null;
+		$current_version = isset( $experiment['row_version'] ) ? $experiment['row_version'] : null;
+		$current_approver = isset( $experiment['approved_by'] ) ? $experiment['approved_by'] : null;
+		$approved_by = isset( $s['approved_by'] ) ? $s['approved_by'] : null;
+		$status = isset( $experiment['status'] ) ? $experiment['status'] : '';
+		$expected_version = 'running' === $status ? 1 : ( 'approved' === $status ? 0 : null );
+		$keys = isset( $experiment['variants'] ) && is_string( $experiment['variants'] )
+			? self::placement_keys( json_decode( $experiment['variants'], true ) ) : null;
+		if ( null === $expected_version || ! GCU_Future_Policy::valid_aggregate_count( $approval_version )
+			|| ! GCU_Future_Policy::valid_aggregate_count( $current_version )
+			|| ! GCU_Future_Policy::valid_aggregate_count( $approved_by )
+			|| ! GCU_Future_Policy::valid_aggregate_count( $current_approver )
+			|| (int) $approved_by < 1 || (int) $current_approver !== (int) $approved_by
+			|| (int) $current_version !== (int) $approval_version + $expected_version
+			|| null === $keys || count( $keys ) !== count( $s['placements'] ) ) {
+			return array( 'restored' => false, 'reason' => 'approved_experiment_baseline_identity_unverified', 'manual_review' => true );
+		}
+		foreach ( $keys as $key ) {
+			if ( ! isset( $s['placements'][ $key ] ) ) {
+				return array( 'restored' => false, 'reason' => 'approved_experiment_baseline_identity_unverified', 'manual_review' => true );
+			}
+		}
 		foreach ( $s['placements'] as $key => $before ) {
 			$now = self::read_placement( $key, true );
 			if ( ! is_array( $now ) || self::shape( $now ) !== $before ) {
