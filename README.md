@@ -1,3 +1,9 @@
+Software candidate: `1.4.64`.
+
+# R61 — forty-plan owner-snapshot typed evidence and event-contract integrity audit, 2026-10-18
+
+Frozen exact pre-PHP GitHub main `58b4c0e453c37ca195adffe681237ee98e294c10` (File14 source v1.4.63), 16 FR and 24 FUT plan lenses traced against amended File14 Master Plan, Three Central Governing Plans and Files01/07/08/09/20/25 owner boundaries in `docs/REVIEW-40-CROSS-PLAN-v1.4.64-R61.md` BEFORE edits. Two locally proved source defects: R61-D01 `GCU_Experiment_Baseline::shape` previously accepted any-typed SQL block/route/slot/audience/status/schedule fields and unverified priority despite snapshot hashing; now validates required nonempty strings, nullable schedules and signed canonical 32-bit SQL INT priority, failing closed on corrupt owner evidence. R61-D02 `GCU_Contracts::apply_inbound_event` previously coerced invalid readiness `contract_version` with `absint/max`, and relied only on ingest-time validation for availability bool/event UUID; now validates original event envelope and strictly positive canonical bounded version before storing owner readiness, while preserving omitted historical v1 version. Forty native PHP owner placement cases + forty direct availability event consumer cases added. Exact PR and postmerge main PHP7.4/8.3, forty repeated 40-marker source reviews, two independent fresh reviews, deterministic ZIP SHA/SBOM required. File01 signed native events #19 and File20/25 actual changed-placement owner CAS #22 remain OPEN. No WordPress live deployed source/DB/migration/staging parity: not production-resolved.
+
 Software candidate: `1.4.63`.
 
 # R60 — forty amended File14/central/owner plan scope audit and source hardening, 2026-10-18
