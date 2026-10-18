@@ -551,9 +551,13 @@ final class GCU_Future_Policy {
 			return false;
 		}
 		$count = $signal['count'];
-		$nonnegative = ( is_int( $count ) && $count >= 0 )
-			|| ( is_string( $count ) && ctype_digit( $count ) && strlen( $count ) <= 12 );
-		return $nonnegative && '' !== trim( $signal['question'] ) && self::cohort_allowed( (int) $count );
+		// FUT18+FUT15: the *original* aggregate, not an integer coercion,
+		// must satisfy the canonical privacy count contract. Preserve the
+		// historical twelve-digit bound for external string signal volumes.
+		return self::valid_aggregate_count( $count )
+			&& ( ! is_string( $count ) || strlen( $count ) <= 12 )
+			&& '' !== trim( $signal['question'] )
+			&& self::cohort_allowed( $count );
 	}
 
 	/** No cast from nested JSON to an AI editor instruction or to safe copy. */
