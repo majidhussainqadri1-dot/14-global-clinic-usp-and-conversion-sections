@@ -4,7 +4,7 @@ Tags: clinic, doctors, conversion, accessibility, privacy, governance, trust, ex
 Requires at least: 6.6
 Tested up to: 7.0.1
 Requires PHP: 7.4
-Stable tag: 1.4.59
+Stable tag: 1.4.60
 License: GPLv2 or later
 
 Version 1.4.56 tightens canonical whole-number cohort and owner-outcome evidence gates (40 direct privacy-policy test vectors); pending production/staging parity and external owner #19/#22.
@@ -14,6 +14,8 @@ R54 source v1.4.57 hardens truthful approved FAQ gap aggregate counts and fail-c
 Source v1.4.58 (R55) explicitly denies placement-changing experiments absent a File20/25 owner-authorized CAS restoration command, and treats unverified owner analytics as an experiment safety breach. 80 direct-source tests added. Issue #19 approved signed File01/07/08/09 owner event proof and Issue #22 real owner CAS restore remain OPEN pending staging/production evidence.
 
 R56 source v1.4.59: rejects invalid type/blank native owner stage SQL group identity and requires matching Founder-approved experiment version, actor and placement map before even a no-op baseline restoration claim. Adds eighty direct PHP method regression variants; Issues #19/#22 and exact deployed WordPress acceptance remain open.
+
+R57 v1.4.60 verifies strictly positive canonical File09 owner-native application identifiers and forbids cast-based acceptance of malformed event v1 duplicate replay evidence. Adds 80 direct producer PHP/SQL mock cases, with #19/#22 owner contract, deployment and live acceptance still OPEN.
 
 Canonical File 14 implementation for approved Worldwide Clinic value-proposition content, ethical conversion journeys, claim governance, destination contracts, Future Conversion & Trust Intelligence and privacy-minimized measurement.
 

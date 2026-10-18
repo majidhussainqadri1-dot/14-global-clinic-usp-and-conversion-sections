@@ -1,3 +1,17 @@
+Requirements Traceability — v1.4.60
+
+File 14 v1.4.60 may only claim a status independently supported by exact source/CI, staging acceptance, and installed deployed artifact plus DB migration parity; source corrections alone are NOT live acceptance.
+
+# R57 — frozen 40-plan and File01/07/08/09/20/25 integration evidence
+
+| Plan | Verified new source defect | Corrective evidence | Remaining source/owner/live gate |
+|---|---|---|---|
+| F14-FR-011 / F14-FUT-11/14 | R57-D01: File09 native application ID textual padding/overflow coerced into distinct owner event identity | File14 native producer now checks canonical positive bounded counts before event_id HMAC; 40 real-method producer cases | Owner-signed File01 registry, actual File07/08/09 producer attestation/staging OPEN #19 |
+| F14-FR-011 / F14-FUT-11/14 | R57-D02: idempotent duplicate replay accepted `event_version` casting and incomplete SQL identity fields | File14 raw v1 int/string only, full strict row fields, consent, owner/stage/destination and subject, 40 direct duplicate DB-mock cases | Owner signed registry & replay expiry integration OPEN #19 |
+| F14-FUT-17 | Existing safe containment denies placement-changing activation and no-op checks provenance | Source-only; no new File20/25 CAS restoration | Owner-authenticated actual changed placement CAS command/races/rollback OPEN #22 |
+
+Frozen pre-PHP complete 16 FR+24 FUT audit: `docs/REVIEW-40-CROSS-PLAN-v1.4.60-R57.md`, source baseline `8c0d96e990c652f04b0d460a0f1f387a21152d8e`; DB/migrations/installed code and live unverified.
+
 Requirements Traceability — v1.4.59
 
 File 14 v1.4.59 may only claim a status independently supported by exact source/CI, staging acceptance, and installed deployed artifact plus DB migration parity. Repository fixes are not deployed truth.
