@@ -102,21 +102,35 @@ final class GCU_Experiment_Baseline {
 			 WHERE record_type=%s AND record_key=%s AND locale='en-US' AND region='ZZ' AND status='active' AND is_public=0 LIMIT 1",
 			self::RECORD_TYPE, self::record_key( $experiment )
 		), ARRAY_A );
-		if ( ! is_array( $row ) || ! is_string( $row['payload'] )
-			|| ! hash_equals( (string) $row['payload_hash'], hash( 'sha256', $row['payload'] ) ) ) { return null; }
+		if ( ! is_array( $row ) || ! isset( $row['payload'], $row['payload_hash'], $row['created_by'] )
+			|| ! is_string( $row['payload'] ) || ! is_string( $row['payload_hash'] )
+			|| ! GCU_Future_Policy::valid_aggregate_count( $row['created_by'] )
+			|| (int) $row['created_by'] < 1
+			|| ! hash_equals( $row['payload_hash'], hash( 'sha256', $row['payload'] ) ) ) { return null; }
 		$s = json_decode( $row['payload'], true );
 		if ( ! is_array( $s ) || ( $s['contract'] ?? '' ) !== self::CONTRACT
 			|| ( $s['experiment'] ?? '' ) !== self::identity( $experiment )
 			|| ! isset( $s['placements'] ) || ! is_array( $s['placements'] )
-			|| empty( $s['approved_by'] ) || (int) $row['created_by'] !== (int) $s['approved_by'] ) { return null; }
+			|| ! isset( $s['approved_by'], $s['approval_version'] )
+			|| ! GCU_Future_Policy::valid_aggregate_count( $s['approved_by'] )
+			|| ! GCU_Future_Policy::valid_aggregate_count( $s['approval_version'] )
+			|| (int) $s['approved_by'] < 1
+			|| (int) $row['created_by'] !== (int) $s['approved_by'] ) { return null; }
 		return $s;
 	}
 
 	public static function ready( $experiment ) {
 		$s = self::snapshot( $experiment );
-		if ( ! $s || (int) ( $experiment['row_version'] ?? 0 ) !== (int) ( $s['approval_version'] ?? 0 )
-			|| (int) ( $experiment['approved_by'] ?? 0 ) !== (int) $s['approved_by'] ) { return false; }
-		$keys = self::placement_keys( json_decode( (string) $experiment['variants'], true ) );
+		// R58 / FUT16: a cast must never convert corrupt approval metadata
+		// into matching experiment identity. Use original canonical DB values.
+		if ( ! $s || ! isset( $experiment['row_version'], $experiment['approved_by'], $experiment['variants'] )
+			|| ! is_string( $experiment['variants'] )
+			|| ! GCU_Future_Policy::valid_aggregate_count( $experiment['row_version'] )
+			|| ! GCU_Future_Policy::valid_aggregate_count( $experiment['approved_by'] )
+			|| (int) $experiment['approved_by'] < 1
+			|| (int) $experiment['row_version'] !== (int) $s['approval_version']
+			|| (int) $experiment['approved_by'] !== (int) $s['approved_by'] ) { return false; }
+		$keys = self::placement_keys( json_decode( $experiment['variants'], true ) );
 		if ( null === $keys || count( $keys ) !== count( $s['placements'] ) ) { return false; }
 		foreach ( $keys as $key ) {
 			if ( ! isset( $s['placements'][ $key ] ) ) { return false; }
