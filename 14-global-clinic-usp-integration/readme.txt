@@ -4,10 +4,12 @@ Tags: clinic, doctors, conversion, accessibility, privacy, governance, trust, ex
 Requires at least: 6.6
 Tested up to: 7.0.1
 Requires PHP: 7.4
-Stable tag: 1.4.56
+Stable tag: 1.4.57
 License: GPLv2 or later
 
 Version 1.4.56 tightens canonical whole-number cohort and owner-outcome evidence gates (40 direct privacy-policy test vectors); pending production/staging parity and external owner #19/#22.
+
+R54 source v1.4.57 hardens truthful approved FAQ gap aggregate counts and fail-closed friction stage SQL evidence; 80 new direct method cases and full 40-round source plan review. Existing cross-owner #19/#22 and real deployment proof remain open.
 
 Canonical File 14 implementation for approved Worldwide Clinic value-proposition content, ethical conversion journeys, claim governance, destination contracts, Future Conversion & Trust Intelligence and privacy-minimized measurement.
 
