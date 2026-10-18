@@ -515,17 +515,22 @@ final class GCU_Future_Policy {
 		if ( ! is_array( $variants ) ) { return true; }
 		foreach ( $variants as $variant ) {
 			if ( is_array( $variant ) ) {
-				foreach ( array( 'placement_key', 'placement_id', 'slot_key', 'block_key', 'layout', 'navigation', 'shell', 'placement' ) as $key ) {
+				// R60 / File20: every mutable owner-placement field must trigger
+				// the external CAS-restore requirement, not just a placement_key.
+				foreach ( array( 'placement_key', 'placement_id', 'slot_key', 'block_key', 'layout', 'navigation', 'shell', 'placement',
+					'route_key', 'audience', 'priority', 'status', 'starts_at', 'ends_at', 'public_id', 'row_version' ) as $key ) {
 					if ( array_key_exists( $key, $variant ) ) { return true; }
 				}
 				$encoded = wp_json_encode( $variant );
 				if ( ! is_string( $encoded ) ) { return true; }
+				// Nested JSON owner fields also mutate route/placement state.
+				if ( preg_match( '/"(?:route_key|audience|priority|status|starts_at|ends_at|public_id|row_version)"\\s*:/i', $encoded ) ) { return true; }
 			} elseif ( is_string( $variant ) ) {
 				$encoded = $variant;
 			} else {
 				return true;
 			}
-			if ( preg_match( '/\\b(?:placement|slot|shell|layout|navigation|variant[_ -]?key)\\b/i', $encoded ) ) { return true; }
+			if ( preg_match( '/\\b(?:placement|slot|shell|layout|navigation|variant[_ -]?key|route[_ -]?key|starts[_ -]?at|ends[_ -]?at)\\b/i', $encoded ) ) { return true; }
 		}
 		return false;
 	}
