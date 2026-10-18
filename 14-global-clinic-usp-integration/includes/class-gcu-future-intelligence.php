@@ -737,7 +737,7 @@ final class GCU_Future_Intelligence {
 		if ( $funnel_verified ) {
 			foreach ( $rows as $row ) {
 				if ( ! is_array( $row ) || ! isset( $row['funnel_stage'], $row['total'] )
-					|| ! is_string( $row['funnel_stage'] )
+					|| ! is_string( $row['funnel_stage'] ) || '' === trim( $row['funnel_stage'] )
 					|| ! GCU_Future_Policy::valid_aggregate_count( $row['total'] ) ) {
 					$funnel_verified = false;
 					break;
