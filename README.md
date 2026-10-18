@@ -1,3 +1,9 @@
+Software candidate: `1.4.62`.
+
+# R59 — Forty-plan File14 Founder actor and quality SQL-evidence review, 2026-10-18
+
+Exact pre-code GitHub main `416c6a576a7d88260fbaa9d2c3dd8a6532fe03f8` v1.4.61, 16 FR + 24 FUT distinct source lenses against uploaded File14 master plan, consolidated Three Central Plans and File01/07/08/09/20/25 contracts frozen in `docs/REVIEW-40-CROSS-PLAN-v1.4.62-R59.md` BEFORE code. Proved defects: R59-D01 `GCU_Experiment_Baseline::capture_approved` previously `absint`-coerced negative/fractional Founder actor and cast source row-version without canonical/overflow proof; now strictly validates raw actor and experiment version before immutable approved snapshot write. R59-D02 `GCU_Future_Intelligence::quality_score` previously accepted blank string SQL funnel stage and silently omitted it; now marks funnel evidence unverified and refuses aggregate score. 40 direct source-method Founder cases and 40 direct quality_score SQL mock cases added. Must pass PHP7.4/8.3, 40 repeated source-plan checks, 2 Fresh Reviews and deterministic ZIP/SHA/SBOM on exact PR head AND merged main. Cross-owner #19 File01 signed File07/08/09 native event evidence and #22 File20/25 changed placement CAS remain OPEN. Installed WordPress deployed package/code, database/schema/options, migration, staging and live re-test remain UNVERIFIED; no production resolution claim.
+
 Software candidate: `1.4.61`.
 
 # R58 — Forty-plan owner anomaly and approved experiment evidence review, 2026-10-18
