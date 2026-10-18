@@ -1,3 +1,15 @@
+Requirements Traceability — v1.4.63
+
+File 14 v1.4.63 may only claim a status independently supported by exact source/CI, staging acceptance, and installed deployed artifact plus DB migration parity. Repository source fixes are not live installed truth.
+
+| Requirement and canonical owner | R60 verified source defect and bounded correction | Evidence and acceptance gap |
+|---|---|---|
+| F14-FR-007; FUT16/17; File20 owner, File25 visual consumer | R60-D01: route_key/audience/priority/status/starts_at/ends_at/public_id/row_version and nested metadata variants were misclassified as copy-only; now must deny activation without genuine File20 owner CAS rollback contract | 40 native policy/activation PHP method cases; #22 File20/25 owner-authorized changed-placement restoration remains OPEN |
+| F14-FR-012; FUT16/17; File20 canonical placement data | R60-D02: shape() accepted incomplete SQL placement rows; capture/ready/reconcile previously risked accepting hash-consistent partial snapshot. Require canonical complete placement row with valid version/UUID/key, checked against the approved key on capture and read | 40 native File14 method SQL-mock capture/rehash/readiness/no-op scenarios; #22 staging race/rollback OPEN |
+| F14-FR-011; File01/07/08/09 | Genuine owner events still not a signed owner registry/staging deployment | #19 remains OPEN; do not convert server render into booking success |
+
+Source audit frozen BEFORE runtime patch: main `b8304f6bbff2c1d0e63a3c0966bc8a7302bb5aca`, 16 FR + 24 FUT in `docs/REVIEW-40-CROSS-PLAN-v1.4.63-R60.md`. PHP CI green is not WordPress installed version, DB/schema/options/migration or live test proof.
+
 Requirements Traceability — v1.4.62
 
 File 14 v1.4.62 may only claim a status independently supported by exact source/CI, staging acceptance, and installed deployed artifact plus DB migration parity. Source correctness is not deployed truth.
