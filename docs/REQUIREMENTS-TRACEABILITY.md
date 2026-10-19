@@ -1,3 +1,15 @@
+Requirements Traceability — v1.4.67
+
+File 14 v1.4.67 may only claim a status independently supported by exact source/CI, staging acceptance, and installed deployed artifact plus DB migration parity. Repository source != live deployed evidence.
+
+## R64 pre-code frozen 40-scope source and owner contractual proof
+| Requirements / owner | Proven File14-local source defect and correction | Source verification and external blocker |
+|---|---|---|
+| FR009/FUT02/FUT09, File07/08/09 owner readiness | R64-D01: if original and persisted options JSON encoding both failed, SHA of false produced same empty-string digest and falsely confirmed option equality. Require both native wp_json_encode values to be strings before comparing SHA256. | Forty direct PHP method mock cases; #19 signed owner events and real deployed readiness staging OPEN |
+| FR011/FUT14/FUT15, File01 signed owner event/SQL inbox | R64-D02: stored inbox payload_hash/event_id/schema were not validated before re-delivery to owner consumer. Compare raw JSON digest, UUID row/payload identity and current allowed .v1 schema before any option or callback; corrupted inbox fails closed. | Forty direct GCU_Repository method cases + one actual process_inbox corrupt-row containment; signed actual owner provenance #19 OPEN |
+| FUT16/FUT17, File20/25 | No change to owner placement CAS actual changed placement restoration | Issue #22 OPEN, owner-approved CAS + staging concurrency unavailable |
+
+Forty separately scoped FR(16)+FUT(24) source/plan lenses frozen BEFORE PHP changes in docs/REVIEW-40-CROSS-PLAN-v1.4.67-R64.md from main 93008dc1d49aaf8e62003bb1e032d09703e88db3. Real installed package/hash, actual DB/schema/wp_options, migration, runtime logs, staging and live E2E remain unverified.
 Requirements Traceability — v1.4.66
 
 File 14 v1.4.66 may only claim a status independently supported by exact source/CI, staging acceptance, and installed deployed artifact plus DB migration parity. GitHub source truth is not deployed WordPress reality.

@@ -1,3 +1,8 @@
+Software candidate: `1.4.67`.
+
+# R64 v1.4.67 source-only release — deployed and live acceptance NOT verified
+
+Original frozen exact GitHub main 93008dc1d49aaf8e62003bb1e032d09703e88db3, source v1.4.66. Exactly forty FR/FUT source lenses traced to amended File14 and consolidated Three Central Governing Plans before modifying code. R64-D01: option persisted JSON attestation previously hashed two failed encoders to same empty digest; now demand valid string encodings. R64-D02: GCU_Repository::process_inbox previously consumed durable owner JSON without checking original recorded payload hash and row identity; now verify digest, row/event UUID and versioned owner schema and refuse corrupt side-effects. Added 40 native options, 40 native inbox PHP/SQL cases and one real process containment check. Required exact PR and postmerge PHP7.4/8.3, repeated forty full 40-marker source reviews, two fresh reviews, deterministic package ZIP/SHA/SBOM. Issues #19 real File01 signed native File07/08/09 producers and #22 File20/25 approved changed-placement CAS still OPEN; actual deployed plugin, DB/options/migration, staging/live retest remain UNKNOWN. No Production Resolved claim.
 Software candidate: `1.4.66`.
 
 # R63 v1.4.66 source-only release — deployed and live acceptance NOT verified

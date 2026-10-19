@@ -1,3 +1,9 @@
+Software candidate: `1.4.67`.
+
+# R64 — Forty plan-lens owner integrity audit, options JSON and durable inbox evidence, 2026-10-19
+
+Exact pre-PHP source main `93008dc1d49aaf8e62003bb1e032d09703e88db3` v1.4.66. `docs/REVIEW-40-CROSS-PLAN-v1.4.67-R64.md` frozen before edits, 16 FR + 24 FUT lenses grounded in attached amended File14 Word plan and Three Central Plans, cross File01/07/08/09/20/25 owner boundaries. R64-D01: `GCU_Contracts::persist_option_exact` falsely attested wp_options persistence when original and stored JSON encoders both failed and produced identical empty-string SHA hashes. Now requires both JSON encodings to be strings before hashing; 40 direct PHP source method cases. R64-D02: `GCU_Repository::process_inbox` trusted stored owner payload without comparing raw payload against recorded SHA256, row UUID or current v1 schema; now verified original row digest/event identity/versioned schema before calling consumer, with 40 direct recorded Inbox source tests plus 1 actual corrupt-message process side-effect containment. Required exact candidate and merged HEAD PHP7.4/8.3, forty repeated full 40-contract source rounds, two independent Fresh Reviews and deterministic ZIP/SHA256/SBOM. #19 signed File01/07/08/09 producer registry/staging and #22 real File20/25 authorized changed-placement CAS restore remain OPEN. Installed code/version/checksum, real DB/options/migrations, staging and live retest UNVERIFIED; GitHub is not deployed reality.
+
 Software candidate: `1.4.66`.
 
 # R63 — Forty-plan cross-owner source audit, business-policy replay and pre-inbox version truth, 2026-10-18
