@@ -1,3 +1,8 @@
+Software candidate: `1.4.68`.
+
+# R65 v1.4.68 Source release evidence only — no live acceptance
+
+Frozen former GitHub main 85759882e6e3610ee8047601b8ac7f2a4cc6b914, source v1.4.67. Pre-code ledger docs/REVIEW-40-CROSS-PLAN-v1.4.68-R65.md covers 40 amended File14 FR/FUT and Three Central Governing Plan scopes with File01/07/08/09/20/25 owners. R65-D01 rejects invalid/absent policy_version and bad changed_keys for owner BusinessPolicyChanged.v1 both at first Inbox admission and at local consumer replay before wp_options writes. R65-D02 local consumer now deduplicates exact owner event ID+canonical policy/keys without duplicate durable option update/callback, and refuses conflicting same-ID facts. 40 direct version/keys + 40 direct idempotent/replay/conflict PHP native source method tests, not a signed producer or full crash-exactly-once guarantee. Exact PR and merged main must pass PHP7.4/8.3, 40 repeated 40-marker source reviews, two independent Fresh Reviews, deterministic package ZIP SHA/SBOM. #19 File01 signed native producers and File07/08/09 real staging still OPEN. #22 File20/25 authorized CAS changed-placement restoration still OPEN. Deployed plugin/files/checksum, schema/wp_options/migration/logs/staging/live not verified; source fix is not production resolution.
 Software candidate: `1.4.67`.
 
 # R64 v1.4.67 source-only release — deployed and live acceptance NOT verified

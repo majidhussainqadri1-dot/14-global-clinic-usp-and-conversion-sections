@@ -39,7 +39,25 @@ private function validate_inbound_event($name,array$p){if(!in_array($name,array(
 // R63: reject unsupported .v1 envelope versions *before* inbox storage,
 // retry/dead-letter and consumer dispatch. Omitting remains legacy v1.
 if(array_key_exists('contract_version',$p)&&!in_array($p['contract_version'],array(1,'1'),true)){return new WP_Error('gcu_inbound_version_unverified','Unsupported owner event contract version.');}
-if('BusinessPolicyChanged.v1'!==$name){if(!array_key_exists('available',$p)||!is_bool($p['available'])){return new WP_Error('gcu_inbound_schema_invalid','Availability events require a boolean available field.');}if(!empty($p['url'])&&!GCU_Hardening::strict_same_origin_url($p['url'])){return new WP_Error('gcu_inbound_url_invalid','Availability event URL is not same-origin.');}}return true;}
+if('BusinessPolicyChanged.v1'===$name){
+    // R65: a policy-change fact without an identifiable source policy
+    // version is not an actionable central/owner contract update.
+    if(!isset($p['policy_version'])||!is_string($p['policy_version'])
+       ||''===trim($p['policy_version'])||strlen($p['policy_version'])>64){
+        return new WP_Error('gcu_inbound_policy_version_unverified','Original owner policy version is required.');
+    }
+    if(array_key_exists('changed_keys',$p)){
+        if(!is_array($p['changed_keys'])||count($p['changed_keys'])>50){
+            return new WP_Error('gcu_inbound_policy_keys_unverified','Owner policy field changes are malformed.');
+        }
+        foreach($p['changed_keys'] as $key){
+            if(!is_string($key)||''===sanitize_key($key)){return new WP_Error('gcu_inbound_policy_keys_unverified','Owner policy field changes are malformed.');}
+        }
+    }
+}else{
+    if(!array_key_exists('available',$p)||!is_bool($p['available'])){return new WP_Error('gcu_inbound_schema_invalid','Availability events require a boolean available field.');}
+    if(!empty($p['url'])&&!GCU_Hardening::strict_same_origin_url($p['url'])){return new WP_Error('gcu_inbound_url_invalid','Availability event URL is not same-origin.');}
+}return true;}
 // R64: a row claimed from the durable inbox is untrusted until its
 // original event identity, stored payload digest and versioned owner
 // schema all agree. This checksum is NOT a signed File01 producer proof.

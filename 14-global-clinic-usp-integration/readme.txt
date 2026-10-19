@@ -4,7 +4,7 @@ Tags: clinic, doctors, conversion, accessibility, privacy, governance, trust, ex
 Requires at least: 6.6
 Tested up to: 7.0.1
 Requires PHP: 7.4
-Stable tag: 1.4.67
+Stable tag: 1.4.68
 License: GPLv2 or later
 
 Version 1.4.56 tightens canonical whole-number cohort and owner-outcome evidence gates (40 direct privacy-policy test vectors); pending production/staging parity and external owner #19/#22.
@@ -30,6 +30,8 @@ R62 v1.4.65 rejects impossible, noncanonical or inverted File20-style placement 
 R63 v1.4.66 fail-closes BusinessPolicyChanged.v1 inbox replays with malformed raw event UUIDs; enforces explicit .v1 source schema contract_version at repository admission before inbox/retry. Added forty direct policy-option and forty repository validator native PHP source tests. Signed owner #19, CAS owner #22, actual WordPress deployed DB/live unverified.
 
 R64 v1.4.67 requires successful option JSON serialization before proof of persisted owner readiness; verifies stored inbox original payload SHA256, owner event_id, schema and exact event name before any consumer side effect. Forty direct source options and forty source inbox scenarios plus process-inbox containment. File01 signed producer #19 and File20/25 changed-placement owner CAS #22 remain OPEN; staging/live unverified.
+
+R65 v1.4.68: validate original BusinessPolicyChanged.v1 policy_version and changed_keys at File14 inbound storage and consumer replay, fail close on missing/malformed policy evidence. Exactly repeated policy Event IDs now have idempotent no-write/no-repeat-callback behavior for matching facts and conflict error for changed owner facts. Forty native version/keys and forty replay/conflict PHP mock cases. #19 and #22 owner/staging/live still OPEN.
 
 Canonical File 14 implementation for approved Worldwide Clinic value-proposition content, ethical conversion journeys, claim governance, destination contracts, Future Conversion & Trust Intelligence and privacy-minimized measurement.
 
