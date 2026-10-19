@@ -17,7 +17,7 @@ $con  = xft( $p . '/includes/class-gcu-contracts.php' );
 $front= xft( $p . '/includes/class-gcu-frontend.php' );
 $obs  = xft( $p . '/includes/class-gcu-observability.php' );
 
-xfit( false !== strpos( $main, "GCU_VERSION', '1.4.68" ), 'Release version is not 1.4.68.' );
+xfit( false !== strpos( $main, "GCU_VERSION', '1.4.69" ), 'Release version is not 1.4.69.' );
 xfit( false !== strpos( $main, "GCU_CANONICAL_REPOSITORY', '14-global-clinic-usp-and-conversion-sections" ), 'Current repository identity is not exact.' );
 xfit( false !== strpos( $main, 'class-gcu-companion-adapters.php' ), 'Companion adapter bootstrap missing.' );
 
@@ -43,7 +43,7 @@ xfit( false !== strpos( $comp, 'FILE24_MIN_VERSION' ) && false !== strpos( $comp
 xfit( false !== strpos( $comp, "'posture'                => 'unassessed'" ) && false !== strpos( $comp, "'last_security_test'     => ''" ), 'File 24 manifest must not fabricate repository security acceptance.' );
 
 xfit( false !== strpos( $con, 'GCU_Companion_Adapters::destination_probe' ), 'Request-time owner destination probe missing.' );
-xfit( false !== strpos( $con, "'source'=>'owner_event'" ), 'Legacy owner event compatibility path missing.' );
+xfit( false === strpos( $con, 'if($event_available&&$event_url)' ), 'Stale owner availability event can revive a denied native probe.' );\nxfit( false !== strpos( $con, '$candidate!==$url' ), 'Destination filter can silently substitute a native owner URL.' );
 xfit( false !== strpos( $con, '$url=\'\';' ), 'Unavailable destination does not clear its delivery URL.' );
 
 xfit( false !== strpos( $obs, 'GCU_Companion_Adapters::dependency_health' ), 'Observability does not report actual companion health.' );
