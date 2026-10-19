@@ -1,5 +1,7 @@
 Requirements Traceability — v1.4.69
 
+File 14 v1.4.69 may only claim a status supported by exact source/CI, independently accepted staging, installed artifact/checksum, actual database/schema and migration parity, and a fresh live re-test; the new patch is source-only until those gates succeed.
+
 File14 R66 source correction depends on 16 approved File14 FR and 24 CTI FUT scope checks in `docs/REVIEW-40-FOCUSED-SOURCE-v1.4.69-R66.md`. Exact source before correction: `879bafa6523f99be2289c17988d72aae516da638`. The presence of source markers is not live feature proof.
 
 | Requirement | R66 source-level finding and correction | Remaining acceptance |
