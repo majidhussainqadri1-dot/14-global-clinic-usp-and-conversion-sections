@@ -1,3 +1,9 @@
+Software candidate: `1.4.70`.
+
+# R68 strict native owner contract evidence
+
+File14 now requires exactly typed File07/08/09 native health, File08 numeric integer zero commission and explicitly false donation visibility linkage, and File09 explicit boolean availability/no-write attestations. No owner-data mutation. Forty actual PHP source method mock scenarios will be checked on PHP7.4/8.3; #19/#22/#70 owner acceptance, deployment parity and live re-test remain OPEN. Repository green is not live acceptance.
+
 Software candidate: `1.4.69`.
 
 # R66 File14 source-level handoff safety

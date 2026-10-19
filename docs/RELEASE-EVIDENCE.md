@@ -1,3 +1,9 @@
+Software candidate: `1.4.70`.
+
+# R68 v1.4.70 — Source-only typed owner contract correction
+
+The exact previous main `81f6200bcde69a60e8ed639f2026d35633c1715d` exposed a strict trust-boundary defect in File14's File07/08/09 owner adapter. File08's native `contract_manifest()` declares `commission_percent => 0` (integer), `donation_visibility_link => false`; File08 `health()` declares boolean `ok`. R68 code now fails closed on coerceable strings, fractional commission, null, arrays or missing policy/health evidence; File07 `ready` and File09 availability/no-write flags likewise require owner-native boolean types. Forty direct PHP method cases test the actual File14 adapter with typed/mock owner payloads. Full quality, fresh reviews and exact deterministic package SHA256/SBOM must be accepted on final PR SHA and merged main SHA. Issues #19/#22/#70 remain external owner/consent/staging dependent. No live installed checksum, DB/options/migration or WordPress staging evidence supplied; no claim of production resolution.
+
 Software candidate: `1.4.69`.
 
 # R66 v1.4.69 — Source correction and release-evidence gates (not live acceptance)

@@ -202,7 +202,7 @@ final class GCU_Companion_Adapters {
 					$system = self::owner_call( 'file07', 'system_check', array( 'DDD_Observability', 'system_check' ), null );
 					$overall = is_array( $system ) && isset( $system['overall'] ) ? sanitize_key( (string) $system['overall'] ) : 'fail';
 					$ready = is_array( $health )
-						&& ! empty( $health['ready'] )
+						&& isset( $health['ready'] ) && true === $health['ready']
 						&& in_array( $overall, array( 'pass', 'degraded' ), true );
 					$reason = $ready ? ( 'degraded' === $overall ? 'owner_runtime_degraded_readable' : 'owner_runtime_ready' ) : 'owner_runtime_unhealthy';
 					return self::probe_result( $key, 'File 07', $ready, home_url( '/doctors/' ), $reason, DDD_CONTRACT_VERSION );
@@ -219,12 +219,12 @@ final class GCU_Companion_Adapters {
 					$appointments = isset( $routes['appointments'] ) && is_array( $routes['appointments'] ) ? $routes['appointments'] : array();
 					$ready = is_array( $manifest )
 						&& is_array( $runtime_health )
-						&& ! empty( $runtime_health['ok'] )
+						&& isset( $runtime_health['ok'] ) && true === $runtime_health['ok']
 						&& self::version_at_least( $runtime_version, self::FILE08_MIN_VERSION )
 						&& self::version_in_range( $api_version, self::FILE08_MIN_API, self::FILE08_MAX_API_EXCLUSIVE )
 						&& '/appointments' === ( isset( $appointments['pattern'] ) ? (string) $appointments['pattern'] : '' )
-						&& 0 === (int) ( isset( $manifest['commission_percent'] ) ? $manifest['commission_percent'] : -1 )
-						&& empty( $manifest['donation_visibility_link'] );
+						&& array_key_exists( 'commission_percent', $manifest ) && 0 === $manifest['commission_percent']
+						&& array_key_exists( 'donation_visibility_link', $manifest ) && false === $manifest['donation_visibility_link'];
 					return self::probe_result( $key, 'File 08', $ready, home_url( '/appointments/' ), $ready ? 'owner_runtime_ready' : 'owner_runtime_degraded_or_policy_mismatch', $api_version );
 				}
 				return self::probe_result( $key, 'File 08', false, '', 'owner_contract_unavailable_or_incompatible', '' );
@@ -238,10 +238,10 @@ final class GCU_Companion_Adapters {
 						&& 'file09' === sanitize_key( isset( $destination['owner'] ) ? (string) $destination['owner'] : '' )
 						&& 'file14' === sanitize_key( isset( $destination['consumer'] ) ? (string) $destination['consumer'] : '' );
 					$read_only = is_array( $destination )
-						&& array_key_exists( 'writes_data', $destination ) && false === (bool) $destination['writes_data']
-						&& array_key_exists( 'automatic_enrollment', $destination ) && false === (bool) $destination['automatic_enrollment']
-						&& array_key_exists( 'automatic_verification', $destination ) && false === (bool) $destination['automatic_verification'];
-					$ready = $contract_ok && $owner_ok && $read_only && ! empty( $destination['available'] );
+						&& array_key_exists( 'writes_data', $destination ) && false === $destination['writes_data']
+						&& array_key_exists( 'automatic_enrollment', $destination ) && false === $destination['automatic_enrollment']
+						&& array_key_exists( 'automatic_verification', $destination ) && false === $destination['automatic_verification'];
+					$ready = $contract_ok && $owner_ok && $read_only && isset( $destination['available'] ) && true === $destination['available'];
 					$url = is_array( $destination ) && ! empty( $destination['canonical_url'] ) ? (string) $destination['canonical_url'] : '';
 					$reason = is_array( $destination ) && ! empty( $destination['reason_code'] ) ? sanitize_key( (string) $destination['reason_code'] ) : ( $ready ? 'owner_runtime_ready' : 'owner_runtime_degraded_or_contract_mismatch' );
 					return self::probe_result( $key, 'File 09', $ready, $url, $reason, $version );
