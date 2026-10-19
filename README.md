@@ -1,3 +1,9 @@
+Software candidate: `1.4.68`.
+
+# R65 — Forty amended File14 / Three Central Plans / owner-contract source audit, 2026-10-19
+
+Frozen source `main@85759882e6e3610ee8047601b8ac7f2a4cc6b914` v1.4.67, 16 FR + 24 FUT plan scopes in `docs/REVIEW-40-CROSS-PLAN-v1.4.68-R65.md` committed BEFORE edits; attached File14 Future CTI24, Three Central Governing Plans and File01/07/08/09/20/25 source ownership independently checked. R65-D01: `BusinessPolicyChanged.v1` policy source version absent/non-string/empty or malformed changed_keys could be accepted as verified revalidation evidence; now fail closed both before inbox insertion and upon stored replay with strict source field checks. R65-D02: identical policy event ID always caused repeat wp_options writes, received_at refresh and duplicate do_action callback; now original event ID with identical canonical policy/keys is a no-op; same ID with different fields rejects as conflicting owner evidence. Added 40 direct real PHP first ingress/replay validation cases plus 40 real policy duplicate/conflict cases; at-least-once crash safety/exactly-once external effects unproven. Exact PR and merged-main PHP7.4/8.3 complete quality, forty repeated source-plan rounds, two Fresh Reviews and deterministic ZIP SHA256/SBOM required. Owner #19 actual signed File01/07/08/09 producer and #22 genuine File20/25 changed-placement CAS restore remain OPEN. Deployed installed WordPress code, active DB/schema/wp_options/migration/logs/staging/live unverified — no Production Resolved claim.
+
 Software candidate: `1.4.67`.
 
 # R64 — Forty plan-lens owner integrity audit, options JSON and durable inbox evidence, 2026-10-19
