@@ -1,8 +1,9 @@
-# File 14 v1.4.66 Source Manifest
+# File 14 v1.4.67 Source Manifest
 
 Canonical plugin folder: `14-global-clinic-usp-integration`
 
 Contents:
+- R64 frozen forty amended FR/FUT owner/central plan lenses; strict JSON-encoding evidence for persisted options and SHA256/original UUID/schema checks before Inbox consumer side effects; 80 native method and one process containment PHP test. Owner #19/#22 OPEN.
 - R63: frozen forty File14 plan/owner contract lenses; BusinessPolicyChanged raw UUID/v1 replay integrity and owner .v1 schema rejection before inbox insert; 80 direct PHP source regressions. File01 owner signed event #19 and File20/25 CAS #22 remain OPEN.
 - R62 precode freeze 40 distinct amended File14/central/owner requirement lenses; native owner placement Gregorian SQL time-window validity and inbound File07/08/09 .v1 contract-only schema negotiation; eighty real-method mocked PHP source tests; owner #19/#22 OPEN.
 - R61 forty amended FR/FUT source owner lenses frozen before PHP; signed INT priority and typed owner placement evidence; strict File07/08/09 inbound contract_version and envelope; 80 actual PHP method mock test cases; external #19/#22 OPEN.
