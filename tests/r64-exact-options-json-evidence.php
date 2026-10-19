@@ -21,7 +21,7 @@ for($i=0;$i<40;$i++){
   if($mode===6)$value['count']=INF;
   if($mode===7)$value['count']=NAN;
   if($mode===8)$value['copy']="valid".$v."\xFF";
-  if($mode===9)$value['nested']=array('one'=>'\x80','two'=>'valid');
+  if($mode===9)$value['nested']=array('one'=>"\x80",'two'=>'valid');
   $actual=$check->invoke($consumer,'r64_option_evidence',$value);
   $encoded=wp_json_encode($value);
   $pass=($actual===$valid) && $GLOBALS['r61_writes']===1 &&
