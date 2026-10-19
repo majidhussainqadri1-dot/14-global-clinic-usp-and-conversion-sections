@@ -44,7 +44,7 @@ build=r('scripts/build.py')
 checks=[]
 def add(label, ok): checks.append((label,bool(ok)))
 
-add('01 current release retains sixth-review schema lineage', 'Version: 1.4.68' in loader and "GCU_VERSION', '1.4.68" in loader and "GCU_SCHEMA_VERSION', 10005" in loader)
+add('01 current release retains sixth-review schema lineage', 'Version: 1.4.69' in loader and "GCU_VERSION', '1.4.69" in loader and "GCU_SCHEMA_VERSION', 10005" in loader)
 add('02 governing File14 and Future plan identities', 'SSH-F14-PLAN-2026-v1.0' in loader and 'SSH-F14-FUTURE-CTI-2026-v2.0' in loader)
 add('03 active public blocks re-check File14 placement semantics at request time', 'placement_ready($row)' in repo and 'gcu_file14_placement_ready_v1' in contracts)
 add('04 File07 remains doctor-directory destination owner', "'doctor_directory'=>array('owner'=>'File 07'" in contracts)
@@ -86,7 +86,7 @@ add('39 rollback snapshot/hash/verification remains governed', 'gcu_rollback_sna
 add('40 uninstall remains non-destructive by default with dual purge guards', 'GCU_ALLOW_PURGE' in uninstall and 'gcu_purge_on_uninstall' in uninstall)
 add('41 strict same-origin validation checks scheme host effective port and userinfo', all(x in hard for x in ('strict_same_origin_url','effective_port',"isset( $target['user'] )","isset( $target['pass'] )")))
 add('42 public destination DTO remains minimized', 'public_destination($key)' in contracts and "'owner'=>" not in contracts.split('public function public_destination($key)',1)[1].split('public function public_destination_health',1)[0])
-add('43 owner destination readiness has bounded freshness', 'time()-DAY_IN_SECONDS' in contracts.replace(' ',''))
+add('43 native owner destination health fails closed without stale event grants', 'if(!is_array($base))' in contracts.replace(' ','') and 'if($event_available&&$event_url)' not in contracts.replace(' ','') and '$candidate!==$url' in contracts.replace(' ',''))
 add('44 File20 remains sole shell owner, validates semantic contract and keeps bounded fallback', 'sabri_shell_route_result_allowed' in companion and 'sabri_shell_system_check_sections' in companion and 'sabri_shell_context_navigation_fallback_url' in companion and 'GCU_Companion_Adapters::file20_available' in front and 'CentralPlanContract' in companion and 'FILE20_MIN_CONTRACT' in companion and 'approved-clinic-cta' in companion and 'slots-only' in companion and 'cta-hidden' in companion)
 add('45 File25 remains presentation boundary, not domain truth', 'sabri_visual_experience_contract()' in trace and 'visual-system truth' in trace and 'sabri_visual_experience_render_state' in companion and 'owner_call' in companion and 'Sabri\\\\PublicExperience\\\\Components::render_state' not in companion)
 add('46 Global Privacy Control is honored', 'HTTP_SEC_GPC' in privacy)
