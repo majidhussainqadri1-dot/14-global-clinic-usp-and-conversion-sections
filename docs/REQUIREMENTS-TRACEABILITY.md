@@ -1,3 +1,19 @@
+Requirements Traceability — v1.4.70
+
+File 14 v1.4.70 may only claim a status independently supported by exact source/CI, staging acceptance, and the installed deployed artifact plus DB migration parity.
+
+## R68 typed companion manifest acceptance
+
+| Requirement/central owner contract | Proven source issue and correction | Status |
+|---|---|---|
+| F14-FR-006 / FUT-05, File08 zero-commission and donation-neutrality | Reject `(int)` truncation of nonzero fractional/string commission; require canonical integer 0 and explicit boolean false donation linkage | File14 source correction and 40 direct native PHP test cases; staging unknown |
+| F14-FR-009 / FUT-02, File07/08/09 owner readiness | Reject truthy string/numeric readiness and accept only native explicit true | Source-only, not deployed |
+| F14-FR-003 / FUT-02, File09 read-only no-enrolment/no-verification | Reject `(bool)` coercion; require exact false for all three safety fields | Source-only, not deployed |
+| F14-FR-011 / FUT-11/FUT-14 | Signed source-of-truth events and private booking stage measurements | Issues #19/#70 OPEN |
+| FUT-17, File20/25 experiment restoration | Real changed-placement compare-and-swap restoration not attested | Issue #22 OPEN |
+
+R68 40 targeted native source-method tests are separate from historical 40-marker source scans and from live WordPress testing.
+
 Requirements Traceability — v1.4.69
 
 File 14 v1.4.69 may only claim a status supported by exact source/CI, independently accepted staging, installed artifact/checksum, actual database/schema and migration parity, and a fresh live re-test; the new patch is source-only until those gates succeed.
