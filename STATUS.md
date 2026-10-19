@@ -1,6 +1,6 @@
 Software candidate: `1.4.70`.
 
-# R68 — Owner native manifest exact-type audit, source only — 2026-10-19
+# R68 v1.4.70 — Owner native manifest exact-type audit, source only — 2026-10-19
 
 Frozen source `main@81f6200bcde69a60e8ed639f2026d35633c1715d` (v1.4.69), amended File14 (16 FR/10 NFR/24 FUT) and central governing plans; compared actual File07/08/09 repository owner contracts (not installed code). Proven R68-D01: File08 commission `(int)` coersion accepted nonzero fractional and malformed zero-like inputs as zero; corrected to exactly integer 0. R68-D02: File08 `empty()` donation visibility and truthy owner health accepted untyped values as valid policy and health evidence; corrected to exact canonical native booleans. R68-D03: File07 and File09 readiness/no-write fields accepted truthy strings and non-boolean falsy values; changed to strict boolean identity. Added 40 native direct owner source-method cases, CI matrix/PHP version verification and new exact-version review ledger. This is a File14-only consumer fix, not a change to File07/08/09 data/ownership. Open issues #19 signed producer/real staging, #22 File20/25 changed-placement CAS restoration, #70 privacy-safe owner booking aggregates. Deployed installed plugin, DB/schema/options, migration and live re-test remain UNKNOWN.
 
