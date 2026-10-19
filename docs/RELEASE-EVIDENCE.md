@@ -1,3 +1,9 @@
+Software candidate: `1.4.69`.
+
+# R66 v1.4.69 — Source correction and release-evidence gates (not live acceptance)
+
+Exact precode HEAD `879bafa6523f99be2289c17988d72aae516da638`; frozen File14 FR(16)+FUT(24) source-lens review `docs/REVIEW-40-FOCUSED-SOURCE-v1.4.69-R66.md`. Two bounded code fixes: deny stale owner-event resurrection over current File07/08/09 health and deny any consumer filter rewrite of canonical owner-approved URLs. Direct actual native `GCU_Contracts::destination()` regression scenarios plus PHP7.4/8.3 full quality, two independent reviews and deterministic ZIP/SHA256/SBOM must be verified for exact candidate and merged main before considering this a packaged source release. #19, #22, #70 cross-owner/staging gaps remain open. Installed WordPress/plugin/schema/options/migrations/deployment parity and live retest UNVERIFIED; WPVibe connection attempt met HTTP 530.
+
 Software candidate: `1.4.68`.
 
 # R65 v1.4.68 Source release evidence only — no live acceptance
