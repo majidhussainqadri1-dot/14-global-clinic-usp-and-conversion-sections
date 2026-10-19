@@ -1,3 +1,15 @@
+Requirements Traceability — v1.4.68
+
+GitHub File14 v1.4.68 source quality is separate from deployed WordPress. No production completion without exact installed artifact, actual database/schema/options, migration, stage/live acceptance.
+
+## R65 forty-plan-scope review and local File14 source corrections
+| Requirement / owner | Proven source defect and exact bounded code correction | Verified source method cases / remaining owner work |
+|---|---|---|
+| FR011/FUT14, File01/07/08/09 versioned policy event | R65-D01 BusinessPolicyChanged.v1 missing/non-string/empty policy_version and malformed changed_keys could be stored as verified revalidation; require original valid source-policy envelope at Repository admission and consumer replay | 40 actual native PHP source/WordPress-option cases; signed File01 real owner producer registry #19 OPEN |
+| FR012/FUT04/FUT05/FUT17, central policy and rollback governance | R65-D02 repeated same BusinessPolicyChanged event ID overwrote received_at and fired callback again; now equal canonical policy/keys replay no-op, conflicting same ID error. Zero-commission/donation policy content never inferred from empty event | 40 direct actual PHP idempotent/conflict source cases; real staging crash/transaction acceptance and owner signed registry #19 OPEN |
+| FUT16/FUT17, File20/25 actual owner placement lifecycle | No unrelated foreign-owner table or placement write; File14 only blocks unapproved mutating variants and checks immutable snapshot | #22 File20/25 owner CAS changed-placement restore/rollback/staging still OPEN |
+
+Forty separately scoped amended FR(16)+FUT(24) requirements frozen before code in docs/REVIEW-40-CROSS-PLAN-v1.4.68-R65.md, exact previous repository main 85759882e6e3610ee8047601b8ac7f2a4cc6b914. Staging and Live unknown; source scans are not 40 browser runs.
 Requirements Traceability — v1.4.67
 
 File 14 v1.4.67 may only claim a status independently supported by exact source/CI, staging acceptance, and installed deployed artifact plus DB migration parity. Repository source != live deployed evidence.
