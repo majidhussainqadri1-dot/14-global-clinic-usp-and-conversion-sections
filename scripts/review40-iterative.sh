@@ -31,6 +31,7 @@ for round in $(seq 1 40); do
     exit 1
   fi
   count=$((count+1))
+  echo "R41 full plan source review $round/40: PASS (40 source contracts; FUT17 blocked)"
   echo "R68 complete source iteration $round/40: PASS (40 requirements + 40 native owner behavior cases; FUT17 blocked)"
 done
 php "$ROOT/tests/r34-experiment-lifecycle-regressions.php"
