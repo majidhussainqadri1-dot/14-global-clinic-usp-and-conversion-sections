@@ -1,6 +1,6 @@
 Requirements Traceability — v1.4.68
 
-GitHub File14 v1.4.68 source quality is separate from deployed WordPress. No production completion without exact installed artifact, actual database/schema/options, migration, stage/live acceptance.
+File 14 v1.4.68 may only claim a status independently supported by exact source/CI, staging acceptance, and installed deployed artifact plus DB migration parity. GitHub source quality is separate from deployed WordPress. No production completion without exact installed artifact, actual database/schema/options, migration, stage/live acceptance.
 
 ## R65 forty-plan-scope review and local File14 source corrections
 | Requirement / owner | Proven source defect and exact bounded code correction | Verified source method cases / remaining owner work |
