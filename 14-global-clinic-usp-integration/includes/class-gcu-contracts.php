@@ -38,7 +38,17 @@ return true===$ready;
 }
 public function consume_directory_event($p){$this->consume_event('DoctorDirectoryAvailable.v1',$p);}public function consume_clinic_event($p){$this->consume_event('ClinicBookingAvailable.v1',$p);}public function consume_onboarding_event($p){$this->consume_event('DoctorOnboardingAvailable.v1',$p);}public function consume_business_policy_event($p){$this->consume_event('BusinessPolicyChanged.v1',$p);}
 private function consume_event($name,$p){if(!is_array($p)){return false;}return GCU_Plugin::instance()->repository()->accept_inbound_event($name,$p);}
-private function persist_option_exact($name,array$value){update_option($name,$value,false);$stored=get_option($name,null);return is_array($stored)&&hash_equals(hash('sha256',wp_json_encode($value)),hash('sha256',wp_json_encode($stored)));}
+private function persist_option_exact($name,array$value){
+    update_option($name,$value,false);
+    $stored=get_option($name,null);
+    // R64: boolean false from both failed JSON encoders hashes to the
+    // same empty string, but is NOT evidence of persisted option equality.
+    if(!is_array($stored)){return false;}
+    $before=wp_json_encode($value);
+    $after=wp_json_encode($stored);
+    return is_string($before)&&is_string($after)
+        && hash_equals(hash('sha256',$before),hash('sha256',$after));
+}
 public function apply_inbound_event($name,array$p){$map=array('DoctorDirectoryAvailable.v1'=>'doctor_directory','ClinicBookingAvailable.v1'=>'clinic','DoctorOnboardingAvailable.v1'=>'doctor_onboarding');if(isset($map[$name])){
     // R61: inbox rows may outlive the current producer validation logic.
     // A corrupt owner availability envelope must not become a trusted
