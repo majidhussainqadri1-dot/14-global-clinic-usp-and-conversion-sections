@@ -96,7 +96,7 @@ add("44 File08 destination ownership", "'clinic'=>array('owner'=>'File 08'" in c
 add("45 File09 destination ownership", "'doctor_onboarding'=>array('owner'=>'File 09'" in contracts)
 add("46 File01/File20 placement readiness fails closed", "GCU_Companion_Adapters::placement_contract_ready" in contracts and "file01_route_registry_state" in companion and "SABRI_SHELL_VERSION" in companion)
 add("47 public destination DTO minimized", "public function public_destination($key)" in contracts and "'reason'=>" in contracts and "'owner'=>" not in contracts.split("public function public_destination($key)",1)[1].split("public function public_destination_health",1)[0])
-add("48 owner readiness freshness bounded", "time()-DAY_IN_SECONDS" in contracts.replace(" ", ""))
+add("48 negative owner health never resurrected by stale events", "if(!is_array($base))" in contracts.replace(" ", "") and "if($event_available&&$event_url)" not in contracts.replace(" ", "") and "$candidate!==$url" in contracts.replace(" ", ""))
 add("49 campaign values are sanitized", "sanitize_campaign" in repo or "sanitize_campaign" in privacy)
 add("50 conversion stage allowlist", all(s in repo for s in ["impression","cta_selected","destination_loaded","application_started","booking_started"]))
 add("51 owner stage/destination consistency", "gcu_stage_destination_mismatch" in repo)

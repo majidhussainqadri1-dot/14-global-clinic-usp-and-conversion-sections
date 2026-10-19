@@ -1,3 +1,9 @@
+Software candidate: `1.4.69`.
+
+# R66 — Native owner destination probe and URL handoff corrections (source-only), 2026-10-19
+
+Reviewed exact former main `879bafa6523f99be2289c17988d72aae516da638` source v1.4.68 with forty distinct File14 16 FR + 24 FUT scope checks in `docs/REVIEW-40-FOCUSED-SOURCE-v1.4.69-R66.md` (not forty installed WordPress end-to-end test runs). R66-D01: cached owner availability events could silently override fresh File07/08/09 negative runtime health; now native owner probe is the sole availability grant and the cached event cannot revive a denied handoff. R66-D02: consumer filter could replace canonical owner URL with unrelated same-origin URL; now only exact owner-approved URL may survive, else fail closed. Added actual GCU_Contracts method negative/regression suite in PHP7.4/8.3 quality workflow; check exact candidate CI and fresh reviews before merging. Issues #19 signed native File01/07/08/09 owner outcomes, #22 real changed-placement File20/25 CAS restoration and #70 privacy-safe booking outcome measurement remain OPEN. WordPress staging connection unverified (Cloudflare HTTP 530 during attempted read-only connection), real installed files/hash/schema/wp_options/migration/logs not accessible, no Live resolution asserted.
+
 Software candidate: `1.4.68`.
 
 # R65 — Forty amended File14 / Three Central Plans / owner-contract source audit, 2026-10-19

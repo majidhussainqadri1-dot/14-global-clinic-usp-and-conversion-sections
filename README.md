@@ -1,3 +1,9 @@
+Software candidate: `1.4.69`.
+
+# R66 File14 source-level handoff safety
+
+Native File07/08/09 owner health must be affirmatively confirmed; a cached prior available Event cannot override a current negative/unknown probe. The `gcu_destination_contract_v1` consumer filter may deny an owner handoff but cannot substitute another URL, including same-origin. This is a repository-only candidate, not a deployed/staging/live acceptance statement. Owner Issues #19, #22, #70 and exact installed WordPress/DB/migration verification remain open.
+
 Software candidate: `1.4.68`.
 
 # R65 — Forty amended File14 / Three Central Plans / owner-contract source audit, 2026-10-19

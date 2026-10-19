@@ -1,3 +1,18 @@
+Requirements Traceability — v1.4.69
+
+File 14 v1.4.69 may only claim a status supported by exact source/CI, independently accepted staging, installed artifact/checksum, actual database/schema and migration parity, and a fresh live re-test; the new patch is source-only until those gates succeed.
+
+File14 R66 source correction depends on 16 approved File14 FR and 24 CTI FUT scope checks in `docs/REVIEW-40-FOCUSED-SOURCE-v1.4.69-R66.md`. Exact source before correction: `879bafa6523f99be2289c17988d72aae516da638`. The presence of source markers is not live feature proof.
+
+| Requirement | R66 source-level finding and correction | Remaining acceptance |
+|---|---|---|
+| F14-FR-009 / F14-FUT-09 | Fresh File07/08/09 negative or absent native owner probe no longer resurrected from cached available event | real WordPress owner health/staging |
+| F14-FR-003 / F14-FUT-02 | `gcu_destination_contract_v1` can veto but cannot replace exact native owner URL | real owner route/redirect/degraded tests |
+| F14-FR-011 / FUT-11,13,14 | No success inferred from CTA, owner hook and consent integrity | Issues #19 and #70 OPEN |
+| F14-FUT-17 | No speculative File20/25 owner changed-placement restoration | Issue #22 OPEN |
+
+Candidate v1.4.69 code and its regressions are separate from staging/live. Deployed version, database version, migration status and live retest remain unverified.
+
 Requirements Traceability — v1.4.68
 
 File 14 v1.4.68 may only claim a status independently supported by exact source/CI, staging acceptance, and installed deployed artifact plus DB migration parity. GitHub source quality is separate from deployed WordPress. No production completion without exact installed artifact, actual database/schema/options, migration, stage/live acceptance.
