@@ -16,8 +16,22 @@ for round in $(seq 1 40); do
     echo "R41 review $round incomplete or false restoration claim." >&2
     exit 1
   fi
+  # R68: each complete iteration additionally exercises forty actual PHP
+  # companion-owner method calls. Complete the full audit before any next
+  # iteration; never misstate mocked contracts as WordPress staging tests.
+  if ! php "$ROOT/tests/r68-forty-native-owner-contract-behavior-tests.php" >"$tmp" 2>&1; then
+    cat "$tmp" >&2
+    echo "R68 native owner behavior review $round: FAILED; subsequent rounds not started." >&2
+    exit 1
+  fi
+  if [[ $(grep -c '^R68 native case [0-9][0-9]/40 PASS:' "$tmp") -ne 40 ]] ||
+      ! grep -q 'R68 40/40 owner manifest source method behavior checks PASS' "$tmp"; then
+    cat "$tmp" >&2
+    echo "R68 owner behavior review $round incomplete." >&2
+    exit 1
+  fi
   count=$((count+1))
-  echo "R41 full plan source review $round/40: PASS (40 source contracts; FUT17 blocked)"
+  echo "R68 complete source iteration $round/40: PASS (40 requirements + 40 native owner behavior cases; FUT17 blocked)"
 done
 php "$ROOT/tests/r34-experiment-lifecycle-regressions.php"
-echo "R41: 40 repeated exact-source plan scans plus prior 40 parameterized R34 lifecycle cases. F14 R41-specific 40 actual-method SQL mocks run separately in quality.sh. No staging/live acceptance."
+echo "R68: 40 repeated full source rounds × (40 plan contract scans + 40 real File14 native owner method assertions), plus previous R34 lifecycle simulations. FUT17 changed-placement restore remains blocked; NOT installed WordPress E2E."
