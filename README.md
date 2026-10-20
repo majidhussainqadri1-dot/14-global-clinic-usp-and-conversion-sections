@@ -1,3 +1,8 @@
+Software candidate: `1.4.72`.
+
+# R70: explicit unmeasured owner-stage status (source-candidate only)
+Issue #70's privacy-safe fallback is now machine-readable: File14 reports the File08 sensitive REST booking aggregate **unavailable**, never an inferred zero/booking success rate. Issue #19's owner-signed arrival/application contracts are similarly **unverified**, and #22's changed-placement CAS restoration is still **blocked**. This does not create a new owner-native aggregate, approval, deployment or staging verification. Forty native method tests ensure varying historical/placeholder counts do not become fabricated outcome metrics. File07/08/09/20/25 owner code and live WordPress untouched.
+
 Software candidate: `1.4.71`.
 
 # R69 — Source-level privacy Database failure safety (2026-10-20)

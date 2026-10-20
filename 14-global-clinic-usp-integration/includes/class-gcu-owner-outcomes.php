@@ -186,6 +186,31 @@ final class GCU_Owner_Outcomes {
 		);
 	}
 
+	/**
+	 * #19/#70: Distinguish missing permission/owner evidence from a measured zero.
+	 * The File08 booking action runs on a sensitive REST route. Its native hook
+	 * cannot lawfully use File14 optional pseudonymous journey measurement,
+	 * and there is no approved separate, revocable, owner aggregate producer.
+	 *
+	 * This is consumer-facing capability metadata, NOT a bypass or activation
+	 * contract. Independent native event counts are not correlated journeys.
+	 */
+	public static function measurement_capabilities() {
+		return array(
+			'owner_arrival' => 'unavailable_owner_attested_arrival',
+			'application_started' => 'unverified_signed_owner_contract',
+			'booking_started' => 'unavailable_sensitive_rest_aggregate_unapproved',
+			'booking_owner_outcome_count' => null,
+			'booking_success_rate' => null,
+			'cross_person_conversion_rate' => null,
+			'zero_is_proven' => false,
+			'owner_confirmation_accepted' => false,
+			'staging_accepted' => false,
+			'live_verified' => false,
+			'requirements' => array( 'F14-FR-011', 'F14-FUT-11', 'F14-FUT-13', 'F14-FUT-14' ),
+		);
+	}
+
 	/** Aggregates are separate from browser CTA metrics; never imply success rates. */
 	public static function owner_stage_summary( $days = 30 ) {
 		$auth = GCU_Capabilities::require_capability( GCU_Capabilities::VIEW_ANALYTICS, null, 'future_intelligence_analytics' );
@@ -235,6 +260,8 @@ final class GCU_Owner_Outcomes {
 		}
 		return array( 'items' => $items, 'suppressed' => $restricted,
 			'minimum_cohort' => 10, 'linked_journey' => false,
-			'success_rate' => null, 'live_accepted' => false, 'contract' => self::CONTRACT );
+			'success_rate' => null, 'live_accepted' => false,
+			'measurement_capabilities' => self::measurement_capabilities(),
+			'contract' => self::CONTRACT );
 	}
 }

@@ -1,3 +1,16 @@
+Requirements Traceability — v1.4.72
+
+File 14 v1.4.72 may only claim a status independently supported by exact source/CI, separately accepted staging and the installed deployed artifact plus DB migration parity.
+
+## R70 owner-stage release-state acceptance
+| Approved requirement | What is coded in File14 1.4.72 | Remaining gate |
+|---|---|---|
+| F14-FR-011 / FUT-11 | Explicit `measurement_capabilities`: owner arrival and signed application not accepted; no generated booking success-rate or invented zero | File01/07/08/09 signed events, consent, native stage producer #19 |
+| F14-FR-011 / FUT-13/14 | Booking stages on File08 sensitive REST cannot be optional-analytics tracked; File14 reports booking aggregate `unavailable_sensitive_rest_aggregate_unapproved`, count `null`, sample zero NOT proven | Founder-approved privacy-safe owner aggregate + staging test #70 |
+| FUT-17 | Existing File14 early-stop/fail-closed state retained, but no owner CAS restored changed placements | File20/25 approved restoration contract, deployment parity and staging #22 |
+
+These represent safety/capability truth, not acceptance of original owner-outcome functionality.
+
 Requirements Traceability — v1.4.71
 
 File 14 v1.4.71 may only claim a status independently supported by exact source/CI, separately accepted staging, and the installed deployed artifact plus DB migration parity. No live completion is asserted.
