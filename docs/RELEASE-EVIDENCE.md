@@ -1,3 +1,8 @@
+Software candidate: `1.4.74`.
+
+# R73 v1.4.74 proposed source-candidate release evidence
+Prechange exact repository main: `adeba7f3fb3d0be02953ec0851fdb07f499dd438` (v1.4.73), NOT verified deployed artifact. Source defect: File14 `GCU_Companion_Adapters::file00_assertions()/authorize()` coerced the File00 subject ID, eligible/suspended booleans, and restrictive-filter response. Native File00 assertions are typed (integer `user_id`, boolean `eligible`, boolean `suspended`). New File14 source checks canonical identity and strict truth values, with forty adversarial direct-method PHP cases in each of forty sequential source-review rounds. Evidence categories: source/tests/CI and deterministic ZIP are repository-only; staging and live remain unverified. Native signed File07/08/09 outcomes #19, File20/25 changed-placement rollback CAS #22, File08 consented owner booking aggregation #70 still open. A successful GitHub build does not close these or resolve WordPress DB/migration/deployment parity.
+
 Software candidate: `1.4.73`.
 
 # R71 v1.4.73 source-candidate release evidence
