@@ -1,3 +1,16 @@
+Requirements Traceability — v1.4.71
+
+## R69 File14 privacy export/erasure source correctness against amended governing documents
+| Requirement | Source-level defect and change | Acceptance boundary |
+|---|---|---|
+| F14-FR-010, F14-NFR-002, central privacy and consent | Conversion events `get_results()` error must not become a completed empty export; now `done=false`, no unverified data | PHP mocked DB behavior only; staging pending |
+| F14-FR-011, F14-NFR-002, auditability | Copy-quality reports `get_results()` failure must not become a completed/partial export; now fails closed | PHP mocked DB behavior only; staging pending |
+| F14-NFR-002 / 003, right to erasure and retention | Conversion and copy-quality `COUNT(*)` failures must not become count zero; now `done=false`, `items_retained=true`, subject meta preserved | PHP mocked DB behavior only; staging pending |
+| FUT-17; File20/25 owners | Changed-placement CAS rollback is not implemented by owner-verified contract | Issue #22 blocked |
+| F14-FR-011 owner native event delivery | Native owner producers, privacy-safe aggregate acceptance and signed owner version remain outstanding | Issues #19/#70 blocked |
+
+Historical released source checks remain historical; neither mock tests nor GitHub green = installed WordPress production health.
+
 Requirements Traceability — v1.4.70
 
 File 14 v1.4.70 may only claim a status independently supported by exact source/CI, staging acceptance, and the installed deployed artifact plus DB migration parity.
