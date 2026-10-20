@@ -1,3 +1,20 @@
+Requirements Traceability — v1.4.75
+
+File 14 v1.4.75 may only claim a status independently supported by exact source/CI, separately accepted staging and the actual deployed artifact plus DB migration parity.
+
+## R74 File00 authoritative native claim survives compatibility filtering
+
+| Requirement | Proven failure | Source remedy | Verification limit |
+|---|---|---|---|
+| F14-NFR-001; CEN-OWN-001; File00 | `smc_assertions_v1` could elevate a native `eligible=false` after the original claim had been discarded | Native and filtered grants compared; never convert denial to granted | Direct PHP mock only |
+| F14-NFR-001; role/trust | `suspended=true` could be reset to false by filter | Deny elevation, keep native suspension | Direct PHP mock only |
+| F14-NFR-001; owner identity/version | Native claim ID/status/contract could be rewritten by filter before validation | Exact typed original `user_id`, `contract_version`, `status` immutable | Direct PHP mock only |
+| F14-FR-011; F14-FUT-11/13/14 | Signed native event delivery unaccepted | File01/07/08/09 owner issue #19 remains OPEN | Owner approval + staging |
+| F14-FUT-17; File20/25 | CAS restore of changed placements not implemented | #22 remains OPEN; no-op != rollback | Owner-approved executable CAS + staging |
+| F14-FR-011; File08 | Sensitive booking REST cannot feed File14 private analytics | #70 remains OPEN; report unavailability, not zero | Native revocable owner aggregate + staging |
+
+40 rounds each cover plan/source markers, native owner PHP mocks, privacy PHP mocks, CTA filter PHP mocks, R73 typed File00 cases and R74 native monotonic File00 cases. These are not 40 independent live tests.
+
 Requirements Traceability — v1.4.74
 
 File 14 v1.4.74 may only claim a status independently supported by exact source/CI, separately accepted staging and the actual deployed artifact plus DB migration parity.
