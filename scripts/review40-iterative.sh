@@ -54,7 +54,21 @@ for round in $(seq 1 40); do
     echo "R71 destination filter review $round incomplete." >&2
     exit 1
   fi
+  # R73: check the actual File00 authorization adapter against forty
+  # strictly typed identity, eligibility and filter outcomes in each round.
+  if ! php "$ROOT/tests/r73-forty-file00-claim-and-filter-auth-tests.php" >"$tmp" 2>&1; then
+    cat "$tmp" >&2
+    echo "R73 File00 authorization round $round FAILED; stop before next round." >&2
+    exit 1
+  fi
+  if [[ $(grep -c '^R73 File00 authorization case [0-9][0-9]/40 PASS' "$tmp") -ne 40 ]] ||
+     ! grep -q 'R73: 40/40 direct File14 File00-claim/filter authorization cases PASS' "$tmp"; then
+    cat "$tmp" >&2
+    echo "R73 authorization review $round incomplete." >&2
+    exit 1
+  fi
   count=$((count+1))
+  echo "R73 complete source iteration $round/40: PASS (40 plan + 40 native owner + 40 privacy + 40 CTA filters + 40 File00 authorization direct PHP cases; FUT17 CAS blocked)"
   echo "R71 complete source iteration $round/40: PASS (40 FR/FUT source requirements + 40 owner + 40 privacy + 40 CTA filter behavior cases; FUT17 CAS blocked)"
   echo "R41 full plan source review $round/40: PASS (40 source contracts; FUT17 blocked)"
   echo "R69 complete source iteration $round/40: PASS (40 plan + 40 owner + 40 privacy behaviors; FUT17 owner CAS remains blocked)"
@@ -62,3 +76,5 @@ for round in $(seq 1 40); do
 done
 php "$ROOT/tests/r34-experiment-lifecycle-regressions.php"
 echo "R71: 40 complete iterative source rounds × (40 plan checks + 40 owner behavior + 40 privacy behavior + 40 destination filter behavior checks) passed; FUT17 changed-placement CAS remains BLOCKED; no staging or live WordPress acceptance."
+
+echo 'R73: 40 complete source review rounds x 5 distinct 40-case tests PASS; owner signed events, File20 CAS and File08 aggregate pending; no live WordPress parity.'
