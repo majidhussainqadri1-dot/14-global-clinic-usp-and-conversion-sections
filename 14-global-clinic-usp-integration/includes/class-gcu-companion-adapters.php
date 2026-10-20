@@ -115,7 +115,7 @@ final class GCU_Companion_Adapters {
 			null
 		);
 
-		if ( ! is_array( $assertions ) || absint( isset( $assertions['user_id'] ) ? $assertions['user_id'] : 0 ) !== $user_id ) {
+		if ( ! is_array( $assertions ) || ! isset( $assertions['user_id'] ) || ! is_int( $assertions['user_id'] ) || $assertions['user_id'] !== $user_id ) {
 			return new WP_Error( 'gcu_file00_claim_invalid', __( 'The canonical File 00 authorization claim is invalid.', 'global-clinic-usp-integration' ) );
 		}
 
@@ -127,6 +127,8 @@ final class GCU_Companion_Adapters {
 			return new WP_Error( 'gcu_file00_contract_invalid', __( 'The canonical File 00 authorization contract version is invalid or unsupported.', 'global-clinic-usp-integration' ) );
 		}
 
+		// R73: File00 has canonical integer user IDs and strict boolean eligibility;
+		// arbitrary typed filter output must not grant capabilities.
 		return $assertions;
 	}
 
@@ -152,8 +154,9 @@ final class GCU_Companion_Adapters {
 		$status = sanitize_key( isset( $claim['status'] ) ? (string) $claim['status'] : '' );
 		if (
 			'' === $purpose ||
-			empty( $claim['eligible'] ) ||
-			! empty( $claim['suspended'] ) ||
+			! isset( $claim['eligible'], $claim['suspended'] ) ||
+			true !== $claim['eligible'] ||
+			false !== $claim['suspended'] ||
 			in_array( $status, $blocked_statuses, true )
 		) {
 			return false;
@@ -162,7 +165,7 @@ final class GCU_Companion_Adapters {
 		$allowed = true;
 		if ( false !== has_filter( 'gcu_authorize' ) ) {
 			// Compatibility filters may restrict an owner-approved action, never elevate it.
-			$allowed = (bool) apply_filters( 'gcu_authorize', true, $capability, $object, $purpose );
+			$allowed = true === apply_filters( 'gcu_authorize', true, $capability, $object, $purpose );
 		}
 		return $allowed;
 	}
