@@ -1,3 +1,8 @@
+Software candidate: `1.4.73`.
+
+# R71 v1.4.73 — Strict native destination and filter readiness, 2026-10-20
+Original GitHub source frozen `main@ef9651eb4b394896942c48ddde6d77c11ee28e92` (v1.4.72). The amended File14 plan F14-FR-003/009 and central-plan fail-closed owner-handoff rules require exactly approved File07/08/09 destination readiness. Proven local File14 defects: R71-D01 `!empty($base['available'])` elevated malformed truthy owner readiness; R71-D02 filtered unavailable/readiness only checked via PHP Boolean cast, allowed string `'false'` or malformed/missing filter contract to preserve CTA. Corrected to native `true===`, require returned filter array with `available===true` and unchanged, typed canonical owner URL or mark CTA unavailable. Forty actual `GCU_Contracts::destination()` PHP mock scenarios × 40 full source rounds are required. No owner-domain modifications; existing clinical/consent/sensitive routes untouched. Owner signed events #19, File20/25 actual changed-placement CAS #22, and File08 consent-safe private booking aggregate #70 remain blocked; staging/deployed checksum/DB/schema/migrations/logs remain unknown. No `Staging-Accepted`, `Live-Deployed` or `Operational` claim.
+
 Software candidate: `1.4.72`.
 
 # R70 v1.4.72 — Explicit unavailable owner outcome measurements, 2026-10-20

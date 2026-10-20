@@ -1,3 +1,8 @@
+Software candidate: `1.4.73`.
+
+# R71 source-only patient-safe destination/filter trust boundary
+R71-D01: a malformed owner-native `available` value could gain CTA readiness from `!empty()`. R71-D02: a non-array, incomplete, untyped, or rewritten `gcu_destination_contract_v1` consumer filter could leave an owner-approved CTA enabled. File14 now requires exact native Boolean readiness, an exactly typed filter `available=true`, and a canonical URL identical to the native approved owner URL. Uncertain input fails closed. Forty adversarial direct PHP method cases repeat on each of 40 complete source review rounds. No foreign owner write, no new schema, no File07/08/09 event-contract verification, no File20/25 changed-placement CAS restoration, and no File08 sensitive booking aggregate. Issues #19/#22/#70 OPEN; WordPress installed-code, DB/migration and live re-test unverified.
+
 Software candidate: `1.4.72`.
 
 # R70: explicit unmeasured owner-stage status (source-candidate only)

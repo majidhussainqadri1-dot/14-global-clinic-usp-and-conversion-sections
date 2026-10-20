@@ -1,3 +1,18 @@
+Requirements Traceability — v1.4.73
+
+File 14 v1.4.73 may only claim a status independently supported by exact source/CI, separately accepted staging and the actual deployed artifact plus DB migration parity.
+
+## R71 approved owner/fail-closed source behavior
+| Source requirement | Root cause and File14-only source repair | Acceptance |
+|---|---|---|
+| F14-FR-003, F14-FR-009; Central Plan exact-owner safety | `!empty($base['available'])` may elevate malformed native readiness; now only explicit boolean true can maintain CTA readiness | PHP mocked source only |
+| F14-FR-003, F14-FR-009; owner-veto filter | Coerced `(bool) $filtered['available']` and incomplete/untyped filter could preserve owner-approved CTA; now requires array, typed available=true and owner-identical typed URL or fails closed | PHP mocked source only |
+| F14-FR-011, FUT-11/FUT-14; Files 01, 07/08/09 | Versioned signed native confirmed event contract required | #19 OPEN |
+| FUT-17; File20/25 | Actual changed placement CAS baseline restoration, not no-op stop | #22 OPEN |
+| F14-FR-011; File08 | Revocable privacy-safe owner booking aggregate independent of sensitive REST tracking | #70 OPEN |
+
+No assumption that current HEAD is installed production code.
+
 Requirements Traceability — v1.4.72
 
 File 14 v1.4.72 may only claim a status independently supported by exact source/CI, separately accepted staging and the installed deployed artifact plus DB migration parity.

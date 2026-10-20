@@ -82,7 +82,7 @@ checks: list[tuple[str, bool]] = [
     ("11 dedicated public destination DTO exists", "public function public_destination($key)" in contracts and "public function public_destination_health()" in contracts),
     ("12 public destination DTO strips internal owner/contract/freshness fields", all(x not in public_dto for x in ("'owner'=>", "'contract'=>", "'verified_at'=>"))),
     ("13 public destinations endpoint uses safe DTO and obeys runtime fail-close", "public_destination_health()" in rest and "public function destinations(){$ready=GCU_Install::ready_for_runtime();" in rest),
-    ("14 destination availability cannot be elevated by consumer filter", "false===(bool)$filtered['available']" in contracts and "available=true" not in section(contracts, "apply_filters('gcu_destination_contract_v1'", "return array('key'=>$key")),
+    ("14 destination availability cannot be elevated by consumer filter", "true!==$filtered['available']" in contracts and "!array_key_exists('available',$filtered)" in contracts and "available=true" not in section(contracts, "apply_filters('gcu_destination_contract_v1'", "return array('key'=>$key")),
     ("15 strict same-origin scheme host and effective port retained", all(x in hard for x in ("strict_same_origin_url", "home_scheme", "target_scheme", "effective_port"))),
     ("16 File 07/08/09 remain destination owners", all(x in contracts for x in ("'File 07'", "'File 08'", "'File 09'"))),
     ("17 File 01/File 20 placement readiness contract retained", "GCU_Companion_Adapters::placement_contract_ready" in contracts and "file01_route_registry_state" in companion and "SABRI_SHELL_VERSION" in companion),

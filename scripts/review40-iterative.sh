@@ -41,10 +41,24 @@ for round in $(seq 1 40); do
     echo "R69 privacy behavior review $round incomplete." >&2
     exit 1
   fi
+  # R71: complete all forty direct File14 destination/filter adversarial cases
+  # before beginning the next complete review pass; no live proof inferred.
+  if ! php "$ROOT/tests/r71-forty-destination-filter-fail-closed-tests.php" >"$tmp" 2>&1; then
+    cat "$tmp" >&2
+    echo "R71 owner destination filter review $round: FAILED; stopping." >&2
+    exit 1
+  fi
+  if [[ $(grep -c '^R71 filter behavior case [0-9][0-9]/40 PASS:' "$tmp") -ne 40 ]] ||
+     ! grep -q 'R71 40/40 exact File14 owner destination/filter behavior tests PASS' "$tmp"; then
+    cat "$tmp" >&2
+    echo "R71 destination filter review $round incomplete." >&2
+    exit 1
+  fi
   count=$((count+1))
+  echo "R71 complete source iteration $round/40: PASS (40 FR/FUT source requirements + 40 owner + 40 privacy + 40 CTA filter behavior cases; FUT17 CAS blocked)"
   echo "R41 full plan source review $round/40: PASS (40 source contracts; FUT17 blocked)"
   echo "R69 complete source iteration $round/40: PASS (40 plan + 40 owner + 40 privacy behaviors; FUT17 owner CAS remains blocked)"
   echo "R68 complete source iteration $round/40: PASS (40 requirements + 40 native owner behavior cases; FUT17 blocked)"
 done
 php "$ROOT/tests/r34-experiment-lifecycle-regressions.php"
-echo "R69: 40 repeated full source rounds × (40 plan contracts + 40 native owner method tests + 40 privacy export/erasure DB-failure tests); FUT17 changed-placement CAS remains blocked; NOT live/staging WordPress E2E."
+echo "R71: 40 complete iterative source rounds × (40 plan checks + 40 owner behavior + 40 privacy behavior + 40 destination filter behavior checks) passed; FUT17 changed-placement CAS remains BLOCKED; no staging or live WordPress acceptance."
