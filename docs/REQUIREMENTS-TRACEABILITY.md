@@ -1,5 +1,7 @@
 Requirements Traceability — v1.4.71
 
+File 14 v1.4.71 may only claim a status independently supported by exact source/CI, separately accepted staging, and the installed deployed artifact plus DB migration parity. No live completion is asserted.
+
 ## R69 File14 privacy export/erasure source correctness against amended governing documents
 | Requirement | Source-level defect and change | Acceptance boundary |
 |---|---|---|
