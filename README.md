@@ -1,3 +1,8 @@
+Software candidate: `1.4.71`.
+
+# R69 — Source-level privacy Database failure safety (2026-10-20)
+Corrected File14's WordPress privacy exporter and eraser to distinguish a failed SELECT or COUNT from a verified empty result. Forty native method mock privacy scenarios run on each of forty full review rounds. File07/08/09 owners, clinical/private records, File20/25 placement writes and deployment are untouched. Cross-owner issues #19/#22/#70 and WordPress staging acceptance remain OPEN. No source CI can attest deployed files/DB/migrations or production resolution.
+
 Software candidate: `1.4.70`.
 
 # R68 strict native owner contract evidence
