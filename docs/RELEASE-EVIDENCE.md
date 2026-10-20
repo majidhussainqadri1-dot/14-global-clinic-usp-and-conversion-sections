@@ -1,3 +1,8 @@
+Software candidate: `1.4.73`.
+
+# R71 v1.4.73 source-candidate release evidence
+Original frozen GitHub main: `ef9651eb4b394896942c48ddde6d77c11ee28e92`, repo code `1.4.72`. Source-derived root cause: File14 consumer interpreted malformed owner/filter availability using PHP coercions, and trusted incomplete filter returns. New source code refuses availability without explicitly typed native owner readiness and an identical canonical URL through a typed consumer-filter response; no cross-module table or URL routing substitution. Regression: `tests/r71-forty-destination-filter-fail-closed-tests.php`, 40 different PHP cases on the actual File14 method, repeated in `scripts/review40-iterative.sh` with previous 40 plan, 40 owner, 40 privacy checks. Next required: CI PHP7.4/PHP8.3, Fresh Reviews and deterministic SHA256/SBOM for the exact PR and merged HEAD. File01 signed producer status, File20/25 baseline restoration, File08 privacy-safe aggregate, WordPress staging and live verification remain OPEN/UNVERIFIED.
+
 Software candidate: `1.4.72`.
 
 # R70 v1.4.72 — Owner observation availability, source-only
