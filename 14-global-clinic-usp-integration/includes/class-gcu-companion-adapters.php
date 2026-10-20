@@ -106,11 +106,34 @@ final class GCU_Companion_Adapters {
 			'authorization_assertions',
 			static function() use ( $user_id ) {
 				$claim = SMC_Contracts::assertions( $user_id );
-				if ( is_array( $claim ) && function_exists( 'apply_filters' ) ) {
-					// Consume File 00's current assertion hardening (including action-time age containment).
-					$claim = apply_filters( 'smc_assertions_v1', $claim, $user_id );
+				if ( ! is_array( $claim ) ) { return null; }
+				// R74: File 00's native assertion is the authoritative permission floor.
+				// A later compatibility filter can RESTRICT it, but cannot change its
+				// canonical subject, version or status, or turn a native denial into
+				// an eligible / unsuspended grant.
+				if ( ! isset( $claim['user_id'], $claim['contract_version'], $claim['status'] )
+					|| ! is_int( $claim['user_id'] ) || $claim['user_id'] !== $user_id
+					|| ! is_string( $claim['contract_version'] )
+					|| ! is_string( $claim['status'] ) || '' === trim( $claim['status'] )
+					|| ! isset( $claim['eligible'], $claim['suspended'] )
+					|| ! is_bool( $claim['eligible'] ) || ! is_bool( $claim['suspended'] ) ) {
+					return null;
 				}
-				return $claim;
+				if ( ! function_exists( 'apply_filters' ) ) { return $claim; }
+				$filtered = apply_filters( 'smc_assertions_v1', $claim, $user_id );
+				if ( ! is_array( $filtered )
+					|| ! isset( $filtered['user_id'], $filtered['contract_version'], $filtered['status'] )
+					|| ! is_int( $filtered['user_id'] ) || $filtered['user_id'] !== $claim['user_id']
+					|| ! is_string( $filtered['contract_version'] )
+					|| ! hash_equals( $claim['contract_version'], $filtered['contract_version'] )
+					|| ! is_string( $filtered['status'] ) || $filtered['status'] !== $claim['status']
+					|| ! isset( $filtered['eligible'], $filtered['suspended'] )
+					|| ! is_bool( $filtered['eligible'] ) || ! is_bool( $filtered['suspended'] )
+					|| ( true !== $claim['eligible'] && true === $filtered['eligible'] )
+					|| ( true === $claim['suspended'] && false === $filtered['suspended'] ) ) {
+					return null;
+				}
+				return $filtered;
 			},
 			null
 		);
