@@ -15,13 +15,17 @@ if(class_exists('GCU_Companion_Adapters')){$probe=GCU_Companion_Adapters::destin
 // R66: A cached event is historical evidence, never a live owner health grant.
 // A negative or missing File07/08/09 native probe must not be overridden.
 if(!is_array($base)){$base=array('key'=>$key,'owner'=>$def['owner'],'available'=>false,'url'=>'','reason'=>'owner_unconfirmed','contract'=>$def['contract'],'verified_at'=>0,'source'=>'none');}
-$available=!empty($base['available']);$url=$available&&!empty($base['url'])?GCU_Hardening::strict_same_origin_url($base['url']):'';
+// R71: readiness is owner-native boolean evidence; strings and integers are not grants.
+$available=isset($base['available']) && true===$base['available'];$url=$available&&isset($base['url'])&&is_string($base['url'])?GCU_Hardening::strict_same_origin_url($base['url']):'';
 if(!$url){$available=false;$url='';}
 $filtered=apply_filters('gcu_destination_contract_v1',array('available'=>$available,'url'=>$url,'reason'=>$available?'owner_confirmed':sanitize_key(isset($base['reason'])?$base['reason']:'owner_unconfirmed')),$key,$def);
-if(is_array($filtered)&&array_key_exists('available',$filtered)&&false===(bool)$filtered['available']){$available=false;$url='';}
-// R66: filter consumers may restrict an owner-approved URL, not swap the destination.
-if($available&&is_array($filtered)&&array_key_exists('url',$filtered)){
-    $candidate=is_string($filtered['url'])?GCU_Hardening::strict_same_origin_url($filtered['url']):'';
+// R71: an invalid veto contract is not permission to keep a patient-facing CTA.
+// Only an exactly typed true and the unchanged owner-native URL can preserve a
+// previously approved destination. A filter may always veto, never elevate.
+if(!is_array($filtered)||!array_key_exists('available',$filtered)||true!==$filtered['available']){$available=false;$url='';}
+// R66/R71: invalid, absent or rewritten filter URLs must never be used as owner truth.
+if($available){
+    $candidate=isset($filtered['url'])&&is_string($filtered['url'])?GCU_Hardening::strict_same_origin_url($filtered['url']):'';
     if(''===$candidate||$candidate!==$url){$available=false;$url='';}
 }
 return array('key'=>$key,'owner'=>$def['owner'],'available'=>$available,'url'=>$available?$url:'','reason'=>$available?'owner_confirmed':sanitize_key(isset($base['reason'])?$base['reason']:'owner_unconfirmed'),'contract'=>isset($base['contract'])?(string)$base['contract']:$def['contract'],'verified_at'=>isset($base['verified_at'])?(int)$base['verified_at']:0,'source'=>isset($base['source'])?sanitize_key($base['source']):'unknown');
