@@ -1,3 +1,13 @@
+Software candidate: `1.4.71`.
+
+# R69 v1.4.71 release evidence (source-candidate only)
+- Exact prechange GitHub source: `main@0b72b866c8708af6a8e4bae980f0f5ac1fd25336`, plugin source `1.4.70` with previously green GitHub PHP7.4/8.3 quality.
+- Proof: actual `GCU_Privacy::export_data()` and `erase_data()` source paths treat failed event/report SELECTs as empty and failed event/report COUNT reads as zero, breaking verifiable WP personal-data export/erasure completeness.
+- Root cause: unchecked `wpdb` query result types at two privacy lifecycle boundaries, not a claimed live DB incident.
+- File14-only correction: fail closed on invalid read results; stop erasure without destroying erasure subject meta until event/report remaining-row counts are verified. No clinical tables read/write added.
+- Forty distinct native PHP callback/mock DB outcomes in `tests/r69-forty-privacy-db-read-failure-tests.php`, run on each of forty quality review rounds. Historic R68 owner typed readiness tests and 16 FR / 10 NFR / 24 FUT mapping retained. Accepted only when CI and exact merged HEAD tests pass.
+- GitHub owner issues #19/#22/#70 remain OPEN. Live installed plugin checksum, schema, migration state, staging smoke, owner event signing, real File20/25 CAS restore are not verified.
+
 Software candidate: `1.4.70`.
 
 # R68 v1.4.70 — Source-only typed owner contract correction
