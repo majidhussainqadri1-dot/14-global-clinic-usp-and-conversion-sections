@@ -1,3 +1,8 @@
+Software candidate: `1.4.71`.
+
+# R69 v1.4.71 — Privacy exporter/eraser DB failure correction, source only — 2026-10-20
+Frozen prior GitHub main: `0b72b866c8708af6a8e4bae980f0f5ac1fd25336` (`1.4.70`). R69-D01: `GCU_Privacy::export_data()` coerced failed `get_results()` into an empty result with `done=true`, for conversions and copy-quality reports; now returns `done=false` and does not misreport an unverified partial export. R69-D02: `erase_data()` cast failed `get_var(COUNT(*))` to 0, allowing `done=true` and premature subject-meta deletion despite unverified remaining conversion/report rows; now validates nonnegative SQL COUNT results, reports incomplete erasure and keeps subject-meta. Forty actual privacy callback SQL-mock conditions exercised per round × 40 rounds; File14-only source changes. Issues #19 signed owner event producers, #22 File20/25 changed-placement CAS baseline restoration, #70 File08 private booking aggregate are not resolved by this fix. Live code/checksum, WP options, DB schema/migration, owner parity and staged/production verification unavailable. No `Staging-Accepted`, `Live-Deployed` or `Operational` claim.
+
 Software candidate: `1.4.70`.
 
 # R68 v1.4.70 — Owner native manifest exact-type audit, source only — 2026-10-19
