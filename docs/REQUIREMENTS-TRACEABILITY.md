@@ -1,5 +1,7 @@
 Requirements Traceability — v1.4.74
 
+File 14 v1.4.74 may only claim a status independently supported by exact source/CI, separately accepted staging and the actual deployed artifact plus DB migration parity.
+
 ## R73 File00 authorization and restrictive-filter type integrity
 
 | Requirement | Proven source gap | Fix and regression | Status |
