@@ -40,7 +40,7 @@ for($sample=0;$sample<40;$sample++){
  $metadata=isset($value['measurement_capabilities'])?$value['measurement_capabilities']:array();
  $valid=is_array($metadata)
    && 'unavailable_sensitive_rest_aggregate_unapproved'===($metadata['booking_started']??null)
-   && 'unavailable_owner_attested_arrival'===($metadata['destination_loaded']??null)
+   && 'unavailable_owner_attested_arrival'===($metadata['owner_arrival']??null)
    && 'unverified_signed_owner_contract'===($metadata['application_started']??null)
    && array_key_exists('booking_owner_outcome_count',$metadata)
    && null===$metadata['booking_owner_outcome_count']
