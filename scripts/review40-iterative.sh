@@ -67,7 +67,21 @@ for round in $(seq 1 40); do
     echo "R73 authorization review $round incomplete." >&2
     exit 1
   fi
+  # R74: native File00 authoritative denials remain immutable after
+  # WordPress smc_assertions_v1 compatibility-filter processing.
+  if ! php "$ROOT/tests/r74-forty-native-file00-claim-monotonic-tests.php" >"$tmp" 2>&1; then
+    cat "$tmp" >&2
+    echo "R74 native File00 claim monotonic review $round FAILED." >&2
+    exit 1
+  fi
+  if [[ $(grep -c '^R74 native assertion case [0-9][0-9]/40: PASS' "$tmp") -ne 40 ]] ||
+     ! grep -q 'R74 40/40 actual File14 native-assertion authorization PHP mock cases PASS' "$tmp"; then
+    cat "$tmp" >&2
+    echo "R74 native File00 claim review $round INCOMPLETE." >&2
+    exit 1
+  fi
   count=$((count+1))
+  echo "R74 complete source iteration $round/40: PASS (40 plan + 40 owner + 40 privacy + 40 destinations + 40 File00 typed + 40 native File00 filter escalation cases; FUT17 CAS blocked)"
   echo "R73 complete source iteration $round/40: PASS (40 plan + 40 native owner + 40 privacy + 40 CTA filters + 40 File00 authorization direct PHP cases; FUT17 CAS blocked)"
   echo "R71 complete source iteration $round/40: PASS (40 FR/FUT source requirements + 40 owner + 40 privacy + 40 CTA filter behavior cases; FUT17 CAS blocked)"
   echo "R41 full plan source review $round/40: PASS (40 source contracts; FUT17 blocked)"
@@ -78,3 +92,5 @@ php "$ROOT/tests/r34-experiment-lifecycle-regressions.php"
 echo "R71: 40 complete iterative source rounds × (40 plan checks + 40 owner behavior + 40 privacy behavior + 40 destination filter behavior checks) passed; FUT17 changed-placement CAS remains BLOCKED; no staging or live WordPress acceptance."
 
 echo 'R73: 40 complete source review rounds x 5 distinct 40-case tests PASS; owner signed events, File20 CAS and File08 aggregate pending; no live WordPress parity.'
+
+echo 'R74: 40 complete rounds x 6 families of forty source/mock PHP checks PASS; File01 signed events, File20 CAS and File08 aggregates remain blocked; staging/live unverified.'

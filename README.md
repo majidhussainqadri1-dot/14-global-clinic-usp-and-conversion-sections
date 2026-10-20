@@ -1,4 +1,7 @@
-Software candidate: `1.4.74`.
+Software candidate: `1.4.75`.
+
+# R74 v1.4.75 — File00 native authorization cannot be elevated by filters (repository-only)
+R74 closes the File14 consumer loophole: `smc_assertions_v1` formerly could rewrite the canonical File00 `eligible=false`, `suspended=true`, status, ID or contract version to an apparent authorization grant. The consumer now validates original typed owner identity/version/status and rejects any filtered claim that widens native authorization or changes immutable owner evidence. Forty direct PHP mock tests added to every one of 40 source iterations. **Not** installed WordPress evidence; owner events #19, changed-placement CAS restore #22, File08 consented booking aggregates #70 remain open.
 
 # R73 — Verified Repository Candidate (NOT deployed)
 File14 GCU_Companion_Adapters now uses exact File00 integer claimant and boolean eligible/suspended assertions and allows a restrictive authorization filter only when it returns boolean true. Forty direct PHP scenarios execute in each of forty sequential source review rounds. Source-only candidate; File01 signed outcomes #19, File20/25 true placement CAS #22 and File08 privacy-safe aggregates #70 remain open; real staging/DB/deployed checks pending.
