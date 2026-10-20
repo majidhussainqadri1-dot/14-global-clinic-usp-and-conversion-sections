@@ -1,3 +1,20 @@
+Requirements Traceability — v1.4.74
+
+File 14 v1.4.74 may only claim a status independently supported by exact source/CI, separately accepted staging and the actual deployed artifact plus DB migration parity.
+
+## R73 File00 authorization and restrictive-filter type integrity
+
+| Requirement | Proven source gap | Fix and regression | Status |
+|---|---|---|---|
+| F14-NFR-001; CEN-OWN-001; File00 authorization | File14 used `absint()` on owner assertion `user_id`; a padded or decimal-looking string could be coerced to local subject | Exact `is_int` subject identity; forty `GCU_Companion_Adapters::authorize()` adversarial PHP cases | Repository source fix; live unverified |
+| F14-NFR-001; F14-FR-015; File00 role assertions | PHP `empty()` on `eligible/suspended` accepts malformed nonboolean truthy/falsey claims | Strict `eligible === true` and `suspended === false` | Repository source fix; live unverified |
+| F14-NFR-001; restrictive `gcu_authorize` filter | `(bool) 'false'` was true, so a nonboolean deny could remain granted | Require `true === apply_filters(...)` | Repository source fix; live unverified |
+| F14-FR-011; F14-FUT-11/13/14 | Signed native File07/08/09 owner event delivery/consent missing | File01 proposed schema PR #7; original File14 status remains unverified, no scoring unlock | Cross-owner #19 OPEN |
+| F14-FUT-17 | File20/25 changed placement signed provenance and transactional CAS restoration missing | File20 proposed validation-only draft PR #42, no actual CAS restore | Cross-owner #22 OPEN |
+| F14-FR-011 | Revocable opt-in native File08 booking aggregate producer missing | File08 strict unaccepted proposal PR #42; sensitive REST stays untracked | Cross-owner #70 OPEN |
+
+The following statuses MUST remain distinct: repository coded; repository CI; approved package; staging acceptance; actual deployed version, DB/migration parity; live retest. Only a verified live deployment and retest can establish a live fix.
+
 Requirements Traceability — v1.4.73
 
 File 14 v1.4.73 may only claim a status independently supported by exact source/CI, separately accepted staging and the actual deployed artifact plus DB migration parity.
