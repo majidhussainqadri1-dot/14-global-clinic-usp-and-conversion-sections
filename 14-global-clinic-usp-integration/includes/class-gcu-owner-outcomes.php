@@ -197,7 +197,7 @@ final class GCU_Owner_Outcomes {
 	 */
 	public static function measurement_capabilities() {
 		return array(
-			'destination_loaded' => 'unavailable_owner_attested_arrival',
+			'owner_arrival' => 'unavailable_owner_attested_arrival',
 			'application_started' => 'unverified_signed_owner_contract',
 			'booking_started' => 'unavailable_sensitive_rest_aggregate_unapproved',
 			'booking_owner_outcome_count' => null,
