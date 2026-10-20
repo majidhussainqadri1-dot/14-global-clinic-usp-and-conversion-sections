@@ -1,3 +1,8 @@
+Software candidate: `1.4.72`.
+
+# R70 v1.4.72 — Owner observation availability, source-only
+Exact prechange GitHub main `8ebd475195662acfa92dd6e62a412a0da3f66998` (v1.4.71). Reviewed plan F14-FR-011, F14-FUT-11/13/14 and F14-FUT-17, plus File01/07/08/09/20/25 source HEAD as independent source truths. #70 cannot be bypassed by tracking sensitive File08 REST. Introduced explicit owner-stage unavailability metadata in File14's scoped analytics response, 40 method-level regression cases, and maintained `owner_confirmation_contract_ready() === false` until independent proof. The required actual File07/08/09 versioned signed origin, File08 consent-safe aggregate and File20/25 CAS restoring changed placements remain open design/approval/staging gates. No runtime/deployment parity evidence supplied. Candidate CI then postmerge main CI are required for a repository-level verification.
+
 Software candidate: `1.4.71`.
 
 # R69 v1.4.71 release evidence (source-candidate only)
