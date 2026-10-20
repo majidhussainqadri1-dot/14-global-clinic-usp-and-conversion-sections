@@ -1,3 +1,8 @@
+Software candidate: `1.4.74`.
+
+# R73 v1.4.74 — File00 authorization strict typed evidence, 2026-10-20
+Original verified GitHub source: File14 main@adeba7f3fb3d0be02953ec0851fdb07f499dd438 (1.4.73); File00 `SMC_Contracts::assertions()` supplies an integer user_id and boolean eligible/suspended. Proven File14 source defect: the consumer used absint() on assertion subject, empty() on authorization flags, and (bool) on a supposedly restriction-only gcu_authorize filter, allowing malformed scalar strings and nonboolean filter responses to be interpreted as granted. R73 requires exact integer owner/user identity, exact boolean true eligibility and exact boolean false suspended, plus boolean true from restrictive filter. Forty direct native adapter PHP mock cases and 40 sequential source review rounds run on candidate; this is NOT WordPress staging. Files01/07/08/09 event #19, File20/25 actual owner CAS restore #22, and File08 optional-consent booking aggregate #70 remain unimplemented or unaccepted and fail closed. No repository CI implies deployment; deployed code/version, DB schema/migration, backup and live retest remain UNVERIFIED.
+
 Software candidate: `1.4.73`.
 
 # R71 v1.4.73 — Strict native destination and filter readiness, 2026-10-20
