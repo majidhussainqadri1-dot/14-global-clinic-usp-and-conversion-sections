@@ -1,3 +1,8 @@
+Software candidate: `1.4.72`.
+
+# R70 v1.4.72 — Explicit unavailable owner outcome measurements, 2026-10-20
+Frozen original GitHub main: `8ebd475195662acfa92dd6e62a412a0da3f66998` (v1.4.71). Actual owner hook origins inspected in File07 directory, File08 appointment REST and File09 application. Missing signed owner + revocable consent aggregate contract #19/#70 and mutated-placement CAS #22 are NOT solved by File14 alone. To prevent unsafe interpretation of missing File08 sensitive-route booking rows as measured zero, File14 `GCU_Owner_Outcomes::owner_stage_summary()` now includes `measurement_capabilities` with stage-level status, `booking_owner_outcome_count=null`, `booking_success_rate=null`, `zero_is_proven=false`, and `live_verified=false`. This is a truthful source-only containment, not a stage producer, measurement completion or a conversion score unlock. Forty actual PHP summary callbacks with varying sample inputs test fail-closed capability disclosure; consent, cohort suppression and independent historical owner-event observations remain otherwise unchanged. No foreign owner, DB or live mutations. No `Staging-Accepted`, `Live-Deployed` or `Operational` claim.
+
 Software candidate: `1.4.71`.
 
 # R69 v1.4.71 — Privacy exporter/eraser DB failure correction, source only — 2026-10-20
