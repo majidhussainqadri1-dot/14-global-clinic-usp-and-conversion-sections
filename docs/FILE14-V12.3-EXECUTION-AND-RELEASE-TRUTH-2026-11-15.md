@@ -29,6 +29,16 @@ This ledger separates **plan**, **repository**, **package**, **staging**, and **
 3. `tools/file14-readonly-deployed-freeze.php` is a host-side **read-only WP-CLI** inventory for exact installed source version, plugin path checksum/tree checksum, selected option-state types and versions, and File14 table/column structure. It emits no raw table rows, medical data, credentials or migration log text. It can only describe the site where executed.
 4. `scripts/quality.sh` runs the new static preflight tests and PHP syntax check.
 
+## R77 source-preflight fail-closed correction (2026-11-15)
+
+**Defect proved against merged v1.4.76 audit tooling:** the first version of `scripts/v123_source_gate.py` could mark owner contract #19, changed-placement CAS #22, or booking aggregate #70 as "accepted" merely because a PHP function stopped containing a literal `return false` or a particular null marker. Source text alone can never authenticate a real owner producer, transactionally tested restoration, revocable consent, or deployed WordPress state.
+
+**Correction:** Those three owner acceptance results are permanently false in this source-only script. Instead, the checker separately confirms that the current PHP source still explicitly fails closed. If a future change removes a denial, the source test fails; it never promotes source text into owner/staging/live acceptance. Real acceptance requires independently verified cryptographic/owner/DB/staging evidence outside this tool and an explicit updated release procedure.
+
+**Regression:** `tests/v123-source-gate-tests.py::test_fake_source_activation_never_certifies_owner_acceptance` injects fake PHP `return true` for owner and CAS functions plus a fabricated measured booking count, and checks that no owner issue is falsely closed and the source control gate fails.
+
+This R77 change modifies **repository tooling/tests only**; plugin version remains `1.4.76`. Three owner issues remain OPEN, and deployed version/DB/migration/live remain UNVERIFIED.
+
 ## Current external reality and limits
 
 WPVibe had no connected site on 2026-11-15. The WordPress connector lists `https://www.sabrihomeopathy.com` but reports the Jetpack site connection unavailable. Therefore **the installed File14 plugin, deployed checksum, DB/schema version, migration state, wp_options values and runtime logs were not retrieved**.
