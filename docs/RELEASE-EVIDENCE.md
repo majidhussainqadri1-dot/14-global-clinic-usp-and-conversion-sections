@@ -1,4 +1,8 @@
 Software candidate: `1.4.76`.
+
+# R76 source authorization hardening (combined v1.4.76 candidate)
+Frozen File00 source `source/sabri-membership-core/includes/functions.php::smc_membership_state` proves the canonical eligible statuses: `approved` for regular members and `verified` for institutional. File14 consumer previously used a denylist and sanitized status, potentially admitting unknown source state if inconsistent File00 eligible/suspended fields were returned. R76 restricts to exact two statuses and adds 40 real adapter source-mock cases plus two positive controls per 40-round audit. This remains source-only; no installed code, DB or live proof. #19/#22/#70 open.
+
 Current source release: v1.4.76; source-only candidate, not deployed.
 
 # R75 proposed source evidence — exact original membership claimant
