@@ -2,6 +2,7 @@
 """Guard V12.3 requirement identity and safe release truth."""
 import importlib.util
 import unittest
+from unittest.mock import patch
 from pathlib import Path
 
 SRC = Path(__file__).resolve().parents[1] / 'scripts' / 'v123_source_gate.py'
@@ -45,6 +46,37 @@ class V123SourceGateTests(unittest.TestCase):
         self.assertFalse(r['source_observations']['owner_booking_aggregate_available'])
         self.assertFalse(r['source_observations']['owner_signed_contract_accepted'])
         self.assertFalse(r['source_observations']['changed_placement_cas_restore_accepted'])
+
+
+    def test_fake_source_activation_never_certifies_owner_acceptance(self):
+        original = gate.read_php
+
+        def false_success_source(path):
+            if path == 'class-gcu-future-policy.php':
+                return (
+                    '<?php function owner_confirmation_contract_ready() { return true; }'
+                    ' function experiment_baseline_restoration_ready($experiment) { return true; }'
+                )
+            if path == 'class-gcu-owner-outcomes.php':
+                return (
+                    "<?php function measurement_capabilities() { return array("
+                    "'booking_started'=>'available', 'booking_owner_outcome_count'=>25, "
+                    "'booking_success_rate'=>0.5); }"
+                )
+            return original(path)
+
+        with patch.object(gate, 'read_php', side_effect=false_success_source):
+            observations = gate.source_observations()
+            self.assertFalse(observations['owner_signed_contract_accepted'])
+            self.assertFalse(observations['changed_placement_cas_restore_accepted'])
+            self.assertFalse(observations['owner_booking_aggregate_available'])
+            self.assertFalse(observations['owner_contract_source_denies_unaccepted'])
+            self.assertFalse(observations['owner_cas_source_denies_unattested_restore'])
+            self.assertFalse(observations['booking_measurement_source_reports_unavailable'])
+            report = gate.examine()
+            self.assertFalse(report['source_fail_closed_controls_present'])
+            self.assertFalse(report['production_ready'])
+            self.assertEqual({'#19', '#22', '#70'}, set(report['known_unaccepted_cross_owner_issues']))
 
 
 if __name__ == '__main__':
