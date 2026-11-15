@@ -1,4 +1,5 @@
 Software candidate: `1.4.76`.
+Current source release: v1.4.76; source-only candidate, not deployed.
 
 # R75 proposed source evidence — exact original membership claimant
 Source failure found in File14 v1.4.75: `file00_assertions( $user_id )` called `absint()` before File00 and could reinterpret malformed caller IDs. Correction: reject non-int/non-positive subjects before File00 access. Direct forty mocked PHP cases and one legitimate int grant control. QA and final SHA packaging are distinct from deployed proof. No File00/01/07/08/09/20/25 mutation. Issues #19, #22, #70 intentionally not closed; staging and live parity unverified.
