@@ -4,8 +4,10 @@ Tags: clinic, doctors, conversion, accessibility, privacy, governance, trust, ex
 Requires at least: 6.6
 Tested up to: 7.0.1
 Requires PHP: 7.4
-Stable tag: 1.4.76
+Stable tag: 1.4.77
 License: GPLv2 or later
+
+R77 v1.4.77: fixes Urdu/Arabic Back and Home fallback labels using approved GCU_I18n locale keys and blocks silent English copy/FAQ fallback into untranslated RTL pages (F14-FR-013/NFR-010/FUT-20); new direct PHP tests. Source-only; staging/live unverified.
 
 Version 1.4.56 tightens canonical whole-number cohort and owner-outcome evidence gates (40 direct privacy-policy test vectors); pending production/staging parity and external owner #19/#22.
 
