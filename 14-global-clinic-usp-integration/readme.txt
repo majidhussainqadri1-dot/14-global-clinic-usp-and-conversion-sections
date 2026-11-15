@@ -4,7 +4,7 @@ Tags: clinic, doctors, conversion, accessibility, privacy, governance, trust, ex
 Requires at least: 6.6
 Tested up to: 7.0.1
 Requires PHP: 7.4
-Stable tag: 1.4.75
+Stable tag: 1.4.76
 License: GPLv2 or later
 
 Version 1.4.56 tightens canonical whole-number cohort and owner-outcome evidence gates (40 direct privacy-policy test vectors); pending production/staging parity and external owner #19/#22.
