@@ -40,6 +40,7 @@ $body = $frontend->render_blocks( 'global_clinic_primary', 'all' );
 gcu_v123_assert( false !== strpos( $body, 'مواد زیرِ جائزہ ہے' ), 'User must see honest Urdu unavailable state.' );
 gcu_v123_assert( false === strpos( $body, 'ENGLISH_ONLY_UNAPPROVED_FOR_URDU' ), 'English-only block must not leak.' );
 $faq = new ReflectionMethod( 'GCU_Frontend', 'render_faqs' );
+$faq->setAccessible( true ); // Required for PHP 7.4 native reflection.
 $faq_html = $faq->invoke( $frontend, 'gcu-sample', 'ur-PK' );
 gcu_v123_assert( '' === $faq_html, 'English-only FAQ must not publish as Urdu FAQ.' );
 $calls = GCU_Plugin::instance()->repo->calls;
