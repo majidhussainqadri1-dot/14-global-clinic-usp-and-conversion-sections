@@ -1,9 +1,12 @@
+## R77 / F14-FR-013, F14-NFR-010, F14-FUT-20 — approved three-locale publication
+The V12.3 source review found Urdu RTL fallback navigation incorrectly rendered Arabic Back/Home text; the approved locale-specific `GCU_I18n` keys already exist and now provide the UI text and accessible nav label. When no approved `ur-PK` or `ar-SA` block or FAQ exists, the frontend no longer silently substitutes `en-US` content under Urdu/Arabic page language and direction. The governed block shows a locale-owned truthful review state and untranslated FAQ is withheld. Two independent real PHP regression scripts run in the standard source QA. **This is source correctness only, not a completed independent visual WCAG or staging/Live acceptance.** Existing #19/#22/#70 owner blockers remain open.
+
 ## R76 / F14-NFR-001 canonical status grant control
 File00 original source establishes only exactly `approved` or `verified` as eligible membership status; File14 `authorize()` now checks a strict positive allowlist and does not normalize malformed status. Forty real PHP mock denial cases and two canonical positive controls are included in 40 source-review rounds. All staging/live and deployment-parity gates remain external.
 
-Requirements Traceability — v1.4.76
+Requirements Traceability — v1.4.77
 
-File 14 v1.4.76 may only claim a status independently supported by exact source/CI, separately accepted staging and the actual deployed artifact plus DB migration parity.
+File 14 v1.4.77 may only claim a status independently supported by exact source/CI, separately accepted staging and the actual deployed artifact plus DB migration parity.
 
 | Requirement | Demonstrated source gap | Local source remedy | Proof boundary |
 |---|---|---|---|
