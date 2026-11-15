@@ -3,6 +3,8 @@ File00 original source establishes only exactly `approved` or `verified` as elig
 
 Requirements Traceability — v1.4.76
 
+File 14 v1.4.76 may only claim a status independently supported by exact source/CI, separately accepted staging and the actual deployed artifact plus DB migration parity.
+
 | Requirement | Demonstrated source gap | Local source remedy | Proof boundary |
 |---|---|---|---|
 | F14-NFR-001, File00 original claimant | File14 v1.4.75 `absint()` coerced string/fractional/negative caller ID before original File00 provider check | `is_int()` and positive-only gate before owner read; forty direct PHP negative cases, canonical integer control | Source-only; no deployed runtime/DB/WordPress evidence |
