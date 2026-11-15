@@ -1,4 +1,8 @@
 Software candidate: `1.4.76`.
+
+# R76 exact File00 native status authority (2026-11-15)
+Verified original File00 `smc_membership_state()` sources `approved` for ordinary eligible members and `verified` for institutional authorities. File14 prior denylist plus `sanitize_key()` would not fail closed on unknown state with malformed `eligible=true`. Corrected File14 to accept only exact original `approved` / `verified`; test 40 malformed/non-authorized statuses and two canonical grants. Existing R75 identity validation remains. Source-only, live unverified.
+
 Current source release: v1.4.76; source-only candidate, not deployed.
 
 # R75 2026-11-15 — File00 subject input coercion narrowed (repository-only)
