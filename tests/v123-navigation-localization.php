@@ -35,6 +35,17 @@ foreach ( $cases as $locale => $case ) {
     gcu_nav_assert( 1 === substr_count( $html, 'class="gcu-context-nav__home"' ), 'Exactly one Home anchor' );
     gcu_nav_assert( false !== strpos( $html, 'https://local.example.test/' ), 'Canonical safe Home URL' );
 }
+// The root and degraded states cannot safely Back-link to their own failing routes.
+foreach ( array( 'global_clinic', 'degraded' ) as $context ) {
+    $root_nav = $method->invoke( $frontend, $context, 'ur-PK' );
+    gcu_nav_assert( false !== strpos( $root_nav, 'class="gcu-context-nav__back" href="https://local.example.test/"' ),
+        'Root/degraded Back must not be a self-link: ' . $context );
+}
+$child_nav = $method->invoke( $frontend, 'how_it_works', 'ur-PK' );
+gcu_nav_assert( false !== strpos( $child_nav, 'class="gcu-context-nav__back" href="https://local.example.test/global-clinic/"' ),
+    'How-it-works Back should return to canonical Global Clinic.' );
+gcu_nav_assert( false !== strpos( $child_nav, 'class="gcu-context-nav__home" href="https://local.example.test/"' ),
+    'Child Home should return to canonical site root.' );
 $ur = $method->invoke( $frontend, 'global_clinic', 'ur-PK' );
 gcu_nav_assert( false === strpos( $ur, 'الرجوع / الرئيسية' ), 'Urdu shell must not contain Arabic hardcoding.' );
 gcu_nav_assert( false === strpos( $ur, '>رجوع</a>' ), 'Urdu label must not be Arabic.' );
