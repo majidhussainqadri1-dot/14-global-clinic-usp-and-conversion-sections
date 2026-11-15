@@ -1,6 +1,7 @@
 Software candidate: `1.4.77`.
 
 # R77 V12.3 interface-copy integrity — source only
+Source F14-FR-015 fallback navigation improvement: Back is no longer a self-link on Global Clinic root/degraded routes; the child How-It-Works Back returns to canonical Global Clinic. Native PHP route-context regression is in the standard quality suite.
 Current source release: v1.4.77; source-only candidate, not deployed. F14-FR-013, F14-NFR-010, and F14-FUT-20 are corrected for Urdu/Arabic fallback nav labels and mixed English fallback governed blocks/FAQs, with dedicated native PHP tests. Exact PR SHA quality/package, two fresh reviews, Founder/WordPress staging, active DB/migration and live re-test are separate. File14 issues #19/#22/#70 remain OPEN.
 
 Software candidate: `1.4.76`.
