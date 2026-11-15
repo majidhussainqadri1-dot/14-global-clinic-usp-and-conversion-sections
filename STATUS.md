@@ -1,3 +1,5 @@
+Current source release: v1.4.77; source-only candidate, not deployed.
+
 Software candidate: `1.4.77`.
 
 # R77 V12.3 localization integrity — 2026-11-15
