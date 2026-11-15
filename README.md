@@ -1,3 +1,8 @@
+Software candidate: `1.4.76`.
+
+# R75 source release — prevent cast-created File00 authorization subjects
+File14 `GCU_Companion_Adapters::file00_assertions()` now denies non-integer, zero and negative caller subjects **before** invoking File00. Forty real PHP adapter input cases test no owner call on malformed values, plus a canonical integer control; repeated per source review iteration. This fixes a repository-source trust-boundary defect only, not a verified live installation. Cross-owner issues #19/#22/#70 remain OPEN, and deployed DB/migration/staging/live parity is unverified.
+
 Software candidate: `1.4.75`.
 
 # R74 v1.4.75 — File00 native authorization cannot be elevated by filters (repository-only)
