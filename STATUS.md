@@ -1,3 +1,8 @@
+Software candidate: `1.4.76`.
+
+# R75 2026-11-15 — File00 subject input coercion narrowed (repository-only)
+Original File14 v1.4.75 accepted `absint()`-coerced caller input to `file00_assertions()`, potentially turning untrusted scalar identities into a different valid owner ID. Original native File00 owner assertion still checked identity, but the wrong canonical subject could be queried. File14 now accepts only original positive integer identity. Forty direct PHP input adversarial cases plus control test added to 40 repeated source review rounds. Current CI must be checked at the final exact commit. No live WordPress, DB, migration or deployed package parity attested; Issues #19/#22/#70 remain OPEN.
+
 Software candidate: `1.4.75`.
 
 # R74 v1.4.75 — Native File00 authority remains monotonic, 2026-10-21
