@@ -99,6 +99,7 @@ for temp in \
   if [ -e "$temp" ]; then echo "Temporary third-review corrective machinery remains: $temp" >&2; exit 1; fi
 done
 php "$ROOT/tests/v123-navigation-localization.php"
+php "$ROOT/tests/v123-locale-fail-closed.php"
 python3 "$ROOT/tests/v123-source-gate-tests.py"
 python3 "$ROOT/scripts/v123_source_gate.py" --compact
 php -l "$ROOT/tools/file14-readonly-deployed-freeze.php"
