@@ -1,3 +1,6 @@
+## R77 / F14-FR-015 — bounded Back/Home recovery correction
+The File14 fallback navigation previously rendered a Back anchor targeting `/global-clinic/` even when the user was already on that root route or in a degraded state, causing a self-link. The fallback now chooses canonical Home for those contexts and Global Clinic only from the How-it-Works child; existing File20 ownership takes precedence. New PHP regression assertions inspect each canonical href. The change is source-only, not a tested browser history feature.
+
 ## R77 / F14-FR-013, F14-NFR-010, F14-FUT-20 — approved three-locale publication
 The V12.3 source review found Urdu RTL fallback navigation incorrectly rendered Arabic Back/Home text; the approved locale-specific `GCU_I18n` keys already exist and now provide the UI text and accessible nav label. When no approved `ur-PK` or `ar-SA` block or FAQ exists, the frontend no longer silently substitutes `en-US` content under Urdu/Arabic page language and direction. The governed block shows a locale-owned truthful review state and untranslated FAQ is withheld. Two independent real PHP regression scripts run in the standard source QA. **This is source correctness only, not a completed independent visual WCAG or staging/Live acceptance.** Existing #19/#22/#70 owner blockers remain open.
 
