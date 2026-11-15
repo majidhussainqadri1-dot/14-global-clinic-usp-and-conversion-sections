@@ -91,6 +91,18 @@ for round in $(seq 1 40); do
     echo "R75 original-subject review $round INCOMPLETE." >&2
     exit 1
   fi
+  # R76: enforce the File00 source-verified finite status authority.
+  if ! php "$ROOT/tests/r76-forty-file00-native-status-tests.php" >"$tmp" 2>&1; then
+    cat "$tmp" >&2
+    echo "R76 strict owner status review $round FAILED." >&2
+    exit 1
+  fi
+  if [[ $(grep -c '^R76 canonical status [0-9][0-9]/40 PASS' "$tmp") -ne 40 ]] ||
+      ! grep -q 'R76 40/40 strict original File00 status checks PASS' "$tmp"; then
+    cat "$tmp" >&2
+    echo "R76 owner status source review $round INCOMPLETE." >&2
+    exit 1
+  fi
   count=$((count+1))
   echo "R74 complete source iteration $round/40: PASS (40 plan + 40 owner + 40 privacy + 40 destinations + 40 File00 typed + 40 native File00 filter escalation cases; FUT17 CAS blocked)"
   echo "R73 complete source iteration $round/40: PASS (40 plan + 40 native owner + 40 privacy + 40 CTA filters + 40 File00 authorization direct PHP cases; FUT17 CAS blocked)"
@@ -107,3 +119,5 @@ echo 'R73: 40 complete source review rounds x 5 distinct 40-case tests PASS; own
 echo 'R74: 40 complete rounds x 6 families of forty source/mock PHP checks PASS; File01 signed events, File20 CAS and File08 aggregates remain blocked; staging/live unverified.'
 
 echo 'R75: 40 rounds x 40 original input subject checks PASS; source mock only, no staging/live claim.'
+
+echo 'R76: 40 source review rounds x 40 typed native File00 statuses PASS; owner signer/staging/live remain separate.'
