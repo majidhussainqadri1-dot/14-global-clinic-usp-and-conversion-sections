@@ -1,6 +1,7 @@
 Software candidate: `1.4.77`.
 
 # R77 — V12.3 governed-copy locale integrity (source-only)
+Additional F14-FR-015 source correction: the fallback Back anchor no longer returns to the same Global Clinic root when already on that route (or on a degraded route); it deterministically selects canonical Home there and returns from How-It-Works to Global Clinic. This is a bounded fallback, not a substitute for File20 history navigation.
 File14 now renders fallback Back/Home and its nav aria label from the exact approved English/Urdu/Arabic catalogue, rather than assuming RTL means Arabic. When Urdu/Arabic block or FAQ translation is not approved, the module does not silently publish the English text as if it were localized. The block shows its localized content-review state; the missing FAQ is withheld. Two real native PHP regressions are attached to `scripts/quality.sh`. File14 owner outcome #19, placement #22 and privacy-safe File08 booking aggregate #70 remain OPEN; no staging/live verification.
 
 Software candidate: `1.4.76`.
