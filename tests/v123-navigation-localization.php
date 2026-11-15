@@ -19,6 +19,7 @@ function gcu_nav_assert( $ok, $message ) {
 gcu_nav_assert( GCU_I18n::is_complete(), 'Every locale must keep all canonical copy keys.' );
 $frontend = new GCU_Frontend();
 $method = new ReflectionMethod( 'GCU_Frontend', 'navigation_controls' );
+$method->setAccessible( true ); // Required for PHP 7.4 native reflection.
 $cases = array(
     'en-US' => array( 'Page navigation', 'Back', 'Home', 'ltr' ),
     'ur-PK' => array( 'صفحہ کی رہنمائی', 'واپس', 'ہوم', 'rtl' ),
