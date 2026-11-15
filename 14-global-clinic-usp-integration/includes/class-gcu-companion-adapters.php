@@ -96,8 +96,14 @@ final class GCU_Companion_Adapters {
 	}
 
 	public static function file00_assertions( $user_id ) {
-		$user_id = absint( $user_id );
-		if ( ! $user_id || ! self::file00_available() ) {
+		// R75: an arbitrary scalar must never be coerced into a different
+		// canonical File 00 identity (e.g. '42junk', -42, 42.9 or true).
+		// WordPress get_current_user_id() supplies an integer for the native
+		// authorization path; deny all other input types before owner access.
+		if ( ! is_int( $user_id ) || $user_id <= 0 ) {
+			return new WP_Error( 'gcu_file00_subject_invalid', __( 'The File 00 authorization subject must be an original positive integer.', 'global-clinic-usp-integration' ) );
+		}
+		if ( ! self::file00_available() ) {
 			return new WP_Error( 'gcu_file00_unavailable', __( 'The canonical File 00 authorization provider is unavailable.', 'global-clinic-usp-integration' ) );
 		}
 
@@ -173,14 +179,19 @@ final class GCU_Companion_Adapters {
 		}
 
 		$purpose = sanitize_key( (string) $purpose );
-		$blocked_statuses = array( 'rejected', 'suspended', 'expired', 'appeal_review', 'erasure_pending', 'invalid_application', 'effects_reconciliation' );
-		$status = sanitize_key( isset( $claim['status'] ) ? (string) $claim['status'] : '' );
+		// R76 / canonical File00 smc_membership_state(): approved means a
+		// reviewed member; verified means an institutional Founder/admin/AI
+		// authority. All other states are unapproved or unsafe. A denylist
+		// alone fails open on new/unknown File00 statuses, and sanitize_key()
+		// must not rewrite malformed status bytes into an allowed status.
+		$status = isset( $claim['status'] ) ? $claim['status'] : null;
 		if (
 			'' === $purpose ||
+			! is_string( $status ) ||
+			! in_array( $status, array( 'approved', 'verified' ), true ) ||
 			! isset( $claim['eligible'], $claim['suspended'] ) ||
 			true !== $claim['eligible'] ||
-			false !== $claim['suspended'] ||
-			in_array( $status, $blocked_statuses, true )
+			false !== $claim['suspended']
 		) {
 			return false;
 		}

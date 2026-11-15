@@ -61,6 +61,8 @@ php "$ROOT/tests/r70-owner-metric-availability-contract-tests.php"
 php "$ROOT/tests/r71-forty-destination-filter-fail-closed-tests.php"
 php "$ROOT/tests/r73-forty-file00-claim-and-filter-auth-tests.php"
 php "$ROOT/tests/r74-forty-native-file00-claim-monotonic-tests.php"
+php "$ROOT/tests/r75-forty-file00-subject-origin-tests.php"
+php "$ROOT/tests/r76-forty-file00-native-status-tests.php"
 php "$ROOT/tests/review80-hardening-tests.php"
 php "$ROOT/tests/second-review-regression-tests.php"
 php "$ROOT/tests/third-review-regression-tests.php"
@@ -96,4 +98,7 @@ for temp in \
   "$ROOT/scripts/apply-file14-third-review-containment.py"; do
   if [ -e "$temp" ]; then echo "Temporary third-review corrective machinery remains: $temp" >&2; exit 1; fi
 done
+python3 "$ROOT/tests/v123-source-gate-tests.py"
+python3 "$ROOT/scripts/v123_source_gate.py" --compact
+php -l "$ROOT/tools/file14-readonly-deployed-freeze.php"
 echo "Quality suite: PASS"

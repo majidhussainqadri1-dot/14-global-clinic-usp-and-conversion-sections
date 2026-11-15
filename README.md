@@ -1,3 +1,12 @@
+Software candidate: `1.4.76`.
+
+# R76 companion authority hardening (included in v1.4.76 source candidate)
+The File00 native membership contract returns `approved` for approved members and `verified` for eligible institutional accounts. File14 previously denied only named bad statuses, which allowed unknown or malformed status strings if eligibility fields were inconsistent. File14 now requires exactly `approved` or `verified`, without lossy `sanitize_key()` rewriting. Forty real PHP method-level negative cases per review round and two positive status controls were added. This is a **repository-source correction only**, not a live incident resolution. Owner issues #19/#22/#70 remain OPEN.
+
+
+# R75 source release — prevent cast-created File00 authorization subjects
+File14 `GCU_Companion_Adapters::file00_assertions()` now denies non-integer, zero and negative caller subjects **before** invoking File00. Forty real PHP adapter input cases test no owner call on malformed values, plus a canonical integer control; repeated per source review iteration. This fixes a repository-source trust-boundary defect only, not a verified live installation. Cross-owner issues #19/#22/#70 remain OPEN, and deployed DB/migration/staging/live parity is unverified.
+
 Software candidate: `1.4.75`.
 
 # R74 v1.4.75 — File00 native authorization cannot be elevated by filters (repository-only)

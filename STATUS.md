@@ -1,3 +1,13 @@
+Software candidate: `1.4.76`.
+
+# R76 exact File00 native status authority (2026-11-15)
+Verified original File00 `smc_membership_state()` sources `approved` for ordinary eligible members and `verified` for institutional authorities. File14 prior denylist plus `sanitize_key()` would not fail closed on unknown state with malformed `eligible=true`. Corrected File14 to accept only exact original `approved` / `verified`; test 40 malformed/non-authorized statuses and two canonical grants. Existing R75 identity validation remains. Source-only, live unverified.
+
+Current source release: v1.4.76; source-only candidate, not deployed.
+
+# R75 2026-11-15 — File00 subject input coercion narrowed (repository-only)
+Original File14 v1.4.75 accepted `absint()`-coerced caller input to `file00_assertions()`, potentially turning untrusted scalar identities into a different valid owner ID. Original native File00 owner assertion still checked identity, but the wrong canonical subject could be queried. File14 now accepts only original positive integer identity. Forty direct PHP input adversarial cases plus control test added to 40 repeated source review rounds. Current CI must be checked at the final exact commit. No live WordPress, DB, migration or deployed package parity attested; Issues #19/#22/#70 remain OPEN.
+
 Software candidate: `1.4.75`.
 
 # R74 v1.4.75 — Native File00 authority remains monotonic, 2026-10-21
