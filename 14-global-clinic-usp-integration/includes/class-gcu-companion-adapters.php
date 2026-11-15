@@ -179,14 +179,19 @@ final class GCU_Companion_Adapters {
 		}
 
 		$purpose = sanitize_key( (string) $purpose );
-		$blocked_statuses = array( 'rejected', 'suspended', 'expired', 'appeal_review', 'erasure_pending', 'invalid_application', 'effects_reconciliation' );
-		$status = sanitize_key( isset( $claim['status'] ) ? (string) $claim['status'] : '' );
+		// R76 / canonical File00 smc_membership_state(): approved means a
+		// reviewed member; verified means an institutional Founder/admin/AI
+		// authority. All other states are unapproved or unsafe. A denylist
+		// alone fails open on new/unknown File00 statuses, and sanitize_key()
+		// must not rewrite malformed status bytes into an allowed status.
+		$status = isset( $claim['status'] ) ? $claim['status'] : null;
 		if (
 			'' === $purpose ||
+			! is_string( $status ) ||
+			! in_array( $status, array( 'approved', 'verified' ), true ) ||
 			! isset( $claim['eligible'], $claim['suspended'] ) ||
 			true !== $claim['eligible'] ||
-			false !== $claim['suspended'] ||
-			in_array( $status, $blocked_statuses, true )
+			false !== $claim['suspended']
 		) {
 			return false;
 		}
