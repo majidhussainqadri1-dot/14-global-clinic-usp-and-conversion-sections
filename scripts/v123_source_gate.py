@@ -62,11 +62,21 @@ def source_observations() -> dict:
         restore
     ))
     return {
-        'owner_signed_contract_accepted': bool(confirmed) and not bool(re.search(r'\breturn\s+false\s*;', confirmed)),
-        'changed_placement_cas_restore_accepted': bool(restore) and not blocked_cas,
-        'owner_booking_aggregate_available': bool(measurement) and not (
+        # R77: repository text is incapable of authenticating signed owner
+        # producers, an executable File20/25 CAS writer, or revocable File08
+        # consent. Absence of a literal "return false" is NEVER acceptance.
+        # These must remain unaccepted until independently approved owner
+        # evidence and real deployment/staging verification are supplied.
+        'owner_signed_contract_accepted': False,
+        'changed_placement_cas_restore_accepted': False,
+        'owner_booking_aggregate_available': False,
+        # Positive evidence of the current explicit fail-closed source gates.
+        # If one is removed, source QA fails instead of reporting success.
+        'owner_contract_source_denies_unaccepted': bool(re.search(r'\breturn\s+false\s*;', confirmed)),
+        'owner_cas_source_denies_unattested_restore': bool(restore) and blocked_cas,
+        'booking_measurement_source_reports_unavailable': (
             'unavailable_sensitive_rest_aggregate_unapproved' in measurement
-            or bool(re.search(r"'booking_owner_outcome_count'\s*=>\s*null", measurement))
+            and bool(re.search(r"'booking_owner_outcome_count'\s*=>\s*null", measurement))
         ),
         'privacy_boundary_present': all(s in privacy for s in (
             'measurement_allowed', 'global_privacy_control_requested', 'is_file14_acquisition_route'
@@ -91,7 +101,10 @@ def examine() -> dict:
     blockers = {k: list(BLOCKED_IDS[k]) for k, is_open in outstanding.items() if is_open}
     controls_present = all(controls[k] for k in (
         'privacy_boundary_present', 'authoritative_file00_checks_present',
-        'baseline_reconciliation_present', 'reports_unverified_as_null'
+        'baseline_reconciliation_present', 'reports_unverified_as_null',
+        'owner_contract_source_denies_unaccepted',
+        'owner_cas_source_denies_unattested_restore',
+        'booking_measurement_source_reports_unavailable'
     ))
     return {
         'plan': 'V12.3', 'file': '14', 'audit_type': 'repository-source-only',
