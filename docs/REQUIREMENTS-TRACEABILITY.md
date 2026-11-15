@@ -1,3 +1,6 @@
+## R76 / F14-NFR-001 canonical status grant control
+File00 original source establishes only exactly `approved` or `verified` as eligible membership status; File14 `authorize()` now checks a strict positive allowlist and does not normalize malformed status. Forty real PHP mock denial cases and two canonical positive controls are included in 40 source-review rounds. All staging/live and deployment-parity gates remain external.
+
 Requirements Traceability — v1.4.76
 
 | Requirement | Demonstrated source gap | Local source remedy | Proof boundary |
