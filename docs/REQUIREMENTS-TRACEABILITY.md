@@ -1,3 +1,12 @@
+Requirements Traceability — v1.4.76
+
+| Requirement | Demonstrated source gap | Local source remedy | Proof boundary |
+|---|---|---|---|
+| F14-NFR-001, File00 original claimant | File14 v1.4.75 `absint()` coerced string/fractional/negative caller ID before original File00 provider check | `is_int()` and positive-only gate before owner read; forty direct PHP negative cases, canonical integer control | Source-only; no deployed runtime/DB/WordPress evidence |
+| F14-FR-011 / FUT-11,13,14 | Signed owner-native events not accepted | #19 remains open | Genuine owner registry, producer, consent, staging |
+| F14-FUT-17 | Changed owner placements cannot be CAS-restored | #22 remains open, placement-changing experiments blocked | File20/25 approved owner CAS and staged rollback |
+| F14-FR-011 | File08 sensitive REST analytics cannot provide approved aggregate | #70 remains open; count/success rate null | Revocable owner opt-in aggregate, cohort and staging |
+
 Requirements Traceability — v1.4.75
 
 File 14 v1.4.75 may only claim a status independently supported by exact source/CI, separately accepted staging and the actual deployed artifact plus DB migration parity.
