@@ -3,6 +3,7 @@ Current source release: v1.4.77; source-only candidate, not deployed.
 Software candidate: `1.4.77`.
 
 # R77 V12.3 localization integrity — 2026-11-15
+Additional source-level F14-FR-015 corrective scope: no self-referential Back link on Global Clinic/degraded paths. Native PHP regression asserts safe canonical root/child/degraded Back destinations; File20 retains sole shell/history ownership.
 Corrected two repository-source publication defects: Urdu RTL back/home Arabic copy, and English governed block/FAQ fallback that bypassed translation approval. Added two native PHP regression tests to QA. GitHub source change only: deployed code, WordPress schema, migration, and live re-test not verified. Known owner #19/#22/#70 remain blocked.
 
 Software candidate: `1.4.76`.
